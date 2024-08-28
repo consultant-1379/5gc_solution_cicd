@@ -1,0 +1,9 @@
+{
+  "additionalParams": {
+       "namespace": "pcc",
+       "applicationTimeOut": "1800",
+       "commandTimeOut": "1800",
+       "skipVerification": true
+    }
+}
+

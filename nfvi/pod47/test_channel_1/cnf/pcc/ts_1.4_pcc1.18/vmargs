@@ -1,0 +1,7 @@
+-Dejcat.configs.path=/workspace/git/eybdfgm/e-jcat-configs
+-Dproperties_file.path=/workspace/git/eybdfgm/e-jcat-configs/pod47/eccd1/default-parameters.properties
+-D5gc_solution_cicd.repo.path=/workspace/git/eybdfgm
+-Dtest.suite.path=test/fivegc/testcases/installation/install_pcc_test_case.xml
+-Ddeploy.sut=false
+-Ddeploy.5gc_partial_vnf.list=PCC
+-D5gc.pcc.csar_file_on_director=/home/eccd/images/PCC/argonauts/PCC_CXP9037447_1-R47B17-modified.csar

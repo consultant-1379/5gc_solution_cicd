@@ -1,0 +1,387 @@
+testCases:
+  - id: '8h_5GC_DM_Stability_with_EDA_CI_CNIS'
+    name: 8h_5GC_DM_Stability_with_EDA_CI_CNIS
+    evidence:
+      start: ${BH reached}
+      end: ${traffic_ended}
+      charts:
+        - title: MME / SGW / PGW / AMF / SMF
+          query-names:
+            - pcc_4g_sau
+            - pcc_4g_sgw_bearer
+            - pcc_4g_pdn
+            - pcc_5g_sau
+            - pcc_5g_pdu
+        - title: PCC Critical Pods Average CPU Usage per Container [limits]
+          query-names:
+            - PCC Critical Pods Average CPU Usage per Container [limits]
+        - title: PCC Critical Pods Maximum CPU Usage per Container [limits]
+          query-names:
+            - PCC Critical Pods Maximum CPU Usage per Container [limits]
+        - title: PCC Critical Pods Average Memory Usage per Container [limits]
+          query-names:
+            - PCC Critical Pods Average Memory Usage per Container [limits]
+        - title: PCC Critical Pods Maximum Memory Usage per Container [limits]
+          query-names:
+            - PCC Critical Pods Maximum Memory Usage per Container [limits]
+        - title: PCG Critical Pods CPU Usage
+          query-names:
+            - PCG Critical Pods Average CPU Usage per Container [limits]
+            - PCG Critical Pods Maximum CPU Usage per Container [limits]
+            - PCG Critical Pods Minimum CPU Usage per Container [limits]
+        - title: PCG Critical Pods Memory Usage
+          query-names:
+            - PCG Critical Pods Average Memory Usage per Container [limits]
+            - PCG Critical Pods Maximum Memory Usage per Container [limits]
+            - PCG Critical Pods Minimum Memory Usage per Container [limits]
+        - title: PCG_Payload_CPU_Ingress
+          query-names:
+            - pcg_payload_cpu_ingress
+        - title: PCG_Payload_CPU_Egress
+          query-names:
+            - pcg_payload_cpu_egress
+        - title: PCG_Payload_CPU_Control
+          query-names:
+            - pcg_payload_cpu_control
+        - title: BSF-Critical-Pod-CPU
+          query-names:
+            - BSF-Critical-Pod-CPU
+        - title: BSF-Critical-Pod-Memory
+          query-names:
+            - BSF-Critical-Pod-Memory
+        - title: SCP-Critical-Pod-CPU
+          query-names:
+            - SCP-Critical-Pod-CPU
+        - title: SCP-Critical-Pod-Memory
+          query-names:
+            - SCP-Critical-Pod-Memory
+        - title: CCRC Critical Pods Average CPU Usage per Container [limits]
+          query-names:
+            - CCRC Critical Pods Average CPU Usage per Container [limits]
+        - title: CCRC Critical Pods Maximum CPU Usage per Container [limits]
+          query-names:
+            - CCRC Critical Pods Maximum CPU Usage per Container [limits]
+        - title: CCRC Critical Pods Average Memory Usage per Container [limits]
+          query-names:
+            - CCRC Critical Pods Average Memory Usage per Container [limits]
+        - title: CCRC Critical Pods Maximum Memory Usage per Container [limits]
+          query-names:
+            - CCRC Critical Pods Maximum Memory Usage per Container [limits]
+        - title: CCSM Critical Pods Average CPU Usage per Container [limits]
+          query-names:
+            - CCSM Critical Pods Average CPU Usage per Container [limits]
+        - title: CCSM Critical Pods Maximum CPU Usage per Container [limits]
+          query-names:
+            - CCSM Critical Pods Maximum CPU Usage per Container [limits]
+        - title:  CCSM Critical Pods Average Memory Usage per Container [limits]
+          query-names:
+            -  CCSM Critical Pods Average Memory Usage per Container [limits]
+        - title: CCSM Critical Pods Maximum Memory Usage per Container [limits]
+          query-names:
+            - CCSM Critical Pods Maximum Memory Usage per Container [limits]
+        - title: CCDM Critical Pods Average CPU Usage per Container [limits]
+          query-names:
+            - CCDM Critical Pods Average CPU Usage per Container [limits]
+        - title: CCDM Critical Pods Maximum CPU Usage per Container [limits]
+          query-names:
+            - CCDM Critical Pods Maximum CPU Usage per Container [limits]
+        - title: CCDM Critical Pods Average Memory Usage per Container [limits]
+          query-names:
+            - CCDM Critical Pods Average Memory Usage per Container [limits]
+        - title: CCDM Critical Pods Maximum Memory Usage per Container [limits]
+          query-names:
+            - CCDM Critical Pods Maximum Memory Usage per Container [limits]
+        - title: CCES Critical Pods Average CPU Usage per Container [limits]
+          query-names:
+            - CCES Critical Pods Average CPU Usage per Container [limits]
+        - title: CCES Critical Pods Maximum CPU Usage per Container [limits]
+          query-names:
+            - CCES Critical Pods Maximum CPU Usage per Container [limits]
+        - title: CCES Critical Pods Average Memory Usage per Container [limits]
+          query-names:
+            - CCES Critical Pods Average Memory Usage per Container [limits]
+        - title: CCES Critical Pods Maximum Memory Usage per Container [limits]
+          query-names:
+            - CCES Critical Pods Maximum Memory Usage per Container [limits]
+
+queries:
+  - name: dallas_total_signaling_KPI
+    expression: rate(dallas_system_total_signaling_successful[2m])/rate(dallas_system_total_signaling_successful+dallas_system_total_signaling_failed)[2m]
+    legend-format: dallas_total_signaling_KPI
+    data-source: CCD
+  - name: dallas_total_drop
+    expression: ((dallas_ltt_payload_uplink_packets_dropped_e2e_value - dallas_ltt_payload_uplink_packets_dropped_e2e_value offset 60)+(dallas_ltt_payload_downlink_packets_dropped_e2e_value - dallas_ltt_payload_downlink_packets_dropped_e2e_value offset 60)) / (dallas_ltt_payload_gn_iuu_ul_packets_rate + dallas_ltt_payload_gi_dl_packets_rate) / 60 * 1e6
+    legend-format: dallas_total_drop
+    data-source: CCD
+  - name: dallas_uplink_drop
+    expression: (dallas_ltt_payload_uplink_packets_dropped_e2e_value - dallas_ltt_payload_uplink_packets_dropped_e2e_value offset 60) / dallas_ltt_payload_gn_iuu_ul_packets_rate / 60 * 1e6
+    legend-format: dallas_uplink_drop
+    data-source: CCD
+  - name: dallas_downlink_drop
+    expression: (dallas_ltt_payload_downlink_packets_dropped_e2e_value - dallas_ltt_payload_downlink_packets_dropped_e2e_value offset 60) / dallas_ltt_payload_gi_dl_packets_rate / 60 * 1e6
+    legend-format: dallas_downlink_drop
+    data-source: CCD
+  - name: dallas_nr_rm_registered_ue_number
+    expression: dallas_nr_rm_registered_ue_number_value
+    legend-format: dallas_nr_rm_registered_ue_number
+    data-source: CCD
+  - name: dallas_nr_reg_ue_number_with_sess
+    expression: dallas_nr_reg_ue_number_with_sess_value
+    legend-format: dallas_nr_reg_ue_number_with_sess
+    data-source: CCD
+  - name: dallas_nr_reg_ue_number_without_sess
+    expression: dallas_nr_reg_ue_number_without_sess_value
+    legend-format: dallas_nr_reg_ue_number_without_sess
+    data-source: CCD
+  - name: dallas_nr_active_pdu_session_number
+    expression: dallas_nr_active_pdu_session_number_value
+    legend-format: dallas_nr_active_pdu_session_number
+    data-source: CCD
+  - name: dallas_nr_inactive_pdu_session_number
+    expression: dallas_nr_inactive_pdu_session_number_value
+    legend-format: dallas_nr_inactive_pdu_session_number
+    data-source: CCD
+  - name: dallas_lte_attached_ue
+    expression: dallas_lte_attached_ue
+    legend-format: dallas_lte_attached_ue
+    data-source: CCD
+  - name: dallas_lte_attached_cm_connected_ue
+    expression: dallas_lte_attached_cm_connected_ue_value
+    legend-format: dallas_lte_attached_cm_connected_ue
+    data-source: CCD
+  - name: dallas_lte_attached_cm_idle_ue
+    expression: dallas_lte_attached_cm_idle_ue_value
+    legend-format: dallas_lte_attached_cm_idle_ue
+    data-source: CCD
+  - name: pcc_4g_sau
+    expression: sum(pcmm_VS_MM_NbrActAttachedSub_E)
+    legend-format: pcc_4g_sau
+    data-source: PCC
+  - name: pcc_4g_sgw_bearer
+    expression: sum(sgw_nbr_of_bearers)
+    legend-format: pcc_4g_sgw_bearer
+    data-source: PCC
+  - name: pcc_4g_pdn
+    expression: sum(nbr_of_pgw_pdn_connections)
+    legend-format: pcc_4g_pdn
+    data-source: PCC
+  - name: pcc_5g_sau
+    expression: sum(pcmm_VS_MM_NbrRegisteredSub_5GS{kubernetes_pod_name=~"eric-pc-mm-mobility.*"})
+    legend-format: pcc_5g_sau
+    data-source: PCC
+  - name: pcc_5g_pdu
+    expression: sum(pdu_session_ipv4{ns="1-000002"}+pdu_session_ipv6{ns="1-000002"}+pdu_session_ipv4v6{ns="1-000002"})
+    legend-format: pcc_5g_pdu
+    data-source: PCC
+  - name: PCC Critical Pods Average CPU Usage per Container [limits]
+    expression: avg(100*irate(container_cpu_usage_seconds_total{name!="",namespace="pcc",container=~"eric-pc-mm-controller|eric-pc-mm-forwarder|eric-pc-mm-mobility|eric-pc-mm-sctp|eric-pc-vpn-gateway-forwarder|udpforwarder|sgw|nsmfforwarder|http-client|smf|controller|diameter|eric-pc-kvdb-rd-server|ipallocator|eric-data-object-storage-mn"}[2m])/on(pod,contaier)group_left()(kube_pod_container_resource_limits{namespace="pcc",resource="cpu",container=~"eric-pc-mm-controller|eric-pc-mm-forwarder|eric-pc-mm-mobility|eric-pc-mm-sctp|eric-pc-vpn-gateway-forwarder|udpforwarder|sgw|nsmfforwarder|http-client|smf|controller|diameter|eric-pc-kvdb-rd-server|ipallocator|eric-data-object-storage-mn"})) by(container)
+    legend-format: avg_cpu_({{container}})
+    data-source: CCD
+  - name: PCC Critical Pods Maximum CPU Usage per Container [limits]
+    expression: max(100*irate(container_cpu_usage_seconds_total{name!="",namespace="pcc",container=~"eric-pc-mm-controller|eric-pc-mm-forwarder|eric-pc-mm-mobility|eric-pc-mm-sctp|eric-pc-vpn-gateway-forwarder|udpforwarder|sgw|nsmfforwarder|http-client|smf|controller|diameter|eric-pc-kvdb-rd-server|ipallocator|eric-data-object-storage-mn"}[2m])/on(pod,contaier)group_left()(kube_pod_container_resource_limits{namespace="pcc",resource="cpu",container=~"eric-pc-mm-controller|eric-pc-mm-forwarder|eric-pc-mm-mobility|eric-pc-mm-sctp|eric-pc-vpn-gateway-forwarder|udpforwarder|sgw|nsmfforwarder|http-client|smf|controller|diameter|eric-pc-kvdb-rd-server|ipallocator|eric-data-object-storage-mn"})) by(container)
+    legend-format: max_cpu_({{container}})
+    data-source: CCD
+  - name: PCC Critical Pods Average Memory Usage per Container [limits]
+    expression: avg((container_memory_usage_bytes{name!="",namespace="pcc",container=~"eric-pc-mm-controller|eric-pc-mm-forwarder|eric-pc-mm-mobility|eric-pc-mm-sctp|eric-pc-vpn-gateway-forwarder|udpforwarder|sgw|nsmfforwarder|http-client|smf|controller|diameter|eric-pc-kvdb-rd-server|ipallocator|eric-data-object-storage-mn"} - on(pod,container)container_memory_cache{name!="",namespace="pcc",container=~"eric-pc-mm-controller|eric-pc-mm-forwarder|eric-pc-mm-mobility|eric-pc-mm-sctp|eric-pc-vpn-gateway-forwarder|udpforwarder|sgw|nsmfforwarder|http-client|smf|controller|diameter|eric-pc-kvdb-rd-server|ipallocator|eric-data-object-storage-mn"})/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="pcc",resource="memory"})*100) by (container)
+    legend-format: avg_memory_({{container}})
+    data-source: CCD
+  - name: PCC Critical Pods Maximum Memory Usage per Container [limits]
+    expression: max((container_memory_usage_bytes{name!="",namespace="pcc",container=~"eric-pc-mm-controller|eric-pc-mm-forwarder|eric-pc-mm-mobility|eric-pc-mm-sctp|eric-pc-vpn-gateway-forwarder|udpforwarder|sgw|nsmfforwarder|http-client|smf|controller|diameter|eric-pc-kvdb-rd-server|ipallocator|eric-data-object-storage-mn"} - on(pod,container)container_memory_cache{name!="",namespace="pcc",container=~"eric-pc-mm-controller|eric-pc-mm-forwarder|eric-pc-mm-mobility|eric-pc-mm-sctp|eric-pc-vpn-gateway-forwarder|udpforwarder|sgw|nsmfforwarder|http-client|smf|controller|diameter|eric-pc-kvdb-rd-server|ipallocator|eric-data-object-storage-mn"})/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="pcc",resource="memory"})*100) by (container)
+    legend-format: max_memory_({{container}})
+    data-source: CCD
+  - name: PCG Critical Pods Maximum CPU Usage per Container [limits]
+    expression: max(100*(irate(container_cpu_usage_seconds_total{name!="",namespace="pcg",container=~"eric-pc-kvdb-rd-server|eric-pc-up-pfcp-endpoint|eric-pc-routing-engine-api|eric-data-object-storage-mn"}[2m]))/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="pcg",resource="cpu"})) by (container)
+    legend-format: max_({{container}})
+    data-source: CCD
+  - name: PCG Critical Pods Minimum CPU Usage per Container [limits]
+    expression: min(100*(irate(container_cpu_usage_seconds_total{name!="",namespace="pcg",container=~"eric-pc-kvdb-rd-server|eric-pc-up-pfcp-endpoint|eric-pc-routing-engine-api|eric-data-object-storage-mn"}[2m]))/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="pcg",resource="cpu"})) by (container)
+    legend-format: min_{{container}}
+    data-source: CCD
+  - name: PCG Critical Pods Average CPU Usage per Container [limits]
+    expression: avg(100*(irate(container_cpu_usage_seconds_total{name!="",namespace="pcg",container=~"eric-pc-kvdb-rd-server|eric-pc-up-pfcp-endpoint|eric-pc-routing-engine-api|eric-data-object-storage-mn"}[2m]))/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="pcg",resource="cpu"})) by (container)
+    legend-format: avg_{{container}}
+    data-source: CCD
+  - name: PCG Critical Pods Maximum Memory Usage per Container [limits]
+    expression: max((container_memory_usage_bytes{name!="",namespace="pcg",container=~"eric-pc-kvdb-rd-server|eric-pc-up-pfcp-endpoint|eric-pc-routing-engine-api|eric-data-object-storage-mn"} - on(pod,container)container_memory_cache{name!="",namespace="pcg",container=~"eric-pc-kvdb-rd-server|eric-pc-up-pfcp-endpoint|eric-pc-routing-engine-api|eric-data-object-storage-mn"})/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="pcg",resource="memory"})*100) by (container)
+    legend-format: max_({{container}})
+    data-source: CCD
+  - name: PCG Critical Pods Minimum Memory Usage per Container [limits]
+    expression: min((container_memory_usage_bytes{name!="",namespace="pcg",container=~"eric-pc-kvdb-rd-server|eric-pc-up-pfcp-endpoint|eric-pc-routing-engine-api|eric-data-object-storage-mn"} - on(pod,container)container_memory_cache{name!="",namespace="pcg",container=~"eric-pc-kvdb-rd-server|eric-pc-up-pfcp-endpoint|eric-pc-routing-engine-api|eric-data-object-storage-mn"})/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="pcg",resource="memory"})*100) by (container)
+    legend-format: min_{{container}}
+    data-source: CCD
+  - name: PCG Critical Pods Average Memory Usage per Container [limits]
+    expression: avg((container_memory_usage_bytes{name!="",namespace="pcg",container=~"eric-pc-kvdb-rd-server|eric-pc-up-pfcp-endpoint|eric-pc-routing-engine-api|eric-data-object-storage-mn"} - on(pod,container)container_memory_cache{name!="",namespace="pcg",container=~"eric-pc-kvdb-rd-server|eric-pc-up-pfcp-endpoint|eric-pc-routing-engine-api|eric-data-object-storage-mn"})/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="pcg",resource="memory"})*100) by (container)
+    legend-format: avg_{{container}}
+    data-source: CCD
+  - name: pcg_payload_cpu_control
+    expression: pc_up_cpu_load_15s_percent{role="Control"}
+    legend-format: '{{kubernetes_pod_name}}_control'
+    data-source: PCG
+  - name: pcg_payload_cpu_ingress
+    expression: pc_up_cpu_load_15s_percent{role="Ingress"}
+    legend-format: '{{kubernetes_pod_name}}_ingress'
+    data-source: PCG
+  - name: pcg_payload_cpu_egress
+    expression: pc_up_cpu_load_15s_percent{role="Egress"}
+    legend-format: '{{kubernetes_pod_name}}_egress'
+    data-source: PCG
+  - name: BSF-Critical-Pod-CPU
+    expression: 100*(irate(container_cpu_usage_seconds_total{name!="",namespace="sc",container=~"eric-bsf-worker|bsfdiameter|cassandra"}[2m]))/on(pod,container)group_left()((container_spec_cpu_quota{name!="",namespace="sc"})/100000)
+    legend-format: SC_{{container}}
+    data-source: CCD
+  - name: BSF-Critical-Pod-Memory
+    expression: (container_memory_usage_bytes{name!="",namespace="sc",container=~"eric-bsf-worker|bsfdiameter|cassandra"} - on(pod,container)container_memory_cache{name!="",namespace="sc",container=~"eric-bsf-worker|bsfdiameter|cassandra"})/on(pod,container)group_left()(container_spec_memory_limit_bytes{name!="",namespace="sc"})*100
+    legend-format: SC_{{container}}
+    data-source: CCD
+  - name: SCP-Critical-Pod-CPU
+    expression: 100*(irate(container_cpu_usage_seconds_total{name!="",namespace="sc",container=~"eric-scp-manager|eric-scp-worker|diameter|cassandra"}[2m]))/on(pod,container)group_left()((container_spec_cpu_quota{name!="",namespace="sc"})/100000)
+    legend-format: SCP_{{container}}
+    data-source: CCD
+  - name: SCP-Critical-Pod-Memory
+    expression: (container_memory_usage_bytes{name!="",namespace="sc",container=~"eric-scp-manager|eric-scp-worker|diameter|cassandra"} - on(pod,container)container_memory_cache{name!="",namespace="sc",container=~"eric-scp-manager|eric-scp-worker|diameter|cassandra"})/on(pod,container)group_left()(container_spec_memory_limit_bytes{name!="",namespace="sc"})*100
+    legend-format: SCP_{{container}}
+    data-source: CCD
+  - name: CCRC Critical Pods Average CPU Usage per Container [limits]
+    expression: avg(100*(irate(container_cpu_usage_seconds_total{name!="",namespace="ccrc",container=~"eric-nrf-management|eric-nrf-discovery|eric-nrf-management-notification|eric-nssf-slice-selection-control|eric-nssf-nssai-availability|eric-nrf-kvdb-ag-locator|eric-nrf-kvdb-ag-server|eric-nssf-kvdb-ag-locator|eric-nssf-kvdb-ag-server"}[2m]))/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="ccrc",resource="cpu"}))by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCRC Critical Pods Maximum CPU Usage per Container [limits]
+    expression: max(100*(irate(container_cpu_usage_seconds_total{name!="",namespace="ccrc",container=~"eric-nrf-management|eric-nrf-discovery|eric-nrf-management-notification|eric-nssf-slice-selection-control|eric-nssf-nssai-availability|eric-nrf-kvdb-ag-locator|eric-nrf-kvdb-ag-server|eric-nssf-kvdb-ag-locator|eric-nssf-kvdb-ag-server"}[2m]))/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="ccrc",resource="cpu"}))by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCRC Critical Pods Average Memory Usage per Container [limits]
+    expression: avg((container_memory_usage_bytes{name!="",namespace="ccrc",container=~"eric-nrf-management|eric-nrf-discovery|eric-nrf-management-notification|eric-nssf-slice-selection-control|eric-nssf-nssai-availability|eric-nrf-kvdb-ag-locator|eric-nrf-kvdb-ag-server|eric-nssf-kvdb-ag-locator|eric-nssf-kvdb-ag-server"} - on(pod,container)container_memory_cache{name!="",namespace="ccrc",container=~"eric-nrf-management|eric-nrf-discovery|eric-nrf-management-notification|eric-nssf-slice-selection-control|eric-nssf-nssai-availability|eric-nrf-kvdb-ag-locator|eric-nrf-kvdb-ag-server|eric-nssf-kvdb-ag-locator|eric-nssf-kvdb-ag-server"})/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="ccrc",resource="memory"})*100)by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCRC Critical Pods Maximum Memory Usage per Container [limits]
+    expression: max((container_memory_usage_bytes{name!="",namespace="ccrc",container=~"eric-nrf-management|eric-nrf-discovery|eric-nrf-management-notification|eric-nssf-slice-selection-control|eric-nssf-nssai-availability|eric-nrf-kvdb-ag-locator|eric-nrf-kvdb-ag-server|eric-nssf-kvdb-ag-locator|eric-nssf-kvdb-ag-server"} - on(pod,container)container_memory_cache{name!="",namespace="ccrc",container=~"eric-nrf-management|eric-nrf-discovery|eric-nrf-management-notification|eric-nssf-slice-selection-control|eric-nssf-nssai-availability|eric-nrf-kvdb-ag-locator|eric-nrf-kvdb-ag-server|eric-nssf-kvdb-ag-locator|eric-nssf-kvdb-ag-server"})/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="ccrc",resource="memory"})*100)by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCSM Critical Pods Average CPU Usage per Container [limits]
+    expression: avg(100*(irate(container_cpu_usage_seconds_total{namespace="ccsm",container=~"eric-ausf-engine|eric-eir-eireic|eric-eir-socshipper|eric-hssepc-s6adiameter|eric-hssepc-s6anotify|eric-hssepc-s6aauthentication|eric-hssepc-s6aupdatelocation|eric-hssepc-subscriptionupdate|eric-hss-redisdb|eric-hssepc-capacity|diameter|eric-udm-epsauth|eric-udm-sdmamdata|eric-udm-sdmnssai|eric-udm-sdmsmdata|eric-udm-sdmsmfselect|eric-udm-sdmsubscriptions|eric-udm-ueauth|eric-udm-uecmamfget|eric-udm-uecmreg|eric-udm-uecmsmfderegistration|eric-udm-uecmsmfregistration"}[2m]))/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="ccsm",resource="cpu"}))by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCSM Critical Pods Maximum CPU Usage per Container [limits]
+    expression: max(100*(irate(container_cpu_usage_seconds_total{namespace="ccsm",container=~"eric-ausf-engine|eric-eir-eireic|eric-eir-socshipper|eric-hssepc-s6adiameter|eric-hssepc-s6anotify|eric-hssepc-s6aauthentication|eric-hssepc-s6aupdatelocation|eric-hssepc-subscriptionupdate|eric-hss-redisdb|eric-hssepc-capacity|diameter|eric-udm-epsauth|eric-udm-sdmamdata|eric-udm-sdmnssai|eric-udm-sdmsmdata|eric-udm-sdmsmfselect|eric-udm-sdmsubscriptions|eric-udm-ueauth|eric-udm-uecmamfget|eric-udm-uecmreg|eric-udm-uecmsmfderegistration|eric-udm-uecmsmfregistration"}[2m]))/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="ccsm",resource="cpu"}))by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCSM Critical Pods Average Memory Usage per Container [limits]
+    expression: avg((container_memory_usage_bytes{name!="",namespace="ccsm",container=~"eric-ausf-engine|eric-eir-eireic|eric-eir-socshipper|eric-hssepc-s6adiameter|eric-hssepc-s6anotify|eric-hssepc-s6aauthentication|eric-hssepc-s6aupdatelocation|eric-hssepc-subscriptionupdate|eric-hss-redisdb|eric-hssepc-capacity|diameter|eric-udm-epsauth|eric-udm-sdmamdata|eric-udm-sdmnssai|eric-udm-sdmsmdata|eric-udm-sdmsmfselect|eric-udm-sdmsubscriptions|eric-udm-ueauth|eric-udm-uecmamfget|eric-udm-uecmreg|eric-udm-uecmsmfderegistration|eric-udm-uecmsmfregistration"} - on(pod,container)container_memory_cache{name!="",namespace="ccsm",container=~"eric-ausf-engine|eric-eir-eireic|eric-eir-socshipper|eric-hssepc-s6adiameter|eric-hssepc-s6anotify|eric-hssepc-s6aauthentication|eric-hssepc-s6aupdatelocation|eric-hssepc-subscriptionupdate|eric-hss-redisdb|eric-hssepc-capacity|diameter|eric-udm-epsauth|eric-udm-sdmamdata|eric-udm-sdmnssai|eric-udm-sdmsmdata|eric-udm-sdmsmfselect|eric-udm-sdmsubscriptions|eric-udm-ueauth|eric-udm-uecmamfget|eric-udm-uecmreg|eric-udm-uecmsmfderegistration|eric-udm-uecmsmfregistration"})/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="ccsm",resource="memory"})*100)by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCSM Critical Pods Maximum Memory Usage per Container [limits]
+    expression: max((container_memory_usage_bytes{name!="",namespace="ccsm",container=~"eric-ausf-engine|eric-eir-eireic|eric-eir-socshipper|eric-hssepc-s6adiameter|eric-hssepc-s6anotify|eric-hssepc-s6aauthentication|eric-hssepc-s6aupdatelocation|eric-hssepc-subscriptionupdate|eric-hss-redisdb|eric-hssepc-capacity|diameter|eric-udm-epsauth|eric-udm-sdmamdata|eric-udm-sdmnssai|eric-udm-sdmsmdata|eric-udm-sdmsmfselect|eric-udm-sdmsubscriptions|eric-udm-ueauth|eric-udm-uecmamfget|eric-udm-uecmreg|eric-udm-uecmsmfderegistration|eric-udm-uecmsmfregistration"} - on(pod,container)container_memory_cache{name!="",namespace="ccsm",container=~"eric-ausf-engine|eric-eir-eireic|eric-eir-socshipper|eric-hssepc-s6adiameter|eric-hssepc-s6anotify|eric-hssepc-s6aauthentication|eric-hssepc-s6aupdatelocation|eric-hssepc-subscriptionupdate|eric-hss-redisdb|eric-hssepc-capacity|diameter|eric-udm-epsauth|eric-udm-sdmamdata|eric-udm-sdmnssai|eric-udm-sdmsmdata|eric-udm-sdmsmfselect|eric-udm-sdmsubscriptions|eric-udm-ueauth|eric-udm-uecmamfget|eric-udm-uecmreg|eric-udm-uecmsmfderegistration|eric-udm-uecmsmfregistration"})/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="ccsm",resource="memory"})*100)by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCDM Critical Pods Average CPU Usage per Container [limits]
+    expression: avg(100*(irate(container_cpu_usage_seconds_total{namespace="ccdm",container=~"eric-udr-gudrestfe|eric-udr-gudrestfe|eric-udr-ldapfe|eric-udr-nudrfe|eric-udr-query-router|eric-udr-http-proxy|eric-udr-kvdb-ag-locator|eric-udr-kvdb-ag-server|eric-udr-notificationsubscription|eric-udr-provisioningfe"}[2m]))/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="ccdm",resource="cpu"}))by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCDM Critical Pods Maximum CPU Usage per Container [limits]
+    expression: max(100*(irate(container_cpu_usage_seconds_total{namespace="ccdm",container=~"eric-udr-gudrestfe|eric-udr-gudrestfe|eric-udr-ldapfe|eric-udr-nudrfe|eric-udr-query-router|eric-udr-http-proxy|eric-udr-kvdb-ag-locator|eric-udr-kvdb-ag-server|eric-udr-notificationsubscription|eric-udr-provisioningfe"}[2m]))/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="ccdm",resource="cpu"}))by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCDM Critical Pods Average Memory Usage per Container [limits]
+    expression: avg((container_memory_usage_bytes{name!="",namespace="ccdm",container=~"eric-udr-gudrestfe|eric-udr-gudrestfe|eric-udr-ldapfe|eric-udr-nudrfe|eric-udr-query-router|eric-udr-http-proxy|eric-udr-kvdb-ag-locator|eric-udr-kvdb-ag-server|eric-udr-notificationsubscription|eric-udr-provisioningfe"} - on(pod,container)container_memory_cache{name!="",namespace="ccdm",container=~"eric-udr-gudrestfe|eric-udr-gudrestfe|eric-udr-ldapfe|eric-udr-nudrfe|eric-udr-query-router|eric-udr-http-proxy|eric-udr-kvdb-ag-locator|eric-udr-kvdb-ag-server|eric-udr-notificationsubscription|eric-udr-provisioningfe"})/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="ccdm",resource="memory"})*100)by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCDM Critical Pods Maximum Memory Usage per Container [limits]
+    expression: max((container_memory_usage_bytes{name!="",namespace="ccdm",container=~"eric-udr-gudrestfe|eric-udr-gudrestfe|eric-udr-ldapfe|eric-udr-nudrfe|eric-udr-query-router|eric-udr-http-proxy|eric-udr-kvdb-ag-locator|eric-udr-kvdb-ag-server|eric-udr-notificationsubscription|eric-udr-provisioningfe"} - on(pod,container)container_memory_cache{name!="",namespace="ccdm",container=~"eric-udr-gudrestfe|eric-udr-gudrestfe|eric-udr-ldapfe|eric-udr-nudrfe|eric-udr-query-router|eric-udr-http-proxy|eric-udr-kvdb-ag-locator|eric-udr-kvdb-ag-server|eric-udr-notificationsubscription|eric-udr-provisioningfe"})/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="ccdm",resource="memory"})*100)by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCES Critical Pods Average CPU Usage per Container [limits]
+    expression: avg(100*(irate(container_cpu_usage_seconds_total{namespace="cces",container=~"eric-apigm-api-proxy|eric-nef-afsessionwithqos-provisioning|eric-nef-afsessionwithqos|diameter|diameterproxygrpc|dsl|dced|cassandra"}[2m]))/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="cces",resource="cpu"}))by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCES Critical Pods Maximum CPU Usage per Container [limits]
+    expression: max(100*(irate(container_cpu_usage_seconds_total{namespace="cces",container=~"eric-apigm-api-proxy|eric-nef-afsessionwithqos-provisioning|eric-nef-afsessionwithqos|diameter|diameterproxygrpc|dsl|dced|cassandra"}[2m]))/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="cces",resource="cpu"}))by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCES Critical Pods Average Memory Usage per Container [limits]
+    expression: avg((container_memory_usage_bytes{name!="",namespace="cces",container=~"eric-apigm-api-proxy|eric-nef-afsessionwithqos-provisioning|eric-nef-afsessionwithqos|diameter|diameterproxygrpc|dsl|dced|cassandra"} - on(pod,container)container_memory_cache{name!="",namespace="cces",container=~"eric-apigm-api-proxy|eric-nef-afsessionwithqos-provisioning|eric-nef-afsessionwithqos|diameter|diameterproxygrpc|dsl|dced|cassandra"})/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="cces",resource="memory"})*100)by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: CCES Critical Pods Maximum Memory Usage per Container [limits]
+    expression: max((container_memory_usage_bytes{name!="",namespace="cces",container=~"eric-apigm-api-proxy|eric-nef-afsessionwithqos-provisioning|eric-nef-afsessionwithqos|diameter|diameterproxygrpc|dsl|dced|cassandra"} - on(pod,container)container_memory_cache{name!="",namespace="cces",container=~"eric-apigm-api-proxy|eric-nef-afsessionwithqos-provisioning|eric-nef-afsessionwithqos|diameter|diameterproxygrpc|dsl|dced|cassandra"})/on(pod,container)group_left()(kube_pod_container_resource_limits{namespace="cces",resource="memory"})*100)by(container)
+    legend-format: '{{container}}'
+    data-source: CCD
+  - name: Dallas_LTE_Attach_Request_IMSI
+    expression: rate((dallas_lte_attach_request_imsi_successful)[2m])/rate((dallas_lte_attach_request_imsi_successful+dallas_lte_attach_request_imsi_failed)[2m]) >0
+    legend-format: Dallas_LTE_Attach_Request_IMSI
+    data-source: CCD
+  - name: Dallas_LTE_Attach_Request_GUTI
+    expression: rate((dallas_lte_attach_request_guti_successful[2m]))/rate((dallas_lte_attach_request_guti_successful+dallas_lte_attach_request_guti_failed)[2m]) >0
+    legend-format: Dallas_LTE_Attach_Request_GUTI
+    data-source: CCD
+  - name: Dallas_LTE_Detach_Request
+    expression: rate(dallas_lte_detach_request_successful[2m])/rate(dallas_lte_detach_request_successful+dallas_lte_detach_request_failed)[2m] >0
+    legend-format: Dallas_LTE_Detach_Request
+    data-source: CCD
+  - name: Dallas_LTE_Disconnect_PDN_Request
+    expression: rate(dallas_lte_disconnect_pdn_request_successful[2m])/rate(dallas_lte_disconnect_pdn_request_successful+dallas_lte_disconnect_pdn_request_failed)[2m] >0
+    legend-format: Dallas_LTE_Disconnect_PDN_Request
+    data-source: CCD
+  - name: Dallas_LTE_Handover_Require
+    expression: rate(dallas_lte_handover_require_successful[2m])/rate(dallas_lte_handover_require_successful+dallas_lte_handover_require_failed)[2m] >0
+    legend-format: Dallas_LTE_Handover_Require
+    data-source: CCD
+  - name: Dallas_LTE_PDN_Connectivity_Request
+    expression: rate(dallas_lte_pdn_connectivity_request_successful[2m])/rate(dallas_lte_pdn_connectivity_request_successful+dallas_lte_pdn_connectivity_request_failed)[2m] >0
+    legend-format: Dallas_LTE_PDN_Connectivity_Request
+    data-source: CCD
+  - name: Dallas_LTE_Service_Request
+    expression: rate(dallas_lte_service_request_successful[2m])/rate(dallas_lte_service_request_successful+dallas_lte_service_request_failed)[2m] >0
+    legend-format: Dallas_LTE_Service_Request
+    data-source: CCD
+  - name: Dallas_LTE_Service_Release_failed
+    expression: rate(dallas_lte_service_release_successful[2m])/rate(dallas_lte_service_release_successful+dallas_lte_service_release_failed)[2m] >0
+    legend-format: Dallas_LTE_Service_Release_failed
+    data-source: CCD
+  - name: Dallas_LTE_Path_Switch_Request
+    expression: rate(dallas_lte_path_switch_request_successful[2m])/rate(dallas_lte_path_switch_request_failed+dallas_lte_path_switch_request_successful)[2m] >0
+    legend-format: Dallas_LTE_Path_Switch_Request
+    data-source: CCD
+  - name: Dallas_NR_Initial_Registration_Requestd_SUCI
+    expression: rate(dallas_nr_initial_registration_request_suci_successful[2m])/rate(dallas_nr_initial_registration_request_suci_successful+dallas_nr_initial_registration_request_suci_failed)[2m]
+    legend-format: Dallas_NR_Initial_Registration_Requestd_SUCI
+    data-source: CCD
+  - name: Dallas_NR_Initial_Registration_Request_GUTI
+    expression: rate(dallas_nr_initial_registration_request_guti_successful[2m])/rate(dallas_nr_initial_registration_request_guti_successful+dallas_nr_initial_registration_request_guti_failed)[2m]
+    legend-format: Dallas_NR_Initial_Registration_Request_GUTI
+    data-source: CCD
+  - name: Dallas_NR_PDU_Session_Establishment_Request
+    expression: rate(dallas_nr_pdu_session_establishment_request_successful[2m])/rate(dallas_nr_pdu_session_establishment_request_successful+dallas_nr_pdu_session_establishment_request_failed)[2m]
+    legend-format: Dallas_NR_PDU_Session_Establishment_Request
+    data-source: CCD
+  - name: Dallas_NR_PDU_Session_Release_Request
+    expression: rate(dallas_nr_pdu_session_release_request_successful[2m])/rate(dallas_nr_pdu_session_release_request_successful+dallas_nr_pdu_session_release_request_failed)[2m]
+    legend-format: Dallas_NR_PDU_Session_Release_Request
+    data-source: CCD
+  - name: Dallas_NR_PDU_Session_Resource_Release_Cmd
+    expression: rate(dallas_nr_pdu_session_release_cmd_cmpt_successful[2m])/rate(dallas_nr_pdu_session_release_cmd_cmpt_successful+dallas_nr_pdu_session_release_cmd_cmpt_failed)[2m]
+    legend-format: Dallas_NR_PDU_Session_Resource_Release_Cmd
+    data-source: CCD
+  - name: Dallas_NR_Service_Request_UE_Init
+    expression: rate(dallas_nr_service_request_ue_init_successful[2m])/rate(dallas_nr_service_request_ue_init_successful+dallas_nr_service_request_ue_init_failed)[2m]
+    legend-format: Dallas_NR_Service_Request_UE_Init
+    data-source: CCD
+  - name: Dallas_NR_Service_Request_NW_Init
+    expression: rate(dallas_nr_service_request_nw_init_successful[2m])/rate(dallas_nr_service_request_nw_init_successful+dallas_nr_service_request_nw_init_failed)[2m]
+    legend-format: Dallas_NR_Service_Request_NW_Init
+    data-source: CCD
+  - name: Dallas_NR_Mobility_Registration_Request
+    expression: rate(dallas_nr_mobility_registration_request_successful[2m])/rate(dallas_nr_mobility_registration_request_successful+dallas_nr_mobility_registration_request_failed)[2m]
+    legend-format: Dallas_NR_Mobility_Registration_Request
+    data-source: CCD
+  - name: Dallas_NR_Handover_Required
+    expression: rate(dallas_nr_handover_required_successful[2m])/rate(dallas_nr_handover_required_successful+dallas_nr_handover_required_failed)[2m]
+    legend-format: Dallas_NR_Handover_Required
+    data-source: CCD
+  - name: Dallas_NR_Path_Switch_Request
+    expression: rate(dallas_nr_path_switch_request_successful[2m])/rate(dallas_nr_path_switch_request_successful+dallas_nr_path_switch_request_failed)[2m]
+    legend-format: Dallas_NR_Path_Switch_Request
+    data-source: CCD
+  - name: Dallas_NR_UE_Context_Release_Request
+    expression: rate(dallas_nr_ue_context_release_request_successful[2m])/rate(dallas_nr_ue_context_release_request_successful+dallas_nr_ue_context_release_request_failed)[2m]
+    legend-format: Dallas_NR_UE_Context_Release_Request
+    data-source: CCD

@@ -1,0 +1,59 @@
+pre_install:
+    - name: disable_puppet_due_to_PCGW-4936
+      executable: "/usr/bin/puppet agent"
+      arg: "--disable 'Disable puppet Dallas 1 installed - PCGW-4936'"
+      host: [ pccc-tool-niv-249-07, pccc-tool-niv-249-08, pccc-tool-niv-249-09, pccc-tool-niv-249-10, pccc-tool-niv-249-11, pccc-tool-niv-249-12, pccc-tool-niv-249-01 ]
+
+    - name: bind_dpdk
+      executable: "/lab/testtools/dallas/rhel764/Release/3R176B02//3pp/ltt/dpdk/lts_bind_dpdk"
+      arg: "/var/dallas/tap.conf"
+      host: [ pccc-tool-niv-249-07, pccc-tool-niv-249-08, pccc-tool-niv-249-09, pccc-tool-niv-249-10, pccc-tool-niv-249-11, pccc-tool-niv-249-12 ]
+      debug: on
+
+post_install:
+    - name: add routes for host pccc-tool-niv-249-07
+      executable: "/bin/bash /root/script/configure_ip_address_on_tap.sh"
+      arg: "-c 1 -i 2 -a 214.13.238.0/24:10.221.124.64/27"
+      host: [ pccc-tool-niv-249-07 ]
+      debug: on
+
+    - name: add routes for host pccc-tool-niv-249-08
+      executable: "/bin/bash /root/script/configure_ip_address_on_tap.sh"
+      arg: "-c 1 -i 3 -a 214.13.238.0/24:10.221.124.64/27"
+      host: [ pccc-tool-niv-249-08 ]
+      debug: on
+
+    - name: add routes for host pccc-tool-niv-249-09
+      executable: "/bin/bash /root/script/configure_ip_address_on_tap.sh"
+      arg: "-c 1 -i 4 -a 214.13.238.0/24:10.221.124.64/27"
+      host: [ pccc-tool-niv-249-09 ]
+      debug: on
+
+    - name: add routes for host pccc-tool-niv-249-10
+      executable: "/bin/bash /root/script/configure_ip_address_on_tap.sh"
+      arg: "-c 1 -i 5 -a 214.13.238.0/24:10.221.124.64/27"
+      host: [ pccc-tool-niv-249-10 ]
+      debug: on
+
+    - name: add routes for host pccc-tool-niv-249-11
+      executable: "/bin/bash /root/script/configure_ip_address_on_tap.sh"
+      arg: "-c 1 -i 6 -a 214.13.238.0/24:10.221.124.64/27"
+      host: [ pccc-tool-niv-249-11 ]
+      debug: on
+
+    - name: add routes for host pccc-tool-niv-249-12
+      executable: "/bin/bash /root/script/configure_ip_address_on_tap.sh"
+      arg: "-c 1 -i 7 -a 214.13.238.0/24:10.221.124.64/27"
+      host: [ pccc-tool-niv-249-12 ]
+      debug: on
+
+    - name: add routes for host pccc-tool-niv-249-01
+      executable: "/bin/bash /root/script/configure_ip_address_on_tap.sh"
+      arg: "-c 1 -i 8 -a 214.13.238.0/24:10.221.124.64/27"
+      host: [ pccc-tool-niv-249-01 ]
+      debug: on
+
+post_uninstall:
+    - name: unbind_dpdk
+      executable: "/lab/testtools/dallas/rhel764/Release/3R176B02//3pp/ltt/dpdk/lts_bind_dpdk"
+      host: [ pccc-tool-niv-249-07, pccc-tool-niv-249-08, pccc-tool-niv-249-09, pccc-tool-niv-249-10, pccc-tool-niv-249-11, pccc-tool-niv-249-12 ]

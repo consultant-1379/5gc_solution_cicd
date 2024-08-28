@@ -1,0 +1,14 @@
+dallas:
+  batch_size: 10
+  collection:
+  - name: dallas_counter
+    cmd:
+    - lts_info
+    - lts_pm p
+    - lts_pm pp
+    - lts_pm p nr
+    - lts_pm p lte
+    - lts_pmshow -c kpi -p
+  - name: pmshow_payload
+    cmd:
+    - /root/pmshow_payload.sh -n

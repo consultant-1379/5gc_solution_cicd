@@ -1,0 +1,11 @@
+{
+   "nrfInstanceName":"nrf-slice-common-region-001",
+   "nrfInstanceInfoList":[
+      {
+         "adminState":"UNLOCKED",
+         "nrfInstanceId":"0c765084-c182-49c6-9876-ae2f5fa2a63f",
+         "nrfId":"https://ccrc1-nrf-sig.site2-cluster1.5gc.mnc081.mcc240.3gppnetwork.org/nnrf-disc/v1/",
+         "nrfNfMgtUri":"https://ccrc1-nrf-sig.site2-cluster1.5gc.mnc081.mcc240.3gppnetwork.org/nnrf-nfm/v1/"
+      }
+   ]
+}

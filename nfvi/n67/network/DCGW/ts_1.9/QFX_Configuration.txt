@@ -1,0 +1,1344 @@
+set version 20.2R3.9
+set system host-name serointrt00101
+set system root-authentication encrypted-password "$6$jxcNonhy$h8S5nJQh/nDcRErkjxmwZnyYWAhCtxECnspDlyIsORFJicnQwL7YdF.EzI3TfjjQMAFlPeYD5JZsHAcxjZ8lI."
+set system login class rancid permissions access
+set system login class rancid permissions admin
+set system login class rancid permissions firewall
+set system login class rancid permissions flow-tap
+set system login class rancid permissions interface
+set system login class rancid permissions network
+set system login class rancid permissions routing
+set system login class rancid permissions secret
+set system login class rancid permissions security
+set system login class rancid permissions snmp
+set system login class rancid permissions system
+set system login class rancid permissions trace
+set system login class rancid permissions view
+set system login class read-only-config permissions clear
+set system login class read-only-config permissions view
+set system login class read-only-config permissions view-configuration
+set system login class read-only-local idle-timeout 120
+set system login class read-only-local permissions view
+set system login class super-user-local idle-timeout 120
+set system login class super-user-local permissions all
+set system login user rancid uid 2004
+set system login user rancid class rancid
+set system login user rancid authentication ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDUWvRhGvzsZiVBytYPlQ6kfLwRMJ+kF24v6SLbNbU9rwW0Bj3Zt3jnw6zwBZbHIX9prEyeRF+BXf6fIbERRTqsIrh2oRSRLSky3XMeY2dtSRM1Y7bTLxeFGFH1M+2FaRLHE0EAPiC5ruEXqVlRtn5NlzulIgqE28l0cuITgh2nrvgizeJIAb+mDx5ubO3SPdAnAj7sp74LMshr9Sx3In6wsn5uxTGLsUa4nvot8NNBV2419FA/fm+K1i52ykKBCL7tZBN7xBTjDnnNZHZzFGDUDo4iv9diW81iEs9Z+aRXZMyxosOj4I4gzCtbrstTTcxY6FNfk7U2q7G9EyZWvzSB rancid@seroiuts00077"
+set system login user remote-ro uid 2002
+set system login user remote-ro class read-only-local
+set system login user remote-rw uid 2003
+set system login user remote-rw class super-user-local
+set system services ssh
+set system domain-name sc.sero.gic.ericsson.se
+set system time-zone UTC
+set system authentication-order password
+set system authentication-order tacplus
+set system name-server 10.221.16.11
+set system name-server 10.221.16.10
+set system tacplus-server 134.138.10.68 port 10006
+set system tacplus-server 134.138.10.68 secret "$9$C6R0uIhev8L7d24Q39C1IylK8LNVwgGUH2469pu1INdV"
+set system tacplus-server 134.138.10.68 timeout 5
+set system tacplus-server 134.138.10.68 single-connection
+set system tacplus-server 134.138.10.69 port 10006
+set system tacplus-server 134.138.10.69 secret "$9$qfF6p01IhyM8ZDkqzFCtu1IcreWN-wM8ikPfzFcyr"
+set system tacplus-server 134.138.10.69 timeout 5
+set system tacplus-server 134.138.10.69 single-connection
+set system syslog user * any emergency
+set system syslog host seroiumon00024.sc.sero.gic.ericsson.se any any
+set system syslog file messages any notice
+set system syslog file messages authorization info
+set system syslog file interactive-commands interactive-commands any
+set system license keys key "JUNOS080088885 aeaqia qfivlt oobxay bjbeqm bncves kdknju 6traif baokdz p34cfa vzljl7 5b2gi4 nhby3m vu2wea fgig3q vueajn g6nhhe hry7fe gb6now 4euwgy"
+set system processes dhcp-service traceoptions file dhcp_logfile
+set system processes dhcp-service traceoptions file size 10m
+set system processes dhcp-service traceoptions level all
+set system processes dhcp-service traceoptions flag packet
+set system ntp server 10.221.17.22 prefer
+set system ntp server 10.221.17.54
+set system ntp server 10.221.17.150
+set system ntp server 10.221.17.182
+set chassis maximum-ecmp 32
+set chassis aggregated-devices ethernet device-count 3
+set chassis fpc 0 pic 0 port 30 number-of-sub-ports 4
+set chassis fpc 0 pic 0 port 30 speed 10g
+set chassis fpc 0 pic 0 port 31 number-of-sub-ports 4
+set chassis fpc 0 pic 0 port 31 speed 10g
+set chassis fpc 0 pic 0 port 32 number-of-sub-ports 4
+set chassis fpc 0 pic 0 port 32 speed 10g
+set chassis fpc 0 pic 0 port 33 number-of-sub-ports 4
+set chassis fpc 0 pic 0 port 33 speed 10g
+set chassis fpc 0 pic 0 port 34 number-of-sub-ports 4
+set chassis fpc 0 pic 0 port 34 speed 10g
+set chassis fpc 0 pic 0 port 35 number-of-sub-ports 4
+set chassis fpc 0 pic 0 port 35 speed 10g
+set chassis fpc 0 pic 0 port 38 number-of-sub-ports 4
+set chassis fpc 0 pic 0 port 38 speed 10g
+set chassis fpc 0 pic 0 port 39 number-of-sub-ports 4
+set chassis fpc 0 pic 0 port 39 speed 10g
+set chassis fpc 0 pic 0 port 40 number-of-sub-ports 4
+set chassis fpc 0 pic 0 port 40 speed 10g
+set chassis fpc 0 pic 0 port 42 number-of-sub-ports 4
+set chassis fpc 0 pic 0 port 42 speed 10g
+set chassis fpc 0 pic 0 port 44 number-of-sub-ports 4
+set chassis fpc 0 pic 0 port 44 speed 10g
+set chassis fpc 0 pic 0 port 48 number-of-sub-ports 4
+set chassis fpc 0 pic 0 port 48 speed 10g
+set chassis fpc 0 pic 0 port 58 number-of-sub-ports 1
+set chassis fpc 0 pic 0 port 58 speed 10g
+set chassis fpc 0 pic 0 port 59 number-of-sub-ports 1
+set chassis fpc 0 pic 0 port 59 speed 10g
+set chassis network-services enhanced-mode
+set interfaces et-0/0/0 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/1 description ae0-N67-seroinnru00271-19
+set interfaces et-0/0/1 ether-options 802.3ad ae0
+set interfaces et-0/0/2 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/3 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/4 description dallas-fe-100G-1
+set interfaces et-0/0/4 no-traps
+set interfaces et-0/0/4 mtu 9216
+set interfaces et-0/0/4 ether-options no-flow-control
+set interfaces et-0/0/4 unit 0 family ethernet-switching interface-mode trunk
+set interfaces et-0/0/4 unit 0 family ethernet-switching vlan members 141-154
+set interfaces et-0/0/5 description ae0-N67-seroinnru00271-20
+set interfaces et-0/0/5 ether-options 802.3ad ae0
+set interfaces et-0/0/6 description dallas-fe-100G-2
+set interfaces et-0/0/6 no-traps
+set interfaces et-0/0/6 mtu 9216
+set interfaces et-0/0/6 ether-options no-flow-control
+set interfaces et-0/0/6 unit 0 family ethernet-switching interface-mode trunk
+set interfaces et-0/0/6 unit 0 family ethernet-switching vlan members 141-154
+set interfaces et-0/0/7 description ae0-N67-seroinnru00272-19
+set interfaces et-0/0/7 ether-options 802.3ad ae0
+set interfaces et-0/0/8 description dallas-fe-100G-3
+set interfaces et-0/0/8 no-traps
+set interfaces et-0/0/8 mtu 9216
+set interfaces et-0/0/8 ether-options no-flow-control
+set interfaces et-0/0/8 unit 0 family ethernet-switching interface-mode trunk
+set interfaces et-0/0/8 unit 0 family ethernet-switching vlan members 141-154
+set interfaces et-0/0/9 description dallas-fe-100G-4
+set interfaces et-0/0/9 no-traps
+set interfaces et-0/0/9 mtu 9216
+set interfaces et-0/0/9 ether-options no-flow-control
+set interfaces et-0/0/9 unit 0 family ethernet-switching interface-mode trunk
+set interfaces et-0/0/9 unit 0 family ethernet-switching vlan members 141-154
+set interfaces et-0/0/10 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/11 description ae0-N67-seroinnru00272-20
+set interfaces et-0/0/11 ether-options 802.3ad ae0
+set interfaces et-0/0/12 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/13 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/14 description dallas-fe-100G-0074-p1p1
+set interfaces et-0/0/14 no-traps
+set interfaces et-0/0/14 mtu 9216
+set interfaces et-0/0/14 ether-options no-flow-control
+set interfaces et-0/0/14 unit 0 family ethernet-switching interface-mode trunk
+set interfaces et-0/0/14 unit 0 family ethernet-switching vlan members 141-154
+set interfaces et-0/0/15 description dallas-fe-100G-0074-p1p2
+set interfaces et-0/0/15 no-traps
+set interfaces et-0/0/15 mtu 9216
+set interfaces et-0/0/15 ether-options no-flow-control
+set interfaces et-0/0/15 unit 0 family ethernet-switching interface-mode trunk
+set interfaces et-0/0/15 unit 0 family ethernet-switching vlan members 141-154
+set interfaces et-0/0/16 description dallas-fe-100G-0075-p1p1
+set interfaces et-0/0/16 no-traps
+set interfaces et-0/0/16 mtu 9216
+set interfaces et-0/0/16 ether-options no-flow-control
+set interfaces et-0/0/16 unit 0 family ethernet-switching interface-mode trunk
+set interfaces et-0/0/16 unit 0 family ethernet-switching vlan members 141-154
+set interfaces et-0/0/17 description dallas-fe-100G-0075-p1p2
+set interfaces et-0/0/17 no-traps
+set interfaces et-0/0/17 mtu 9216
+set interfaces et-0/0/17 ether-options no-flow-control
+set interfaces et-0/0/17 unit 0 family ethernet-switching interface-mode trunk
+set interfaces et-0/0/17 unit 0 family ethernet-switching vlan members 141-154
+set interfaces et-0/0/18 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/19 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/20 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/21 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/22 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/23 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/24 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/25 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/26 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/27 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/28 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/29 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/30 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces xe-0/0/30:1 description dallas-interlink
+set interfaces xe-0/0/30:1 no-traps
+set interfaces xe-0/0/30:1 mtu 9216
+set interfaces xe-0/0/30:1 ether-options no-flow-control
+set interfaces xe-0/0/30:1 unit 0 family ethernet-switching interface-mode trunk
+set interfaces xe-0/0/30:1 unit 0 family ethernet-switching vlan members all
+set interfaces xe-0/0/30:3 description dallas-interlink
+set interfaces xe-0/0/30:3 no-traps
+set interfaces xe-0/0/30:3 mtu 9216
+set interfaces xe-0/0/30:3 ether-options no-flow-control
+set interfaces xe-0/0/30:3 unit 0 family ethernet-switching interface-mode trunk
+set interfaces xe-0/0/30:3 unit 0 family ethernet-switching vlan members all
+set interfaces et-0/0/31 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/32 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/33 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces xe-0/0/33:1 description dallas-interlink
+set interfaces xe-0/0/33:1 no-traps
+set interfaces xe-0/0/33:1 mtu 9216
+set interfaces xe-0/0/33:1 ether-options no-flow-control
+set interfaces xe-0/0/33:1 unit 0 family ethernet-switching interface-mode trunk
+set interfaces xe-0/0/33:1 unit 0 family ethernet-switching vlan members all
+set interfaces xe-0/0/33:3 description dallas-interlink
+set interfaces xe-0/0/33:3 no-traps
+set interfaces xe-0/0/33:3 mtu 9216
+set interfaces xe-0/0/33:3 ether-options no-flow-control
+set interfaces xe-0/0/33:3 unit 0 family ethernet-switching interface-mode trunk
+set interfaces xe-0/0/33:3 unit 0 family ethernet-switching vlan members all
+set interfaces et-0/0/34 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/35 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/36 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/37 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/38 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces xe-0/0/38:0 description "selnpctool-375-01-101  p1p2"
+set interfaces xe-0/0/38:1 description "selnpctool-375-01-101  p2p2"
+set interfaces et-0/0/39 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/40 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/41 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/42 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces xe-0/0/42:0 description dallas-interlink
+set interfaces xe-0/0/42:0 no-traps
+set interfaces xe-0/0/42:0 mtu 9216
+set interfaces xe-0/0/42:0 ether-options no-flow-control
+set interfaces xe-0/0/42:0 unit 0 family ethernet-switching interface-mode trunk
+set interfaces xe-0/0/42:0 unit 0 family ethernet-switching vlan members all
+set interfaces xe-0/0/42:2 description dallas-interlink
+set interfaces xe-0/0/42:2 no-traps
+set interfaces xe-0/0/42:2 mtu 9216
+set interfaces xe-0/0/42:2 ether-options no-flow-control
+set interfaces xe-0/0/42:2 unit 0 family ethernet-switching interface-mode trunk
+set interfaces xe-0/0/42:2 unit 0 family ethernet-switching vlan members all
+set interfaces et-0/0/43 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/44 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces xe-0/0/44:0 description "selnpctool-375-01-101  p1p1"
+set interfaces xe-0/0/44:1 description "selnpctool-375-01-101  p2p1"
+set interfaces et-0/0/45 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/46 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/47 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/48 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/49 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/50 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/51 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/52 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/53 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/54 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/55 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/56 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/57 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces et-0/0/58 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces xe-0/0/58:0 description serointrt00089
+set interfaces xe-0/0/58:0 ether-options 802.3ad ae1
+set interfaces et-0/0/59 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces xe-0/0/59:0 description serointrt00090
+set interfaces xe-0/0/59:0 ether-options 802.3ad ae2
+set interfaces ae0 description N67-NRU
+set interfaces ae0 mtu 9216
+set interfaces ae0 aggregated-ether-options minimum-links 1
+set interfaces ae0 aggregated-ether-options link-speed 100g
+set interfaces ae0 aggregated-ether-options lacp active
+set interfaces ae0 unit 0 family ethernet-switching interface-mode trunk
+set interfaces ae0 unit 0 family ethernet-switching vlan members 350-1200
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-4089
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-301
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-302
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-900
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-901
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-902
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-903
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-904
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-905
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-906
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-907
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-908
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-909
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-910
+set interfaces ae0 unit 0 family ethernet-switching vlan members VLAN-911
+set interfaces ae1 description serointrt00089
+set interfaces ae1 mtu 9216
+set interfaces ae1 aggregated-ether-options minimum-links 1
+set interfaces ae1 aggregated-ether-options link-speed 10g
+set interfaces ae1 aggregated-ether-options lacp active
+set interfaces ae1 aggregated-ether-options lacp periodic slow
+set interfaces ae1 unit 0 family ethernet-switching interface-mode trunk
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-201
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-4089
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-301
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-302
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-900
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-901
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-902
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-903
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-904
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-905
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-906
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-907
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-908
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-909
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-910
+set interfaces ae1 unit 0 family ethernet-switching vlan members VLAN-911
+set interfaces ae2 description serointrt00090
+set interfaces ae2 mtu 9216
+set interfaces ae2 aggregated-ether-options minimum-links 1
+set interfaces ae2 aggregated-ether-options lacp active
+set interfaces ae2 aggregated-ether-options lacp periodic slow
+set interfaces ae2 unit 0 family ethernet-switching interface-mode trunk
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-202
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-4089
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-301
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-302
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-900
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-901
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-902
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-903
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-904
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-905
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-906
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-907
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-908
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-909
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-910
+set interfaces ae2 unit 0 family ethernet-switching vlan members VLAN-911
+set interfaces em0 unit 0 family inet address 10.155.238.147/25
+set interfaces em2 unit 0 family inet dhcp vendor-id Juniper-qfx10002-60c-EW787
+set interfaces irb unit 118 description n67-1-VPN01562_if-1-tools
+set interfaces irb unit 118 family inet mtu 1500
+set interfaces irb unit 118 family inet address 11.0.18.254/24
+set interfaces irb unit 141 description pccc-tc-n67-1-signaling-tools-1
+set interfaces irb unit 141 family inet address 11.100.2.254/24
+set interfaces irb unit 143 description pccc-tc-n67-1-ran-tools-1
+set interfaces irb unit 143 family inet mtu 1500
+set interfaces irb unit 143 family inet address 11.100.4.254/24
+set interfaces irb unit 144 description pccc-tc-n67-1-ran-tools-2
+set interfaces irb unit 144 family inet address 11.100.5.254/24
+set interfaces irb unit 153 description pccc-tc-n67-1-ran-tools-2
+set interfaces irb unit 153 family inet address 11.100.29.254/24
+set interfaces irb unit 154 description pccc-tc-n67-1-sgi1-tools-1
+set interfaces irb unit 154 family inet address 11.100.30.254/24
+set interfaces irb unit 201 description "Link net interface to serointrt00089 VPN01562"
+set interfaces irb unit 201 family inet address 214.13.137.139/31
+set interfaces irb unit 202 description "Link net interface to serointrt00090 VPN01562"
+set interfaces irb unit 202 family inet address 214.13.137.141/31
+set interfaces irb unit 351 description N67-eccd1-ecfe-oam
+set interfaces irb unit 351 family inet address 11.22.20.254/24
+set interfaces irb unit 352 description N67-eccd1-if-om_cn-mm-1
+set interfaces irb unit 352 family inet address 11.106.3.254/24
+set interfaces irb unit 353 description N67-eccd1-pcf1-oam
+set interfaces irb unit 353 family inet address 25.51.4.158/28
+set interfaces irb unit 355 description N67-eccd1-eda-traffic
+set interfaces irb unit 355 family inet address 10.37.242.254/24
+set interfaces irb unit 357 description N67-eccd1-ecfe-oam
+set interfaces irb unit 357 family inet address 11.21.45.254/24
+set interfaces irb unit 401 description N67-eccd1-if-media-mm-1
+set interfaces irb unit 401 family inet address 11.106.1.254/24
+set interfaces irb unit 402 description N67-eccd1-if-media-vpngw-1
+set interfaces irb unit 402 family inet address 11.109.1.254/24
+set interfaces irb unit 451 description N67-eccd1-ecfe-signaling
+set interfaces irb unit 451 family inet address 11.110.2.254/24
+set interfaces irb unit 452 description N67-eccd1-if-signaling-mm-1
+set interfaces irb unit 452 family inet address 11.106.2.254/24
+set interfaces irb unit 453 description N67-eccd1-if-signaling-mm-2
+set interfaces irb unit 453 family inet address 11.21.2.254/24
+set interfaces irb unit 454 description N67-eccd1-if-signaling-vpngw-1
+set interfaces irb unit 454 family inet address 11.109.2.254/24
+set interfaces irb unit 455 description N67-eccd1-if-signaling-up-1
+set interfaces irb unit 455 family inet address 11.108.2.254/24
+set interfaces irb unit 456 description N67-eccd1-if-media-up-1
+set interfaces irb unit 456 family inet address 11.108.1.254/24
+set interfaces irb unit 457 description N67-eccd1-pcf1-traffic
+set interfaces irb unit 457 family inet address 25.51.0.158/28
+set interfaces irb unit 459 family inet address 10.143.130.254/24
+set interfaces irb unit 501 description N67-eccd1-ecfe-intersite
+set interfaces irb unit 501 family inet address 11.21.93.254/24
+set interfaces irb unit 551 description N67-eccd1-if-sgi1-up-1
+set interfaces irb unit 551 family inet address 11.108.5.254/24
+set interfaces irb unit 601 description N67-eccd1-if-ran-mm-1
+set interfaces irb unit 601 family inet address 11.106.4.254/24
+set interfaces irb unit 602 description N67-eccd1-if-ran-mm-2
+set interfaces irb unit 602 family inet address 11.21.79.254/24
+set interfaces irb unit 603 description N67-eccd1-if-ran-up-1
+set interfaces irb unit 603 family inet address 11.108.4.254/24
+set interfaces lo0 description test-link
+set interfaces lo0 unit 0 family inet address 6.72.0.10/32
+set snmp location SERO01-03-00-0031/07*029
+set snmp contact "STC NWT PDLAREDTAR@pdl.internal.ericsson.com"
+set snmp community cloud authorization read-only
+set snmp community cloud clients 10.221.44.10/32
+set snmp community cloud clients 10.221.44.11/32
+set snmp community cloud clients 10.128.15.104/32
+set snmp community cloud clients 10.221.121.243/32
+set snmp community cloud clients 10.221.121.244/32
+set snmp community cloud clients 10.137.195.254/32
+set snmp community cloud clients 10.128.249.0/24
+set snmp community cloud clients 10.221.8.18/32
+set snmp community cloud clients 10.143.188.26/32
+set snmp community cloud clients 10.142.138.32/32
+set snmp community cloud clients 10.221.8.16/28
+set snmp community cloud clients 10.63.70.128/25
+set snmp community vnf-mgmt-read authorization read-only
+set forwarding-options enhanced-hash-key ecmp-resilient-hash
+set forwarding-options enhanced-hash-key inet no-incoming-port
+set forwarding-options enhanced-hash-key inet6 no-incoming-port
+set policy-options policy-statement direct from protocol direct
+set policy-options policy-statement direct then next-hop self
+set policy-options policy-statement direct then accept
+set policy-options policy-statement load-balancing-policy then load-balance per-packet
+set policy-options policy-statement mp-resolv then multipath-resolve
+set policy-options policy-statement static from protocol static
+set policy-options policy-statement static then next-hop self
+set policy-options policy-statement static then accept
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.1
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.2
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.3
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.4
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.5
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.6
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.7
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.8
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.9
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.10
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.11
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.12
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.13
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.14
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.15
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.16
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.17
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.18
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.19
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.20
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.21
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.22
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.23
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.24
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.25
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.26
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.27
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.28
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.29
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 next-hop 108.1.1.30
+set routing-instances N67-1-media routing-options static route 5.108.1.1/32 resolve
+set routing-instances N67-1-media routing-options static route 108.1.1.1/32 next-hop 11.108.1.1
+set routing-instances N67-1-media routing-options static route 108.1.1.1/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.1/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.1/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.2/32 next-hop 11.108.1.2
+set routing-instances N67-1-media routing-options static route 108.1.1.2/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.2/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.2/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.3/32 next-hop 11.108.1.3
+set routing-instances N67-1-media routing-options static route 108.1.1.3/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.3/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.3/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.4/32 next-hop 11.108.1.4
+set routing-instances N67-1-media routing-options static route 108.1.1.4/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.4/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.4/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.5/32 next-hop 11.108.1.5
+set routing-instances N67-1-media routing-options static route 108.1.1.5/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.5/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.5/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.6/32 next-hop 11.108.1.6
+set routing-instances N67-1-media routing-options static route 108.1.1.6/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.6/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.6/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.7/32 next-hop 11.108.1.7
+set routing-instances N67-1-media routing-options static route 108.1.1.7/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.7/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.7/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.8/32 next-hop 11.108.1.8
+set routing-instances N67-1-media routing-options static route 108.1.1.8/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.8/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.8/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.9/32 next-hop 11.108.1.9
+set routing-instances N67-1-media routing-options static route 108.1.1.9/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.9/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.9/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.10/32 next-hop 11.108.1.10
+set routing-instances N67-1-media routing-options static route 108.1.1.10/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.10/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.10/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.11/32 next-hop 11.108.1.11
+set routing-instances N67-1-media routing-options static route 108.1.1.11/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.11/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.11/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.12/32 next-hop 11.108.1.12
+set routing-instances N67-1-media routing-options static route 108.1.1.12/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.12/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.12/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.13/32 next-hop 11.108.1.13
+set routing-instances N67-1-media routing-options static route 108.1.1.13/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.13/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.13/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.14/32 next-hop 11.108.1.14
+set routing-instances N67-1-media routing-options static route 108.1.1.14/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.14/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.14/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.15/32 next-hop 11.108.1.15
+set routing-instances N67-1-media routing-options static route 108.1.1.15/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.15/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.15/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.16/32 next-hop 11.108.1.16
+set routing-instances N67-1-media routing-options static route 108.1.1.16/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.16/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.16/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.17/32 next-hop 11.108.1.17
+set routing-instances N67-1-media routing-options static route 108.1.1.17/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.17/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.17/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.18/32 next-hop 11.108.1.18
+set routing-instances N67-1-media routing-options static route 108.1.1.18/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.18/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.18/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.19/32 next-hop 11.108.1.19
+set routing-instances N67-1-media routing-options static route 108.1.1.19/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.19/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.19/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.20/32 next-hop 11.108.1.20
+set routing-instances N67-1-media routing-options static route 108.1.1.20/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.20/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.20/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.21/32 next-hop 11.108.1.21
+set routing-instances N67-1-media routing-options static route 108.1.1.21/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.21/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.21/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.22/32 next-hop 11.108.1.22
+set routing-instances N67-1-media routing-options static route 108.1.1.22/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.22/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.22/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.23/32 next-hop 11.108.1.23
+set routing-instances N67-1-media routing-options static route 108.1.1.23/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.23/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.23/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.24/32 next-hop 11.108.1.24
+set routing-instances N67-1-media routing-options static route 108.1.1.24/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.24/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.24/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.25/32 next-hop 11.108.1.25
+set routing-instances N67-1-media routing-options static route 108.1.1.25/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.25/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.25/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.26/32 next-hop 11.108.1.26
+set routing-instances N67-1-media routing-options static route 108.1.1.26/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.26/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.26/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.27/32 next-hop 11.108.1.27
+set routing-instances N67-1-media routing-options static route 108.1.1.27/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.27/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.27/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.28/32 next-hop 11.108.1.28
+set routing-instances N67-1-media routing-options static route 108.1.1.28/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.28/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.28/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.29/32 next-hop 11.108.1.29
+set routing-instances N67-1-media routing-options static route 108.1.1.29/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.29/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.29/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 108.1.1.30/32 next-hop 11.108.1.30
+set routing-instances N67-1-media routing-options static route 108.1.1.30/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.30/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 108.1.1.30/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 106.101.0.65/32 next-hop 11.106.1.1
+set routing-instances N67-1-media routing-options static route 106.101.0.65/32 next-hop 11.106.1.2
+set routing-instances N67-1-media routing-options static route 106.101.0.65/32 next-hop 11.106.1.3
+set routing-instances N67-1-media routing-options static route 106.101.0.65/32 next-hop 11.106.1.4
+set routing-instances N67-1-media routing-options static route 106.101.0.65/32 next-hop 11.106.1.5
+set routing-instances N67-1-media routing-options static route 106.101.0.65/32 next-hop 11.106.1.6
+set routing-instances N67-1-media routing-options static route 106.101.0.65/32 next-hop 11.106.1.7
+set routing-instances N67-1-media routing-options static route 106.101.0.65/32 next-hop 11.106.1.8
+set routing-instances N67-1-media routing-options static route 106.101.0.65/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 106.101.0.65/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 106.101.0.65/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 106.101.0.33/32 next-hop 11.106.1.1
+set routing-instances N67-1-media routing-options static route 106.101.0.33/32 next-hop 11.106.1.2
+set routing-instances N67-1-media routing-options static route 106.101.0.33/32 next-hop 11.106.1.3
+set routing-instances N67-1-media routing-options static route 106.101.0.33/32 next-hop 11.106.1.4
+set routing-instances N67-1-media routing-options static route 106.101.0.33/32 next-hop 11.106.1.5
+set routing-instances N67-1-media routing-options static route 106.101.0.33/32 next-hop 11.106.1.6
+set routing-instances N67-1-media routing-options static route 106.101.0.33/32 next-hop 11.106.1.7
+set routing-instances N67-1-media routing-options static route 106.101.0.33/32 next-hop 11.106.1.8
+set routing-instances N67-1-media routing-options static route 106.101.0.33/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 106.101.0.33/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 106.101.0.33/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 106.101.0.1/32 next-hop 11.106.1.1
+set routing-instances N67-1-media routing-options static route 106.101.0.1/32 next-hop 11.106.1.2
+set routing-instances N67-1-media routing-options static route 106.101.0.1/32 next-hop 11.106.1.3
+set routing-instances N67-1-media routing-options static route 106.101.0.1/32 next-hop 11.106.1.4
+set routing-instances N67-1-media routing-options static route 106.101.0.1/32 next-hop 11.106.1.5
+set routing-instances N67-1-media routing-options static route 106.101.0.1/32 next-hop 11.106.1.6
+set routing-instances N67-1-media routing-options static route 106.101.0.1/32 next-hop 11.106.1.7
+set routing-instances N67-1-media routing-options static route 106.101.0.1/32 next-hop 11.106.1.8
+set routing-instances N67-1-media routing-options static route 106.101.0.1/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 106.101.0.1/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 106.101.0.1/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options static route 109.1.1.1/32 next-hop 11.109.1.1
+set routing-instances N67-1-media routing-options static route 109.1.1.1/32 next-hop 11.109.1.2
+set routing-instances N67-1-media routing-options static route 109.1.1.1/32 next-hop 11.109.1.3
+set routing-instances N67-1-media routing-options static route 109.1.1.1/32 next-hop 11.109.1.4
+set routing-instances N67-1-media routing-options static route 109.1.1.1/32 next-hop 11.109.1.5
+set routing-instances N67-1-media routing-options static route 109.1.1.1/32 next-hop 11.109.1.6
+set routing-instances N67-1-media routing-options static route 109.1.1.1/32 next-hop 11.109.1.7
+set routing-instances N67-1-media routing-options static route 109.1.1.1/32 next-hop 11.109.1.8
+set routing-instances N67-1-media routing-options static route 109.1.1.1/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-media routing-options static route 109.1.1.1/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-media routing-options static route 109.1.1.1/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-media routing-options resolution rib N67-1-media.inet.0 import mp-resolv
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd type external
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd multihop
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd accept-remote-nexthop
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd hold-time 180
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd log-updown
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd peer-as 101
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd local-as 10812
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd multipath
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd neighbor 11.108.1.100 out-delay 1
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd neighbor 11.108.1.100 family inet unicast
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd neighbor 11.108.1.101 out-delay 1
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd neighbor 11.108.1.101 family inet unicast
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd neighbor 11.109.1.100 out-delay 1
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd neighbor 11.109.1.100 family inet unicast
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd neighbor 11.109.1.101 out-delay 1
+set routing-instances N67-1-media protocols bgp group external_peers_no_bfd neighbor 11.109.1.101 family inet unicast
+set routing-instances N67-1-media instance-type virtual-router
+set routing-instances N67-1-media interface irb.401
+set routing-instances N67-1-media interface irb.402
+set routing-instances N67-1-media interface irb.456
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.1
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.2
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.3
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.4
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.5
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.6
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.7
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.8
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.9
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.10
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.11
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.12
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.13
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.14
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.15
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.16
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.17
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.18
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.19
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.20
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.21
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.22
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.23
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.24
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.25
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.26
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.27
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.28
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.29
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 next-hop 108.4.1.30
+set routing-instances N67-1-ran routing-options static route 5.108.4.1/32 resolve
+set routing-instances N67-1-ran routing-options static route 108.4.1.1/32 next-hop 11.108.4.1
+set routing-instances N67-1-ran routing-options static route 108.4.1.1/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.1/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.1/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.2/32 next-hop 11.108.4.2
+set routing-instances N67-1-ran routing-options static route 108.4.1.2/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.2/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.2/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.3/32 next-hop 11.108.4.3
+set routing-instances N67-1-ran routing-options static route 108.4.1.3/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.3/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.3/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.4/32 next-hop 11.108.4.4
+set routing-instances N67-1-ran routing-options static route 108.4.1.4/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.4/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.4/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.5/32 next-hop 11.108.4.5
+set routing-instances N67-1-ran routing-options static route 108.4.1.5/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.5/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.5/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.6/32 next-hop 11.108.4.6
+set routing-instances N67-1-ran routing-options static route 108.4.1.6/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.6/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.6/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.7/32 next-hop 11.108.4.7
+set routing-instances N67-1-ran routing-options static route 108.4.1.7/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.7/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.7/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.8/32 next-hop 11.108.4.8
+set routing-instances N67-1-ran routing-options static route 108.4.1.8/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.8/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.8/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.9/32 next-hop 11.108.4.9
+set routing-instances N67-1-ran routing-options static route 108.4.1.9/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.9/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.9/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.10/32 next-hop 11.108.4.10
+set routing-instances N67-1-ran routing-options static route 108.4.1.10/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.10/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.10/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.11/32 next-hop 11.108.4.11
+set routing-instances N67-1-ran routing-options static route 108.4.1.11/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.11/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.11/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.12/32 next-hop 11.108.4.12
+set routing-instances N67-1-ran routing-options static route 108.4.1.12/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.12/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.12/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.13/32 next-hop 11.108.4.13
+set routing-instances N67-1-ran routing-options static route 108.4.1.13/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.13/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.13/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.14/32 next-hop 11.108.4.14
+set routing-instances N67-1-ran routing-options static route 108.4.1.14/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.14/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.14/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.15/32 next-hop 11.108.4.15
+set routing-instances N67-1-ran routing-options static route 108.4.1.15/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.15/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.15/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.16/32 next-hop 11.108.4.16
+set routing-instances N67-1-ran routing-options static route 108.4.1.16/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.16/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.16/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.17/32 next-hop 11.108.4.17
+set routing-instances N67-1-ran routing-options static route 108.4.1.17/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.17/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.17/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.18/32 next-hop 11.108.4.18
+set routing-instances N67-1-ran routing-options static route 108.4.1.18/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.18/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.18/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.19/32 next-hop 11.108.4.19
+set routing-instances N67-1-ran routing-options static route 108.4.1.19/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.19/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.19/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.20/32 next-hop 11.108.4.20
+set routing-instances N67-1-ran routing-options static route 108.4.1.20/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.20/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.20/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.21/32 next-hop 11.108.4.21
+set routing-instances N67-1-ran routing-options static route 108.4.1.21/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.21/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.21/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.22/32 next-hop 11.108.4.22
+set routing-instances N67-1-ran routing-options static route 108.4.1.22/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.22/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.22/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.23/32 next-hop 11.108.4.23
+set routing-instances N67-1-ran routing-options static route 108.4.1.23/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.23/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.23/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.24/32 next-hop 11.108.4.24
+set routing-instances N67-1-ran routing-options static route 108.4.1.24/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.24/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.24/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.25/32 next-hop 11.108.4.25
+set routing-instances N67-1-ran routing-options static route 108.4.1.25/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.25/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.25/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.26/32 next-hop 11.108.4.26
+set routing-instances N67-1-ran routing-options static route 108.4.1.26/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.26/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.26/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.27/32 next-hop 11.108.4.27
+set routing-instances N67-1-ran routing-options static route 108.4.1.27/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.27/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.27/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.28/32 next-hop 11.108.4.28
+set routing-instances N67-1-ran routing-options static route 108.4.1.28/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.28/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.28/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.29/32 next-hop 11.108.4.29
+set routing-instances N67-1-ran routing-options static route 108.4.1.29/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.29/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.29/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 108.4.1.30/32 next-hop 11.108.4.30
+set routing-instances N67-1-ran routing-options static route 108.4.1.30/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.30/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 108.4.1.30/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 10.132.128.96/30 next-hop 11.106.4.1
+set routing-instances N67-1-ran routing-options static route 10.132.128.96/30 next-hop 11.106.4.2
+set routing-instances N67-1-ran routing-options static route 10.132.128.96/30 next-hop 11.106.4.3
+set routing-instances N67-1-ran routing-options static route 10.132.128.96/30 next-hop 11.106.4.4
+set routing-instances N67-1-ran routing-options static route 10.132.128.96/30 next-hop 11.106.4.5
+set routing-instances N67-1-ran routing-options static route 10.132.128.96/30 next-hop 11.106.4.6
+set routing-instances N67-1-ran routing-options static route 10.132.128.96/30 next-hop 11.106.4.7
+set routing-instances N67-1-ran routing-options static route 10.132.128.96/30 next-hop 11.106.4.8
+set routing-instances N67-1-ran routing-options static route 10.132.128.96/30 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 10.132.128.96/30 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 10.132.128.96/30 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 10.132.144.96/30 next-hop 11.21.79.1
+set routing-instances N67-1-ran routing-options static route 10.132.144.96/30 next-hop 11.21.79.2
+set routing-instances N67-1-ran routing-options static route 10.132.144.96/30 next-hop 11.21.79.3
+set routing-instances N67-1-ran routing-options static route 10.132.144.96/30 next-hop 11.21.79.4
+set routing-instances N67-1-ran routing-options static route 10.132.144.96/30 next-hop 11.21.79.5
+set routing-instances N67-1-ran routing-options static route 10.132.144.96/30 next-hop 11.21.79.6
+set routing-instances N67-1-ran routing-options static route 10.132.144.96/30 next-hop 11.21.79.7
+set routing-instances N67-1-ran routing-options static route 10.132.144.96/30 next-hop 11.21.79.8
+set routing-instances N67-1-ran routing-options static route 10.132.144.96/30 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 10.132.144.96/30 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 10.132.144.96/30 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 10.132.128.136/32 next-hop 11.106.4.1
+set routing-instances N67-1-ran routing-options static route 10.132.128.136/32 next-hop 11.106.4.2
+set routing-instances N67-1-ran routing-options static route 10.132.128.136/32 next-hop 11.106.4.3
+set routing-instances N67-1-ran routing-options static route 10.132.128.136/32 next-hop 11.106.4.4
+set routing-instances N67-1-ran routing-options static route 10.132.128.136/32 next-hop 11.106.4.5
+set routing-instances N67-1-ran routing-options static route 10.132.128.136/32 next-hop 11.106.4.6
+set routing-instances N67-1-ran routing-options static route 10.132.128.136/32 next-hop 11.106.4.7
+set routing-instances N67-1-ran routing-options static route 10.132.128.136/32 next-hop 11.106.4.8
+set routing-instances N67-1-ran routing-options static route 10.132.128.136/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 10.132.128.136/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 10.132.128.136/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 10.132.144.136/32 next-hop 11.21.79.1
+set routing-instances N67-1-ran routing-options static route 10.132.144.136/32 next-hop 11.21.79.2
+set routing-instances N67-1-ran routing-options static route 10.132.144.136/32 next-hop 11.21.79.3
+set routing-instances N67-1-ran routing-options static route 10.132.144.136/32 next-hop 11.21.79.4
+set routing-instances N67-1-ran routing-options static route 10.132.144.136/32 next-hop 11.21.79.5
+set routing-instances N67-1-ran routing-options static route 10.132.144.136/32 next-hop 11.21.79.6
+set routing-instances N67-1-ran routing-options static route 10.132.144.136/32 next-hop 11.21.79.7
+set routing-instances N67-1-ran routing-options static route 10.132.144.136/32 next-hop 11.21.79.8
+set routing-instances N67-1-ran routing-options static route 10.132.144.136/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-ran routing-options static route 10.132.144.136/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-ran routing-options static route 10.132.144.136/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-ran routing-options static route 6.192.0.0/19 next-hop 11.100.4.5
+set routing-instances N67-1-ran routing-options static route 6.192.64.0/19 next-hop 11.100.4.6
+set routing-instances N67-1-ran routing-options static route 6.192.32.0/19 next-hop 11.100.29.5
+set routing-instances N67-1-ran routing-options static route 6.192.96.0/19 next-hop 11.100.29.6
+set routing-instances N67-1-ran routing-options static route 6.196.0.0/19 next-hop 11.100.4.5
+set routing-instances N67-1-ran routing-options static route 6.196.32.0/19 next-hop 11.100.29.5
+set routing-instances N67-1-ran routing-options static route 6.196.96.0/19 next-hop 11.100.29.6
+set routing-instances N67-1-ran routing-options static route 6.196.64.0/19 next-hop 11.100.4.6
+set routing-instances N67-1-ran routing-options static route 6.16.0.0/19 next-hop 11.100.4.5
+set routing-instances N67-1-ran routing-options static route 6.16.32.0/19 next-hop 11.100.29.5
+set routing-instances N67-1-ran routing-options static route 6.16.64.0/19 next-hop 11.100.4.6
+set routing-instances N67-1-ran routing-options static route 6.16.96.0/19 next-hop 11.100.29.6
+set routing-instances N67-1-ran routing-options static route 8.140.0.0/19 next-hop 11.100.4.5
+set routing-instances N67-1-ran routing-options static route 8.140.32.0/19 next-hop 11.100.29.5
+set routing-instances N67-1-ran routing-options static route 8.140.64.0/19 next-hop 11.100.4.6
+set routing-instances N67-1-ran routing-options static route 8.140.96.0/19 next-hop 11.100.29.6
+set routing-instances N67-1-ran routing-options resolution rib N67-1-ran.inet.0 import mp-resolv
+set routing-instances N67-1-ran protocols bgp group external_peers_no_bfd type external
+set routing-instances N67-1-ran protocols bgp group external_peers_no_bfd multihop
+set routing-instances N67-1-ran protocols bgp group external_peers_no_bfd accept-remote-nexthop
+set routing-instances N67-1-ran protocols bgp group external_peers_no_bfd hold-time 180
+set routing-instances N67-1-ran protocols bgp group external_peers_no_bfd log-updown
+set routing-instances N67-1-ran protocols bgp group external_peers_no_bfd peer-as 104
+set routing-instances N67-1-ran protocols bgp group external_peers_no_bfd local-as 10842
+set routing-instances N67-1-ran protocols bgp group external_peers_no_bfd multipath
+set routing-instances N67-1-ran protocols bgp group external_peers_no_bfd neighbor 11.108.4.100 out-delay 1
+set routing-instances N67-1-ran protocols bgp group external_peers_no_bfd neighbor 11.108.4.100 family inet unicast
+set routing-instances N67-1-ran protocols bgp group external_peers_no_bfd neighbor 11.108.4.101 out-delay 1
+set routing-instances N67-1-ran protocols bgp group external_peers_no_bfd neighbor 11.108.4.101 family inet unicast
+set routing-instances N67-1-ran instance-type virtual-router
+set routing-instances N67-1-ran interface irb.143
+set routing-instances N67-1-ran interface irb.153
+set routing-instances N67-1-ran interface irb.601
+set routing-instances N67-1-ran interface irb.602
+set routing-instances N67-1-ran interface irb.603
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.1
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.2
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.3
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.4
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.5
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.6
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.7
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.8
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.9
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.10
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.11
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.12
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.13
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.14
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.15
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.16
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.17
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.18
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.19
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.20
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.21
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.22
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.23
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.24
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.25
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.26
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.27
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.28
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.29
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 next-hop 108.5.1.30
+set routing-instances N67-1-sgi1 routing-options static route 5.108.5.1/32 resolve
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.1/32 next-hop 11.108.5.1
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.1/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.1/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.1/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.2/32 next-hop 11.108.5.2
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.2/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.2/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.2/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.3/32 next-hop 11.108.5.3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.3/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.3/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.3/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.4/32 next-hop 11.108.5.4
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.4/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.4/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.4/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.5/32 next-hop 11.108.5.5
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.5/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.5/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.5/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.6/32 next-hop 11.108.5.6
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.6/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.6/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.6/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.7/32 next-hop 11.108.5.7
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.7/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.7/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.7/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.8/32 next-hop 11.108.5.8
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.8/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.8/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.8/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.9/32 next-hop 11.108.5.9
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.9/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.9/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.9/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.10/32 next-hop 11.108.5.10
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.10/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.10/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.10/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.11/32 next-hop 11.108.5.11
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.11/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.11/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.11/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.12/32 next-hop 11.108.5.12
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.12/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.12/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.12/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.13/32 next-hop 11.108.5.13
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.13/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.13/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.13/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.14/32 next-hop 11.108.5.14
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.14/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.14/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.14/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.15/32 next-hop 11.108.5.15
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.15/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.15/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.15/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.16/32 next-hop 11.108.5.16
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.16/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.16/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.16/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.17/32 next-hop 11.108.5.17
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.17/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.17/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.17/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.18/32 next-hop 11.108.5.18
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.18/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.18/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.18/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.19/32 next-hop 11.108.5.19
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.19/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.19/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.19/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.20/32 next-hop 11.108.5.20
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.20/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.20/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.20/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.21/32 next-hop 11.108.5.21
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.21/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.21/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.21/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.22/32 next-hop 11.108.5.22
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.22/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.22/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.22/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.23/32 next-hop 11.108.5.23
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.23/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.23/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.23/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.24/32 next-hop 11.108.5.24
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.24/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.24/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.24/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.25/32 next-hop 11.108.5.25
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.25/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.25/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.25/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.26/32 next-hop 11.108.5.26
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.26/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.26/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.26/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.27/32 next-hop 11.108.5.27
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.27/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.27/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.27/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.28/32 next-hop 11.108.5.28
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.28/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.28/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.28/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.29/32 next-hop 11.108.5.29
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.29/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.29/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.29/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.30/32 next-hop 11.108.5.30
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.30/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.30/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sgi1 routing-options static route 108.5.1.30/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sgi1 routing-options static route 192.0.0.0/14 next-hop 11.100.5.5
+set routing-instances N67-1-sgi1 routing-options static route 192.4.0.0/14 next-hop 11.100.30.5
+set routing-instances N67-1-sgi1 routing-options static route 192.8.0.0/14 next-hop 11.100.5.6
+set routing-instances N67-1-sgi1 routing-options static route 192.12.0.0/14 next-hop 11.100.30.6
+set routing-instances N67-1-sgi1 routing-options static route 222.8.0.0/14 next-hop 11.100.5.5
+set routing-instances N67-1-sgi1 routing-options static route 222.12.0.0/14 next-hop 11.100.30.5
+set routing-instances N67-1-sgi1 routing-options static route 222.16.0.0/14 next-hop 11.100.5.6
+set routing-instances N67-1-sgi1 routing-options static route 222.20.0.0/14 next-hop 11.100.30.6
+set routing-instances N67-1-sgi1 routing-options resolution rib N67-1-sgi1.inet.0 import mp-resolv
+set routing-instances N67-1-sgi1 protocols bgp group external_peers_no_bfd type external
+set routing-instances N67-1-sgi1 protocols bgp group external_peers_no_bfd multihop
+set routing-instances N67-1-sgi1 protocols bgp group external_peers_no_bfd accept-remote-nexthop
+set routing-instances N67-1-sgi1 protocols bgp group external_peers_no_bfd hold-time 180
+set routing-instances N67-1-sgi1 protocols bgp group external_peers_no_bfd log-updown
+set routing-instances N67-1-sgi1 protocols bgp group external_peers_no_bfd peer-as 105
+set routing-instances N67-1-sgi1 protocols bgp group external_peers_no_bfd local-as 10852
+set routing-instances N67-1-sgi1 protocols bgp group external_peers_no_bfd multipath
+set routing-instances N67-1-sgi1 protocols bgp group external_peers_no_bfd neighbor 11.108.5.100 out-delay 1
+set routing-instances N67-1-sgi1 protocols bgp group external_peers_no_bfd neighbor 11.108.5.100 family inet unicast
+set routing-instances N67-1-sgi1 protocols bgp group external_peers_no_bfd neighbor 11.108.5.101 out-delay 1
+set routing-instances N67-1-sgi1 protocols bgp group external_peers_no_bfd neighbor 11.108.5.101 family inet unicast
+set routing-instances N67-1-sgi1 instance-type virtual-router
+set routing-instances N67-1-sgi1 interface irb.144
+set routing-instances N67-1-sgi1 interface irb.154
+set routing-instances N67-1-sgi1 interface irb.551
+set routing-instances N67-1-sig_data protocols bgp group eccd-sig_data-peering type external
+set routing-instances N67-1-sig_data protocols bgp group eccd-sig_data-peering hold-time 180
+set routing-instances N67-1-sig_data protocols bgp group eccd-sig_data-peering out-delay 1
+set routing-instances N67-1-sig_data protocols bgp group eccd-sig_data-peering family inet unicast
+set routing-instances N67-1-sig_data protocols bgp group eccd-sig_data-peering peer-as 7018
+set routing-instances N67-1-sig_data protocols bgp group eccd-sig_data-peering local-as 8018
+set routing-instances N67-1-sig_data protocols bgp group eccd-sig_data-peering multipath
+set routing-instances N67-1-sig_data protocols bgp group eccd-sig_data-peering bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-sig_data protocols bgp group eccd-sig_data-peering bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-sig_data protocols bgp group eccd-sig_data-peering bfd-liveness-detection multiplier 3
+set routing-instances N67-1-sig_data protocols bgp group eccd-sig_data-peering allow 11.21.93.0/24
+set routing-instances N67-1-sig_data instance-type virtual-router
+set routing-instances N67-1-sig_data interface irb.501
+set routing-instances N67-1-signaling routing-options static route 25.51.1.251/32 next-hop 25.51.0.145
+set routing-instances N67-1-signaling routing-options static route 25.51.1.251/32 next-hop 25.51.0.147
+set routing-instances N67-1-signaling routing-options static route 25.51.1.251/32 next-hop 25.51.0.146
+set routing-instances N67-1-signaling routing-options static route 25.51.1.251/32 next-hop 25.51.0.148
+set routing-instances N67-1-signaling routing-options static route 25.51.1.251/32 next-hop 25.51.0.149
+set routing-instances N67-1-signaling routing-options static route 25.51.1.251/32 next-hop 25.51.0.150
+set routing-instances N67-1-signaling routing-options static route 106.102.0.97/32 next-hop 11.21.2.1
+set routing-instances N67-1-signaling routing-options static route 106.102.0.97/32 next-hop 11.21.2.2
+set routing-instances N67-1-signaling routing-options static route 106.102.0.97/32 next-hop 11.21.2.3
+set routing-instances N67-1-signaling routing-options static route 106.102.0.97/32 next-hop 11.21.2.4
+set routing-instances N67-1-signaling routing-options static route 106.102.0.97/32 next-hop 11.21.2.5
+set routing-instances N67-1-signaling routing-options static route 106.102.0.97/32 next-hop 11.21.2.6
+set routing-instances N67-1-signaling routing-options static route 106.102.0.97/32 next-hop 11.21.2.7
+set routing-instances N67-1-signaling routing-options static route 106.102.0.97/32 next-hop 11.21.2.8
+set routing-instances N67-1-signaling routing-options static route 106.102.0.97/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-signaling routing-options static route 106.102.0.97/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-signaling routing-options static route 106.102.0.97/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-signaling routing-options static route 106.102.0.65/32 next-hop 11.106.2.1
+set routing-instances N67-1-signaling routing-options static route 106.102.0.65/32 next-hop 11.106.2.2
+set routing-instances N67-1-signaling routing-options static route 106.102.0.65/32 next-hop 11.106.2.3
+set routing-instances N67-1-signaling routing-options static route 106.102.0.65/32 next-hop 11.106.2.4
+set routing-instances N67-1-signaling routing-options static route 106.102.0.65/32 next-hop 11.106.2.5
+set routing-instances N67-1-signaling routing-options static route 106.102.0.65/32 next-hop 11.106.2.6
+set routing-instances N67-1-signaling routing-options static route 106.102.0.65/32 next-hop 11.106.2.7
+set routing-instances N67-1-signaling routing-options static route 106.102.0.65/32 next-hop 11.106.2.8
+set routing-instances N67-1-signaling routing-options static route 106.102.0.65/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-signaling routing-options static route 106.102.0.65/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-signaling routing-options static route 106.102.0.65/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-signaling routing-options static route 29.1.64.120/30 next-hop 11.106.2.1
+set routing-instances N67-1-signaling routing-options static route 29.1.64.120/30 next-hop 11.106.2.2
+set routing-instances N67-1-signaling routing-options static route 29.1.64.120/30 next-hop 11.106.2.3
+set routing-instances N67-1-signaling routing-options static route 29.1.64.120/30 next-hop 11.106.2.4
+set routing-instances N67-1-signaling routing-options static route 29.1.64.120/30 next-hop 11.106.2.5
+set routing-instances N67-1-signaling routing-options static route 29.1.64.120/30 next-hop 11.106.2.6
+set routing-instances N67-1-signaling routing-options static route 29.1.64.120/30 next-hop 11.106.2.7
+set routing-instances N67-1-signaling routing-options static route 29.1.64.120/30 next-hop 11.106.2.8
+set routing-instances N67-1-signaling routing-options static route 29.1.64.120/30 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-signaling routing-options static route 29.1.64.120/30 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-signaling routing-options static route 29.1.64.120/30 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-signaling routing-options static route 6.72.0.0/27 next-hop 11.100.2.5
+set routing-instances N67-1-signaling routing-options static route 6.72.0.32/27 next-hop 11.100.2.6
+set routing-instances N67-1-signaling routing-options static route 109.2.1.1/32 next-hop 11.109.2.1
+set routing-instances N67-1-signaling routing-options static route 109.2.1.1/32 next-hop 11.109.2.2
+set routing-instances N67-1-signaling routing-options static route 109.2.1.1/32 next-hop 11.109.2.3
+set routing-instances N67-1-signaling routing-options static route 109.2.1.1/32 next-hop 11.109.2.4
+set routing-instances N67-1-signaling routing-options static route 109.2.1.1/32 next-hop 11.109.2.5
+set routing-instances N67-1-signaling routing-options static route 109.2.1.1/32 next-hop 11.109.2.6
+set routing-instances N67-1-signaling routing-options static route 109.2.1.1/32 next-hop 11.109.2.7
+set routing-instances N67-1-signaling routing-options static route 109.2.1.1/32 next-hop 11.109.2.8
+set routing-instances N67-1-signaling routing-options static route 109.2.1.1/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-signaling routing-options static route 109.2.1.1/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-signaling routing-options static route 109.2.1.1/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.1
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.2
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.3
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.4
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.5
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.6
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.7
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.8
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.9
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.10
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.11
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.12
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.13
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.14
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.15
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.16
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.17
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.18
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.19
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.20
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.21
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.22
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.23
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.24
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.25
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.26
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.27
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.28
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.29
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 next-hop 11.108.2.30
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-signaling routing-options static route 5.108.2.1/32 bfd-liveness-detection multiplier 3
+set routing-instances N67-1-signaling routing-options resolution rib N67-1-signaling.inet.0 import mp-resolv
+set routing-instances N67-1-signaling protocols bgp group eccd-ecfe-signaling-peering type external
+set routing-instances N67-1-signaling protocols bgp group eccd-ecfe-signaling-peering hold-time 180
+set routing-instances N67-1-signaling protocols bgp group eccd-ecfe-signaling-peering out-delay 1
+set routing-instances N67-1-signaling protocols bgp group eccd-ecfe-signaling-peering family inet unicast
+set routing-instances N67-1-signaling protocols bgp group eccd-ecfe-signaling-peering peer-as 102
+set routing-instances N67-1-signaling protocols bgp group eccd-ecfe-signaling-peering local-as 3802
+set routing-instances N67-1-signaling protocols bgp group eccd-ecfe-signaling-peering multipath
+set routing-instances N67-1-signaling protocols bgp group eccd-ecfe-signaling-peering bfd-liveness-detection minimum-interval 300
+set routing-instances N67-1-signaling protocols bgp group eccd-ecfe-signaling-peering bfd-liveness-detection minimum-receive-interval 300
+set routing-instances N67-1-signaling protocols bgp group eccd-ecfe-signaling-peering bfd-liveness-detection multiplier 3
+set routing-instances N67-1-signaling protocols bgp group eccd-ecfe-signaling-peering allow 11.110.2.0/24
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd type external
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd multihop
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd accept-remote-nexthop
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd hold-time 180
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd log-updown
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd peer-as 102
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd local-as 3802
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd multipath
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd neighbor 11.108.2.101 out-delay 1
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd neighbor 11.108.2.101 family inet unicast
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd neighbor 11.108.2.100 out-delay 1
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd neighbor 11.108.2.100 family inet unicast
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd neighbor 11.109.2.100 out-delay 1
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd neighbor 11.109.2.100 family inet unicast
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd neighbor 11.109.2.101 out-delay 1
+set routing-instances N67-1-signaling protocols bgp group external_peers_no_bfd neighbor 11.109.2.101 family inet unicast
+set routing-instances N67-1-signaling protocols bgp export direct
+set routing-instances N67-1-signaling protocols bgp export static
+set routing-instances N67-1-signaling instance-type virtual-router
+set routing-instances N67-1-signaling interface irb.141
+set routing-instances N67-1-signaling interface irb.451
+set routing-instances N67-1-signaling interface irb.452
+set routing-instances N67-1-signaling interface irb.453
+set routing-instances N67-1-signaling interface irb.454
+set routing-instances N67-1-signaling interface irb.455
+set routing-instances N67-1-signaling interface irb.457
+set routing-instances N67-1-signaling interface lo0.0
+set routing-instances VPN01562 routing-options static route 10.136.11.240/32 next-hop 25.51.4.145
+set routing-instances VPN01562 routing-options static route 10.136.11.240/32 next-hop 25.51.4.146
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.1
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.2
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.3
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.4
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.5
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.6
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.7
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.8
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.9
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.10
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.11
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.12
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.13
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.14
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.15
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.16
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.17
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.18
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.19
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.20
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.21
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.22
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.23
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.24
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.25
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.26
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.27
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.28
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.29
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 next-hop 11.106.3.30
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 bfd-liveness-detection minimum-interval 300
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 bfd-liveness-detection minimum-receive-interval 300
+set routing-instances VPN01562 routing-options static route 10.136.11.238/32 bfd-liveness-detection multiplier 3
+set routing-instances VPN01562 routing-options autonomous-system 8013
+set routing-instances VPN01562 protocols bgp group n67-qfx-ASR-peering type external
+set routing-instances VPN01562 protocols bgp group n67-qfx-ASR-peering hold-time 300
+set routing-instances VPN01562 protocols bgp group n67-qfx-ASR-peering peer-as 64813.87
+set routing-instances VPN01562 protocols bgp group n67-qfx-ASR-peering multipath
+set routing-instances VPN01562 protocols bgp group n67-qfx-ASR-peering neighbor 214.13.137.139
+set routing-instances VPN01562 protocols bgp group n67-qfx-ASR-peering neighbor 214.13.137.141
+set routing-instances VPN01562 protocols bgp group n67-qfx-ASR-peering neighbor 214.13.137.138 out-delay 1
+set routing-instances VPN01562 protocols bgp group n67-qfx-ASR-peering neighbor 214.13.137.138 family inet unicast
+set routing-instances VPN01562 protocols bgp group n67-qfx-ASR-peering neighbor 214.13.137.140 out-delay 1
+set routing-instances VPN01562 protocols bgp group n67-qfx-ASR-peering neighbor 214.13.137.140 family inet unicast
+set routing-instances VPN01562 protocols bgp group eccd-ecfe-oam-peering type external
+set routing-instances VPN01562 protocols bgp group eccd-ecfe-oam-peering hold-time 180
+set routing-instances VPN01562 protocols bgp group eccd-ecfe-oam-peering out-delay 1
+set routing-instances VPN01562 protocols bgp group eccd-ecfe-oam-peering family inet unicast
+set routing-instances VPN01562 protocols bgp group eccd-ecfe-oam-peering peer-as 103
+set routing-instances VPN01562 protocols bgp group eccd-ecfe-oam-peering local-as 10832
+set routing-instances VPN01562 protocols bgp group eccd-ecfe-oam-peering multipath
+set routing-instances VPN01562 protocols bgp group eccd-ecfe-oam-peering bfd-liveness-detection minimum-interval 300
+set routing-instances VPN01562 protocols bgp group eccd-ecfe-oam-peering bfd-liveness-detection minimum-receive-interval 300
+set routing-instances VPN01562 protocols bgp group eccd-ecfe-oam-peering bfd-liveness-detection multiplier 3
+set routing-instances VPN01562 protocols bgp group eccd-ecfe-oam-peering allow 11.22.20.0/24
+set routing-instances VPN01562 protocols bgp group eccd-ecfe-oam-peering allow 11.21.45.0/24
+set routing-instances VPN01562 protocols bgp group eccd-ecfe-oam-peering allow 10.143.130.0/24
+set routing-instances VPN01562 protocols bgp export direct
+set routing-instances VPN01562 protocols bgp export static
+set routing-instances VPN01562 instance-type virtual-router
+set routing-instances VPN01562 interface irb.118
+set routing-instances VPN01562 interface irb.201
+set routing-instances VPN01562 interface irb.202
+set routing-instances VPN01562 interface irb.351
+set routing-instances VPN01562 interface irb.352
+set routing-instances VPN01562 interface irb.353
+set routing-instances VPN01562 interface irb.355
+set routing-instances VPN01562 interface irb.357
+set routing-instances VPN01562 interface irb.459
+set routing-options static route 0.0.0.0/0 next-hop 10.155.238.129
+set routing-options forwarding-table export load-balancing-policy
+set routing-options ppm no-delegate-processing
+set protocols lldp interface all
+set protocols lldp-med interface all
+set vlans VLAN-201 description "Link net to serointrt00089"
+set vlans VLAN-201 vlan-id 201
+set vlans VLAN-201 l3-interface irb.201
+set vlans VLAN-202 description "Link net to serointrt00090"
+set vlans VLAN-202 vlan-id 202
+set vlans VLAN-202 l3-interface irb.202
+set vlans VLAN-301 description CEE_OM_SP_1
+set vlans VLAN-301 vlan-id 301
+set vlans VLAN-302 description SDNC_SIG_SP_1
+set vlans VLAN-302 vlan-id 302
+set vlans VLAN-4089 description "DCC access hds-om-nw"
+set vlans VLAN-4089 vlan-id 4089
+set vlans VLAN-459 description newVPN01562
+set vlans VLAN-459 vlan-id 459
+set vlans VLAN-459 l3-interface irb.459
+set vlans VLAN-900 description N67-eccd1-ccd-oam
+set vlans VLAN-900 vlan-id 900
+set vlans VLAN-901 description N67-eccd2-ccd-oam
+set vlans VLAN-901 vlan-id 901
+set vlans VLAN-902 description N67-eccd1-eda-oam
+set vlans VLAN-902 vlan-id 902
+set vlans VLAN-903 description N67_ECCD_Director-OAM_4
+set vlans VLAN-903 vlan-id 903
+set vlans VLAN-904 description N67_ECCD_Director-OAM_5
+set vlans VLAN-904 vlan-id 904
+set vlans VLAN-905 description N67_ECCD_Director-OAM_6
+set vlans VLAN-905 vlan-id 905
+set vlans VLAN-906 description N67_ECCD_Director-OAM_7
+set vlans VLAN-906 vlan-id 906
+set vlans VLAN-907 description N67_ECCD_Director-OAM_8
+set vlans VLAN-907 vlan-id 907
+set vlans VLAN-908 description N67_ECCD_Director-OAM_9
+set vlans VLAN-908 vlan-id 908
+set vlans VLAN-909 description N67_ECCD_Director-OAM_10
+set vlans VLAN-909 vlan-id 909
+set vlans VLAN-910 description "N67_NF_O&M_1"
+set vlans VLAN-910 vlan-id 910
+set vlans VLAN-911 description "N67_NF_O&M_2"
+set vlans VLAN-911 vlan-id 911
+set vlans VLAN00141 description dallas-100GB
+set vlans VLAN00141 vlan-id 141
+set vlans VLAN00141 l3-interface irb.141
+set vlans VLAN00143 description dallas-100GB
+set vlans VLAN00143 vlan-id 143
+set vlans VLAN00143 l3-interface irb.143
+set vlans VLAN00144 description dallas-100GB
+set vlans VLAN00144 vlan-id 144
+set vlans VLAN00144 l3-interface irb.144
+set vlans VLAN00153 description dallas-100GB
+set vlans VLAN00153 vlan-id 153
+set vlans VLAN00153 l3-interface irb.153
+set vlans VLAN00154 description dallas-100GB
+set vlans VLAN00154 vlan-id 154
+set vlans VLAN00154 l3-interface irb.154
+set vlans VLAN0051 description dallas-interlink
+set vlans VLAN0051 vlan-id 51
+set vlans VLAN0118 description n67-1-VPN01562_if-1-tools
+set vlans VLAN0118 vlan-id 118
+set vlans VLAN0118 l3-interface irb.118
+set vlans VLAN0351 description N67-eccd1-ecfe-oam
+set vlans VLAN0351 vlan-id 351
+set vlans VLAN0351 l3-interface irb.351
+set vlans VLAN0352 description N67-eccd1-if-om_cn-mm-1
+set vlans VLAN0352 vlan-id 352
+set vlans VLAN0352 l3-interface irb.352
+set vlans VLAN0353 description N67-eccd1-pcf1-oam
+set vlans VLAN0353 vlan-id 353
+set vlans VLAN0353 l3-interface irb.353
+set vlans VLAN0355 description N67-eccd1-eda-traffic
+set vlans VLAN0355 vlan-id 355
+set vlans VLAN0355 l3-interface irb.355
+set vlans VLAN0357 description N67-eccd1-ecfe-oam
+set vlans VLAN0357 vlan-id 357
+set vlans VLAN0357 l3-interface irb.357
+set vlans VLAN0401 description N67-eccd1-if-media-mm-1
+set vlans VLAN0401 vlan-id 401
+set vlans VLAN0401 l3-interface irb.401
+set vlans VLAN0402 description N67-eccd1-if-media-vpngw-1
+set vlans VLAN0402 vlan-id 402
+set vlans VLAN0402 l3-interface irb.402
+set vlans VLAN0451 description N67-eccd1-ecfe-signaling
+set vlans VLAN0451 vlan-id 451
+set vlans VLAN0451 l3-interface irb.451
+set vlans VLAN0452 description N67-eccd1-if-signaling-mm-1
+set vlans VLAN0452 vlan-id 452
+set vlans VLAN0452 l3-interface irb.452
+set vlans VLAN0453 description N67-eccd1-if-signaling-mm-2
+set vlans VLAN0453 vlan-id 453
+set vlans VLAN0453 l3-interface irb.453
+set vlans VLAN0454 description N67-eccd1-if-signaling-vpngw-1
+set vlans VLAN0454 vlan-id 454
+set vlans VLAN0454 l3-interface irb.454
+set vlans VLAN0455 description N67-eccd1-if-signaling-up-1
+set vlans VLAN0455 vlan-id 455
+set vlans VLAN0455 l3-interface irb.455
+set vlans VLAN0456 description N67-eccd1-if-media-up-1
+set vlans VLAN0456 vlan-id 456
+set vlans VLAN0456 l3-interface irb.456
+set vlans VLAN0457 description N67-eccd1-pcf1-traffic
+set vlans VLAN0457 vlan-id 457
+set vlans VLAN0457 l3-interface irb.457
+set vlans VLAN0501 description N67-eccd1-ecfe-intersite
+set vlans VLAN0501 vlan-id 501
+set vlans VLAN0501 l3-interface irb.501
+set vlans VLAN0551 description N67-eccd1-if-sgi1-up-1
+set vlans VLAN0551 vlan-id 551
+set vlans VLAN0551 l3-interface irb.551
+set vlans VLAN0601 description N67-eccd1-if-ran-mm-1
+set vlans VLAN0601 vlan-id 601
+set vlans VLAN0601 l3-interface irb.601
+set vlans VLAN0602 description N67-eccd1-if-ran-mm-2
+set vlans VLAN0602 vlan-id 602
+set vlans VLAN0602 l3-interface irb.602
+set vlans VLAN0603 description N67-eccd1-if-ran-up-1
+set vlans VLAN0603 vlan-id 603
+set vlans VLAN0603 l3-interface irb.603

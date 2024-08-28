@@ -1,0 +1,68 @@
+######################################
+## CaaS Variables
+######################################
+caas: CNIS
+kubernetes_service_ipaddress: 10.96.0.1
+
+###############################
+## Site Variables
+###############################
+timezone: CET
+mnc: '81'
+mcc: '240'
+oamDomain: sero.gic.ericsson.se
+locality: LN1
+nels:
+  host: nelsaas-cnels3.fijo.gic.ericsson.se
+  port: 9095
+snmpServer:
+  host: 11.100.3.51
+
+#storageClassName: network-block
+######################################
+## Geography Redundancy Variables
+######################################
+
+amfGeo: false
+smfGwcGeo: false
+nrfGeo: false
+nssfGeo: false
+hssGeo: false
+udrGeo: false
+pcfGeo: false
+
+######################################
+## CNF Variables
+######################################
+
+###################
+## CCRC
+###################
+
+nrf:
+- host: ccrc1-nrf-sig.site1-cluster1
+  ipv4: 172.17.128.9
+  port: 443
+
+nssf:
+- host: ccrc1-nssf-sig.site1-cluster1
+  port: 443
+
+
+###################
+## SC
+###################
+
+indirectCommunication:
+  enabled: false
+
+######################################
+## Miscellaneous Variables
+######################################
+dnsServer:
+- 10.221.16.10
+sftpServer:
+  host: 11.100.3.51
+  username: root
+  password: bG1jX3hkZw==   # base64
+  hostKey: c3NoLWRzcyBBQUFBQjNOemFDMWtjM01BQUFDQkFNMldEMWxCOElEb3FKOWJERDNjbis2Qzh1OEJhb0s1YVM5NENNR05hYS9vc0puNUhhZzNvOTMwYkt1bUtDeDdSZlRzVlpiTE5ESUdnU1F2ZHo2MmR1dTVWWk8rRjlXUGlXRFhuZnRYNkxCd1FHL0t6TmxyNjA0eStEaTRaTElQbE9OSm05MUxpM3lVNDh5SXp3OEkranFxbmxzZTlrQm9OWGp5UTlqTXBLSkJBQUFBRlFEeGFwNit6Sk1LQlE4c0NuMmdFaXh1WXIydGVRQUFBSUF0MUt1TkgyWis3TVF6b1hjWUJGbUxmNkowa0M1cHlKZjNSUkI5NmN5NkdsaXRBVzM1SEF2NGV5MlRYTytBdzk4QUtCS1lRQThYZGJGMjBudko0QXUvNkVoS2JFTFZqSCtrek54UU8wbVlOMUZtZEF4OXcwUFBqYm5RdGVaclNDejRNSGE2SjVqYkh1MjJQKzM4Wk5zNytxOG9mNG1TVlJLbHIzSmQySHd6dXdBQUFJQnZYRDBUc1AyOXFBNm9LeHhaelFzRnVLZjJYcXZHZ2twdTZ2MGRBemQzQ2NheGdUVlhYT0pBOUwwQlJKenNMRU5MUFJZbHEyNWxEYUd3ejgvcjRwRkdmOWVGaUQyc2dUQWNtalV3NUo2eFovejJpWGlUUm5tZjFQNnRSSTJWSUFBTGIvZ1B3cGtoUzhaUTBZM25FdHkzUTVTdVVhbGNkU1FTM1M4bXJJZW94UT09IEtleSBmb3IgdGVzdHRvb2wgYWNjZXNzIHRvIGxhYi4K

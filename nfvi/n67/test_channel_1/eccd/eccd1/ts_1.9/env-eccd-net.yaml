@@ -1,0 +1,197 @@
+parameters:
+
+  prefix: eccd1                                              # Name prefix of the network and subnet
+  phynet_virtio: N67_physnet1
+  phynet_sriov_left: N67_CEE1_PFPT_VLAG_L
+  phynet_sriov_right: N67_CEE1_PFPT_VLAG_R
+  l2gw_dcgw_id: 800263f2-2177-4030-97fc-e9bcbfd90fa2
+  l2gw_sriov_left_id: 94d7db28-fa64-4328-ba9d-cacd9918530b
+  l2gw_sriov_right_id: 914157cb-4e22-449b-97a5-4fcaa16a113a
+
+  macvlan_parent_networks:
+  - name: macvlan-parent-1
+    cidr: 172.32.1.0/24
+
+  virtio_networks:
+  - name: ccd-oam
+    vlan: 900
+    vxlan: 4900
+    cidr: 10.63.80.0/29
+    enable_dhcp: false
+    gateway: 10.63.80.1
+    allocation_pools: { start: 10.63.80.4, end: 10.63.80.5 }
+    routes: []
+
+  - name: ecfe-signaling
+    vlan: 451
+    vxlan: 4451
+    cidr: 11.110.2.0/24
+    enable_dhcp: false
+    gateway: 11.110.2.254
+    allocation_pools: { start: 11.110.2.1, end: 11.110.2.30 }
+    routes: []
+
+  - name: ecfe-oam
+    vlan: 459
+    vxlan: 4459
+    cidr: 10.143.130.0/24
+    enable_dhcp: false
+    gateway: 10.143.130.254
+    allocation_pools: { start: 10.143.130.1, end: 10.143.130.30 }
+    routes:
+    - { destination: 10.136.11.239/32, nexthop: 10.143.130.254 }  # eccd2 ingress
+    - { destination: 10.136.11.241/32, nexthop: 10.143.130.254 }  # evnfm oam
+    - { destination: 10.63.80.0/29, nexthop: 10.143.130.254 } # eccd1 oam
+    - { destination: 10.63.80.8/29, nexthop: 10.143.130.254 } # eccd2 oam
+    - { destination: 11.21.45.0/24, nexthop: 10.143.130.254 } #  eccd2 worker oam link
+    - { destination: 10.37.242.0/24, nexthop: 10.143.130.254 } # SoapUI and sftp server
+    - { destination: 10.63.0.0/16, nexthop: 10.143.130.254 } # SERO server
+    - { destination: 10.86.0.0/16, nexthop: 10.143.130.254 } # SERO server
+    - { destination: 100.78.165.0/24, nexthop: 10.143.130.254 } # SERO server
+    - { destination: 10.117.91.0/24, nexthop: 10.143.130.254 } # SERO server
+    - { destination: 132.196.0.0/16, nexthop: 10.143.130.254 }  # SELN server
+    - { destination: 11.0.18.0/24, nexthop: 10.143.130.254 } #  micro service on MISC Server
+    - { destination: 10.117.121.42/28, nexthop: 10.143.130.254 } #  Jenkins server 
+    - { destination: 10.63.204.105/28, nexthop: 10.143.130.254 } #  CI/CD developer server
+    - { destination: 214.14.171.0/24, nexthop: 10.143.130.254 } #  N67 ECCD1 oam link
+    - { destination: 214.14.170.96/27, nexthop: 10.143.130.254 } #  N67 ECCD1 oam
+
+
+  - name: ecfe-intersite
+    vlan: 501
+    vxlan: 4501
+    cidr: 11.21.93.0/24
+    enable_dhcp: false
+    gateway: 11.21.93.254
+    allocation_pools: { start: 11.21.93.1, end: 11.21.93.30 }
+    routes: []
+
+  - name: pc-mm-oam
+    vlan: 352
+    vxlan: 4352
+    cidr: 11.106.3.0/24
+    enable_dhcp: false
+    gateway: 11.106.3.254
+    allocation_pools: { start: 11.106.3.1, end: 11.106.3.30 }
+    routes: []
+
+  - name: pc-mm-ran-1
+    vlan: 601
+    vxlan: 4601
+    cidr: 11.106.4.0/24
+    enable_dhcp: false
+    gateway: 11.106.4.254
+    allocation_pools: { start: 11.106.4.1, end: 11.106.4.30 }
+    routes: []
+
+  - name: pc-mm-ran-2
+    is_internal: false
+    vlan: 602
+    vxlan: 4602
+    cidr: 11.21.79.0/24
+    enable_dhcp: false
+    gateway: 11.21.79.254
+    allocation_pools: { start: 11.21.79.1, end: 11.21.79.30 }
+    routes: []
+
+  - name: pc-mm-signaling-1
+    vlan: 452
+    vxlan: 4452
+    cidr: 11.106.2.0/24
+    enable_dhcp: false
+    gateway: 11.106.2.254
+    allocation_pools: { start: 11.106.2.1, end: 11.106.2.30 }
+    routes: []
+
+  - name: pc-mm-signaling-2
+    vlan: 453
+    vxlan: 4453
+    cidr: 11.21.2.0/24
+    enable_dhcp: false
+    gateway: 11.21.2.254
+    allocation_pools: { start: 11.21.2.1, end: 11.21.2.30 }
+    routes: []
+
+  - name: pc-mm-media
+    is_internal: false
+    vlan: 401
+    vxlan: 4401
+    cidr: 11.106.1.0/24
+    enable_dhcp: false
+    gateway: 11.106.1.254
+    allocation_pools: { start: 11.106.1.1, end: 11.106.1.30 }
+    routes: []
+
+  - name: pc-sm-media
+    vlan: 402
+    vxlan: 4402
+    cidr: 11.109.1.0/24
+    enable_dhcp: false
+    gateway: 11.109.1.254
+    allocation_pools: { start: 11.109.1.1, end: 11.109.1.30 }
+    routes: []
+
+  - name: pc-sm-signaling
+    vlan: 454
+    vxlan: 4454
+    cidr: 11.109.2.0/24
+    enable_dhcp: false
+    gateway: 11.109.2.254
+    allocation_pools: { start: 11.109.2.1, end: 11.109.2.30 }
+    routes: []
+
+  - name: pc-sm-intra
+    vlan: 652
+    vxlan: 4652
+    cidr: 172.31.0.0/24
+    enable_dhcp: false
+    gateway: null
+    allocation_pools: { start: 172.31.0.1, end: 172.31.0.30 }
+    routes: []
+
+  sriov_networks:
+  - name: pc-up-ran
+    vlan: 603
+    vxlan: 4603
+    cidr: 11.108.4.0/24
+    enable_dhcp: false
+    gateway: 11.108.4.254
+    allocation_pools: { start: 11.108.4.1, end: 11.108.4.30 }
+    routes: []
+
+  - name: pc-up-signaling
+    vlan: 455
+    vxlan: 4455
+    cidr: 11.108.2.0/24
+    enable_dhcp: false
+    gateway: 11.108.2.254
+    allocation_pools: { start: 11.108.2.1, end: 11.108.2.30 }
+    routes: []
+
+  - name: pc-up-media
+    vlan: 456
+    vxlan: 4456
+    cidr: 11.108.1.0/24
+    enable_dhcp: false
+    gateway: 11.108.1.254
+    allocation_pools: { start: 11.108.1.1, end: 11.108.1.30 }
+    routes: []
+
+  - name: pc-up-dn
+    vlan: 551
+    vxlan: 4551
+    cidr: 11.108.5.0/24
+    enable_dhcp: false
+    gateway: 11.108.5.254
+    allocation_pools: { start: 11.108.5.1, end: 11.108.5.30 }
+    routes: []
+
+  - name: pc-up-intra
+    vlan: 651
+    vxlan: 4651
+    cidr: 172.31.100.0/24
+    enable_dhcp: false
+    gateway: null
+    allocation_pools: { start: 172.31.100.1, end: 172.31.100.30 }
+    routes: []
+

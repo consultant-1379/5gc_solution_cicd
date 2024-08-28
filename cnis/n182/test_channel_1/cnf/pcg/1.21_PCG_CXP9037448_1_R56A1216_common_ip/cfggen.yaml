@@ -1,0 +1,33 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global_common_ip.yaml
+# targetDir: .
+# jsonschema: pcc/jsonschema.yaml
+#jsonschemaGlobal: common/global-jsonschema.yaml
+templateDir: ../../../../../../config_template/templates/
+#jsonschemaGlobal: ../../ts-config/jsonschemas/schema-global.yaml
+
+files:
+- template: pcg/1.21_PCG_CXP9037448_1-R56A1216/values.yaml.jinja2
+  target: day0/values.yaml
+- template: common/instantiate.json.jinja2
+  target: day0/instantiate.json
+- template: common/snmp-config.json.jinja2
+  target: day1/snmp-config.json
+- template: common/user-config.txt.jinja2
+  target: day1/user-config.txt
+- template: pcg/1.21_PCG_CXP9037448_1-R56A1216/pcg-config.txt.jinja2
+  target: day1/pcg-config.txt
+- template: common/ddc-config.txt.jinja2
+  target: day1/ddc-config.txt
+- template: common/network-policy/eric-pm-server-allow.yaml.jinja2
+  target: network-policy/eric-pm-server-allow.yaml
+- template: common/network-policy/eric-data-search-engine-allow.yaml.jinja2 
+  target: network-policy/eric-data-search-engine-allow.yaml
+- template: common/network-policy/eric-fh-alarm-handler-allow.yaml.jinja2
+  target: network-policy/eric-fh-alarm-handler-allow.yaml
+- template: common/ingress/eric-fh-alarm-handler-ingress.yaml.jinja2
+  target: ingress/eric-fh-alarm-handler-ingress.yaml
+- template: common/ingress/eric-data-search-engine-tls-ingress.yaml.jinja2
+  target: ingress/eric-data-search-engine-ingress.yaml
+- template: common/ingress/eric-pm-server-ingress.yaml.jinja2
+  target: ingress/eric-pm-server-ingress.yaml

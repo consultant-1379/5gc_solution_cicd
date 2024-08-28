@@ -1,0 +1,9 @@
+{
+  "clusterName": "n84-eccd3",
+  "additionalParams": {
+       "namespace": "pcc",
+       "applicationTimeOut": "2400",
+       "skipJobVerification": "false",
+       "skipVerification": "true"
+      }
+}

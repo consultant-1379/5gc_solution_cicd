@@ -1,0 +1,1570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <capabilities>
+        <capability>urn:ietf:params:netconf:base:1.0</capability>
+    </capabilities>
+</hello>]]>]]>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+    <edit-config>
+        <target>
+            <running/>
+        </target>
+        <config>
+            <udr xmlns="urn:rdns:com:ericsson:oammodel:ericsson-udr">
+                <administrative-state>unlocked</administrative-state>
+                <handle-traffic-locally>false</handle-traffic-locally>
+                <database>
+                    <local-redundancy>true</local-redundancy>
+                </database>
+                <geo-redundancy>
+                    <site>
+                        <id>1</id>
+                        <name>udr-eccd1</name>
+                        <is-local-site>true</is-local-site>
+                        <provisioning-priority>20</provisioning-priority>
+                        <ldap-endpoint>
+                            <host>udr1.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>389</port>
+                        </ldap-endpoint>
+                        <nudr-dr-endpoint>
+                            <host>udr1.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>443</port>
+                        </nudr-dr-endpoint>
+                        <nudr-provisioning-endpoint>
+                            <host>udr1-intersite.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>443</port>
+                        </nudr-provisioning-endpoint>
+                        <db-locator-endpoint>
+                            <host>udr1-intersite.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>10334</port>
+                        </db-locator-endpoint>
+                        <db-receiver-endpoint>
+                            <host>udr1-intersite.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>31000</port>
+                        </db-receiver-endpoint>
+                        <db-coordinator-endpoint>
+                            <host>udr1-intersite.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>2181</port>
+                        </db-coordinator-endpoint>
+                        <consistency-check-orchestrator-endpoint>
+                            <host>udr1-intersite.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>21000</port>
+                        </consistency-check-orchestrator-endpoint>
+                    </site>
+                    <site>
+                        <id>2</id>
+                        <name>udr-eccd5</name>
+                        <is-local-site>false</is-local-site>
+                        <provisioning-priority>10</provisioning-priority>
+                        <ldap-endpoint>
+                            <host>udr2.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>389</port>
+                        </ldap-endpoint>
+                        <nudr-dr-endpoint>
+                            <host>udr2.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>443</port>
+                        </nudr-dr-endpoint>
+                        <nudr-provisioning-endpoint>
+                            <host>udr2-intersite.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>443</port>
+                        </nudr-provisioning-endpoint>
+                        <db-locator-endpoint>
+                            <host>udr2-intersite.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>10334</port>
+                        </db-locator-endpoint>
+                        <db-receiver-endpoint>
+                            <host>udr2-intersite.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>31000</port>
+                        </db-receiver-endpoint>
+                        <db-coordinator-endpoint>
+                            <host>udr2-intersite.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>2181</port>
+                        </db-coordinator-endpoint>
+                        <consistency-check-orchestrator-endpoint>
+                            <host>udr2-intersite.n47.5gc.mnc081.mcc240.3gppnetwork.org</host>
+                            <port>21000</port>
+                        </consistency-check-orchestrator-endpoint>
+                    </site>
+                </geo-redundancy>
+                <ldap-access>
+                    <root-entry-dn>dc=operator,dc=com</root-entry-dn>
+                    <ldap-root-password>normal</ldap-root-password>
+          <ldap-schema>
+            <name>identities.schema</name>
+            <content>
+attributetype ( 1.3.6.1.4.1.193.169.2.200 NAME 'IMSI'
+    EQUALITY numericStringMatch
+    ORDERING numericStringOrderingMatch
+    SUBSTR numericStringSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{15}
+    SINGLE-VALUE
+    USAGE userApplications
+    )
+
+attributetype ( 1.3.6.1.4.1.193.169.2.201 NAME 'MSISDN'
+    EQUALITY numericStringMatch
+    ORDERING numericStringOrderingMatch
+    SUBSTR numericStringSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{15}
+    SINGLE-VALUE
+    USAGE userApplications
+    )
+
+attributetype ( 1.3.6.1.4.1.193.169.2.202 NAME 'IMPI'
+    EQUALITY caseExactMatch
+    ORDERING caseExactOrderingMatch
+    SUBSTR caseExactSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255}
+    SINGLE-VALUE
+    USAGE userApplications
+    )
+
+attributetype ( 1.3.6.1.4.1.193.169.2.203 NAME 'IMPU'
+    EQUALITY caseExactMatch
+    ORDERING caseExactOrderingMatch
+    SUBSTR caseExactSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255}
+    SINGLE-VALUE
+    USAGE userApplications
+    )
+
+attributetype ( 1.3.6.1.4.1.193.169.2.220 NAME 'WIMPU'
+    EQUALITY caseExactMatch
+    ORDERING caseExactOrderingMatch
+    SUBSTR caseExactSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255}
+    SINGLE-VALUE
+    USAGE userApplications
+    )
+
+attributetype ( 1.3.6.1.4.1.193.169.2.204 NAME 'IPADDRESS'
+    EQUALITY caseExactMatch
+    ORDERING caseExactOrderingMatch
+    SUBSTR caseExactSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{45}
+    SINGLE-VALUE
+    USAGE userApplications
+    )
+
+attributetype ( 1.3.6.1.4.1.193.169.2.211 NAME 'SUBSID'
+    EQUALITY caseExactMatch
+    ORDERING caseExactOrderingMatch
+    SUBSTR caseExactSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255}
+    SINGLE-VALUE
+    USAGE userApplications
+    )
+
+attributetype ( 1.3.6.1.4.1.193.169.2.212 NAME 'TRAFFICID'
+    EQUALITY caseExactMatch
+    ORDERING caseExactOrderingMatch
+    SUBSTR caseExactSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255}
+    SINGLE-VALUE
+    USAGE userApplications
+    )
+
+attributetype ( 1.3.6.1.4.1.193.169.2.213 NAME 'USERNAME'
+    EQUALITY caseExactMatch
+    ORDERING caseExactOrderingMatch
+    SUBSTR caseExactSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255}
+    SINGLE-VALUE
+    USAGE userApplications
+    )
+
+attributetype ( 1.3.6.1.4.1.193.169.2.227 NAME 'ExternalIdHash'
+    EQUALITY numericStringMatch
+    SUBSTR numericStringSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{5}
+    SINGLE-VALUE
+    )
+
+attributetype ( 1.3.6.1.4.1.193.169.2.228 NAME 'ExternalId'
+    EQUALITY caseExactMatch
+    ORDERING caseExactOrderingMatch
+    SUBSTR caseExactSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255}
+    SINGLE-VALUE
+    )
+
+attributetype ( 1.3.6.1.4.1.193.169.2.229 NAME 'EXTID'
+    EQUALITY caseExactMatch
+    ORDERING caseExactOrderingMatch
+    SUBSTR caseExactSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255}
+    SINGLE-VALUE
+    )
+
+attributetype ( 1.3.6.1.4.1.193.169.2.230 NAME 'NAI'
+    EQUALITY caseExactMatch
+    ORDERING caseExactOrderingMatch
+    SUBSTR caseExactSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255}
+    SINGLE-VALUE
+    )
+
+objectclass ( 1.3.6.1.4.1.193.169.1.100 NAME 'IMSI'
+    SUP top
+    AUXILIARY
+    MUST IMSI
+    )
+
+objectclass ( 1.3.6.1.4.1.193.169.1.101 NAME 'MSISDN'
+    SUP top
+    AUXILIARY
+    MUST MSISDN
+    )
+
+objectclass ( 1.3.6.1.4.1.193.169.1.102 NAME 'IMPI'
+    SUP top
+    AUXILIARY
+    MUST IMPI
+    )
+
+objectclass ( 1.3.6.1.4.1.193.169.1.103 NAME 'IMPU'
+    SUP top
+    AUXILIARY
+    MUST IMPU
+    )
+
+objectclass ( 1.3.6.1.4.1.193.169.1.104 NAME 'IPADDRESS'
+    SUP top
+    AUXILIARY
+    MUST IPADDRESS
+    )
+
+objectclass ( 1.3.6.1.4.1.193.169.1.106 NAME 'SUBSID'
+    SUP top
+    AUXILIARY
+    MUST SUBSID
+    )
+
+objectclass ( 1.3.6.1.4.1.193.169.1.107 NAME 'TRAFFICID'
+    SUP top
+    AUXILIARY
+    MUST TRAFFICID
+    )
+
+objectclass ( 1.3.6.1.4.1.193.169.1.108 NAME 'WIMPU'
+    SUP top
+    AUXILIARY
+    MUST WIMPU
+    )
+
+objectclass ( 1.3.6.1.4.1.193.169.1.109 NAME 'USERNAME'
+    SUP top
+    AUXILIARY
+    MUST USERNAME
+    )
+
+objectclass ( 1.3.6.1.4.1.193.169.1.113 NAME 'NAI'
+    SUP top
+    AUXILIARY
+    MUST NAI
+    )
+
+objectclass ( 1.3.6.1.4.1.193.169.1.114 NAME 'EXTID'
+    SUP top
+    AUXILIARY
+    MUST EXTID
+    )
+</content>
+          </ldap-schema>
+          <ldap-schema>
+            <name>mscIdentities.schema</name>
+            <content>
+attributetype ( 1.3.6.1.4.1.193.169.2.205 NAME 'imsiMask'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.206 NAME 'msisdnMask'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.207 NAME 'impiMask'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.209 NAME 'IMSIAux'
+        EQUALITY numericStringMatch
+        SUBSTR numericStringSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{15}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.210 NAME 'imsiAuxMask'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.169.2.214 NAME 'IMSICHOSTATUS'
+        EQUALITY integerMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.27{1}
+        SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.169.2.215 NAME 'IMSIEXPIRYDATE'
+        EQUALITY octetStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{3}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.222 NAME 'IMPIAux'
+        EQUALITY caseExactMatch
+        ORDERING caseExactOrderingMatch
+        SUBSTR caseExactSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.223 NAME 'IMPUCHOIDS'
+        EQUALITY caseExactMatch
+        ORDERING caseExactOrderingMatch
+        SUBSTR caseExactSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{511})
+
+attributetype ( 1.3.6.1.4.1.193.169.2.216 NAME 'IMSICHOEXEC'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.217 NAME 'secImpi'
+        EQUALITY caseExactMatch
+        ORDERING caseExactOrderingMatch
+        SUBSTR caseExactSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255})
+
+attributetype ( 1.3.6.1.4.1.193.169.2.218 NAME 'usernameMask'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.219 NAME 'mscIdAux'
+        EQUALITY caseExactMatch
+        ORDERING caseExactOrderingMatch
+        SUBSTR caseExactSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.224 NAME 'notifInfo'
+        EQUALITY caseExactMatch
+        ORDERING caseExactOrderingMatch
+        SUBSTR caseExactSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{300}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.225 NAME 'ExtIdList'
+        EQUALITY caseExactMatch
+        ORDERING caseExactOrderingMatch
+        SUBSTR caseExactSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255})
+
+attributetype (1.3.6.1.4.1.193.169.2.226 NAME 'UeFunctionMask'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{63}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.231 NAME 'imsiList'
+        EQUALITY numericStringMatch
+        ORDERING numericStringOrderingMatch
+        SUBSTR numericStringSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{15})
+
+attributetype ( 1.3.6.1.4.1.193.169.2.232 NAME 'msisdnList'
+        EQUALITY numericStringMatch
+        ORDERING numericStringOrderingMatch
+        SUBSTR numericStringSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{15})
+
+attributetype ( 1.3.6.1.4.1.193.169.2.233 NAME 'trafficIdList'
+        EQUALITY caseExactMatch
+        ORDERING caseExactOrderingMatch
+        SUBSTR caseExactSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255})
+
+attributetype ( 1.3.6.1.4.1.193.169.2.234 NAME 'naiMask'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.235 NAME 'naiList'
+        EQUALITY caseExactMatch
+        ORDERING caseExactOrderingMatch
+        SUBSTR caseExactSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{255})
+
+attributetype ( 1.3.6.1.4.1.193.169.2.236 NAME 'imsiExtMask'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.237 NAME 'msisdnExtMask'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.238 NAME 'naiExtMask'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.239 NAME 'imsiAuxExtMask'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.240 NAME 'impiExtMask'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.169.2.241 NAME 'usernameExtMask'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+objectclass ( 1.3.6.1.4.1.193.169.1.105 NAME 'mscIdentities'
+   SUP top
+   AUXILIARY
+   MUST ( CDC )
+   MAY ( IMSI $ imsiMask $ MSISDN $ msisdnMask $ IMPI $ impiMask $ IMSIAux $ imsiAuxMask
+         $ IMSICHOSTATUS $ IMSIEXPIRYDATE $ IMSICHOEXEC $ secImpi $ USERNAME $ usernameMask
+         $ mscIdAux $ IMPIAux $ IMPUCHOIDS $ notifInfo $ ExtIdList $ UeFunctionMask
+         $ trafficIdList $ imsiList $ msisdnList $ NAI $ naiList $ naiMask $ imsiExtMask
+         $ msisdnExtMask $ naiExtMask $ imsiAuxExtMask $ impiExtMask $ usernameExtMask))
+</content>
+          </ldap-schema>
+          <ldap-schema>
+            <name>hss.schema</name>
+            <content>
+attributetype ( 1.3.6.1.4.1.193.188.3.1.1.1 NAME 'EpsSubsId'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.1.2 NAME 'EpsAssocImsi'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+objectclass ( 1.3.6.1.4.1.193.188.3.1.1 NAME 'EpsSubs'
+      STRUCTURAL
+      MUST (EpsSubsId)
+      MAY (EpsAssocImsi $ CDC)
+      )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.1 NAME 'EpsStaInfId'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.2 NAME 'EpsProfileId'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.3 NAME 'EpsOdb'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.4 NAME 'EpsRoamAllow'
+      EQUALITY booleanMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.5 NAME 'EpsIndApnOiReplace'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.6 NAME 'EpsIndDefContextId'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27{8}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.7 NAME 'EpsIndSubChargChars'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.8 NAME 'EpsIndContextId'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27{8}
+      )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.9 NAME 'EpsIndAmbrMaxUl'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27{8}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.10 NAME 'EpsIndAmbrMaxDl'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27{8}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.11 NAME 'EpsIndRatFreqSelPrioId'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27{8}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.12 NAME 'EpsRoamRestrict'
+      EQUALITY booleanMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.13 NAME 'EpsAccessRestriction'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.14 NAME 'EpsUserIpV4Address'
+      EQUALITY caseIgnoreMatch
+      SUBSTR caseIgnoreSubstringsMatch
+      ORDERING caseIgnoreOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.15 NAME 'EpsUserIpV6Address'
+      EQUALITY caseIgnoreMatch
+      SUBSTR caseIgnoreSubstringsMatch
+      ORDERING caseIgnoreOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.16 NAME 'EpsTenantId'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.17 NAME 'EpsStnSr'
+      EQUALITY caseIgnoreMatch
+      SUBSTR caseIgnoreSubstringsMatch
+      ORDERING caseIgnoreOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.18 NAME 'EpsMpsPriority'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.19 NAME 'EpsZoneCodeSetId'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.20 NAME 'EpsAutomaticProvisioned'
+      EQUALITY booleanMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.21 NAME 'EpsIndMappingContextId'
+      EQUALITY caseIgnoreMatch
+      SUBSTR caseIgnoreSubstringsMatch
+      ORDERING caseIgnoreOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.22 NAME 'EpsCommonMsisdn'
+      EQUALITY caseIgnoreMatch
+      SUBSTR caseIgnoreSubstringsMatch
+      ORDERING caseIgnoreOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.23 NAME 'EpsAutoProvMask'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.24 NAME 'EpsRoamingServiceAreaId'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.25 NAME 'EpsAaaIndDefContextId'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.26 NAME 'EpsAaaIndContextId'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.27 NAME 'EpsAaaIndMappingContextId'
+      EQUALITY caseIgnoreMatch
+      SUBSTR caseIgnoreSubstringsMatch
+      ORDERING caseIgnoreOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.28 NAME 'EpsAaaOdb'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.29 NAME 'EpsAdminDisable'
+      EQUALITY booleanMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.30 NAME 'EpsNam'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.31 NAME 'EpsAaaMip6fv'
+      EQUALITY octetStringMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{8}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.32 NAME 'EpsIndUeUsageType'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.33 NAME 'EpsIndRauTauTimer'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.34 NAME 'EpsMdtUserConsent'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.35 NAME 'EpsIndAddDefContextId'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.36 NAME 'EpsIndUserType'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.37 NAME 'EpsIndAmbrMaxUlExt'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27{8}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.38 NAME 'EpsIndAmbrMaxDlExt'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27{8}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.39 NAME 'EpsIndeDrx'
+      EQUALITY caseIgnoreMatch
+      SUBSTR caseIgnoreSubstringsMatch
+      ORDERING caseIgnoreOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.40 NAME 'EpsIndActTim'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.2.41 NAME 'EpsIndCoreNetworkRestrictions'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+objectclass ( 1.3.6.1.4.1.193.188.3.1.2 NAME 'EpsStaticInf'
+      STRUCTURAL
+      MUST (EpsStaInfId $ EpsProfileId $ EpsOdb $ EpsRoamAllow)
+      MAY (assocId $ CDC $
+         EpsIndApnOiReplace $ EpsIndDefContextId $
+         EpsIndSubChargChars $ EpsIndContextId $
+         EpsIndAmbrMaxUl $ EpsIndAmbrMaxDl $
+         EpsIndRatFreqSelPrioId $ EpsRoamRestrict $
+         EpsAccessRestriction $ EpsUserIpV4Address $
+         EpsUserIpV6Address $ EpsTenantId $ EpsStnSr $
+         EpsMpsPriority $ EpsZoneCodeSetId $ EpsAutomaticProvisioned $
+         EpsIndMappingContextId $ EpsCommonMsisdn $ EpsAutoProvMask $
+         EpsRoamingServiceAreaId $ EpsAaaIndDefContextId $
+         EpsAaaIndContextId $ EpsAaaIndMappingContextId $ EpsAaaOdb
+         $ EpsAdminDisable $ EpsNam $ EpsAaaMip6fv $ EpsIndUeUsageType
+         $ EpsMdtUserConsent $ EpsIndRauTauTimer $ EpsIndAddDefContextId
+         $ EpsIndUserType $ EpsIndAmbrMaxUlExt $ EpsIndAmbrMaxDlExt $
+         EpsIndeDrx $ EpsIndActTim $ EpsIndCoreNetworkRestrictions)
+      )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.1 NAME 'EpsDynInfId'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.2 NAME 'EpsMmeAddr'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.3 NAME 'EpsLocState'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.4 NAME 'EpsMmeRealm'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.5 NAME 'EpsLastInsertSent'
+      EQUALITY octetStringMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{18}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.6 NAME 'EpsMmeOdb'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.7 NAME 'EpsMobilityNotifInfo'
+      EQUALITY octetStringMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{8}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.8  NAME 'EpsAaaAddr'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.9  NAME 'EpsAaaRealm'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.10  NAME 'EpsAaaRegState'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.11  NAME 'EpsDynPdnInf'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.12  NAME 'EpsImeiSv'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.13  NAME 'EpsVplmnId'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.14 NAME 'EpsMmeRegServ'
+      EQUALITY booleanMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.15 NAME 'EpsHomoImsVoip'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.16 NAME 'EpsTadsRetrieveSupp'
+      EQUALITY booleanMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.17  NAME 'EpsLastUpdateLocationDate'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.18  NAME 'EpsUeSrVccCap'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.19 NAME 'EpsLocInfFetchSupp'
+      EQUALITY booleanMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.21 NAME 'EpsAaaLastUpdateSent'
+      EQUALITY octetStringMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{18}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.20 NAME 'EpsLastActivityDate'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.22 NAME 'EpsMmeFeatureList2Supp'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.23 NAME 'EpsAaaVplmnId'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.24 NAME 'EpsServiceInfo'
+        EQUALITY bitStringMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+        SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.25 NAME 'EpsMmeFeatureList1Supp'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27{8}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.26 NAME 'EpsUserTypeInTraffic'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+attributetype ( 1.3.6.1.4.1.193.188.3.1.3.27 NAME 'Eps5GSubInf'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+objectclass ( 1.3.6.1.4.1.193.188.3.1.3 NAME 'EpsDynInf'
+      STRUCTURAL
+      MUST (EpsDynInfId $ EpsLocState)
+      MAY (EpsMmeAddr $ EpsMmeRealm $ EpsLastInsertSent $
+         EpsMmeOdb $ EpsMobilityNotifInfo $ EpsAaaAddr $
+         EpsAaaRealm $ EpsAaaRegState $ EpsDynPdnInf $ EpsImeiSv $
+         EpsVplmnId $ EpsMmeRegServ $ EpsHomoImsVoip $ EpsTadsRetrieveSupp $
+         EpsLastUpdateLocationDate $ EpsUeSrVccCap $ EpsLocInfFetchSupp $
+         EpsAaaLastUpdateSent $ EpsLastActivityDate $ EpsMmeFeatureList2Supp $
+         EpsAaaVplmnId $ EpsServiceInfo $ EpsMmeFeatureList1Supp $
+         EpsUserTypeInTraffic $ Eps5GSubInf $ CDC)
+      )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.4.1 NAME 'EpsSgsnAddr'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.4.2 NAME 'EpsSgsnLocState'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.4.3 NAME 'EpsSgsnRealm'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.4.4 NAME 'EpsSgsnLastInsertSent'
+      EQUALITY octetStringMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{18}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.4.5 NAME 'EpsSgsnVplmnId'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.4.6 NAME 'EpsSgsnHomoImsVoip'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.4.7  NAME 'EpsSgsnLastUpdateLocationDate'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.4.8 NAME 'EpsSgsnFeatureList2Supp'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27{8}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.4.9 NAME 'EpsSgsnFeatureList1Supp'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27{8}
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.4.10 NAME 'EpsSgsnNumber'
+      EQUALITY octetStringMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.40
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.4.11 NAME 'EpsSgsnLastActivityDate'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+objectclass ( 1.3.6.1.4.1.193.188.3.1.4 NAME 'EpsSgsnDynInf'
+      SUP top
+      AUXILIARY
+      MAY (EpsSgsnAddr $ EpsSgsnLocState $ EpsSgsnRealm $
+         EpsSgsnLastInsertSent $ EpsSgsnVplmnId $ EpsSgsnHomoImsVoip $
+         EpsSgsnLastUpdateLocationDate $ EpsSgsnFeatureList2Supp $
+         EpsSgsnFeatureList1Supp $ EpsSgsnNumber $ EpsSgsnLastActivityDate)
+      )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.1 NAME 'EpsMtcInfId'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.2 NAME 'EpsMonteMmeServiceSupport'
+      EQUALITY integerMatch
+      ORDERING integerOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.3 NAME 'EpsMtcEventProfId'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.4 NAME 'EpsMonteUserReachability'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024} )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.5 NAME 'EpsMonteLossOfConnectivity'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024} )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.6 NAME 'EpsMonteAvailabilityAfterDdnF'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024} )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.7 NAME 'EpsMonteLocationReporting'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024} )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.8 NAME 'EpsMonteCommunicationF'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024} )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.9 NAME 'EpsNIDDAllow'
+      EQUALITY booleanMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+      SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.10 NAME 'EpsNIDDAuthInfo'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1400}
+      SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.11 NAME 'EpsMtcDeviceTriggerProfId'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.12 NAME 'EpsMonteRoamStatus'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024} )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.13 NAME 'EpsMonteImeiSvAssoc'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024} )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.14 NAME 'EpsMtcAllowedProviderIdList'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.193.188.3.1.5.15 NAME 'EpsMtcLastEventUpdate'
+      EQUALITY caseExactMatch
+      SUBSTR caseExactSubstringsMatch
+      ORDERING caseExactOrderingMatch
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+      SINGLE-VALUE )
+
+objectclass (1.3.6.1.4.1.193.188.3.1.5 NAME 'EpsMtcInf'
+      STRUCTURAL
+      MUST (EpsMtcInfId)
+      MAY (CDC $ EpsMonteMmeServiceSupport $ EpsMtcEventProfId $ EpsMonteUserReachability $
+           EpsMonteLossOfConnectivity $ EpsMonteAvailabilityAfterDdnF $
+           EpsMonteLocationReporting $ EpsMonteCommunicationF $ EpsNIDDAllow
+           $ EpsNIDDAuthInfo $ EpsMtcDeviceTriggerProfId
+           $ EpsMonteRoamStatus $ EpsMonteImeiSvAssoc $ EpsMtcAllowedProviderIdList $ EpsMtcLastEventUpdate)
+      )
+</content>
+          </ldap-schema>
+          <ldap-schema>
+            <name>eir.schema</name>
+            <content>
+attributetype (1.3.6.1.4.1.193.195.1.1 NAME 'imsiPr'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{15}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.2.1 NAME 'imeiSvn'
+        EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{16}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.3.1 NAME 'seqno'
+   EQUALITY generalizedTimeMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.24
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.2 NAME 'l1Num'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.3 NAME 'rsp1'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.4 NAME 'l2Num'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.5 NAME 'rsp2'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.6 NAME 'l3Num'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.7 NAME 'rsp3'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.8 NAME 'l4Num'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.9 NAME 'rsp4'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.10 NAME 'l5Num'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.11 NAME 'rsp5'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.12 NAME 'unknownRsp'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.13 NAME 'IMSIListChkd'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.14 NAME 'l6Num'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.15 NAME 'rsp6'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.16 NAME 'l7Num'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.17 NAME 'rsp7'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.18 NAME 'l8Num'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.19 NAME 'rsp8'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.20 NAME 'l9Num'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.21 NAME 'rsp9'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.22 NAME 'l10Num'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.5.23 NAME 'rsp10'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.3 NAME 'date'
+   EQUALITY numericStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{8}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.4 NAME 'time'
+   EQUALITY numericStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{6}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.5 NAME 'comment'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{255}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.6 NAME 'lockedImsi'
+   EQUALITY numericStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{15}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.7 NAME 'l0'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.8 NAME 'l1'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.9 NAME 'l2'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.10 NAME 'l3'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.11 NAME 'l4'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.12 NAME 'l5'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.13 NAME 'l6'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.14 NAME 'l7'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.15 NAME 'l8'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.16 NAME 'l9'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.7.2 NAME 'imeiFrom'
+        EQUALITY numericStringMatch
+        ORDERING numericStringOrderingMatch
+        SUBSTR numericStringSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{14}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.7.3 NAME 'imeiTo'
+        EQUALITY numericStringMatch
+        ORDERING numericStringOrderingMatch
+        SUBSTR numericStringSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{14}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.7.6 NAME 'reason'
+   EQUALITY numericStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{4}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.6.2 NAME 'svn'
+        EQUALITY caseExactIA5Match
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{2}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.7.7 NAME 'clarifyReason'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{20}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.7.8 NAME 'sourceOfRequest'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{25}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.7.9 NAME 'action'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{1}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.8.2 NAME 'lockedImeiSvn'
+        EQUALITY caseExactIA5Match
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{16}
+      SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.8.4 NAME 'clonedImeiSvn'
+        EQUALITY caseExactIA5Match
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{16}
+  )
+
+attributetype (1.3.6.1.4.1.193.195.8.5 NAME 'SuperSIM'
+   EQUALITY octetStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.40{1}
+   SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.195.8.6 NAME 'CoDMask'
+    EQUALITY bitStringMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+    SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.8.7 NAME 'faultyClonedImeiSvn'
+        EQUALITY caseExactIA5Match
+      SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{16}
+  )
+
+attributetype (1.3.6.1.4.1.193.195.11.1 NAME 'TACCode'
+    EQUALITY numericStringMatch
+    ORDERING numericStringOrderingMatch
+    SUBSTR numericStringSubstringsMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{8}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.12.2 NAME 'Manufacturer'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{128}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.12.3 NAME 'Model'
+   EQUALITY caseExactIA5Match
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{128}
+   SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.12.4 NAME 'CoD'
+   EQUALITY numericStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{2}
+   SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.193.195.12.5 NAME 'CapMask'
+    EQUALITY bitStringMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.6{16}
+    SINGLE-VALUE)
+
+attributetype (1.3.6.1.4.1.193.195.13.2 NAME 'ReasonBlack'
+   EQUALITY numericStringMatch
+   SYNTAX 1.3.6.1.4.1.1466.115.121.1.36{1}
+   SINGLE-VALUE)
+
+objectclass ( 1.3.6.1.4.1.193.195.1 NAME 'EI1'
+   SUP top
+   STRUCTURAL
+   MUST ( imsiPr ))
+
+objectclass ( 1.3.6.1.4.1.193.195.2 NAME 'EI2'
+   SUP top
+   STRUCTURAL
+   MUST ( imeiSvn )
+   MAY ( ZoneId $ DSUnitGroup ))
+
+objectclass ( 1.3.6.1.4.1.193.195.3 NAME 'EI3'
+   SUP top
+   STRUCTURAL
+   MUST ( seqno )
+   MAY ( ZoneId $ DSUnitGroup ))
+
+objectclass ( 1.3.6.1.4.1.193.195.4 NAME 'EI4'
+   SUP top
+   STRUCTURAL
+   MUST ( IMSI )
+   MAY ( ZoneId $ DSUnitGroup ))
+
+objectclass ( 1.3.6.1.4.1.193.195.5 NAME 'EI5'
+   SUP top
+   STRUCTURAL
+   MUST ( imsiPr $ unknownRsp )
+   MAY ( l1Num $ rsp1 $ l2Num $ rsp2 $ l3Num $ rsp3 $ l4Num $ rsp4 $ l5Num $ rsp5 $ IMSIListChkd $ l6Num $ rsp6 $ l7Num $ rsp7 $ l8Num $ rsp8 $ l9Num $ rsp9 $ l10Num $ rsp10 ))
+
+objectclass ( 1.3.6.1.4.1.193.195.6 NAME 'EI6'
+   SUP top
+   STRUCTURAL
+   MUST ( imeiSvn $ l0 $ l1 $ l2 $ l3 $ l4 $ l5 $ l6 $ l7 $ l8 $ l9 )
+   MAY ( date $ time $ comment $ lockedImsi $ reason $ clarifyReason $ sourceOfRequest ))
+
+objectclass ( 1.3.6.1.4.1.193.195.7 NAME 'EI7'
+   SUP top
+   STRUCTURAL
+   MUST ( seqno $ imeiFrom $ imeiTo $ svn $ reason $ action )
+   MAY ( comment $ clarifyReason $ sourceOfRequest ))
+
+objectclass ( 1.3.6.1.4.1.193.195.8 NAME 'EI8'
+   SUP top
+   STRUCTURAL
+   MUST ( IMSI )
+   MAY ( lockedImeiSvn $ clonedImeiSvn $ SuperSIM $ CoDMask $ faultyClonedImeiSvn ))
+
+objectclass ( 1.3.6.1.4.1.193.195.11 NAME 'EI11'
+   SUP top
+   STRUCTURAL
+   MUST ( TACCode )
+   MAY ( ZoneId $ DSUnitGroup ))
+
+objectclass ( 1.3.6.1.4.1.193.195.12 NAME 'EI12'
+   SUP top
+   STRUCTURAL
+   MUST ( TACCode )
+   MAY ( Manufacturer $ Model $ CoD $ CapMask ))
+
+objectclass ( 1.3.6.1.4.1.193.195.13 NAME 'EI13'
+   SUP top
+   STRUCTURAL
+   MUST ( TACCode $ ReasonBlack ))
+</content>
+          </ldap-schema>
+                    <ldap-acl>
+                        <name>acls.conf</name>
+                        <content>access to dn.children="ou=admin,dc=operator,dc=com"
+ by * auth
+access to *
+ by users write
+</content>
+                    </ldap-acl>
+                    <ldap-user>
+                        <name>provisioning</name>
+                        <password>secret2</password>
+                        <is-provisioning-user>true</is-provisioning-user>
+                    </ldap-user>
+                    <ldap-user>
+                        <name>traffic</name>
+                        <password>secret1</password>
+                        <is-provisioning-user>false</is-provisioning-user>
+                    </ldap-user>
+                </ldap-access>
+                <!--<soap-notifications>-->
+                    <!--<event-type>-->
+                        <!--<id>${SOAP_NOTIFICATIONS_EVENT_TYPE_ID}</id>-->
+                        <!--<name>${SOAP_NOTIFICATIONS_EVENT_TYPE_NAME}</name>-->
+                        <!--<enabled>${SOAP_NOTIFICATIONS_EVENT_TYPE_ENABLED}</enabled>-->
+                        <!--<ep-group>${SOAP_NOTIFICATIONS_EP_GROUP_REF}</ep-group>-->
+                        <!--<target-entry>-->
+                            <!--<id>${SOAP_NOTIFICATIONS_TARGET_ENTRY_ID}</id>-->
+                            <!--<entry-dn>${SOAP_NOTIFICATIONS_TARGET_ENTRY_DN}</entry-dn>-->
+                            <!--<target-attribute>-->
+                                <!--<id>${SOAP_NOTIFICATIONS_TARGET_ATTRIBUTE_ID}</id>-->
+                                <!--<attribute-name>${SOAP_NOTIFICATIONS_TARGET_ATTRIBUTE_NAME}</attribute-name>-->
+                                <!--<attribute-type>${SOAP_NOTIFICATIONS_TARGET_ATTRIBUTE_TYPE}</attribute-type>-->
+                                <!--<check-value>${SOAP_NOTIFICATIONS_TARGET_ATTRIBUTE_CHECK_VALUE}</check-value>-->
+                                <!--<is-value-sent>${SOAP_NOTIFICATIONS_TARGET_ATTRIBUTE_IS_VALUE_SENT}</is-value-sent>-->
+                            <!--</target-attribute>-->
+                        <!--</target-entry>-->
+                    <!--</event-type>-->
+                    <!--<end-point-group>-->
+                        <!--<name>${SOAP_NOTIFICATIONS_EP_GROUP_NAME}</name>-->
+                        <!--<end-point>-->
+                            <!--<name>${SOAP_NOTIFICATIONS_EP_NAME}</name>-->
+                            <!--<uri>${SOAP_NOTIFICATIONS_EP_URI}</uri>-->
+                            <!--<weight>${SOAP_NOTIFICATIONS_EP_WEIGTH}</weight>-->
+                        <!--</end-point>-->
+                    <!--</end-point-group>-->
+                <!--</soap-notifications>-->
+                <nudr-dr-notifications>
+                    <maximum-subscription-duration>43200</maximum-subscription-duration>
+                    <end-point>841d1b7c-5103-11e9-8c09-174c95907e28</end-point>
+                </nudr-dr-notifications>
+                <nf-profile>
+                    <instance-id>f8b5865c-49e8-463e-8f16-4dd6a15d3f41</instance-id>
+                    <requested-status>registered</requested-status>
+                    <snssai>
+                        <id>1</id>
+                        <sst>1</sst>
+                        <sd>000002</sd>
+                    </snssai>
+                    <fqdn>udr1.n47.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                    <priority>1</priority>
+                    <locality>LN</locality>
+                    <service>
+                        <instance-id>nudr-dr</instance-id>
+                        <name>nudr-dr</name>
+                        <scheme>https</scheme>
+                        <requested-status>registered</requested-status>
+                        <allowed-nf-type>udm</allowed-nf-type>
+                        <allowed-nf-type>5g-eir</allowed-nf-type>
+                        <allowed-nf-type>amf</allowed-nf-type>
+                        <allowed-nf-type>smf</allowed-nf-type>
+                        <allowed-nf-type>ausf</allowed-nf-type>
+                        <allowed-nf-type>nef</allowed-nf-type>
+                        <allowed-nf-type>pcf</allowed-nf-type>
+                        <allowed-nf-type>smsf</allowed-nf-type>
+                        <allowed-nf-type>nssf</allowed-nf-type>
+                        <allowed-nf-type>udr</allowed-nf-type>
+                        <allowed-nf-type>lmf</allowed-nf-type>
+                        <allowed-nf-type>gmlc</allowed-nf-type>
+                        <allowed-nf-type>sepp</allowed-nf-type>
+                        <allowed-nf-type>upf</allowed-nf-type>
+                        <allowed-nf-type>n3iwf</allowed-nf-type>
+                        <allowed-nf-type>af</allowed-nf-type>
+                        <allowed-nf-type>udsf</allowed-nf-type>
+                        <allowed-nf-type>bsf</allowed-nf-type>
+                        <allowed-nf-type>chf</allowed-nf-type>
+                        <allowed-nf-type>nwdaf</allowed-nf-type>
+                    </service>
+                    <service>
+                        <instance-id>ncudr-gud-dr</instance-id>
+                        <name>ncudr-gud-dr</name>
+                        <scheme>https</scheme>
+                        <requested-status>registered</requested-status>
+                        <allowed-nf-type>hss</allowed-nf-type>
+                        <allowed-nf-type>5g-eir</allowed-nf-type>
+                    </service>
+                    <udr-info>
+                        <group-id>1</group-id>
+                        <supi-range>
+                            <id>1</id>
+                            <supi-pattern>'[0-9]+'</supi-pattern>
+                            <supi-start>240810000000000</supi-start>
+                            <supi-end>240819999999999</supi-end>
+                        </supi-range>
+                        <gpsi-range>
+                            <id>1</id>
+                            <identity-pattern>'[0-9]+'</identity-pattern>
+                            <identity-start>860810000000000</identity-start>
+                            <identity-end>860819999999999</identity-end>
+                        </gpsi-range>
+                        <external-group-identifiers-range>
+                            <id>1</id>
+                            <identity-pattern>'[0-9]+'</identity-pattern>
+                            <identity-start>860810000000000</identity-start>
+                            <identity-end>860819999999999</identity-end>
+                        </external-group-identifiers-range>
+                        <supported-data-set>subscription</supported-data-set>
+                    </udr-info>
+                </nf-profile>
+                <remote-nf-profile>
+                    <instance-id>841d1b7c-5103-11e9-8c09-174c95907e28</instance-id>
+                    <type>udm</type>
+                    <service>
+                        <instance-id>UDM</instance-id>
+                        <name>nudm-uecm</name>
+                        <default-notification-subscription>
+                            <notification-type>data-removal-notification</notification-type>
+                            <callback-uri>https://udm1.n47.udm.5gc.mnc081.mcc240.3gppnetwork.org:443/nudm-notifications/v2/sdm</callback-uri>
+                        </default-notification-subscription>
+                    </service>
+                </remote-nf-profile>
+            </udr>
+        </config>
+    </edit-config>
+</rpc>

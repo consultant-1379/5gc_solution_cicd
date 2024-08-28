@@ -1,0 +1,141 @@
+autowizard false
+config
+bsf-function nf-instance bsf2
+ nrf-service nf-management nrf-group-ref [ nrf_registration ]
+ nf-profile bsf_profile1
+  service-address-ref n84SA
+  nf-type             bsf
+  locality            LN
+  nf-service service-id-about-bsf
+   service-name        nbsf-management
+   scheme              https
+   service-priority    1
+   service-address-ref [ n84SA ]
+   allowed-plmn 240 81
+   !
+  !
+ !
+bsf-function nf-instance bsf2
+ service-address n84SA
+  fqdn     bsf2.n84.5gc.mnc081.mcc240.3gppnetwork.org
+  tls-port 443
+ !
+ nrf-group nrf_registration
+  nf-profile-ref bsf_profile1
+  nrf nrf1
+   priority       1
+   fqdn           nrf2.n84.5gc.mnc081.mcc240.3gppnetwork.org
+   scheme         https
+   retry-timeout  1500
+   max-retries    0
+   nf-profile-ref bsf_profile1
+   ip-endpoint nrf2_ep
+    port         443
+    ipv4-address 5.8.6.22
+   !
+  !
+ !
+ bsf-service serviceName1
+  binding-timeout 720
+  binding-database binding-timeout 2160
+  diameter-routing
+  multiple-binding-resolution http-lookup resolution-type most-recent
+  multiple-binding-resolution diameter-lookup resolution-type most-recent
+ !
+!
+diameter service SC.bsf
+ ingress-request-pending-timer          12000
+ egress-request-pending-timer           6000
+ request-send-max-retry                 0
+ fast-feedback-enabled                  true
+ message-destination-validation-enabled false
+ local-endpoint-reference MyTransportEndpointServer
+  enabled        true
+  rank           1
+  local-endpoint MyTransportEndpointServer
+ !
+! local-endpoint-reference MyTransportEndpointClient1
+!  enabled        true
+!  rank           1
+!  local-endpoint MyTransportEndpointClient1
+ !
+!
+diameter applications bsf_applications
+!
+diameter vendor-specific-application-id vAppId
+!
+diameter dictionary diameter_dictionary
+!
+!diameter peer-table static-peer n84PCF
+! peer-origin-host       pcrf2.n84.epc.mnc081.mcc240.3gppnetwork.org
+! restrict-connections   true
+! enabled                true
+! max-connection-nr      4294967295
+! required-connection-nr 1
+! remote-endpoint PCFn84
+!  address            [ 25.51.0.173 ]
+!  port               3868
+!  transport-protocol tcp
+!  enabled            true
+ !
+!
+diameter peer-table dynamic-peer-acceptor MyDynamicPeerAcceptor
+ restrict-connections   true
+ max-peer-connection-nr 4294967295
+ max-connection-nr      4294967295
+ required-connection-nr 1
+ enabled                true
+!
+diameter transport node machine.source.client.realm.com
+ origin-realm      source.client.realm.com
+ origin-host       machine.source.client.realm.com
+ product-name      CDIATA
+ vendor-id         193
+ firmware-revision 1
+!
+diameter transport host-address-resolver address
+ ip-family     any
+ linux-env-var POD_IP
+!
+diameter transport local-endpoint MyTransportEndpointServer
+ enabled                                  true
+ dscp                                     59
+ instance-count                           1
+ watchdog-timer                           30000
+ reconnect-timer                          10000
+ node                                     machine.source.client.realm.com
+ terminate-connection-from-accepted-peers [ MyDynamicPeerAcceptor ]
+ transport-tcp port       3868
+ transport-tcp rank       1
+ transport-tcp backlog    1024
+ transport-tcp no-delay   true
+ transport-tcp tls-host-name-validation true
+!
+!diameter transport local-endpoint MyTransportEndpointClient1
+! enabled                     true
+! dscp                        59
+! instance-count              1
+! watchdog-timer              30000
+! reconnect-timer             10000
+! node                        machine.source.client.realm.com
+! initiate-connection-to-peer n84PCF
+! transport-tcp port       0
+! transport-tcp rank       1
+! transport-tcp backlog    1024
+! transport-tcp no-delay   true
+! transport-tcp tls-host-name-validation true
+!
+diameter routing-table MyRoutingTable
+ service [ SC.bsf ]
+ routing-entry 200
+  enabled    true
+  expression msg.ingress
+  action     "route-to-service service=\"SC.bsf\" local-action=\"PROXY\""
+ !
+ routing-entry 300
+  enabled    true
+  expression msg.egress
+  action     forward-message
+ !
+!
+commit

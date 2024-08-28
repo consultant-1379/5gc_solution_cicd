@@ -1,0 +1,734 @@
+global:
+  databaseName: "eric-pcf-dms"
+  profiles:
+    std-system:
+      enabled: true
+    small-system:
+      enabled: false
+    cleartext-traffic-gw:
+      enabled: false
+    cleartext-provisioning-gw:
+      enabled: false
+    cleartext-geored:
+      enabled: true
+    mtls-traffic-gw:
+      enabled: true
+    mtls-provisioning-gw:
+      enabled: true
+    mtls-geored:
+      enabled: false
+  applicationId: "CCPC"
+  autoScaling:
+    enabled: true
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: 'CCPC'
+          customerId: '946060'
+          swltId: 'STA-CCPC-8'
+  security:
+    policyBinding:
+      create: false
+    policyReferenceMap:
+      default-restricted-security-policy: "default-restricted-security-policy"
+    tls:
+      enabled: true
+  internalMtls:
+    enabled: "on"
+  pullSecret: regcred
+  registry:
+    url: registry01.eoaas.n89.vpod1.sero.gic.ericsson.se
+    imagePullPolicy: IfNotPresent
+  timezone: CET
+  istio:
+    ingress:
+      gateways:
+        eric-pcf-traffic-gw:
+          enabled: true
+        eric-ccpc-provisioning-gw:
+          enabled: true
+        eric-pcf-intersite-gw:
+          enabled: false
+      oauth2:
+        eric-pcf-traffic:
+          enabled: false
+          permissive: true
+          selector: "eric-pcf-traffic"
+          keys:
+          - issuer: "nrf-a-id"
+            jwks: '{"keys":[
+                {
+                  "crv":"P-256",
+                  "kid":"key-c-id",
+                  "kty":"EC",
+                  "x":"wO3-TFT5fd-Xqx5f9eGLlJHmR9ZgEvRfEoBLXro97co",
+                  "y":"rETYnJ2jUfav7lFr8I0pQnnF_1nDXfnOWG3vv-gvKEc"
+                }
+              ]}'
+          rules:
+          - paths: ["/npcf-smpolicycontrol/v1*"]
+            methods: ["POST","PUT","PATCH","DELETE"]
+            audiences: ["pcf-a-id"]
+            subjects: ["smf-a-id"]
+            issuers: ["nrf-a-id"]
+            scopes: ["npcf-smpolicycontrol"]
+    egress:
+      enabled: true
+      endpoints:
+        eric-ccrc-sbi-traffic-mtls:
+          enabled: true
+          host: "nrf1.n89.nrf.5gc.mnc081.mcc240.3gppnetwork.org" #FQDN for CCRC
+          ports:
+            - port: 443 # HTTPS target destination
+              name: https-port-for-mTLS-origination
+              mode: mTLS # Values allowed [ TLS, mTLS ]
+        eric-smf-sbi-traffic-mtls:
+          enabled: true
+          host: "smf1.n89.smf.5gc.mnc081.mcc240.3gppnetwork.org"
+          ports:
+            - port: 443 # HTTPS target destination
+              name: https-port-for-mTLS-origination
+              mode: mTLS # Values allowed [ TLS, mTLS ]
+
+  enableCrashDumps: true # enable core dump generation
+  tapagent:
+    enabled: true
+  database:
+    multiSite:
+      runtimeConfigMode:
+        enabled: false
+  internalIPFamily: ""
+
+externalcertificate:
+  ingress:
+    trustedCertificateListName: eric-ccpc-sbi-server-certs-cacerts
+    asymmetricKeyCertificateName: eric-ccpc-sbi-server-key/eric-ccpc-sbi-server-certificate
+  egress:
+    trustedCertificateListName: eric-ccpc-sbi-client-certs-cacerts
+    asymmetricKeyCertificateName: eric-ccpc-sbi-client-key/eric-ccpc-sbi-client-certificate
+
+eric-udm-mesh-integration:
+  enabled: true
+  eric-ingressgw-pcf-traffic:
+    enabled: true
+    externalTrafficPolicy: Cluster
+    service:
+      loadBalancerIP: "" #Used for setting the ingress-gateway VIP
+      annotations:
+        addressPoolName: ccpc-5g-traffic
+  eric-ingressgw-ccpc-provisioning:
+    enabled: true
+    externalTrafficPolicy: Cluster
+    service:
+      loadBalancerIP: "" #Used for setting the ingress-gateway VIP
+      annotations:
+        addressPoolName: ccpc-5g-prov
+  eric-ingressgw-pcf-intersite:
+    enabled: false
+    externalTrafficPolicy: Cluster
+    service:
+      loadBalancerIP: "" #Used for setting the ingress-gateway VIP
+      annotations:
+        addressPoolName: ccpc-5g-geored
+
+servicemesh:
+  namespace: eric-ccpc
+
+eric-nrfagent:
+  global:
+    ipStackMode: "'ipv4'"
+    istio:
+      nrfagent_egressrule_enabled: false
+      egress:
+        enabled: true
+        nrfAgent_secretName: "eric-ccpc-sbi-client-certs"
+        caSecretNameSuffix: "-cacert"
+        certsPath: "/etc/istio/egress-certs/"
+        caCertsPath: "/etc/istio/egress-ca-certs/"
+        clientCertificate: "tls.crt"
+        privateKey: "tls.key"
+        caCertificates: "cacert"
+    scheduler:
+      nodeSelector: {}
+
+#adp: define sevice types and required IPs according to cluster specifics
+eric-adp-5g-udm:
+  eric-lm-combined-server:
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: '10.155.142.68'
+          port: '9095'
+    licenseConsumerHandler:
+      service:
+        endpoints:
+          externalHttps:
+            tls:
+              verifyClientCertificate: optional
+
+  eric-si-application-sys-info-handler:
+    nodeSelector: {}
+
+  eric-pm-server:
+    server:
+      serviceAccountName: eric-adp-5g-udm-pm-server
+      persistentVolume:
+        storageClass: network-block
+    rbac:
+      appMonitoring:
+        enabled: true
+        federation:
+          jobOverride: false
+          jobConfiguration: |
+            #- job_name: 'federate-3pp-caas'
+            #  scrape_interval: 15s
+            #  honor_labels: true
+            #  metrics_path: '/federate'
+            #  params:
+            #    'match[]':
+            #      - '{job="kubernetes-nodes",namespace="eric-ccpc"}'
+            #      - '{job="kubernetes-nodes-cadvisori",namespace="eric-ccpc"}'
+            #  static_configs:
+            #    - targets:
+            #      - 'eric-pm-server.monitoring:9090'
+    service:
+      endpoints:
+        reverseproxy:
+          tls:
+            enforced: "optional"
+  eric-pm-bulk-reporter:
+    nodeSelector: {}
+    userConfig:
+      ldap:
+        enabled: true
+    env:
+      nodeName: "ccpc"
+      nodeType: CCPC
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+    service:
+      annotations:
+        sharedVIPLabel: ccpc-oam
+        addressPoolName: ccpc-oam
+      loadBalancerIP: ""
+      type: LoadBalancer
+
+  eric-cm-yang-provider:
+    nodeSelector: {}
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+    service:
+      annotations:
+        addressPoolName: ccpc-oam
+        sharedVIPLabel: ccpc-oam
+      type: LoadBalancer
+      loadBalancerIP: ""
+    ldap:
+      enabled: true
+      ipv6Enabled: false
+    authorization:
+      enabled: true
+    keyManagement:
+      storeHostKeys: false
+    externaldb:
+      dbuser: customname
+    pmMetrics:
+      enabled: true
+      enableQueryMetricsCommands: true
+      httpsHost: eric-pm-server:9089
+
+  eric-cm-mediator:
+    nodeSelector: {}
+    cmkey:
+      enable: true
+    backend:
+      dbuser: customname
+
+  eric-data-document-database-pg:
+    nodeSelector:
+      postgres: {}
+      brAgent: {}
+      cleanuphook: {}
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+      backup:
+        storageClassName: "network-block"
+
+  eric-data-document-database-pg-ah:
+    enabled: true
+    nodeSelector:
+      postgres: {}
+      brAgent: {}
+      cleanuphook: {}
+    postgresDatabase: adp_gs_ah
+    persistentVolumeClaim:
+      storageClassName: network-block
+
+  eric-data-document-database-pg-lm:
+    enabled: true
+    nodeSelector:
+      postgres: {}
+      brAgent: {}
+      cleanuphook: {}
+    postgresDatabase: adp_gs_lm
+    persistentVolumeClaim:
+      storageClassName: network-block
+
+  eric-data-document-database-pg-iam:
+    nodeSelector:
+      postgres: {}
+      brAgent: {}
+      cleanuphook: {}
+    postgresDatabase: adp_gs_iam
+    persistentVolumeClaim:
+      storageClassName: network-block
+
+  eric-sec-access-mgmt:
+    http:
+      hostValidation:
+        allowedHosts: iam.ccpc1.n89.sero.gic.ericsson.se
+    nodeSelector: {}
+
+  eric-sec-ldap-server:
+    persistentVolumeClaim:
+      storageClassName: network-block
+    nodeSelector:
+      ldap: {}
+      ldapAgent: {}
+      ldapProxy: {}
+
+  eric-sec-key-management:
+    nodeSelector: {}
+
+  eric-sec-sip-tls:
+    nodeSelector: {}
+
+  eric-log-transformer:
+    egress:
+      syslog:
+        enabled: false
+        tls:
+          enabled: true
+        certificates:
+          asymmetricKeyCertificateName: log-syslog-client
+          trustedCertificateListName: log-syslog-client
+        remoteHosts: []
+        inclusions: []
+        exclusions: []
+
+  eric-data-search-engine:
+    autoSetRequiredWorkerNodeSysctl: false
+    nodeSelector:
+      data: {}
+      ingest: {}
+      master: {}
+      bragent: {}
+    persistence:
+      data:
+        persistentVolumeClaim:
+          storageClassName: "network-block"
+      # For data-search-engine >= 6.0.0-29
+      master:
+        persistentVolumeClaim:
+          storageClassName: network-block
+    service:
+      network:
+        protocol:
+          IPv6: false #If ipv6 is used, it must be set to true
+
+  eric-data-search-engine-curator:
+    nodeSelector: {}
+
+  eric-data-coordinator-zk:
+    nodeSelector:
+      brAgent: {}
+      datacoordinatorzk: {}
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+
+
+  eric-data-distributed-coordinator-ed:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+      brAgent:
+        backupVolume:
+          storageClassName: "network-block"
+
+
+  eric-data-message-bus-kf:
+    nodeSelector: {}
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+
+  eric-cnom-document-database-mg:
+    nodeSelector: {}
+    persistence:
+      storageClass: "network-block"
+    serviceAccountName: default
+
+  eric-cnom-server:
+    nodeSelector: {}
+    fqdn: cnom.ccpc1.n89.sero.gic.ericsson.se
+    dashboards:
+      configMap: eric-ccpc-cnom-dashboards
+    externalTls:
+      enabled: true
+
+  eric-fh-alarm-handler:
+    nodeSelector: {}
+    backend:
+      dbname: adp_gs_ah
+      dbuser: customname
+
+  eric-fh-snmp-alarm-provider:
+    nodeSelector: {}
+    oamVIP:
+      enabled: false
+      vip: ""
+      nodeName: ""
+      destIp : ""
+    service:
+      annotations:
+        sharedVIPLabel: ccpc-oam
+        addressPoolName: ccpc-oam
+      type: LoadBalancer
+      loadBalancerIP: ""
+    sourceIdentifierType: 1
+    sourceIdentifier: 127.0.0.1
+
+  eric-ctrl-bro:
+   nodeSelector: {}
+   persistence:
+     persistentVolumeClaim:
+       size: 1Gi
+       storageClassName: network-block
+
+  eric-tm-ingress-controller-cr:
+    service:
+      annotations:
+        sharedVIPLabel: ccpc-oam
+        addressPoolName: ccpc-oam
+      type: LoadBalancer
+      loadBalancerIP: ""
+    nodeSelector:
+      envoy: {}
+    resources:
+      contour:
+        limits:
+          memory: "500Mi"
+
+  eric-odca-diagnostic-data-collector:
+    env:
+      enableFileCollector: true
+    objectStorage:
+      enabled: true
+    resources:
+      diagnostic-data-collector:
+        requests:
+          memory: 512Mi
+          cpu: 900m
+        limits:
+          memory: 1024Mi
+          cpu: 1500m
+
+  eric-data-object-storage-mn:
+    affinity:
+      podAntiAffinity: "hard"
+    credentials:
+      kubernetesSecretName: eric-data-object-storage-mn-creds
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+
+eric-stm-diameter:
+  service:
+    externalIPv4:
+      enabled: true
+      annotations:
+        addressPoolNameDiameterOverTCP: "ccpc-4g-traffic"
+        sharedVIPLabelDiameterOverTCP: ""
+    externalIPv6:
+      enabled: false
+      annotations:
+        addressPoolNameDiameterOverTCP: "ccpc-4g-traffic"
+        sharedVIPLabelDiameterOverTCP: ""
+  initialConfig:
+    dsl:
+      enableIPv6: false
+    sctp:
+      enable: false
+
+eric-slt-dsl:
+  replicaCount: 4
+  initialConfig:
+    dsl:
+      enableIPv6: false
+
+dms:
+  nameOverride: "eric-pcf-dms"
+  replicaCount:
+    server: 7
+  persistence:
+    backup:
+      persistentVolumeClaim:
+        enabled: true
+        storageClassName: network-block
+        locator:
+          size: 64Mi
+        server:
+          size: 8Gi
+        adminMgr:
+          size: 1Gi
+    data:
+      persistentVolumeClaim:
+        enabled: true
+        storageClassName: network-block
+    gwsender:
+      persistentVolumeClaim:
+        enabled: false
+        storageClassName: network-block
+        size: 1Gi
+  nodeSelector:
+    locator:
+    server:
+    adminMgr:
+  brAgent:
+    backupTypeList:
+      - "eric-ccpc-provisioned-data-backup"
+  multiSite:
+    enabled: false
+    runtimeConfigMode:
+      enabled: false
+    locator:
+      localHost:
+
+dms-operator:
+  nodeSelector:
+    operator: {}
+
+eric-pcf-license-handler:
+  licensehandler:
+    nodeSelector: {}
+    licenses:
+      data:
+        smpc_bp:
+          enabled: true
+        smpc_miot_bp:
+          enabled: true
+        smpc_data_vp:
+          enabled: true
+        smpc_miot_data_vp:
+          enabled: true
+        smpc_voice_vp:
+          enabled: true
+        smpc_voice_miot_vp:
+          enabled: true
+
+eric-pcf-nrf-registration:
+  nrfregistration:
+    nodeSelector: {}
+
+da:
+  nameOverride: eric-ccpc-data-access
+  autoScaling:
+    minReplicas: 9
+    maxReplicas: 15
+  dataaccess:
+    nodeSelector: {}
+
+eric-pcf-session-management-policy-control:
+  autoScaling:
+    minReplicas: 4
+    maxReplicas: 6
+  sessionmanagementpolicycontrol:
+    smpcConfiguration:
+      properties:
+        checkForSessionAlive: true
+        inactivityPeriod: 0
+    nodeSelector: {}
+    resources:
+      requests:
+        cpu: 2000m
+        memory: 800Mi
+        ephemeral: 300Mi
+      limits:
+        cpu: 2400m
+        memory: 1000Mi
+        ephemeral: 315Mi
+
+eric-pcrf-ipcan-session-management:
+  enabled: true
+  autoScaling:
+    minReplicas: 4
+    maxReplicas: 6
+  ipcansessionmanagement:
+    diameter:
+      dsd:
+        network_type: "ip"
+    ipsmConfiguration:
+      properties:
+        checkForSessionAlive: true
+        inactivityPeriod: 0
+    nodeSelector: {}
+
+eric-pcf-charging:
+  enabled: true
+  autoScaling:
+    minReplicas: 2
+    maxReplicas: 4
+
+eric-pcf-rx-policy-control:
+  autoScaling:
+    minReplicas: 2
+    maxReplicas: 10
+  rxpolicycontrol:
+    diameter:
+      dsd:
+        network_type: "ip"
+    nodeSelector: {}
+
+prov:
+  nameOverride: eric-ccpc-provisioning
+  provisioning:
+    replicaCount: 12
+    nodeSelector: {}
+
+eric-pcf-peer-discoverer:
+  peerdiscoverer:
+    nodeSelector: {}
+    config:
+      data:
+        connectivityConfiguration:
+          tlsMode: 2
+          alpnProtocols: h2,http/1.1
+          timeout: 500
+          outlier:
+            consecutiveFailures: 3
+          healthCheck:
+            interval: 60000
+            unhealthyThreshold: 3
+            healthyThreshold: 1
+            resource: /nudr-dr/v2/policy-data/ues/imsi-100000/sm-data
+            acceptedCodes:
+              - 200,600
+        targetNFSpecification:
+          maxRedundantNFs: 3
+
+eric-pcf-peer-discoverer-chf:
+  enabled: true
+  peerdiscoverer:
+    nodeSelector: {}
+    config:
+      data:
+        connectivityConfiguration:
+          tlsMode: 2
+          alpnProtocols: h2,http/1.1
+          timeout: 500
+          outlier:
+            consecutiveFailures: 3
+          healthCheck:
+            interval: 60000
+            unhealthyThreshold: 3
+            healthyThreshold: 1
+            resource: /nchf-spendinglimitcontrol/v1/subscriptions/imsi100000
+            acceptedCodes:
+              - 200,600
+        targetNFSpecification:
+          maxRedundantNFs: 3
+
+eric-pcf-peer-discoverer-bsf:
+  peerdiscoverer:
+    nodeSelector: {}
+    config:
+      data:
+        connectivityConfiguration:
+          tlsMode: 2
+          alpnProtocols: h2,http/1.1
+          timeout: 500
+          outlier:
+            consecutiveFailures: 3
+          healthCheck:
+            interval: 60000
+            unhealthyThreshold: 3
+            healthyThreshold: 1
+            resource: /nbsf-management/v1/pcfBindings/pcf-dummy-bindingid
+            acceptedCodes:
+              - 200,600
+        targetNFSpecification:
+          maxRedundantNFs: 3
+
+eric-pcf-peer-discoverer-ccpc:
+  peerdiscoverer:
+    nodeSelector: {}
+    config:
+      data:
+        connectivityConfiguration:
+          alpnProtocols: h2,http/1.1
+          timeout: 1720
+          outlier:
+            consecutiveFailures: 3
+        targetNFSpecification:
+          maxRedundantNFs: 3
+
+eric-pcf-egress-proxy:
+  autoScaling:
+    minReplicas: 2
+    maxReplicas: 4
+  egressproxy:
+    nodeSelector: {}
+    secure:
+      secret:
+        cert:
+          name: eric-ccpc-sbi-client-certs
+        cacert:
+          name: eric-ccpc-sbi-client-certs-cacert
+
+eric-pcf-egress-proxy-chf:
+  autoScaling:
+    minReplicas: 2
+    maxReplicas: 4
+  enabled: true
+  egressproxy:
+    nodeSelector: {}
+    secure:
+      secret:
+        cert:
+          name: eric-ccpc-sbi-client-certs
+        cacert:
+          name: eric-ccpc-sbi-client-certs-cacert
+
+eric-pcf-egress-proxy-bsf:
+  autoScaling:
+    minReplicas: 2
+    maxReplicas: 4
+  egressproxy:
+    nodeSelector: {}
+    secure:
+      secret:
+        cert:
+          name: eric-ccpc-sbi-client-certs
+        cacert:
+          name: eric-ccpc-sbi-client-certs-cacert
+
+eric-pcf-egress-proxy-ccpc:
+  egressproxy:
+    nodeSelector: {}
+    secure:
+      secret:
+        cert:
+          name: eric-ccpc-sbi-client-certs
+        cacert:
+          name: eric-ccpc-sbi-client-certs-cacert
+
+eric-pcf-geored-controller:
+  georedcontroller:
+    nodeSelector: {}
+
+eric-pcf-kvdb-supervisor:
+  kvdbsupervisor:
+    nodeSelector: {}
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: network-block

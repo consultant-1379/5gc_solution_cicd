@@ -1,0 +1,11 @@
+{
+  "clusterName": "n84-eccd1",
+  "additionalParams": {
+    "namespace": "ccrc",
+    "skipVerification": true,
+    "applicationTimeOut": "1200",
+    "manoControlledScaling": false,
+    "global.ipStackMode":"ipv4"
+  }
+}
+

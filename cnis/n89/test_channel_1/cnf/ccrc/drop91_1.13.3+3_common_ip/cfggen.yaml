@@ -1,0 +1,50 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global_common_ip.yaml
+# targetDir: .
+# jsonschema: ccrc/jsonschema.yaml
+# jsonschemaGlobal: common/global-jsonschema.yaml
+#templateDir: ../../../../../../../ts-config/templates/
+templateDir: ../../../../../../config_template/templates/
+# jsonschemaGlobal: ../jsonschemas/schema-global.yaml
+
+files:
+- template: ccrc/drop91_1.13.3+3/values.yaml.jinja2
+  target: day0/values.yaml
+- template: common/instantiate.json.jinja2
+  target: day0/instantiate.json
+- template: common/user-config.xml.jinja2
+  target: day1/user-config.xml
+- template: ccrc/drop91_1.13.3+3/nrf-config.xml.jinja2
+  target: day1/nrf-config.xml
+- template: ccrc/drop91_1.13.3+3/nrfagent-config.xml.jinja2
+  target: day1/nrfagent-config.xml
+- template: ccrc/drop91_1.13.3+3/nssf-config.xml.jinja2
+  target: day1/nssf-config.xml
+- template: ccrc/drop91_1.13.3+3/ddc-config.xml.jinja2
+  target: day1/ddc-config.xml
+- template: common/snmp-config.xml.jinja2
+  target: day1/snmp-config.xml
+- template: ccrc/drop91_1.13.3+3/nssf-provisioning/amf-set-profile.json.jinja2
+  target: day1/nssf-provisioning/amf-set-profile.json
+- template: ccrc/drop91_1.13.3+3/nssf-provisioning/nrf-instance-profile.json.jinja2
+  target: day1/nssf-provisioning/nrf-instance-profile.json
+- template: ccrc/drop91_1.13.3+3/nssf-provisioning/tai-group-profile.json.jinja2
+  target: day1/nssf-provisioning/tai-group-profile.json
+- template: ccrc/drop91_1.13.3+3/nssf-provisioning/slice-instance-profile.json.jinja2
+  target: day1/nssf-provisioning/slice-instance-profile.json
+- template: ccrc/drop91_1.13.3+3/outbound-policy/auto-sni-amf.yaml.jinja2
+  target: day1/outbound-policy/auto-sni-amf.yaml
+- template: ccrc/drop91_1.13.3+3/outbound-policy/auto-sni-smf.yaml.jinja2
+  target: day1/outbound-policy/auto-sni-smf.yaml
+- template: ccrc/drop91_1.13.3+3/outbound-policy/auto-sni-pcf.yaml.jinja2
+  target: day1/outbound-policy/auto-sni-pcf.yaml
+- template: ccrc/drop91_1.13.3+3/outbound-policy/destination-rules.yaml.jinja2
+  target: day1/outbound-policy/destination-rules.yaml
+- template: ccrc/drop91_1.13.3+3/outbound-policy/service-entries.yaml.jinja2
+  target: day1/outbound-policy/service-entries.yaml
+- template: ccrc/drop91_1.13.3+3/outbound-policy/tcp-options-for-tls-amf.yaml.jinja2
+  target: day1/outbound-policy/tcp-options-for-tls-amf.yaml
+- template: ccrc/drop91_1.13.3+3/outbound-policy/tcp-options-for-tls-smf.yaml.jinja2
+  target: day1/outbound-policy/tcp-options-for-tls-smf.yaml
+- template: ccrc/drop91_1.13.3+3/outbound-policy/tcp-options-for-tls-pcf.yaml.jinja2
+  target: day1/outbound-policy/tcp-options-for-tls-pcf.yaml

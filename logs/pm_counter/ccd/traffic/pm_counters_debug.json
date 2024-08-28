@@ -1,0 +1,4 @@
+[
+ {"counter-name": "kube_pod_container_status_terminated"},
+ {"counter-name": "kube_pod_container_status_restarts_total"}
+] 

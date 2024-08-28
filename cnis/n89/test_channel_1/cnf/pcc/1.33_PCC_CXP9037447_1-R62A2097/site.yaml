@@ -1,0 +1,198 @@
+nodeName: n89-pcc
+nodeType: PCC
+vnflcm:
+  clusterName: n89
+  namespace: pcc
+  InstantiateVnfRequest:
+    helm_client_version: 3.13
+    applicationTimeOut: 1800
+    skipVerification: "true"
+instance: 1
+users:
+  day0:
+    username: day0
+    password: day0
+  day1:
+  - username: tsadm
+    password: tsadm
+    groups: [ system-admin system-security-admin mm-config-admin mm-lawful-intercept-admin mm-gsh-lawful-intercept-admin mm-itc-admin mm-security-admin mm-admin mm-read-only-operator mm-expert-admin sm-admin sm-cdr-admin sm-charging-admin sm-itc-admin sm-lawful-intercept-admin sm-operator sm-tracing-admin sm-uetrace-admin system-troubleshooter system-read-only admin ]
+ 
+license:
+  customerId: '946060'
+  swltId: STA-PCC-9
+snmp:
+  agentEngineId: 8000137001C0A8720BBDC2842D
+  heartbeatInterval: 600
+replicaCount:
+  eric-pc-mm-forwarder: 8  # mandatory, as PC-MM networking configurations reply on this number.
+  eric-pc-mm-mobility: 19
+  eric-pc-sm-sgw-session: 5
+  eric-pc-sm-smf-pgw-session: 12
+  eric-pc-sm-nsmf-forwarder: 6
+  eric-pc-kvdb-rd-server: 16
+  eric-pc-sm-udp-forwarder: 3
+  eric-pc-sm-http-client: 3
+  eric-pc-vpn-gateway-forwarder: 4
+
+ddc:
+  remotePath: /lab/pccc_logs/5GC-CICD/ci/N89_DDC/n89-pcc
+pcc:
+  dns:
+    server: pccc-tool-niv-n89-01
+    ipv4: 11.100.3.51
+  ipRule:
+    defaultGws: [1]
+    bfdPeers: [2,3]
+    fwdIpFrom: 21
+    bgpNeighbors: [2,3]
+    creIpFrom: 21
+    vpngwIpFrom: 31
+  pcmm:
+    enabled: true
+    nodeId: site1-cluster1-pcc1
+    mmeGroupId: 32768
+    mmeCode: 13
+    amfRegionId: 255
+    amfSetId: 2
+    amfPointer: 13
+    amfCapacity: 50
+    amfInstanceId: 543dc31c-6220-46c4-9c32-720bbdc2842d
+    namfLbIp: 172.17.128.1
+    pgwups5s8NI: media_cn
+    hss:
+      - ip: 172.17.128.14
+        host: esm
+      - ip: 172.17.136.14
+        host: esm
+
+    ipNetwork: # Only support IPv4
+    - name: MEDIA_CN
+      ipInt:
+        vlan: 2001
+        ipv4: 172.20.0.0/24
+      ipSvc:
+      - name: S10-GTP-C
+        ipv4: 172.16.0.2
+      - name: S11-GTP-C
+        ipv4: 172.16.0.3
+    - name: SIG_CN_1
+      ipInt:
+        vlan: 2002
+        ipv4: 172.20.32.0/24
+      ipSvc:
+      - name: S6a-1
+        ipv4: 172.16.32.1
+      - name: SBI-Server
+        ipv4: 172.17.128.1
+      - name: SBI-Client
+        ipv4: 172.17.128.1
+    - name: SIG_CN_2
+      ipInt:
+        vlan: 2010
+        ipv4: 172.20.96.0/24
+      ipSvc:
+      - name: S6a-2
+        ipv4: 172.16.32.2
+    - name: RAN_1
+      ipInt:
+        vlan: 2004
+        ipv4: 172.20.64.0/24
+      ipSvc:
+      - name: S1-MME-1
+        ipv4: 172.16.64.1
+      - name: N2-1
+        ipv4: 172.16.64.3
+    - name: RAN_2
+      ipInt:
+        vlan: 2009
+        ipv4: 172.20.128.0/24
+      ipSvc:
+      - name: S1-MME-2
+        ipv4: 172.16.64.2
+      - name: N2-2
+        ipv4: 172.16.64.4
+    - name: OM_CN
+      ipInt:
+        vlan: 2003
+        ipv4: 172.20.160.0/24
+      ipSvc:
+      - name: OAM
+        ipv4: 10.221.124.79
+     # - name: NTP
+      #  ipv4: 10.221.124.79
+  pcsm:
+    smfInstanceId: d67766fc-210f-4ecf-858f-cc42a60fc00e
+    nsmfLbIp: 172.17.128.2
+    nsmfNotifLbIp: 172.17.128.3
+    nsmfLogicalIntLbNI: sig_cn
+    sgwuPfcpAddress: 172.18.32.1
+    sgwups5s8NI: media_cn
+    internetPool:
+      ipv4: 21.0.0.0/11
+      ipv6: fd21:0001:0000::/44
+    imsPool:
+      ipv4: 21.64.0.0/11
+      ipv6: fd21:0001:0200::/44
+    mqfPool:
+      ipv4: 22.0.0.0/16
+    smfSbiNotifyHost: pcc1-smf-notification.site1-cluster1
+    smfSbiNsmfHost: pcc1-smf-nsmf.site1-cluster1
+    pcrfDiameterAddress: 172.17.128.8
+    smLogicalInt:
+      pgwS5s8c:
+        ipv4: 172.17.0.3
+        networkInstance: sig_cn
+      gomc:
+        ipv4: 172.17.32.3
+        networkInstance: sig_cn
+      sxb:
+        ipv4: 172.17.32.4
+        networkInstance: sig_cn
+      s4s11c:
+        ipv4: 172.17.0.1
+        networkInstance: media_cn
+      sgwS5s8c:
+        ipv4: 172.17.0.2
+        networkInstance: sig_cn
+      sxa:
+        ipv4: 172.17.32.2
+        networkInstance: sig_cn
+      dns:
+        ipv4: 172.17.128.2
+        networkInstance: om_cn
+  vpngw:
+    maxNum: 8
+    loopback:
+      ipv4: 172.17.32.1
+      networkInstance: sig_cn
+    intraForward:
+      vlan: 2110
+      ipv4: 172.21.128.0/25
+    networkInstances:
+    - name: sig_cn
+      localAs: 4201111002
+      remoteAs: 4251100002
+      ipForward:
+        vlan: 2102
+        ipv4: 172.21.32.0/24
+      vnfLoop:
+        ipv4: 172.17.32.254
+    - name: media_cn
+      localAs: 4201111001
+      remoteAs: 4251100001
+      ipForward:
+        vlan: 2101
+        ipv4: 172.21.0.0/24
+      vnfLoop:
+        ipv4: 172.17.0.254
+ntpServer:
+  ip1: 10.221.17.6
+  ip2: 10.221.17.46
+DiagnosticDC:
+  remoteAddress: 11.100.3.51
+  remotePort: 22
+  remotePath: /lab/pccc_logs/5GC-CICD/ci/N89_DDC/n89-pcc-ddc
+  clientIdentityUser: root
+  clientIdentityPwd: bG1jX3hkZwo=
+interfaceType: ovs
+pcc_pcmm_nw_extra: false

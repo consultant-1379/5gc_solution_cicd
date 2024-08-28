@@ -1,0 +1,68 @@
+image:
+  name: sriov-network-device-plugin
+  repo: registry.eccd.local:5000
+  tag: v3.3.1-7-6340e464
+nodeSelector:
+  type: high-throughput
+tolerations:
+- effect: NoSchedule
+  key: high-throughput
+  operator: Equal
+  value: "true"
+configmap:
+  name: sriov-dp-configmap
+  data: |
+    {
+        "resourceList": [{
+                "resourceName": "intel_sriov_netdevice",
+                "selectors": {
+                    "vendors": ["8086"],
+                    "devices": ["154c", "10ed"],
+                    "drivers": ["i40evf", "ixgbevf", "iavf"]
+                }
+            },
+            {
+                "resourceName": "intel_sriov_dpdk_left",
+                "selectors": {
+                    "pciAddresses": ["0000:00:06.0", "0000:00:08.0", "0000:00:0a.0", "0000:00:0c.0"],
+                    "drivers": ["vfio-pci", "igb_uio"]
+                }
+            },
+            {
+                "resourceName": "intel_sriov_dpdk_right",
+                "selectors": {
+                    "pciAddresses": ["0000:00:07.0", "0000:00:09.0", "0000:00:0b.0", "0000:00:0d.0"],
+                    "drivers": ["vfio-pci", "igb_uio"]
+                }
+            },
+            {
+                "resourceName": "dp_sriov_mlx5_left",
+                "selectors": {
+                    "pciAddresses": ["0000:00:06.0", "0000:00:08.0", "0000:00:0a.0", "0000:00:0c.0"],
+                    "vendors": ["15b3"],
+                    "devices": ["1018"],
+                    "drivers": ["mlx5_core"],
+                    "isRdma": true
+                }
+            },
+            {
+                "resourceName": "dp_sriov_mlx5_right",
+                "selectors": {
+                    "pciAddresses": ["0000:00:07.0", "0000:00:09.0", "0000:00:0b.0", "0000:00:0d.0"],
+                    "vendors": ["15b3"],
+                    "devices": ["1018"],
+                    "drivers": ["mlx5_core"],
+                    "isRdma": true
+                }
+            },
+            {
+                "resourceName": "mlnx_sriov_rdma",
+                "selectors": {
+                    "vendors": ["15b3"],
+                    "devices": ["1018"],
+                    "drivers": ["mlx5_ib"],
+                    "isRdma": true
+                }
+            }
+        ]
+    }

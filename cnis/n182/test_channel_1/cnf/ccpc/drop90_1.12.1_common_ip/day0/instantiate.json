@@ -1,0 +1,9 @@
+{
+  "clusterName": "n182",
+  "additionalParams": {
+       "namespace": "ccpc",
+       "applicationTimeOut": "3600",
+       "skipJobVerification": "false",
+       "skipVerification": "true"
+      }
+}

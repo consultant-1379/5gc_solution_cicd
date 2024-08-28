@@ -1,0 +1,37 @@
+nodeName: n84-eda1
+nodeType: EDA
+
+vnflcm:
+  clusterName: n84-eccd1
+  namespace: eda2
+  InstantiateVnfRequest:
+    applicationTimeOut: 1800
+    skipVerification: "false"
+
+oamDomain: sero.gic.ericsson.se
+
+license:
+  customerId: '946060'
+  swltId: STA-EDA-1
+
+hssValidatorTag: 1.29.102
+persistentVolumeClaim:
+  eric-data-wide-column-database-cd: 103G
+  eric-data-message-bus-kf: 2G
+replicaCount:
+  eric-act-aaa: 2
+  eric-act-inbound-async: 2
+  eric-act-inbound-interfaces: 2
+  eric-act-inbound-mml: 2
+  eric-act-rest-provisioning: 2
+  eric-act-tomcat: 2
+
+ne:
+  ccdm:
+    ldap:
+      host: 214.14.170.109
+    mapi:
+      host: 214.14.170.99
+      oauthTokenHost: 214.14.170.99
+  ccsm:
+      host: 214.14.170.100

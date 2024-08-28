@@ -1,0 +1,10 @@
+config
+diagnostic-data-collection sftp-server Default
+ endpoints endpoint Default
+  remote-address 172.30.32.50
+  remote-port    22
+  remote-path    /lab/pccc_logs/5GC-CICD/ci/N47_DDC/n189-pcg-ddc
+  client-identity username root
+  client-identity password bG1jX3hkZw==
+commit
+end

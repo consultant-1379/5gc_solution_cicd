@@ -1,0 +1,10 @@
+{
+  "clusterName": "n67-eccd1",
+  "additionalParams": {
+       "namespace": "ccsm",
+       "applicationTimeOut": "3600",
+       "skipJobVerification": "false",
+       "skipVerification": "true"
+      }
+}
+

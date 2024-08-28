@@ -1,0 +1,157 @@
+##Version: 1.37.0-280
+global:
+  createClusterRoles: true
+  hosts:
+    gas: 'oss.evnfm.n84-eccd3.sero.gic.ericsson.se'
+    gr: ''
+    iam: 'iam.evnfm.n84-eccd3.sero.gic.ericsson.se'
+    pf: ''
+    so: ''
+    uds: ''
+    vnfm: 'eo-nbi.evnfm.n84-eccd3.sero.gic.ericsson.se'
+  ingressClass: eo_iccr
+  registry:
+    password: 'c0ntainerReg!stry'
+    url: 'container-registry.ingress.n84-eccd3.sero.gic.ericsson.se'
+    username: 'admin'
+  support:
+    ipv6:
+      enabled: false
+  timezone: CET
+tags:
+  eoEvnfm: true
+  eoPf: false
+  eoSo: false
+  eoUds: false
+  eoVmvnfm: true
+eric-ctrl-bro:
+  persistence:
+    persistentVolumeClaim:
+      size: 20Gi
+  sftp:
+    password: 'Qwerasdf1234!'
+    username: 'vnfm'
+eric-data-search-engine:
+  autoSetRequiredWorkerNodeSysctl: false
+  service:
+    network:
+      protocol:
+        IPv6: false
+eric-eo-cm:
+  defaultUser:
+    password: ''
+    username: ''
+  eric-eo-cm-onboarding:
+    enabled: false
+eric-eo-evnfm:
+  eric-lcm-container-registry:
+    ingress:
+      hostname: 'docker-registry.evnfm.n84-eccd3.sero.gic.ericsson.se'
+    persistence:
+      persistentVolumeClaim:
+        size: 450Gi
+    resources:
+      registry:
+        requests:
+          memory: 4Gi
+        limits:
+          memory: 16Gi
+
+  eric-lcm-helm-chart-registry:
+    env:
+      secret:
+        BASIC_AUTH_PASS: "Qwerasdf1234!"
+        BASIC_AUTH_USER: vnfm
+    ingress:
+      enabled: true
+      hostname: 'helm-registry.evnfm.n84-eccd3.sero.gic.ericsson.se'
+  eric-vnfm-orchestrator-service:
+    oss:
+      topology:
+        secretName: null
+    smallstack:
+      application: true
+  eric-am-onboarding-service:
+    resources:
+      requests:
+        memory: 8Gi
+      limits:
+        memory: 32Gi
+
+eric-eo-evnfm-nbi:
+  eric-evnfm-rbac:
+    defaultUser:
+      password: 'Qwerasdf1234!'
+      username: 'vnfm'
+
+eric-eo-evnfm-vm:
+  eric-vnflcm-service:
+    oss:
+      secretName: null
+    persistentVolumeClaim:
+      size: 20Gi
+    service:
+      enabled: false
+      externalTrafficPolicy: Local
+      loadBalancerIP: '::'
+eric-eo-so:
+  defaultUser:
+    password: ''
+    username: ''
+eric-gr-bur-orchestrator:
+  credentials:
+    password: ''
+    username: ''
+  gr:
+    bro:
+      autoDelete:
+        backupsLimit: 10
+    cluster:
+      role: ''
+      secondary_hostnames:
+      - ''
+    registry:
+      secondarySiteContainerRegistryHostname: null
+    sftp:
+      password: ''
+      url: ''
+      username: ''
+eric-oss-config-handling:
+  eric-oss-ncmp:
+    ingress:
+      enabled: true
+eric-oss-pf:
+  defaultUser:
+    password: ''
+    username: ''
+eric-oss-uds:
+  defaultUser:
+    password: ''
+    username: ''
+eric-sec-access-mgmt:
+  ingress:
+    hostname: 'iam.evnfm.n84-eccd3.sero.gic.ericsson.se'
+    ingressClass: eo_iccr
+  replicaCount: 2
+eric-tm-ingress-controller-cr:
+  ingressClass: eo_iccr
+  service:
+    externalTrafficPolicy: Local
+    loadBalancerIP: '214.12.117.205'
+  resources:
+    envoy:
+      limits:
+        memory: 2Gi
+    contour:
+      limits:
+        memory: 1Gi
+gas:
+  defaultUser:
+    password: 'Qwerasdf1234!'
+    username: 'gas-day0'
+geo-redundancy:
+  enabled: false
+system-user:
+  credentials:
+    password: 'Qwerasdf1234!'
+    username: 'oss-day0'

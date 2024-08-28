@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <capabilities>
+      <capability>urn:ietf:params:netconf:base:1.0</capability>
+   </capabilities>
+</hello>]]>]]><?xml version="1.0" encoding="UTF-8"?>
+<rpc message-id="3" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <edit-config xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+      <target>
+         <running />
+      </target>
+      <config>
+         <nssf xmlns="urn:rdns:com:ericsson:oammodel:ericsson-nssf" xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:ty="urn:rdns:com:ericsson:oammodel:ericsson-5gcudmpol-common">
+            <nf-profile>
+               <instance-id>13a1de33-ec45-4cd6-a842-ce5bb3cba3d8</instance-id>
+               <requested-status>registered</requested-status>
+               <plmn-id>
+                  <mcc>240</mcc>
+                  <mnc>81</mnc>
+               </plmn-id>
+               <fqdn>nssf1.n47.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+               <capacity>100</capacity>
+               <service>
+                  <instance-id>nnssf-nsselection-0001</instance-id>
+                  <name>nnssf-nsselection</name>
+                  <scheme>https</scheme>
+                  <requested-status>registered</requested-status>
+                  <fqdn>nssf1.n47.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                  <ip-endpoint>
+                     <id>1</id>
+                     <port>443</port>
+                  </ip-endpoint>
+                  <allowed-plmn>
+                     <mcc>240</mcc>
+                     <mnc>81</mnc>
+                  </allowed-plmn>
+                  <allowed-nf-type>amf</allowed-nf-type>
+                  <capacity>100</capacity>
+               </service>
+               <service>
+                  <instance-id>nnssf-nssaiavailability-0001</instance-id>
+                  <name>nnssf-nssaiavailability</name>
+                  <scheme>https</scheme>
+                  <requested-status>registered</requested-status>
+                  <fqdn>nssf1.n47.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                  <ip-endpoint>
+                     <id>1</id>
+                     <port>443</port>
+                  </ip-endpoint>
+                  <allowed-plmn>
+                     <mcc>240</mcc>
+                     <mnc>81</mnc>
+                  </allowed-plmn>
+                  <allowed-nf-type>amf</allowed-nf-type>
+                  <capacity>100</capacity>
+               </service>
+               <snssai>
+                  <id>1</id>
+                  <sst>1</sst>
+                  <sd>000002</sd>
+               </snssai>
+            </nf-profile>
+            <optional-feature>
+               <nssf-automation-analytics>deactivated</nssf-automation-analytics>
+               <nssf-automation-analytics-miot>deactivated</nssf-automation-analytics-miot>
+            </optional-feature>
+            <administrative-state>unlocked</administrative-state>
+         </nssf>
+      </config>
+   </edit-config>
+</rpc>

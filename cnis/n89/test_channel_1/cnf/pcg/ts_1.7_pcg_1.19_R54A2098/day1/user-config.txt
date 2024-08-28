@@ -1,0 +1,4 @@
+config
+system authentication user user1 groups system-admin password user1
+commit
+end

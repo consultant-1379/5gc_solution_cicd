@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <capabilities>
+        <capability>
+            urn:ietf:params:netconf:base:1.0
+        </capability>
+    </capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+  <rpc message-id="3" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <edit-config xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+      <target><running/></target>
+      <config>
+        <pcf xmlns="urn:rdns:com:ericsson:oammodel:ericsson-pcf"   xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"   xmlns:ty="urn:rdns:com:ericsson:oammodel:ericsson-5gcudmpol-common">
+          <remote-nf-profile>
+                    <!--id: Unique ID represents the REMOTE-NF.-->
+            <id>udr1</id>
+                        <!--instance-id: Unique ID for the remote endpoint.-->
+            <instance-id>f8b5865c-49e8-463e-8f16-4dd6a15d3f41</instance-id>
+                        <!--At least one of the addressing parameters fqdn, ipv4-address, ipv6-address must be included in the NF level.-->
+            <!--fqdn: FQDN of the REMOTE-NF.-->
+            <fqdn>udr1.n47.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                        <!--ipv4-address: IPv4 addresses of Remote NF.-->
+                        <!--<ipv4-address>{{REMOTE-NF-IPV4-ADDRESS}}</ipv4-address>-->
+                        <!--ipv6-address: IPv6 addresses of Remote NF-->
+                        <!--<ipv6-address>{{REMOTE-NF--ADDRESS}}</ipv6-address>-->
+                        <!--priority: Priority (relative to other NFs of the same type) in the range of 0-65535, to be used for NF selection; lower values indicate a higher priority. If priority is also present in the remote-nf-service list parameters, those will have precedence over this value.-->
+                        <priority>1</priority>
+                        <!--locality: Operator defined information about the location of the NF instance.-->
+            <locality>Sweden</locality>
+                        <!--type: Type file profile/types where the pcf is listening.-->
+            <type>udr</type>
+            <remote-nf-service>
+                                <!--id: Unique ID represents the REMOTE-NF-SERVICE.-->
+                                <id>udr-service1</id>
+                                <!--fqdn: FQDN of the REMOTE-NF-SERVICE.-->
+                                <fqdn>udr1.n47.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                                <!--instance-id: Unique ID of the service instance within the REMOTE-NF Instance.-->
+                                <instance-id>f8b5865c-49e8-463e-8f16-4dd6a15d3f41</instance-id>
+                                <!--You have a CHOICE of the ipv4-address and ipv6-address at this level. Please remove the other one when choose one ip address.-->
+                                <!--ip-endpoint: IP addresses and port information of the Network Function (including IPv4 and/or IPv6 address) where the service is listening for incoming service requests. -->
+                <ip-endpoint>
+                                        <!--id: Unique ID represents the REMOTE-NF-SERVICE IP-ENDPOINT.-->
+                    <id>1</id>
+                                        <!--ipv4-address: IPv4 addresses where the service is listening.-->
+                    <!--<ipv4-address>{{REMOTE-NF-SERVICE-IPV4-ADDRESS}}</ipv4-address> -->
+                                        <!--ipv6-address: IPv6 addresses where the service is listening.-->
+                    <!--<ipv6-address>{{REMOTE-NF-SERVICE-IPV6-ADDRESS}}</ipv6-address> -->
+                                        <!--port: Endpoint port where the nf-service is listening.-->
+                                        <port>443</port>
+                                        <!--transport: Transport protocol. -->
+                                        <transport>tcp</transport>
+                                </ip-endpoint>
+                                <!--priority: Priority (relative to other services of the same type) in the range of 0-65535 to be used for NF Service selection; lower values indicate a higher priority.-->
+                                <priority>1</priority>
+                                <!--name: Name of the REMOTE-NF-SERVICE-->
+                <name>nudr-dr</name>
+            </remote-nf-service>
+          </remote-nf-profile>
+        </pcf>
+      </config>
+    </edit-config>
+  </rpc>
+]]>]]>

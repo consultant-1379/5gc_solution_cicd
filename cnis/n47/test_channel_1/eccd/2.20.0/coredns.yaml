@@ -1,0 +1,37 @@
+apiVersion: v1
+data:
+  Corefile: |
+    .:53 {
+        log
+        errors
+        health {
+            lameduck 5s
+        }
+        ready
+        prometheus :9153
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+            pods insecure
+            fallthrough in-addr.arpa ip6.arpa
+            ttl 30
+        }
+        hosts {
+            fallthrough
+        }
+        forward . dns://10.221.16.10 dns://10.221.16.11
+        cache 30
+        loop
+        reload
+        loadbalance
+    }
+    mnc081.mcc240.3gppnetwork.org:53 {
+        errors
+        cache 30
+        forward . dns://11.100.3.51
+        reload
+        loadbalance
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+  name: coredns
+  namespace: kube-system

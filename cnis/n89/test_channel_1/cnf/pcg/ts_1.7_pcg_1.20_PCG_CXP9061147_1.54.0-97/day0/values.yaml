@@ -1,0 +1,238 @@
+---
+global:
+  timezone: CET
+  applicationId: n89-pcg1
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: "PACKET_CORE_GATEWAY"
+          swltId: "STA-PCG-20"
+          customerId: "946060"
+
+eric-pc-kvdb-rd-server:
+  numberOfMaster: 5
+
+eric-cloud-native-base:
+  eric-data-search-engine:
+    autoSetRequiredWorkerNodeSysctl: false
+
+  eric-dst-agent:
+    tolerations:
+      - effect: NoSchedule
+        key: high-throughput
+        operator: Equal
+        value: "true"
+
+  eric-fh-snmp-alarm-provider:
+    service:
+      annotations:
+        addressPoolName: pcg-oam
+        secretName: snmp-alarm-provider-config
+        sharedVIPLabel: pcg-oam
+      oamVIP:
+        enabled: false
+
+  eric-lm-combined-server:
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: 10.155.142.68
+          port: 9095
+
+  eric-log-transformer:
+    replicaCount: 3
+
+  eric-odca-diagnostic-data-collector:
+    resources:
+      diagnostic-data-collector:
+        limits:
+          cpu: 3000m
+          ephemeral-storage: 40Gi
+          memory: 32Gi
+        requests:
+          cpu: 1600m
+          ephemeral-storage: 24Gi
+          memory: 800Mi
+  # eric-pm-server dimensioning accordig to PCG CPI for 24 eric-pc-up-data-plane pods.
+  eric-pm-server:
+    server:
+      persistentVolume:
+        enabled: true
+        size: 48Gi
+    resources:
+      eric-pm-server:
+        limits:
+          cpu: 3500m
+          memory: 16Gi
+        requests:
+          cpu: 2
+          memory: 12Gi
+  eric-si-application-sys-info-handler:
+    asih:
+      applicationId: n89-pcg1
+
+eric-pc-up-data-plane:
+  replicaCount: 24
+  acceleratedIo:
+    enabled: true
+    driver: bifurcated
+  tolerations:
+    - key: high-throughput
+      effect: NoSchedule
+  applications:
+    - name: app100
+  resources:
+    dataPlane:
+      requests:
+        cpu: '12'
+        memory: 18Gi
+        hugepages-1Gi: 1Gi
+        mellanox.com/mlnx_left: '1'
+        mellanox.com/mlnx_right: '1'
+      limits:
+        cpu: '12'
+        memory: 18Gi
+        hugepages-1Gi: 1Gi
+        mellanox.com/mlnx_left: '1'
+        mellanox.com/mlnx_right: '1'
+  interfaces:
+    - name: net1
+      type: sriov
+      resourceName: 'mellanox.com/mlnx_left'
+    - name: net2
+      type: sriov
+      resourceName: 'mellanox.com/mlnx_right'
+  nodeSelector:
+    type: high-throughput
+
+
+eric-pc-up-pfcp-endpoint:
+  replicaCount: 12
+
+
+eric-pc-routing-engine:
+  interfaces:
+    type: ovs
+    ovs:
+    - bridge: br_data
+      vlan_mode: trunk
+      trunk:
+        - minID: 164
+          maxID: 165
+        - minID: 167
+          maxID: 168
+      mtu: 9000
+
+
+eric-cloud-native-nf-additions:
+  eric-cm-yang-provider:
+    service:
+      annotations:
+        addressPoolName: pcg-oam
+        sharedVIPLabel: pcg-oam
+  eric-data-sftp-server:
+    service:
+      annotations:
+        addressPoolName: pcg-oam
+        sharedVIPLabel: pcg-oam
+#    configuration:
+#      object_policy: ""
+#      bucket_policy: "system-troubleshooter coredump r:up-troubleshooter coredump r:up-troubleshooter heuristics rw:up-operator heuristics rw:up-admin heuristics rw:system-troubleshooter itc r:system-trace-admin itc r:up-troubleshooter itc r:up-trace-admin itc r:system-read-only eric-pmbr-rop-file-store r:system-trace-admin eric-pmbr-rop-file-store rw"
+#      default_bucket_policy: "system-admin * rw:system-security-admin * rw"
+  eric-sec-admin-user-management:
+    enabled: true
+    day0AdminUser:
+      admin:
+        secret: eric-pc-gateway-ldap-server-secret
+    ldap:
+      day0LdapClientSimpleBindAllowed: false
+      notifierEnabled: true
+# # Edit the adminpasswd to change the password of the Day0 admin.
+  # To generate an SHA-512-hashed password using python3:
+  # python3 -c 'import crypt,getpass; print(crypt.crypt(getpass.getpass(), \
+  #             crypt.mksalt(crypt.METHOD_SHA512)))'
+  eric-sec-ldap-server:
+    adminCredentials:
+      adminuser: "sysadmin"
+      adminpasswd: "$6$J41XQHXB.b0UTKxT$MjaX948jEiYUVZINvq38tjNpAw93oWw65XuZ/4NDKoS0uOAMEP146Tvna./tNJDoSHqnAdkUdj4Jj17DIDv5P0"
+
+  eric-cnom-server:
+    service:
+      type: LoadBalancer
+    annotations:
+      metallb.universe.tf/address-pool: pcg-oam
+      metallb.universe.tf/allow-shared-ip: pcg-oam
+
+  eric-pm-bulk-reporter:
+    service:
+      annotations:
+        addressPoolName: pcg-oam
+        sharedVIPLabel: pcg-oam
+
+snmp-alarm-provider-secret-creation:
+  enabled: false
+
+# eric-odca-diagnostic-data-collector dimensioning accordig to PCG CPI for 24 eric-pc-up-data-plane pods.
+
+#
+
+eric-probe-event-report-broker:
+  ebm:
+    enabled: false
+#  staticConfig:
+#    eventReporting:
+#      streamConsumer:
+#        - name: ebm-server1
+#          address: 1.1.1.1
+#          port: 100
+#          domain: ["upf"]
+#          upfEvents:
+#            - name: service-usage
+#              trigger:
+#                - period
+#              period: 5
+#            - name: tcp-usage
+#              trigger:
+#                - period
+#              period: 5
+#        - name: ebm-server2
+#          address: 2.2.2.2
+#          port: 200
+#          domain: ["upf"]
+#          upfEvents:
+#            - name: service-usage
+#              trigger:
+#                - period
+#              period: 5
+#        - name: ebm-server3
+#          address: 3.3.3.3
+#          port: 300
+#          domain: ["upf"]
+#          upfEvents:
+#            - name: tcp-usage
+#              trigger:
+#                - period
+#              period: 5
+
+
+
+# eric-pc-up-pfcp-endpoint:
+#   callFailureReasonLogging:
+#     enabled: true
+#     rateLimit: 10
+
+# eric-log-transformer:
+#   egress:
+#     syslog:
+#       inclusions:
+#         - field: "[logplane]"
+#           value: "adp-app-audit-logs"
+#         - field: "[facility]"
+#           value: "local3"
+#         - field: "[metadata][category]"
+#           value: "CFR"
+#   config:
+#     filter: |
+#       if "CFR" == [metadata][category] {
+#         drop {}
+#       }

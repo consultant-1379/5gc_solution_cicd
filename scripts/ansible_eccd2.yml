@@ -1,0 +1,76 @@
+---
+- name: CCD post install
+  hosts: director
+  remote_user: eccd
+  become_user: root
+  become: yes
+  tasks:
+    - name: Enable Password Login and Update password
+      replace:
+         path: /etc/ssh/sshd_config
+         regexp: '#PasswordAuthentication yes'
+         replace: 'PasswordAuthentication yes'
+    - name: Restart ssh service
+      shell: |
+        systemctl restart sshd
+        echo "eccd:eccd" |chpasswd
+
+- name: CA Config
+  hosts: worker director
+  remote_user: eccd
+  become_user: root
+  become: yes
+  tasks:
+    - name: Copy RootCA to directors and workers
+      copy: src=/home/eccd/5gc_solution_cicd/nfvi/n84/certs/root/RootCA.crt dest=/etc/pki/trust/anchors/
+    - name: Update ca certificates
+      shell: |
+        update-ca-certificates
+
+- name: EVNFM docker registry certificate
+  hosts: worker
+  remote_user: eccd
+  become_user: root
+  become: yes
+  tasks:
+    - name: Check cluster name
+      shell: hostname | cut -d'-' -f5
+      register: cluster_name
+    - name: Create the evnfm cert directory
+      file: path=/etc/docker/certs.d/evnfm-docker-registry.ingress.n84-eccd2.sero.gic.ericsson.se state=directory
+    - name: Copy the evnfm cert to all worker nodes
+      copy: src=/home/eccd/5gc_solution_cicd/nfvi/n84/certs/root/RootCA.crt dest=/etc/docker/certs.d/evnfm-docker-registry.ingress.n84-eccd2.sero.gic.ericsson.se
+
+- name: kube config
+  hosts: director[0]
+  remote_user: eccd
+  tasks:
+    - name: Add the static route
+      shell: |
+        master_internal_vip=$(cat /etc/hosts | grep nodelocal-api.eccd.local | cut -d' ' -f1) && echo ${master_internal_vip}
+        ingress_svc_ip=$(kubectl -n ingress-nginx get svc ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}') && echo ${ingress_svc_ip}
+        sudo ip route add ${ingress_svc_ip} via ${master_internal_vip}
+        sudo bash -c "echo ${ingress_svc_ip} ${master_internal_vip} - - >> /etc/sysconfig/network/ifroute-eth0"
+    - name: Create Additional Ingress Host
+      shell: |
+        cd /home/eccd/5gc_sa_pkg/lab/yaml/
+        export ns=monitoring
+        export svc=eric-pm-server
+        export port=9090
+        export cluster=$(hostname | sed 's/director-[01]-//')
+        export host=${ns}-${svc}.ingress.${cluster}.sero.gic.ericsson.se
+        envsubst < ingress.yaml | kubectl create -f -
+        export ns=monitoring
+        export svc=eric-pm-server-external
+        export port=9090
+        export cluster=$(hostname | sed 's/director-[01]-//')
+        export host=${ns}-${svc}.ingress.${cluster}.sero.gic.ericsson.se
+        envsubst < ingress.yaml | kubectl create -f -
+        export ns=monitoring
+        export svc=eric-pm-server-pushgateway
+        export port=9091
+        export cluster=$(hostname | sed 's/director-[01]-//')
+        export host=${ns}-${svc}.ingress.${cluster}.sero.gic.ericsson.se
+        envsubst < ingress.yaml | kubectl create -f -
+
+

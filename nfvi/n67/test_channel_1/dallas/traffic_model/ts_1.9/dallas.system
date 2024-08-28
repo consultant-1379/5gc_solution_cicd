@@ -1,0 +1,39 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{t3410_attach_timer, 60}.
+{t3410_release_timer, 60}.
+{tc_history_length, 80}.
+{log_interval, 15}.
+{nbr_of_dps_gi_nws, 32}.
+{link_group_num, 2}.
+{debug_startup, off}.
+%{rtt_signalling_range_list, [10,20,30,50,100,150,300,800], []}.
+{rtt_signalling_range_list, [10,30,50,100,150,300,800,1000,1500,2000,5000,10000,20000,50000], []}.
+%{nr_of_sctp_streams, 10}.
+%%%%%%%%%%%%% Frontend 1 start %%%%%%%%%%%%%
+{dp, 1, 'tool-01-201', []}.
+{gnb_n2_ip_addresses, [{'6.192.0.0' , 18 , undefined, 0 }], 1, []}.
+{gnb_n3_ip_addresses, [{'6.196.0.0', 18 , undefined, 0 }], 1, []}.
+{gi_ip_addresses, [{'222.8.0.0', 13, undefined, 0}], 1, []}.
+%%%%%%%%%%%%% Frontend 1 end %%%%%%%%%%%%%
+%%% for 4G dallas %%%%%%
+{enb_s1mme_ip_addresses, [{'8.140.0.0', 18, undefined, 0 }], 1, []}.
+{enb_s1u_ip_addresses, [{'6.16.0.0', 18, undefined, 0 }], 1, []}.  %%Used by MMEsim towards SGW s1u interface
+%%%  end for 4G dallas %%
+%%%%%%%%%%%%% Backends start %%%%%%%%%%%%%
+{subsystem, 1, 'tool-01-102', 10, []}.
+%%%%%%%%%%%%% Backends end %%%%%%%%%%%%%
+
+%%%%%%%%%%%%% Frontend 2 start %%%%%%%%%%%%%
+{dp, 2, 'tool-01-202', []}.
+{gnb_n2_ip_addresses, [{'6.192.64.0' , 18 , undefined, 0 }], 2, []}.
+{gnb_n3_ip_addresses, [{'6.196.64.0', 18 , undefined, 0 }], 2, []}.
+{gi_ip_addresses, [{'222.16.0.0', 13, undefined, 0 }], 2, []}.
+
+%%%%%%%%%%%%% Frontend 2 end %%%%%%%%%%%%%
+%%% for 4G dallas %%%%%%
+{enb_s1mme_ip_addresses, [{'8.140.64.0', 18, undefined, 0 }], 2, []}.
+{enb_s1u_ip_addresses, [{'6.16.64.0', 18, undefined, 0 }], 2, []}.  %%Used by MMEsim towards SGW s1u interface
+%%%  end for 4G dallas %%
+%%%%%%%%%%%%% Backends start %%%%%%%%%%%%%
+{subsystem, 2, 'tool-01-103', 10, []}.
+%%%%%%%%%%%%% Backends end %%%%%%%%%%%%%

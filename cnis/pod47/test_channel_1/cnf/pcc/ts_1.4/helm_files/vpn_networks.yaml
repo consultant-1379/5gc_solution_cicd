@@ -1,0 +1,68 @@
+{{- $_ := . }}
+{{- range index .Values.interfaces }}
+  {{- if or (not (hasKey . "networkAttachmentDefinition")) (and (hasKey . "networkAttachmentDefinition") .networkAttachmentDefinition) -}}
+    {{- if or (eq (required (printf "Interface type not specified for %s!" .name) .type) "macvlan") (eq .type "host-device") (eq .type "ovs") }}
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: {{ template "eric-pc-up-data-plane.fullname" $_ }}-{{ .name }}
+  annotations:
+    {{- include "eric-pc-up-data-plane.helm-annotations" $_ | nindent 4 }}
+    {{- if hasKey . "resourceName" }}
+    k8s.v1.cni.cncf.io/resourceName: {{ .resourceName | quote }}
+    {{- end }}
+  labels:
+    {{- include "eric-pc-up-data-plane.labels" $_ | nindent 4 }}
+
+spec:
+  config: |
+    {
+      "cniVersion": {{ default "0.4.0" .cniVersion | quote }},
+      {{- if eq .type "macvlan" }}
+      "name": {{ .name | quote }},
+      {{- end }}
+      "plugins":
+        [
+          {
+            "type": {{ required "A plugin type must be provided" .type | quote }},
+            {{- if eq .type "macvlan" }}
+            "master": {{ required "A host interface must be provided!" .hostInterface | quote }},
+              {{- if .l2Mtu }}
+            "mtu": {{ .l2Mtu }},
+              {{- end }}
+            "mode": "bridge",
+            {{- else if (eq .type "ovs") }}
+            "bridge": {{ .bridge | quote }},
+            {{- if .vlan }}
+            "vlan": {{ required "A vlan id must be provided" .vlan }},
+            {{- else if .trunk }}
+            "trunk": [
+              {{- with index .trunk }}
+                {{- $trunks := . -}}
+                {{- $len:=(len .) -}}
+                {{- range $i := until (len .) }}
+                  {{- if eq $i (sub $len 1) }}
+              {"minID" : {{ (index $trunks $i).minID }} , "maxID" : {{ (index $trunks $i).maxID }}}
+                  {{- else }}
+              {"minID" : {{ (index $trunks $i).minID }} , "maxID" : {{ (index $trunks $i).maxID }}},
+                  {{- end }}
+               {{- end }}
+             {{- end }}
+            ],
+            {{- end }}
+            {{- end }}
+            "mtu": {{ .mtu | default 1500 }}
+          },
+          {
+            "type": "tuning",
+            "sysctl":
+              {
+                "net.ipv4.conf.{{ .name }}.proxy_arp": "0"
+              }
+          }
+        ]
+    }
+    {{- end }}
+  {{- end -}}
+{{- end -}}

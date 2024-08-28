@@ -1,0 +1,46 @@
+nodeName: node299-cluster1-eda1
+nodeType: EDA
+instance: 1
+
+vnflcm:
+  clusterName: node299-cluster1
+  namespace: eda1
+  InstantiateVnfRequest:
+    skipVerification: "true"
+    applicationTimeOut: 2400
+#    commandTimeOut: 2400
+
+snmp:
+  agentEngineId: 800000c1046564613163317331
+  sourceIdentifier: 10.221.124.15
+
+license:
+  customerId: "946060"
+  swltId: STA-EDA-18 #DM5GC-NODE299-C1-EDA1-1    #STA-EDA-18
+
+eda:
+  domainName: sero.gic.ericsson.se
+  clusterName: eda1-oam.node299-cluster1
+  hssValidatorTag: 1.38.1.20
+
+  networkElements:
+    mapi:
+    - host: ccdm1-5g-prov.node299-cluster1
+      truststoreFile: ccdmkeystore.p12
+
+    ldap:
+    - host: ccdm1-4g-prov.node299-cluster1
+      tlsPem: server-certificate.pem
+
+replicaCount:
+  eric-tm-ingress-controller-cr-envoy: 4
+  eric-act-aaa: 1
+  eric-act-inbound-async: 1
+  eric-act-inbound-interfaces: 1
+  eric-act-inbound-mml: 1
+  eric-act-rest-provisioning: 1
+  eric-act-web-server: 1
+
+pvcSize:
+  eric-data-message-bus-kf: 2
+  eric-data-wide-column-database-cd: 44

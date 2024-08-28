@@ -1,0 +1,11 @@
+{
+  "clusterName" : "n84-eccd1", 
+  "additionalParams" : {
+    "namespace" : "sc",
+    "applicationTimeOut" : "3000",
+    "commandTimeOut" : "1000",
+    "skipJobVerification" : "true",
+    "skipVerification" : "true",
+    "helmWait" : "false"
+  }
+}

@@ -1,0 +1,7 @@
+config
+system authentication user pcc-admin
+password pcc-admin
+full-name pcc-admin
+groups [ mm-expert-admin sm-admin sm-cdr-admin sm-charging-admin sm-itc-admin sm-lawful-intercept-admin sm-operator sm-tracing-admin sm-uetrace-admin system-troubleshooter system-read-only admin ]
+user-label system_admin
+commit

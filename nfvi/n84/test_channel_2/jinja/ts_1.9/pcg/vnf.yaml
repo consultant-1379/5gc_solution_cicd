@@ -1,0 +1,75 @@
+vnflcm:
+  vnfInstanceName: n84-pcg2
+  vnfProductName: PCG
+  vnfSoftwareVersion: CXP9041656_1.R49B
+  instantiate_file: ../../../../../../../ts-config/templates/common/instantiate.json.jinja2
+  rendered-instantiate-file: ./day0/instantiate.json
+  values_file: ../../../../../../../ts-config/templates/pcg/1.14/values.yaml.jinja2
+  rendered-values-file: ./day0/values.yaml
+  clusterName: n84-eccd3
+  namespace: pcg
+  InstantiateVnfRequest:
+    applicationTimeOut: 2400
+    skipVerification: "true"
+
+skip-instantiation: false
+
+#day0:
+#  k8s-secret:
+#  - name: snmp-alarm-provider-config
+#    sources:
+#    - { type: file, key: config.json, file: ../../../templates/common/snmp-config.json.jinja2 }
+
+verify-running: true
+ignore-not-running:
+- eric-data-search-engine-curator
+
+day1:
+  access:
+    oam: n84-pcg2.sero.gic.ericsson.se
+    ldap-admin:
+      user: sysadmin
+      pass: sysadmin
+    users:
+    - user: tsadm
+      pass: tsadm
+      pass_init: tsadm
+      groups: [ system-admin system-troubleshooter ]
+    configs:
+    - file: ../../../../../../../ts-config/templates/common/user-config.txt.jinja2
+      rendered-file: ./day1/user-config.txt
+      proto: ssh
+      pre-verify-pods-ready:
+        check-interval: 5
+        deployments:
+        - eric-cm-yang-provider
+      post-delay: 30
+      retry-interval: 30
+
+  app-config:
+  - file: ../../../../../../../ts-config/templates/pcg/1.14/pcg-config.txt.jinja2
+    rendered-file: ./day1/pcg-config.txt
+    user-id: 0
+    proto: ssh
+    retry-interval: 30
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/common/ddc-config.txt.jinja2
+    rendered-file: ./day1/ddc-config.txt
+    user-id: 0
+    proto: ssh
+    retry-interval: 30
+    post-delay: 10
+
+  k8s-config:
+  - name: Patching daemonset eric-log-shipper to tolerate high-throughput taint
+    cmd: |-
+      patch daemonsets eric-log-shipper -p '{"spec":{"template":{"spec":{"tolerations":[{"effect":"NoSchedule","key":"high-throughput","operator":"Equal","value":"true"}]}}}}'
+    post-verify-pods-ready:
+      check-interval: 5
+      daemonsets:
+      - eric-log-shipper
+
+sitedata:
+- site.yaml
+- ../site_global.yaml
+

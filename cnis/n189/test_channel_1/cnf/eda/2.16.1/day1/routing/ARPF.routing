@@ -1,0 +1,6 @@
+{
+  "networkElementType": "ARPF",
+  "routingMethod": "UnconditionalRouting",
+  "instance": "ccdm-mapi-1",
+  "instanceType": "NetworkElement"
+}

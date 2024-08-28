@@ -1,0 +1,30 @@
+$TTL    604800
+@       IN      SOA     localhost. ns. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      ns1.5gc.mnc081.mcc240.3gppnetwork.org.
+@       IN      A       11.0.18.1
+@       IN      AAAA    ::1
+
+ns1              IN A     11.0.18.1
+n84-amf1.amf       IN A        5.8.6.9
+smf1.n84       IN A        5.8.6.1
+udr1.n84       IN A        5.8.6.4
+udr2.n84       IN A        5.8.6.49
+udm1.n84       IN A        5.8.6.7
+ausf1.n84      IN A        5.8.6.5
+nrf1.n84      IN A        5.8.6.6
+pcf1.n84            IN A        25.51.0.251
+eir1.n84      IN A    5.8.6.14
+nssf1.n84            IN A        5.8.6.10
+smf1-notif.n84        IN A 5.8.6.2
+
+udr1-intersite.n84     IN A 5.8.6.33
+udr2-intersite.n84      IN A    5.8.6.65
+
+hss-epc1.n84      IN A    5.8.6.13
+nssf2.n84      IN A    5.8.6.26

@@ -1,0 +1,19 @@
+##############################################
+#   Setup file configuration                 #
+##############################################
+log_server: pccc-node182-dallas-01
+system_file_dir: /var/dallas/dualmode5gc
+config_file_dir: /var/dallas/dualmode5gc
+replay_file_dir: /var/dallas/dualmode5gc
+# ###### For Dallas versions 3R151B03 and later ###### 
+otp_dir: /local/dallas/3pp/RHEL-7.9/otp/24.2.2-3/lib/erlang
+erlport_dir: /local/dallas/3pp/RHEL-7.9/erlport/0.9.8-3/lib/erlang/lib/erlport-0.9.8
+jiffy_dir: /local/dallas/3pp/RHEL-7.9/jiffy/1.0.8-3/lib/erlang/lib/jiffy-1.0.8
+yaws_dir: /local/dallas/3pp/RHEL-7.9/yaws/2.0.8-3/lib/erlang/lib/yaws-2.0.8
+max_otp_proc: 5000000
+#auth_key: /var/dallas/testlab_dsakey
+auth_username: root
+auth_password: 'lmc_xdg'
+python: /usr/bin/python3
+python_lib_dir: "/local/dallas/3pp/RHEL-7.9/bcrypt/3.2.0-6:/local/dallas/3pp/RHEL-7.9/python-ecdsa/0.15-6:/local/dallas/3pp/RHEL-7.9/cffi/1.12.3-6:/local/dallas/3pp/RHEL-7.9/cryptography/40.0.2-1:/local/dallas/3pp/RHEL-7.9/paramiko/2.11.0-6:/local/dallas/3pp/RHEL-7.9/pip3/22.0.4-3:/local/dallas/3pp/RHEL-7.9/pyaml/21.10.1-5:/local/dallas/3pp/RHEL-7.9/pycparser/2.19-6:/local/dallas/3pp/RHEL-7.9/pynacl/1.3.0-6:/local/dallas/3pp/RHEL-7.9/python-ecdsa/0.15-6:/local/dallas/3pp/RHEL-7.9/pyyaml/5.4-5:/local/dallas/3pp/RHEL-7.9/pyzmq/22.3.0-4:/local/dallas/3pp/RHEL-7.9/setuptools/67.7.0-1:/local/dallas/3pp/RHEL-7.9/six/1.12.0-6:/local/dallas/3pp/RHEL-7.9/wheel/0.38.4-2"
+root_3pp_dir: "/local/dallas/3pp"

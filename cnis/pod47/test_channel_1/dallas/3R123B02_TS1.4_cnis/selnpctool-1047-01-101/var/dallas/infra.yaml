@@ -1,0 +1,127 @@
+selnpctool-1047-01-101:
+  AP-N:
+    - otp:
+        cores: [55]
+      raw:
+        cores: [55]
+    - otp:
+        cores: [1]
+      raw:
+        cores: [1]
+    - otp:
+        cores: [2]
+      raw:
+        cores: [2]
+    - otp:
+        cores: [3]
+      raw:
+        cores: [3]
+    - otp:
+        cores: [4]
+      raw:
+        cores: [4]
+    - otp:
+        cores: [5]
+      raw:
+        cores: [5]
+    - otp:
+        cores: [6]
+      raw:
+        cores: [6]
+    - otp:
+        cores: [7]
+      raw:
+        cores: [7]
+    - otp:
+        cores: [8]
+      raw:
+        cores: [8]
+    - otp:
+        cores: [9]
+      raw:
+        cores: [9]
+    - otp:
+        cores: [10]
+      raw:
+        cores: [10]
+    - otp:
+        cores: [11]
+      raw:
+        cores: [11]
+    - otp:
+        cores: [12]
+      raw:
+        cores: [12]
+    - otp:
+        cores: [13]
+      raw:
+        cores: [13]
+    - otp:
+        cores: [14]
+      raw:
+        cores: [14]
+    - otp:
+        cores: [15]
+      raw:
+        cores: [15]
+    - otp:
+        cores: [16]
+      raw:
+        cores: [16]
+    - otp:
+        cores: [17]
+      raw:
+        cores: [17]
+    - otp:
+        cores: [18]
+      raw:
+        cores: [18]
+    - otp:
+        cores: [19]
+      raw:
+        cores: [19]
+    - otp:
+        cores: [20]
+      raw:
+        cores: [20]
+    - otp:
+        cores: [21]
+      raw:
+        cores: [21]
+    - otp:
+        cores: [22]
+      raw:
+        cores: [22]
+    - otp:
+        cores: [23]
+      raw:
+        cores: [23]
+    - otp:
+        cores: [24]
+      raw:
+        cores: [24]
+    - otp:
+        cores: [25]
+      raw:
+        cores: [25]
+    - otp:
+        cores: [26]
+      raw:
+        cores: [26]
+    - otp:
+        cores: [27]
+      raw:
+        cores: [27]
+  DP-N:
+    - otp:
+        cores: [28]
+      raw:
+        cores: [33, 34]
+  LTT:
+    oam:
+        [[7, 35],[2, 30],[1, 3, 4, 29, 31, 32]]
+
+    ports:
+      tap0: [36, 38, 40, 42, 44, 46, 48, 50, 52]
+      tap1: [37, 39, 41, 43, 45, 47, 49, 51, 53]
+

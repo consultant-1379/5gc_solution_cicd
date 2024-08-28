@@ -1,0 +1,75 @@
+######################################memory: 600Mi
+## CNF general information
+######################################
+nodeName: n89-ccrc
+nodeType: CCRC
+vtap:
+  tapagent: false
+
+vnflcm:
+  clusterName: n89
+  namespace: ccrc
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+ericPmServer:
+  jobOverride: false
+  
+users:
+  day1:
+  - username: ccrcoam
+    password: Changeme1st!
+    groups:
+    - nrf-admin
+    - nssf-admin
+    - nrfagent-admin
+    - system-admin
+  - username: ccrcsec
+    password: Changeme1st!
+    groups:
+    - nrf-security-admin
+    - nssf-security-admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+cnom:
+  fqdn: cnom.ccrc1.n89.sero.gic.ericsson.se
+
+snmp:
+  agentEngineId: 800000c10400000004
+license:
+  customerId: "946060"
+  swltId: STA-CCRC-19
+
+ccrc:
+  nrf:
+    instanceId: 0c765084-9cc5-49c6-9876-ae2f5fa2a63f
+    provisioning:
+      fqdn: nrf-prov.ccrc1.n89.sero.gic.ericsson.se   
+  nssf:
+    instanceId: 13a1de33-ec45-4cd6-a842-ce5bb3cba3d8
+    provisioning:
+      fqdn: nssf-prov.ccrc1.n89.sero.gic.ericsson.se
+      amf:
+        regionId: 255
+        setId: 1
+        instanceId:
+        - 8b85f3f9-2f66-4698-b07e-06a07010632e
+ddc:
+  remotePath: /lab/pccc_logs/5GC-CICD/ci/N89_DDC/n89-ccrc-ddc
+
+kvdb:
+- siteId: 1
+
+######################################
+## CNF dimensioning specific
+######################################
+hpaReplica:
+  eric-nrf-discovery: {min: 2, max: 10}
+  eric-nrf-management: {min: 2, max: 6}
+  eric-nrf-management-notification: {min: 2, max: 12}
+  eric-nssf-slice-selection-control: {min: 2, max: 5}
+  eric-nssf-nssai-availability: {min: 2, max: 3}
+  eric-nssf-notification: {min: 2, max: 3}
+

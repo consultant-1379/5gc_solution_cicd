@@ -1,0 +1,76 @@
+######################################
+## CaaS Variables
+######################################
+caas: NFVI-CCD
+kubernetes_service_ipaddress: 10.96.0.1
+
+###############################
+## Site Variables
+###############################
+timezone: CET
+mnc: '81'
+mcc: '240'
+# EPC domain: epc.mnc081.mcc240.3gppnetwork.org
+# 5GC domain: 5gc.mnc081.mcc240.3gppnetwork.org
+oamDomain: sero.gic.ericsson.se
+locality: LN1
+nels:
+  host: 10.155.142.68
+  port: 9095
+snmpServer:
+  host: 10.36.242.99
+
+######################################
+## Geography Redundancy Variables
+######################################
+
+amfGeo: false
+smfGwcGeo: false
+nrfGeo: false
+nssfGeo: false
+hssGeo: false
+udrGeo: false
+
+######################################
+## CNF Variables
+######################################
+
+###################
+## CCRC
+###################
+
+nrf:
+- host: nrf2.n84
+  ipv4: 5.8.6.22
+  port: 443
+- host: nrf2.n28
+  ipv4: 5.8.6.53
+  port: 443
+nssf:
+- host: nssf2.n84
+  port: 443
+- host: nssf2.n28
+  port: 443
+
+###################
+## SC
+###################
+
+indirectCommunication:
+  enabled: true
+  scp:
+  - host: scp2.n84
+    port: 443
+  interfaces:
+  - n7
+
+######################################
+## Miscellaneous Variables
+######################################
+dnsServer:
+- 11.0.19.1
+sftpServer:
+  host: 10.143.140.140
+  username: admin
+  password: RXJpY3Nzb25AODQ=   # base64
+  hostKey: c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFBZ1FDdExWS1BmT0hSOVRKUG91a2NwVE1yWGFyblkxM09iZlFORkdERVFIdUp1bFJNcGY2eFdjN09oWnIrbENXN0dtankyKzRhWFZhcjg0Vmt5SENqS21Ia0Ezd3FocDJCSHpobkVvNmk5L0xKVHBSS09OVHd3OU1WUmZHMW1CZHN0elZ3alJyNUlBSEt3eUxvQXBkMmJUOXhoTTFKUWd0NEZsK0hxVEl5bFozWjV3PT0gUlNBLTEwMjQK

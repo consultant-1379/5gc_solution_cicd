@@ -1,0 +1,8 @@
+{
+  "additionalParams": {
+    "namespace": "ccsm",
+    "applicationTimeOut": "2400",
+    "skipJobVerification": "false",
+    "skipVerification": "true"
+ }
+}

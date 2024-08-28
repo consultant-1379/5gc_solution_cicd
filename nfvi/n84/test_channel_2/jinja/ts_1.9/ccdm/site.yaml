@@ -1,0 +1,37 @@
+snmp:
+  agentEngineId: 8000137001C0A899ECCD1D3F41
+license:
+  customerId: "946060"
+  swltId: STA-CCDM-12
+
+udrInstanceId: 841d1b7c-5103-11e9-8c09-99eccd107e28
+
+soapNotifyHost: udm2.n84
+multiSite:
+- host: udr3-intersite.n84
+  siteId: 1
+- host: udr3-intersite.n84
+  siteId: 2
+ 
+ddc:
+  remotePath: /home/admin/ddc/eccd3/n84-ccdm2
+consistency:
+  remotePath: /home/admin/consistencyreport
+proclog:
+  remotePath: /home/admin/proclog
+
+udr:
+  host: udr3.n84
+  port: 443
+  
+clients:
+- client: mapi-client
+  secret: mapi-secret
+  groups:
+  - scopes.ericsson.com/activation/mapi.read
+  - scopes.ericsson.com/activation/mapi.write
+- client: replay-client
+  secret: replay-secret
+  groups:
+  - scopes.ericsson.com/activation/mapi.write
+  - scopes.ericsson.com/activation/replay.callback

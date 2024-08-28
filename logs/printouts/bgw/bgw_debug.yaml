@@ -1,0 +1,7 @@
+bgw:
+  batch_size: 10
+  collection:
+    - name: show_version
+      cmd: show version | no-more
+    - name: show_log_messages
+      cmd: show log messages | no-more

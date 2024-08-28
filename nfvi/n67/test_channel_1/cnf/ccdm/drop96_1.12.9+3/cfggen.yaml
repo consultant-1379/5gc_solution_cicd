@@ -1,0 +1,32 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global.yaml
+# targetDir: .
+# jsonschema: pcc/jsonschema.yaml
+# jsonschemaGlobal: common/global-jsonschema.yaml
+templateDir: ../../../../../../config_template/templates/
+# jsonschemaGlobal: ../jsonschemas/schema-global.yaml
+
+files:
+- template: ccdm/drop96_1.12.9+3/values.yaml.jinja2
+  target: day0/values.yaml
+- template: common/instantiate.json.jinja2
+  target: day0/instantiate.json
+- template: common/user-config.xml.jinja2
+  target: day1/user-config.xml
+- template: ccdm/drop96_1.12.9+3/nrfagent-config.xml.jinja2
+  target: day1/nrfagent-config.xml
+- template: ccdm/drop96_1.12.9+3/udr-config.xml.jinja2
+  target: day1/udr-config.xml
+- template: ccsm/drop94_1.21.1+1/hss-application-counters.xml.jinja2
+  target: day1/hss-application-counters.xml
+- template: ccsm/drop94_1.21.1+1/eir-application-counters.xml.jinja2
+  target: day1/eir-application-counters.xml
+#Only CNIS will use consistency-config.xml
+#- template: ccdm/1.10/consistency-config.xml.jinja2
+#  target: day1/consistency_check_config.xml
+- template: ccdm/drop96_1.12.9+3/ddc-config.xml.jinja2
+  target: day1/ddc-config.xml
+- template: ccsm/drop94_1.21.1+1/eir-main-branches-setting.ldif.jinja2
+  target: day1/eir-main-branches-setting.ldif
+- template: ccsm/drop94_1.21.1+1/eir-search-order-setting.ldif.jinja2
+  target: day1/eir-search-order-setting.ldif

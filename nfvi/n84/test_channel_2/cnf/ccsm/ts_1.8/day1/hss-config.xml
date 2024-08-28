@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  Notice that it is a configuration template in XML format
+  compliant with NF YANG model.  This XML template provides
+  a configuration skeleton that shall be modified before
+  loading into the yang service.  Some parts of the document
+  must be deleted or added depending on the network configuration
+  where the VNF will be deployed.
+-->
+  <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+  </capabilities>
+  </hello>]]>]]>
+  <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+  <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="0">
+  <edit-config>
+    <target><running/></target>
+    <default-operation>replace</default-operation>
+    <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+      <hss-common xmlns="urn:rdns:com:ericsson:oammodel:ericsson-hss-common">
+        <nf-profile>
+            <instance-id>9448c0d3-6590-4e54-b90f-5f7ca0dfc48d</instance-id>
+            <requested-status>registered</requested-status>
+            <fqdn>hss2.n84.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+            <priority>1</priority>
+            <locality>LN</locality>
+            <hss-info-list>
+              <id>1</id>
+              <hss-info>
+                 <!-- the group-id only can be group1-->
+                 <group-id>groupid-000001</group-id>
+              </hss-info>
+            </hss-info-list>
+            <service>
+                <instance-id>nhss-uecm</instance-id>
+                <name>nhss-uecm</name>
+                <scheme>https</scheme>
+                <requested-status>registered</requested-status>
+                <fqdn>hss2.n84.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                <ip-endpoint>
+                    <id>1</id>
+                    <!--<ipv4-address>${HSS_IPv4}</ipv4-address>-->
+                    <transport>tcp</transport>
+                    <port>443</port>
+                </ip-endpoint>
+            </service>
+        </nf-profile>
+      </hss-common>
+    </config>
+  </edit-config>
+  </rpc>
+  <close-session/>

@@ -1,0 +1,127 @@
+######################################
+## CNF general information
+######################################
+# CCDM single instance is only supported for the small-system profile.
+nodeName: node299-cluster1-ccdm1
+nodeType: ERIC-CCDM
+instance: 1
+systemProfile: small
+
+vnflcm:
+  clusterName: node299-cluster1
+  namespace: ccdm1
+#  InstantiateVnfRequest:
+#    applicationTimeOut: 3600
+#    skipVerification: "true"
+
+users:
+  day1:
+  - username: ccdm-admin
+    password: Changeme@1st
+    groups:
+    - udr-admin
+    - pf-admin
+    - pf-operator
+    - nrfagent-admin
+    - system-admin
+  - username: ccdm-sec
+    password: Changeme@1st
+    groups:
+    - udr-security-admin
+    - nrfagent-security-admin
+    - system-security-admin
+  oauth2-client:
+  - id: mapi-client
+    secret: mapi-secret
+    groups:
+    - scopes.ericsson.com/activation/mapi.read
+    - scopes.ericsson.com/activation/mapi.write
+  - id: replay-client
+    secret: replay-secret
+    groups:
+    - scopes.ericsson.com/activation/mapi.write
+    - scopes.ericsson.com/activation/replay.callback
+
+license:
+  customerId: "946060"
+  swltId: STA-CCDM-30  #DM5GC-NODE299-C1-CCDM1-1   #STA-CCDM-30 
+
+#vtap:
+#  tapagent: false
+#  remotePath: vtap/node299-cluster1-ccdm1
+
+cnom:
+  fqdn: cnom.ccdm1-oam.node299-cluster1.sero.gic.ericsson.se  #  n299 -> 10.221.124.6
+
+snmp:
+  agentEngineId: 800000c1046363646d3163317331
+  sourceIdentifier: 10.221.124.6   # ccdm1-oam-node299-cluster1.sero.gic.ericsson.se
+
+ddc:
+  remotePath: /root/ddc/node299-cluster1-ccdm1
+
+######################################
+### CNF certificates specific
+#######################################
+certs:
+  iccr-external-tls-certificate:
+    p12: ../../../../certs/cnf/ccdm/ccdm1-iccr-server.p12
+  eric-ccdm-sbi-server-certificate:
+    p12: ../../../../certs/cnf/ccdm/ccdm1-sbi-server.p12
+  eric-ccdm-sbi-client-certificate:
+    p12: ../../../../certs/cnf/ccdm/ccdm1-sbi-client.p12
+  eric-ccdm-4gtraffic-server-certificate:
+    p12: ../../../../certs/cnf/ccdm/ccdm1-4g-traffic-server.p12
+  eric-ccdm-4gtraffic-client-certificate:
+    p12: ../../../../certs/cnf/ccdm/ccdm1-4g-traffic-client.p12
+  eric-ccdm-prov-server-certificate:
+    p12: ../../../../certs/cnf/ccdm/ccdm1-prov-server.p12
+  eric-ccdm-4gprovisioning-server-certificate:
+    p12: ../../../../certs/cnf/ccdm/ccdm1-4g-prov-server.p12
+  eric-ccdm-4gprovisioning-client-certificate:
+    p12: ../../../../certs/cnf/ccdm/ccdm1-4g-prov-client.p12
+
+######################################
+## CNF specific information
+######################################
+ccdm:
+  iamFqdn: iam.ccdm1-oam.node299-cluster1.sero.gic.ericsson.se # n299 -> 10.221.124.6
+  udr:
+    instanceId: f8b5865c-49e8-463e-8f16-554452a1c1d1 # original but associated to UDM
+    host: ccdm1-5g-traffic.site1-cluster1
+    port: 443
+    geored:           # CNIS Small do not have geored, but we have to define at least 1 site
+      local:
+        host: ccdm1-5g-traffic.site1-cluster1
+        provisioning-priority: 3
+  externalLdapServer:
+    host: external-ldap-server.sero.gic.ericsson.se
+######################################
+## CNF dimensioning specific        from Scripts\Deployment\eric-ccdm-values-CXP9037622_1.10.25+1.yaml
+######################################
+replicaCount:
+  eric-ingressgw-eda-provisioning: 2
+  eric-udr-kvdb-ag-server: 4                # does not exist on the csar delivery
+  eric-ingressgw-udr-ldap-traffic: 2
+  eric-ingressgw-udr-ldap-provisioning: 2
+  eric-ingressgw-udr-traffic: 7
+  eric-ingressgw-udr-intersite: 2
+
+hpaReplica:
+  eric-udr-nudrfe: {min: 2, max: 5}         # does not exist on the csar delivery
+  eric-udr-notificationsubscription: {min: 2, max: 4}
+  eric-udr-gudrestfe: {min: 10, max: 13}
+  eric-udr-provisioningfe: {min: 2, max: 4}
+  eric-udr-ldapfe: {min: 3, max: 5}
+  eric-udr-ldap-balancer: {min: 3, max: 3}
+  eric-udr-rest-notifchecker: {min: 2, max: 4}
+  eric-udr-rest-notifsender: {min: 2, max: 4}
+  eric-udr-soap-notifchecker: {min: 2, max: 4}
+  eric-udr-soap-notifsender: {min: 2, max: 4}
+  eric-udr-prov-sync-fe: {min: 2, max: 4}
+
+pvcSize:
+  eric-pm-server: 16
+  eric-ctrl-bro: 8
+  eric-act-mb-kf: 2
+  eric-data-wide-column-database-cd: 6

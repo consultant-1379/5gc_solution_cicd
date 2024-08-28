@@ -1,0 +1,2036 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <capabilities>
+        <capability>urn:ietf:params:netconf:base:1.0</capability>
+    </capabilities>
+</hello>]]>]]>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+<edit-config>
+    <target>
+        <running/>
+    </target>
+    <config>
+        <udr-application-counters xmlns="urn:rdns:com:ericsson:oammodel:ericsson-app-counters-udr">
+            <active-site>1</active-site>
+            <active-udr-sites>1</active-udr-sites>
+            <predefined-counter-group>
+                <counter-group>
+                    <name>5g-predefined-counters</name>
+                    <description>5G predefined counters</description>
+                    <periodicity>fifteen-min</periodicity>
+                    <administrative-state>unlocked</administrative-state>
+                    <counter>
+                        <name>5gsupi</name>
+                        <description>Number of SUPIs stored in UDR that includes 5G authentication data</description>
+                        <administrative-state>unlocked</administrative-state>
+                    </counter>
+                    <counter>
+                        <name>5gsubin</name>
+                        <description>Number of 5G users with UDM subscription</description>
+                        <administrative-state>unlocked</administrative-state>
+                    </counter>
+                    <counter>
+                        <name>pcfsubnbr</name>
+                        <description>Number of 5G users with PCF subscription</description>
+                        <administrative-state>unlocked</administrative-state>
+                    </counter>
+                    <counter>
+                        <name>5gactsubin</name>
+                        <description>Number of MSISDNs stored in UDR that includes 5G location information</description>
+                        <administrative-state>unlocked</administrative-state>
+                    </counter>
+                </counter-group>
+            </predefined-counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_HLRSUBS</name>
+                <description>Counters for the number of non-M2M subscribers registered in HLR application</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NSUBSCNT</name>
+                    <description>Number of subscribers</description>
+                    <condition>MSISDN is present and M2MSP not present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP1.MSISDN != null</rule>
+                </counter>
+                <counter>
+                    <name>NLMUSUBSCNT</name>
+                    <description>Number of LMU subscribers</description>
+                    <condition>LMU is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP1.LMU != null</rule>
+                </counter>
+                <counter>
+                    <name>NMOBSUBSCNT</name>
+                    <description>Number of mobile subscribers</description>
+                    <condition>LMU is not present and M2MSP not present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP1.LMU = null</rule>
+                </counter>
+                <counter>
+                    <name>NACTSUBSCNT</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of active subscribers</description>
+                    <condition>CSLOC or PSLOC conditions and M2MSP not present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP5.RID = 0 AND ((CP2.CSLOC = 0) OR ((CP2.CSLOC = 2 OR CP2.CSLOC = null) AND CP2.UNKNLOCDATECS != null AND CP2.UNKNLOCDATECS > dateToOctetString(users-active-period)) OR CP2.CSLOC IN SET(3,4) OR (CP2.CSLOC = 5 AND CP2.PURGEDATECS > dateToOctetString(users-active-period)) OR (CP2.PSLOC = 0) OR ((CP2.PSLOC = 2 OR CP2.PSLOC = null) AND CP2.UNKNLOCDATEPS != null AND CP2.UNKNLOCDATEPS > dateToOctetString(users-active-period)) OR CP2.PSLOC IN SET(3,4) OR (CP2.PSLOC = 5 AND CP2.PURGEDATEPS > dateToOctetString(users-active-period)))</rule>
+                </counter>
+                <counter>
+                    <name>TOTNACTSUBSCNT</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Total number of active subscribers.  It is the sum of non-M2M and M2M active subscribers, when respectively NACTSUBSCNT and NACTM2MSUBSCNT counters are used.</description>
+                    <condition>CSLOC or PSLOC conditions</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>((CP2.CSLOC = 0) OR ((CP2.CSLOC = 2 OR CP2.CSLOC = null) AND CP2.UNKNLOCDATECS != null AND CP2.UNKNLOCDATECS > dateToOctetString(users-active-period)) OR CP2.CSLOC IN SET(3,4) OR (CP2.CSLOC = 5 AND CP2.PURGEDATECS > dateToOctetString(users-active-period)) OR (CP2.PSLOC = 0) OR ((CP2.PSLOC = 2 OR CP2.PSLOC = null) AND CP2.UNKNLOCDATEPS != null AND CP2.UNKNLOCDATEPS > dateToOctetString(users-active-period)) OR CP2.PSLOC IN SET(3,4) OR (CP2.PSLOC = 5 AND CP2.PURGEDATEPS > dateToOctetString(users-active-period))) OR ((CPR02.CSLOC = 0) OR ((CPR02.CSLOC = 2 OR CPR02.CSLOC = null) AND CPR02.UNKNLOCDATECS != null AND CPR02.UNKNLOCDATECS > dateToOctetString(users-active-period)) OR CPR02.CSLOC IN SET(3,4) OR (CPR02.CSLOC = 5 AND CPR02.PURGEDATECS > dateToOctetString(users-active-period)) OR (CPR02.PSLOC = 0) OR ((CPR02.PSLOC = 2 OR CPR02.PSLOC = null) AND CPR02.UNKNLOCDATEPS != null AND CPR02.UNKNLOCDATEPS > dateToOctetString(users-active-period)) OR CPR02.PSLOC IN SET(3,4) OR (CPR02.PSLOC = 5 AND CPR02.PURGEDATEPS > dateToOctetString(users-active-period)))</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_PDPDEF</name>
+                <description>Counter for number of subscribers with PDP-Context data</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>ONEPCNT</name>
+                    <description>Number of subscribers with at least one PDP-Context defined per subscriber basis</description>
+                    <condition>Any of the following attributes is present: APNID1, APNID2, APNID3, APNID4, APNID5, APNID6, APNID7, APNID8, APNID9, APNID10</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.PDPCP != null) OR (CP1.APNID1 != null) OR (CP1.APNID2 != null) OR (CP1.APNID3 != null) OR (CP1.APNID4 != null) OR (CP1.APNID5 != null) OR (CP1.APNID6 != null) OR (CP1.APNID7 != null) OR (CP1.APNID8 != null) OR (CP1.APNID9 != null) OR (CP1.APNID10 != null)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_PLMNSUB</name>
+                <description>Counters for number of subscribers located outside the Home PLMN</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>PLMNCNT</name>
+                    <description>Number of non-GPRS subscribers located outside the HPLMN</description>
+                    <condition>CSLOC conditions and CC and NDC of the attribute VLRADD do not match the HPLMN</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>((CP2.CSLOC = 0) OR ((CP2.CSLOC = 2 OR CP2.CSLOC = null) AND CP2.UNKNLOCDATECS != null AND CP2.UNKNLOCDATECS > dateToOctetString(users-active-period)) OR (CP2.CSLOC = 5 AND CP2.PURGEDATECS > dateToOctetString(users-active-period))) AND CP2.VLRADD != ""</rule>
+                </counter>
+                <counter>
+                    <name>GPPLMNCNT</name>
+                    <description>Number of GPRS subscribers located outside the HPLMN</description>
+                    <condition>PSLOC conditions and CC and NDC of the attribute SGSNNUM do not match the HPLMN</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>((CP2.PSLOC = 0) OR ((CP2.PSLOC = 2 OR CP2.PSLOC = null) AND CP2.UNKNLOCDATEPS != null AND CP2.UNKNLOCDATEPS > dateToOctetString(users-active-period)) OR (CP2.PSLOC = 5 AND CP2.PURGEDATEPS > dateToOctetString(users-active-period))) AND CP2.SGSNNUM != ""</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_SERVFEAT</name>
+                <periodicity>two-hour</periodicity>
+                <description>Counters for number of subscribers having a specific feature. Counters are defined per feature</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NSERVFEATMMINT</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Mobility Management Related IN Triggers'</description>
+                    <condition>MMINTARI0 or MMINTARI1 is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP5.MMINTARI0 != null OR CP5.MMINTARI1 != null</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATSUBTRAC</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Subscriber Tracing'</description>
+                    <condition>HLRTS is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP5.HLRTS != null</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATIST</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Immediate Service Termination'</description>
+                    <condition>IST is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP5.IST != null</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATSTE</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Spatial Triggers'</description>
+                    <condition>STEGMLCADDID is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP5.STEGMLCADDID != null</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATPRBT</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Personalized Ring Back Tone'</description>
+                    <condition>PRBT is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP5.PRBT != null</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATSPAMSMS</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Spam Control for Mobile Terminating SMS</description>
+                    <condition>SMSSPAM is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPJ.SMSSPAM != null</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATOBCC</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'OBCC'</description>
+                    <condition>OBCC is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP3.OBCC != null</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATGERAN</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'GERAN Access Restriction'</description>
+                    <condition>ARD = 2 (GERAN is not allowed)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP5.ARD = 2</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATUTRAN</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'UTRAN Access Restriction'</description>
+                    <condition>ARD = 1 (UTRAN is not allowed)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP5.ARD = 1</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATOCAMEL</name>
+                    <description>Number of subscribers having 'Originating CAMEL'</description>
+                    <condition>Any of the following attributes is present: OPH1TDP2GSA, OPH2TDP2GSA, O3T2GSA, O3T4GSA, O4T2GSA, O4T4GSA</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP04s.OPH1TDP2GSA != null) OR (CP04s.OPH2TDP2GSA != null) OR (CP04s.O3T2GSA != null) OR (CP04s.O3T4GSA != null) OR (CP04s.O4T2GSA != null) OR (CP04s.O4T4GSA != null)</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATSMSHR</name>
+                    <description>Number of subscribers having 'SMS Home Routing'</description>
+                    <condition>Any of the following attributes is present: SMHR1, SMHR2</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP5.SMHR1 != null) OR (CP5.SMHR2 != null)</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATTCAMEL</name>
+                    <description>Number of subscribers having 'Terminating CAMEL'</description>
+                    <condition>Any of the following attributes is present: TPH1TDP12GSA, TPH2TDP12GSA, T3T12GSA, T3T13GSA, T3T14GSA, T4T12GSA, T4T13GSA, T4T14GSA</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP04s.TPH1TDP12GSA != null) OR (CP04s.TPH2TDP12GSA != null) OR (CP04s.T3T12GSA != null) OR (CP04s.T3T13GSA != null) OR (CP04s.T3T14GSA != null) OR (CP04s.T4T12GSA != null) OR (CP04s.T4T13GSA != null) OR (CP04s.T4T14GSA != null)</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATVTCSI</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Visited MSC Terminating CAMEL Subscription Information '</description>
+                    <condition>Any of the following attributes is present: V3T12GSA, V3T13GSA, V3T14GSA, V4T12GSA, V4T13GSA, V4T14GSA</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP04s.V3T12GSA != null) OR (CP04s.V3T13GSA != null) OR (CP04s.V3T14GSA != null) OR (CP04s.V4T12GSA != null) OR (CP04s.V4T13GSA != null) OR (CP04s.V4T14GSA != null)</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATGPRSCSI</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'GPRS CAMEL Subscription Information'</description>
+                    <condition>Any of the following attributes is present: GP3T1GSA, GP3T2GSA, GP3T11GSA, GP3T12GSA, GP3T14GSA</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP04s.GP3T1GSA != null) OR (CP04s.GP3T2GSA != null) OR (CP04s.GP3T11GSA != null) OR (CP04s.GP3T12GSA != null) OR (CP04s.GP3T14GSA != null)</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATCRITTCSI</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'CAMEL triggering criteria for Terminating CAMEL TDP "Terminating Attempt Authorized" in HLR'</description>
+                    <condition>Any of the following attributes is present: T2T12BS1, T2T12BS2, T2T12BS3, T2T12BS4, T2T12BS5, T3T12BS1, T3T12BS2, T3T12BS3, T3T12BS4, T3T12BS5, T4T12BS1, T4T12BS2, T4T12BS3, T4T12BS4, T4T12BS5</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP0A.T2T12BS1 != null) OR (CP0A.T2T12BS2 != null) OR (CP0A.T2T12BS3 != null) OR (CP0A.T2T12BS4 != null) OR (CP0A.T2T12BS5 != null) OR (CP0A.T3T12BS1 != null) OR (CP0A.T3T12BS2 != null) OR (CP0A.T3T12BS3 != null) OR (CP0A.T3T12BS4 != null) OR (CP0A.T3T12BS5 != null) OR (CP0A.T4T12BS1 != null) OR (CP0A.T4T12BS2 != null) OR (CP0A.T4T12BS3 != null) OR (CP0A.T4T12BS4 != null) OR (CP0A.T4T12BS5 != null)</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATCRITOCSI</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'CAMEL triggering criteria for Originating CAMEL TDP "Collected Info" in HLR'</description>
+                    <condition>Any of the following attributes is present: O2T2MT, O3T2MT, O4T2MT</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP0A.O2T2MT != null) OR (CP0A.O3T2MT != null) OR (CP0A.O4T2MT != null)</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATMOSMSCSI</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Originating SMS CAMEL Subscription Information'</description>
+                    <condition>Following attribute is present: OS3T1GSA</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP04s.OS3T1GSA != null)</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATMTSMSCSI</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Terminating SMS CAMEL Subscription Information'</description>
+                    <condition>Following attribute is present: TS4T2GSA</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP04s.TS4T2GSA != null)</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATDCSI</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Dialled Services CAMEL Subscription Information'</description>
+                    <condition>Any of the following attributes is present: D3T1GSA, D3T2GSA, D3T3GSA, D3T4GSA, D3T5GSA, D3T6GSA, D3T7GSA, D3T8GSA, D3T9GSA, D3T10GSA</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP0A.D3T1GSA != null) OR (CP0A.D3T2GSA != null) OR (CP0A.D3T3GSA != null) OR (CP0A.D3T4GSA != null) OR (CP0A.D3T5GSA != null) OR (CP0A.D3T6GSA != null) OR (CP0A.D3T7GSA != null) OR (CP0A.D3T8GSA != null) OR (CP0A.D3T9GSA != null) OR (CP0A.D3T10GSA != null)</rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATOCAMELACT</name>
+                    <description>Number of subscribers having 'Originating CAMEL' as active</description>
+                    <condition>Any of the following attributes is present: OPH1TDP2GSA, OPH2TDP2GSA, O3T2GSA, O3T4GSA, O4T2GSA, O4T4GSA and(CSIST is missing or CSIST = b'xxxxxx1x)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <!--
+                    Comment:     Under the .SQL file for NSERVFEATOCAMELACT the last part of the rule is explained as below:
+                    "CP6.CSIST & 0x02 = 0x02"
+                    CSIST attribute identifies a CAMEL Subscription Information Activation state and it is integer with a value range between 0 until 254.
+                    CSIST has a structure of 2 octets where for the 1st octect the bits are correspond to the following states:
+                    BO to T-CSI activation state
+                    B1 to O-CSI activation state
+                    B2 to GPRS-CSI activation state
+                    B3 to OSMS-CSI activation state
+                    ....
+                    B7 to D-CSI activation state
+                    So the sentence which described under the .SQL file (CP6.CSIST & 0x02 = 0x02) means that CSIST is equal to 2 (means "O-CSI activation state").
+                    The above has been translated as a rule in the .xml file as (BIT(CP6.CSIST, 1) = 1).
+                    -->
+                    <rule>((CP04s.OPH1TDP2GSA != null) OR (CP04s.OPH2TDP2GSA != null) OR (CP04s.O3T2GSA != null) OR (CP04s.O3T4GSA != null) OR (CP04s.O4T2GSA != null) OR (CP04s.O4T4GSA != null)) AND ((CP6.CSIST = null) OR (BIT(CP6.CSIST, 1) = 1)) </rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATTCAMELACT</name>
+                    <description>Number of subscribers having 'Terminating CAMEL' as active</description>
+                    <condition>Any of the following attributes is present: TPH1TDP12GSA, TPH2TDP12GSA, T3T12GSA, T3T13GSA, T3T14GSA, T4T12GSA, T4T13GSA, T4T14GSA and (CSIST is missing or CSIST = b'xxxxxxx1)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>((CP04s.TPH1TDP12GSA != null) OR (CP04s.TPH2TDP12GSA != null) OR (CP04s.T3T12GSA != null) OR (CP04s.T3T13GSA != null) OR (CP04s.T3T14GSA != null) OR (CP04s.T4T12GSA != null) OR (CP04s.T4T13GSA != null) OR (CP04s.T4T14GSA != null)) AND ((CP6.CSIST = null) OR (BIT(CP6.CSIST, 0) = 1)) </rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATVTCSIACT</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Visited MSC Terminating CAMEL Subscription Information ' as active</description>
+                    <condition>Any of the following attributes is present: V3T12GSA, V3T13GSA, V3T14GSA, V4T12GSA, V4T13GSA, V4T14GSA and (CSIST is missing or CSIST = b'x1xxxxxx)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>((CP04s.V3T12GSA != null) OR (CP04s.V3T13GSA != null) OR (CP04s.V3T14GSA != null) OR (CP04s.V4T12GSA != null) OR (CP04s.V4T13GSA != null) OR (CP04s.V4T14GSA != null)) AND ((CP6.CSIST = null) OR (BIT(CP6.CSIST, 6) = 1)) </rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATGPRSCSIACT</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'GPRS CAMEL Subscription Information ' as active</description>
+                    <condition>Any of the following attributes is present: GP3T1GSA,GP3T2GSA,GP3T11GSA, GP3T12GSA, GP3T14GSA and (CSIST is missing or CSIST = b'xxxxx1xx)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>((CP04s.GP3T1GSA != null) OR (CP04s.GP3T2GSA != null) OR (CP04s.GP3T11GSA != null) OR (CP04s.GP3T12GSA != null) OR (CP04s.GP3T14GSA != null)) AND ((CP6.CSIST = null) OR (BIT(CP6.CSIST, 2) = 1)) </rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATMOSMSCSIACT</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Originating SMS CAMEL Subscription Information' as active</description>
+                    <condition>Following attribute is present: OS3T1GSA and (CSIST is missing or CSIST = b'xxxx1xxx)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP04s.OS3T1GSA != null AND ((CP6.CSIST = null) OR (BIT(CP6.CSIST, 3) = 1)) </rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATMMCSIACT</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Mobility Management CAMEL Subscription Information' as active</description>
+                    <condition>Following attribute is present: M3GSA and (CSIST is missing or CSIST = b'xx1xxxxx)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP04s.M3GSA != null AND ((CP6.CSIST = null) OR (BIT(CP6.CSIST, 5) = 1)) </rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATMTSMSCSIACT</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Terminating SMS CAMEL Subscription Information' as active</description>
+                    <condition>Following attribute is present: TS4T2GSA and (CSIST is missing or CSIST = b'xxx1xxxx) </condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP04s.TS4T2GSA != null AND ((CP6.CSIST = null) OR (BIT(CP6.CSIST, 4) = 1)) </rule>
+                </counter>
+                <counter>
+                    <name>NSERVFEATDCSIACT</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers having 'Dialled Services CAMEL Subscription Information' as active</description>
+                    <condition>Any of the following attributes is present: D3T1GSA, D3T2GSA, D3T3GSA, D3T4GSA,D3T5GSA,D3T6GSA, D3T7GSA, D3T8GSA,D3T9GSA,D3T10GSA and (CSIST is missing or CSIST = b'1xxxxxxx) </condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>((CP0A.D3T1GSA != null) OR (CP0A.D3T2GSA != null) OR (CP0A.D3T3GSA != null) OR (CP0A.D3T4GSA != null) OR (CP0A.D3T5GSA != null) OR (CP0A.D3T6GSA != null) OR (CP0A.D3T7GSA != null) OR (CP0A.D3T8GSA != null) OR (CP0A.D3T9GSA != null) OR (CP0A.D3T10GSA != null)) AND ((CP6.CSIST = null) OR (BIT(CP6.CSIST, 7) = 1))</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_NAMSUBS</name>
+                <description>Counters for the number of subscribers registered per NAM value</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>GPRSCNT</name>
+                    <description>Number of subscribers with 'GPRS only' NAM</description>
+                    <condition>NAM = 2 (GPRS subscriber)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP1.NAM = 2</rule>
+                </counter>
+                <counter>
+                    <name>BOTHGPRSCNT</name>
+                    <description>Number of subscribers with 'both GPRS and non-GPRS' NAM</description>
+                    <condition>NAM = 0 (both non GPRS and GPRS subscriber)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP1.NAM = 0</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_AUCFE_AUCSUBS</name>
+                <description>Counters for number of subscriptions registered in AUC</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NSUBSCNT</name>
+                    <description>Number of subscribers</description>
+                    <condition>IMSI is present and AKATYPE = 0 (GSM) or AKATYPE = 1 (WCDMA)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>AU1.AKATYPE IN SET (0, 1)</rule>
+                </counter>
+                <counter>
+                    <name>NGSUBSCNT</name>
+                    <description>Number of GSM subscribers</description>
+                    <condition>AKATYPE = 0 (GSM)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>AU1.AKATYPE = 0</rule>
+                </counter>
+                <counter>
+                    <name>NUSUBSCNT</name>
+                    <description>Number of UMTS subscribers</description>
+                    <condition>AKATYPE = 1 (WCDMA)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>AU1.AKATYPE = 1</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_MNPFE_NPHSUBS</name>
+                <periodicity>one-day</periodicity>
+                <description>Counters for the number of subscribers registered in NPH application</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NHOMECNT</name>
+                    <description>Number of home subscribers</description>
+                    <condition>Subscriber type = 0 (HOME)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>servCommonData</data-subtype>
+                    <rule>NphData.SUBSTYPE = 0</rule>
+                </counter>
+                <counter>
+                    <name>NIMPORTEDCNT</name>
+                    <description>Number of imported subscribers</description>
+                    <condition>Subscriber type = 1 (IMPORTED)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>servCommonData</data-subtype>
+                    <rule>NphData.SUBSTYPE = 1</rule>
+                </counter>
+                <counter>
+                    <name>NEXPORTEDCNT</name>
+                    <description>Number of exported subscribers</description>
+                    <condition>Subscriber type = 2 (EXPORTED)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>servCommonData</data-subtype>
+                    <rule>NphData.SUBSTYPE = 2</rule>
+                </counter>
+                <counter>
+                    <name>NOTHERCNT</name>
+                    <description>Number of other subscribers</description>
+                    <condition>Subscriber type = 3 (OTHER)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>servCommonData</data-subtype>
+                    <rule>NphData.SUBSTYPE = 3</rule>
+                </counter>
+                <counter>
+                    <name>NPSTNIMPCNT</name>
+                    <description>Number of imported PSTN/ISDN subscribers</description>
+                    <condition>Subscriber condition = 1 (PSTN/ISDN)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>servCommonData</data-subtype>
+                    <rule>NphData.SUBSCOND = 1</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSFAM</name>
+                    <description>Number of MSISDN relationships associated with node address</description>
+                    <condition>NODEADDR is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>servCommonData</data-subtype>
+                    <rule>NphData.NODEADDR != null</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSFAI</name>
+                    <description>Number of IMSI relationships associated with node address</description>
+                    <condition>NODEADDR is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>servCommonData</data-subtype>
+                    <rule>IMSIData.NODEADDR != null</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_LOCSUBS</name>
+                <description>Counters for number of subscribers per location status defined</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NSGSNKNOWNSUBS</name>
+                    <description>Number of GPRS subscribers with location known</description>
+                    <condition>PSLOC = 0</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP2.PSLOC = 0)</rule>
+                </counter>
+                <counter>
+                    <name>NSGSNBARREDSUBS</name>
+                    <description>Number of GPRS subscribers with location barred</description>
+                    <condition>PSLOC = 4</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP2.PSLOC = 4)</rule>
+                </counter>
+                <counter>
+                    <name>NVLRBARREDSUBS</name>
+                    <description>Number of GSM subscribers with location barred</description>
+                    <condition>CSLOC = 4</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP2.CSLOC = 4)</rule>
+                </counter>
+                <counter>
+                    <name>NVLRPURGESUBS</name>
+                    <description>Number of GSM subscribers with location purged</description>
+                    <condition>CSLOC = 5</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP2.CSLOC = 5)</rule>
+                </counter>
+                <counter>
+                    <name>NSGSNUNKNOWNSUBS</name>
+                    <description>Number of GPRS subscribers with location unknown</description>
+                    <condition>PSLOC = 2</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP2.PSLOC = 2)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_M2MSUBS</name>
+                <description>Counters for the M2M subscribers registered in HLR application</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NM2MSUBSCNT</name>
+                    <description>Number of M2M subscribers</description>
+                    <condition>M2MSP present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CPR01.M2MSP != null)</rule>
+                </counter>
+                <counter>
+                    <name>NACTM2MSUBSCNT</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of active M2M subscribers</description>
+                    <condition>CSLOC or PSLOC conditions and M2MSP is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CPR02.CSLOC = 0) OR ((CPR02.CSLOC = 2 OR CPR02.CSLOC = null) AND CPR02.UNKNLOCDATECS != null AND CPR02.UNKNLOCDATECS > dateToOctetString(users-active-period)) OR CPR02.CSLOC IN SET(3,4) OR (CPR02.CSLOC = 5 AND CPR02.PURGEDATECS > dateToOctetString(users-active-period)) OR (CPR02.PSLOC = 0) OR ((CPR02.PSLOC = 2 OR CPR02.PSLOC = null) AND CPR02.UNKNLOCDATEPS != null AND CPR02.UNKNLOCDATEPS > dateToOctetString(users-active-period)) OR CPR02.PSLOC IN SET(3,4) OR (CPR02.PSLOC = 5 AND CPR02.PURGEDATEPS > dateToOctetString(users-active-period))</rule>
+                </counter>
+            </counter-group>
+
+            <counter-group>
+                <name>GRP_HLRFE_ALLBSG</name>
+                <periodicity>two-hour</periodicity>
+                <description>Counters for number of subscribers with an active SS applied to all BSGs. Counters are defined per SS</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NALLBSGAOCI</name>
+                    <description>Number of subscribers with AOC information SS active</description>
+                    <condition>AOC = 1 (Advice of charge information provided)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP6.AOC = 1</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGAOCC</name>
+                    <description>Number of subscribers with AOC charging SS active</description>
+                    <condition>AOC = 2 (Advice of charge charging provided)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP6.AOC = 2</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGHOLD</name>
+                    <description>Number of subscribers with the HOLD SS active</description>
+                    <condition>HOLD is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP6.HOLD != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGICI</name>
+                    <description>Number of subscribers with the ICI SS active</description>
+                    <condition>ICI is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP6.ICI != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGOIN</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the OIN SS active</description>
+                    <condition>OIN is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP6.OIN != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGTIN</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the TIN SS active</description>
+                    <condition>TIN is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP6.TIN != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGMPTY</name>
+                    <description>Number of subscribers with the MPTY SS active</description>
+                    <condition>MPTY is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP6.MPTY != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGCLIP</name>
+                    <description>Number of subscribers with the CLIP SS active</description>
+                    <condition>CLIP is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP6.CLIP != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGCLIR</name>
+                    <description>Number of subscribers with the CLIR SS active</description>
+                    <condition>CLIR is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP6.CLIR != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGCOLP</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the COLP SS active</description>
+                    <condition>COLP is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP6.COLP != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGCOLR</name>
+                    <description>Number of subscribers with the COLR SS active</description>
+                    <condition>COLR is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP6.COLR != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGOICK</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the OICK SS active</description>
+                    <condition>OICK is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP6.OICK != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGTICK</name>
+                    <description>Number of subscribers with the TICK SS active</description>
+                    <condition>TICK is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP6.TICK != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGEMLPP</name>
+                    <description>Number of subscribers with the EMLPP SS active</description>
+                    <condition>EMLPP is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP5.EMLPP != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGUNIV</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the UNIV SS active</description>
+                    <condition>UNIV is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPF.UNIV != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGCREL</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the CREL SS active</description>
+                    <condition>CREL is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPF.CREL != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGCUNRL</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the CUNRL SS active</description>
+                    <condition>CUNREL is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPF.CUNREL != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGPLMNO</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the PLMNO SS active</description>
+                    <condition>PLMNO is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPF.PLMNO != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGBSL</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BSL SS active</description>
+                    <condition>BSL is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPF.BSL != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGASL</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the ASL SS active</description>
+                    <condition>ASL is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPF.ASL != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGTTP</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the TTP SS active</description>
+                    <condition>TTP is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPF.TTP != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGECT</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the ECT SS active</description>
+                    <condition>ECT is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP5.ECT != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGSERVTL</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the SERVTL SS active</description>
+                    <condition>Any of the following attributes is present: SERVT1 - SERVT32</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CPI.SERVT1 != null) OR (CPI.SERVT2 != null) OR (CPI.SERVT3 != null) OR (CPI.SERVT4 != null) OR (CPI.SERVT5 != null) OR (CPI.SERVT6 != null) OR (CPI.SERVT7 != null) OR (CPI.SERVT8 != null) OR (CPI.SERVT9 != null) OR (CPI.SERVT10 != null) OR (CPI.SERVT11 != null) OR (CPI.SERVT12 != null) OR (CPI.SERVT13 != null) OR (CPI.SERVT14 != null) OR (CPI.SERVT15 != null) OR (CPI.SERVT16 != null) OR (CPI.SERVT17 != null) OR (CPI.SERVT18 != null) OR (CPI.SERVT19 != null) OR (CPI.SERVT20 != null) OR (CPI.SERVT21 != null) OR (CPI.SERVT22 != null) OR (CPI.SERVT23 != null) OR (CPI.SERVT24 != null) OR (CPI.SERVT25 != null) OR (CPI.SERVT26 != null) OR (CPI.SERVT27 != null) OR (CPI.SERVT28 != null) OR (CPI.SERVT29 != null) OR (CPI.SERVT30 != null) OR (CPI.SERVT31 != null) OR (CPI.SERVT32 != null)</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGACR</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the ACR SS active</description>
+                    <condition>ACR is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP5.ACR != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGRTCA</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the RTCA SS active</description>
+                    <condition>RTCA is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP5.RTCA != null</rule>
+                </counter>
+                <counter>
+                    <name>NALLBSGMCA</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the MCA SS active</description>
+                    <condition>MCA is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP5.MCA != null</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_SPEECH</name>
+                <periodicity>two-hour</periodicity>
+                <description>Counter information is number of subscriber having a SS Active for BSG 'Speech'. Counters are defined per SS</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NSPEECHCFU</name>
+                    <description>Number of subscribers with the CFU SS active for BSG 'Speech'</description>
+                    <condition>CFUTS10ST = 14 or 15 (active-operative or active-quiescent) </condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP7.CFUTS10ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NSPEECHCFB</name>
+                    <description>Number of subscribers with the CFB SS active for BSG 'Speech'</description>
+                    <condition>CFBTS10ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP7.CFBTS10ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NSPEECHCFNRY</name>
+                    <description>Number of subscribers with the CFNRY SS active for BSG 'Speech'</description>
+                    <condition>CFNRYTS10ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP7.CFNRYTS10ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NSPEECHCFNRC</name>
+                    <description>Number of subscribers with the CFNRC SS active for BSG 'Speech'</description>
+                    <condition>CFNRCTS10ST  = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP7.CFNRCTS10ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NSPEECHBAOC</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BAOC SS active for BSG 'Speech'</description>
+                    <condition>BAOCTS10ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP7.BAOCTS10ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSPEECHBOIC</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BOIC SS active for BSG 'Speech'</description>
+                    <condition>BOICTS10ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP7.BOICTS10ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSPEECHBOIEXH</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BOIEXH SS active for BSG 'Speech'</description>
+                    <condition>BOIEXHTS10ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP7.BOIEXHTS10ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSPEECHBAIC</name>
+                    <description>Number of subscribers with the BAIC SS active for BSG 'Speech'</description>
+                    <condition>BAICTS10ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP7.BAICTS10ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSPEECHBICRO</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BICRO SS active for BSG 'Speech'</description>
+                    <condition>BICROTS10ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP7.BICROTS10ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSPEECHCAW</name>
+                    <description>Number of subscribers with the CAW SS active for BSG 'Speech'</description>
+                    <condition>CAWTS10ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP7.CAWTS10ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSPEECHSPN</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the SPN SS active for BSG 'Speech'</description>
+                    <condition>SPNTS10ST = 6 or 7 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP7.SPNTS10ST IN SET (6, 7)</rule>
+                </counter>
+                <counter>
+                    <name>NSPEECHDCF</name>
+                    <description>Number of subscribers with the DCF SS active for BSG 'Speech'</description>
+                    <condition>DCFTS10ST = 6 or 7 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP7.DCFTS10ST IN SET (6, 7)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_SMS</name>
+                <periodicity>one-day</periodicity>
+                <description>Counter information is a number of subscriber having a SS Active for BSG 'Short message service'. Counters are defined per SS</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NSMSBAOC</name>
+                    <description>Number of subscribers with the BAOC SS active for BSG 'SMS'</description>
+                    <condition>BAOCTS20ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP8.BAOCTS20ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSMSBOIC</name>
+                    <description>Number of subscribers with the BOIC SS active for BSG 'SMS'</description>
+                    <condition>BOICTS20ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP8.BOICTS20ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSMSBOIEXH</name>
+                    <description>Number of subscribers with the BOIEXH SS active for BSG 'SMS'</description>
+                    <condition>BOIEXHTS20ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP8.BOIEXHTS20ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSMSBAIC</name>
+                    <description>Number of subscribers with the BAIC SS active for BSG 'SMS'</description>
+                    <condition>BAICTS20ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP8.BAICTS20ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSMSBICRO</name>
+                    <description>Number of subscribers with the BICRO SS active for BSG 'SMS'</description>
+                    <condition>BICROTS20ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP8.BICROTS20ST IN SET (10, 11)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_FACSIM</name>
+                <periodicity>two-hour</periodicity>
+                <description>Counter information is number of subscriber having a SS Active for BSG 'Facsimile'</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NFACSIMCFU</name>
+                    <description>Number of subscribers with the CFU SS active for BSG 'Facsimile'</description>
+                    <condition>CFUTS60ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPA.CFUTS60ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NFACSIMCFB</name>
+                    <description>Number of subscribers with the CFB SS active for BSG 'Facsimile'</description>
+                    <condition>CFBTS60ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPA.CFBTS60ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NFACSIMCFNRY</name>
+                    <description>Number of subscribers with the CFNRY SS active for BSG 'Facsimile'</description>
+                    <condition>CFNRYTS60ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPA.CFNRYTS60ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NFACSIMCFNRC</name>
+                    <description>Number of subscribers with the CFNRC SS active for BSG 'Facsimile'</description>
+                    <condition>CFNRCTS60ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPA.CFNRCTS60ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NFACSIMBAOC</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BAOC SS active for BSG 'Facsimile'</description>
+                    <condition>BAOCTS60ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPA.BAOCTS60ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NFACSIMBOIC</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BOIC SS active for BSG 'Facsimile'</description>
+                    <condition>BOICTS60ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPA.BOICTS60ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NFACSIMBOIEXH</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BOIEXH SS active for BSG 'Facsimile'</description>
+                    <condition>BOIEXHTS60ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPA.BOIEXHTS60ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NFACSIMBAIC</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BAIC SS active for BSG 'Facsimile'</description>
+                    <condition>BAICTS60ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPA.BAICTS60ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NFACSIMBICRO</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BICRO SS active for BSG 'Facsimile'</description>
+                    <condition>BICROTS60ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPA.BICROTS60ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NFACSIMCAW</name>
+                    <description>Number of subscribers with the CAW SS active for BSG 'Facsimile'</description>
+                    <condition>CAWTS60ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPA.CAWTS60ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NFACSIMDCF</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the DCF SS active for BSG 'Facsimile'</description>
+                    <condition>DCFTS60ST = 6 or 7 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPA.DCFTS60ST IN SET (6, 7)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_AUXSPEE</name>
+                <periodicity>one-day</periodicity>
+                <description>Counter information is a number of subscriber having a SS Active for BSG 'Auxiliary Speech'. Counters are defined per SS.</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NAUXSPEECFU</name>
+                    <description>Number of subscribers with the CFU SS active for BSG 'Auxiliary Speech'</description>
+                    <condition>CFUTSD0ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP9.CFUTSD0ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NAUXSPEECFB</name>
+                    <description>Number of subscribers with the CFB SS active for BSG 'Auxiliary Speech'</description>
+                    <condition>CFBTSD0ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP9.CFBTSD0ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NAUXSPEECFNRY</name>
+                    <description>Number of subscribers with the CFNRY SS active for BSG 'Auxiliary Speech'</description>
+                    <condition>CFNRYTSD0ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP9.CFNRYTSD0ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NAUXSPEECFNRC</name>
+                    <description>Number of subscribers with the CFNRC SS active for BSG 'Auxiliary Speech'</description>
+                    <condition>CFNRCTSD0ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP9.CFNRCTSD0ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NAUXSPEEBAOC</name>
+                    <description>Number of subscribers with the BAOC SS active for BSG 'Auxiliary Speech'</description>
+                    <condition>BAOCTSD0ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP9.BAOCTSD0ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NAUXSPEEBOIC</name>
+                    <description>Number of subscribers with the BOIC SS active for BSG 'Auxiliary Speech'</description>
+                    <condition>BOICTSD0ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP9.BOICTSD0ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NAUXSPEEBOIEXH</name>
+                    <description>Number of subscribers with the BOIEXH SS active for BSG 'Auxiliary Speech'</description>
+                    <condition>BOIEXHTSD0ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP9.BOIEXHTSD0ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NAUXSPEEBAIC</name>
+                    <description>Number of subscribers with the BAIC SS active for BSG 'Auxiliary Speech'</description>
+                    <condition>BAICTSD0ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP9.BAICTSD0ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NAUXSPEEBICRO</name>
+                    <description>Number of subscribers with the BICRO SS active for BSG 'Auxiliary Speech'</description>
+                    <condition>BICROTSD0ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP9.BICROTSD0ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NAUXSPEECAW</name>
+                    <description>Number of subscribers with the CAW SS active for BSG 'Auxiliary Speech'</description>
+                    <condition>CAWTSD0ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP9.CAWTSD0ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NAUXSPEEDCF</name>
+                    <description>Number of subscribers with the DCF SS active for BSG 'Auxiliary Speech'</description>
+                    <condition>DCFTSD0ST = 6 or 7 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CP9.DCFTSD0ST IN SET (6, 7)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_ASYNCR</name>
+                <periodicity>two-hour</periodicity>
+                <description>Counter information is number of subscriber having a SS Active for BSG 'All Data Circuit Asynchronous'. Counters are defined per SS</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NASYNCRCFU</name>
+                    <description>Number of subscribers with the CFU SS active for BSG 'All Data Circuit Asynchronous'</description>
+                    <condition>CFUBS20ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPC.CFUBS20ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NASYNCRCFB</name>
+                    <description>Number of subscribers with the CFB SS active for BSG 'All Data Circuit Asynchronous'</description>
+                    <condition>CFBBS20ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPC.CFBBS20ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NASYNCRCFNRY</name>
+                    <description>Number of subscribers with the CFNRY SS active for BSG 'All Data Circuit Asynchronous'</description>
+                    <condition>CFNRYBS20ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPC.CFNRYBS20ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NASYNCRCFNRC</name>
+                    <description>Number of subscribers with the CFNRC SS active for BSG 'All Data Circuit Asynchronous'</description>
+                    <condition>CFNRCBS20ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPC.CFNRCBS20ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NASYNCRBAOC</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BAOC SS active for BSG 'All Data Circuit Asynchronous'</description>
+                    <condition>BAOCBS20ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPC.BAOCBS20ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NASYNCRBOIC</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BOIC SS active for BSG 'All Data Circuit Asynchronous'</description>
+                    <condition>BOICBS20ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPC.BOICBS20ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NASYNCRBOIEXH</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BOIEXH SS active for BSG 'All Data Circuit Asynchronous'</description>
+                    <condition>BOIEXHBS20ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPC.BOIEXHBS20ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NASYNCRBAIC</name>
+                    <periodicity>one-day</periodicity>
+                    <description>NNumber of subscribers with the BAIC SS active for BSG 'All Data Circuit Asynchronous'</description>
+                    <condition>BAICBS20ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPC.BAICBS20ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NASYNCRBICRO</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BICRO SS active for BSG 'All Data Circuit Asynchronous'</description>
+                    <condition>BICROBS20ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPC.BICROBS20ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NASYNCRCAW</name>
+                    <description>Number of subscribers with the CAW SS active for BSG 'All Data Circuit Asynchronous'</description>
+                    <condition>CAWBS20ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPC.CAWBS20ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NASYNCRDCF</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the DCF SS active for BSG 'All Data Circuit Asynchronous'</description>
+                    <condition>DCFBS20ST = 6 or 7 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPC.DCFBS20ST IN SET (6, 7)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_SYNCRO</name>
+                <periodicity>two-hour</periodicity>
+                <description>Counter information is a number of subscriber having a SS Active for BSG 'All Data Circuit Synchronous'. Counters are defined per SS</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NSYNCROCFU</name>
+                    <description>Number of subscribers with the CFU SS active for BSG 'All Data Circuit Synchronous'</description>
+                    <condition>CFUBS30ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPB.CFUBS30ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NSYNCROCFB</name>
+                    <description>Number of subscribers with the CFB SS active for BSG 'All Data Circuit Synchronous'</description>
+                    <condition>CFBBS30ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPB.CFBBS30ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NSYNCROCFNRY</name>
+                    <description>Number of subscribers with the CFNRY SS active for BSG 'All Data Circuit Synchronous'</description>
+                    <condition>CFNRYBS30ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPB.CFNRYBS30ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NSYNCROCFNRC</name>
+                    <description>Number of subscribers with the CFNRC SS active for BSG 'All Data Circuit Synchronous'</description>
+                    <condition>CFNRCBS30ST = 14 or 15 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPB.CFNRCBS30ST IN SET (14, 15)</rule>
+                </counter>
+                <counter>
+                    <name>NSYNCROBAOC</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BAOC SS active for BSG 'All Data Circuit Synchronous'</description>
+                    <condition>BAOCBS30ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPB.BAOCBS30ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSYNCROBOIC</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BOIC SS active for BSG 'All Data Circuit Synchronous'</description>
+                    <condition>BOICBS30ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPB.BOICBS30ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSYNCROBOIEXH</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BOIEXH SS active for BSG 'All Data Circuit Synchronous'</description>
+                    <condition>BOIEXHBS30ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPB.BOIEXHBS30ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSYNCROBAIC</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BAIC SS active for BSG 'All Data Circuit Synchronous'</description>
+                    <condition>BAICBS30ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPB.BAICBS30ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSYNCROBICRO</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the BICRO SS active for BSG 'All Data Circuit Synchronous'</description>
+                    <condition>BICROBS30ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPB.BICROBS30ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSYNCROCAW</name>
+                    <periodicity>one-day</periodicity>
+                    <description>Number of subscribers with the CAW SS active for BSG 'All Data Circuit Synchronous'</description>
+                    <condition>CAWBS30ST = 10 or 11 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPB.CAWBS30ST IN SET (10, 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSYNCRODCF</name>
+                    <description>Number of subscribers with the DCF SS active for BSG 'All Data Circuit Synchronous'</description>
+                    <condition>DCFBS30ST = 6 or 7 (active-operative or active-quiescent)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>CPB.DCFBS30ST IN SET (6, 7)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_CUGBSG</name>
+                <periodicity>one-day</periodicity>
+                <description>Counters information is number of subscribers with CUG SS per BSG.</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NCUGBSGTS10</name>
+                    <description>Number of subscribers with the CUG SS active for BSG 'Speech'</description>
+                    <condition>Any of the following attributes CUGBSG1, CUGBSG2, CUGBSG3, CUGBSG4, CUGBSG5, CUGBSG6, CUGBSG7, CUGBSG8, CUGBSG9, CUGBSG10 has one of the following values: 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>((CPE.CUGBSG1 IN SET (1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31)) OR (CPE. CUGBSG2 IN SET (1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31)) OR (CPE.CUGBSG3 IN SET (1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31)) OR (CPE.CUGBSG4 IN SET (1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31)) OR (CPE.CUGBSG5 IN SET (1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31)) OR (CPE.CUGBSG6 IN SET (1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31)) OR (CPE.CUGBSG7 IN SET (1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31)) OR (CPE.CUGBSG8 IN SET (1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31)) OR (CPE.CUGBSG9 IN SET (1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31)) OR (CPE.CUGBSG10 IN SET (1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31)) ) </rule>
+                </counter>
+                <counter>
+                    <name>NCUGBSGTSD0</name>
+                    <description>Number of subscribers with the CUG SS active for BSG 'Auxiliary Speech'</description>
+                    <condition>Any of the following attributes CUGBSG1, CUGBSG2, CUGBSG3, CUGBSG4, CUGBSG5, CUGBSG6, CUGBSG7, CUGBSG8, CUGBSG9, CUGBSG10 has one of the following values: 4, 5, 6, 7, 12, 13 14, 15, 20 ,21, 22, 23, 28, 29, 30, 31</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>((CPE.CUGBSG1 IN SET (4, 5, 6, 7, 12, 13, 14, 15, 20 ,21, 22, 23, 28, 29, 30, 31)) OR (CPE.CUGBSG2 IN SET (4, 5, 6, 7, 12, 13, 14, 15, 20 ,21, 22, 2313, 14, 28, 29, 30, 31)) OR (CPE.CUGBSG3 IN SET (4, 5, 6, 7, 12, 13, 14, 15, 20 ,21, 22, 23, 28, 29, 30, 31)) OR (CPE.CUGBSG4 IN SET (4, 5, 6, 7, 12, 13, 14, 15, 20 ,21, 22, 23, 28, 29, 30, 31)) OR (CPE.CUGBSG5 IN SET (4, 5, 6, 7, 12, 13, 14, 15, 20 ,21, 22, 23, 28, 29, 30, 31)) OR (CPE.CUGBSG6 IN SET (4, 5, 6, 7, 12, 13, 14, 15, 20 ,21, 22, 23, 28, 29, 30, 31)) OR (CPE.CUGBSG7 IN SET (4, 5, 6, 7, 12, 13, 14, 15, 20 ,21, 22, 23, 28, 29, 30, 31)) OR (CPE.CUGBSG8 IN SET (4, 5, 6, 7, 12, 13, 14, 15, 20 ,21, 22, 23, 28, 29, 30, 31)) OR (CPE.CUGBSG9 IN SET (4, 5, 6, 7, 12, 13, 14, 15, 20 ,21, 22, 23, 28, 29, 30, 31)) OR (CPE.CUGBSG10 IN SET (4, 5, 6, 7, 12, 13, 14, 15, 20 ,21, 22, 23, 28, 29, 30, 31)) )</rule>
+                </counter>
+                <counter>
+                    <name>NCUGBSGBS20</name>
+                    <description>Number of subscribers with the CUG SS active for BSG 'All Data Circuit Asynchronous'</description>
+                    <condition>Any of the following attributes CUGBSG1, CUGBSG2, CUGBSG3, CUGBSG4, CUGBSG5, CUGBSG6, CUGBSG7, CUGBSG8, CUGBSG9, CUGBSG10 has one of the following values: 8, 9, 10, 11, 12, 13 14, 15, 24, 25, 26, 27, 28, 29, 30, 31</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>((CPE.CUGBSG1 IN SET (8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG2 IN SET (8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG3 IN SET (8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG4 IN SET (8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG5 IN SET (8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG6 IN SET (8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG7 IN SET (8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG8 IN SET (8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG9 IN SET (8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG10 IN SET (8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27, 28, 29, 30, 31)) )</rule>
+                </counter>
+                <counter>
+                    <name>NCUGBSGBS30</name>
+                    <description>Number of subscribers with the CUG SS active for BSG ' All Data Circuit Synchronous '</description>
+                    <condition>Any of the following attributes CUGBSG1, CUGBSG2, CUGBSG3, CUGBSG4, CUGBSG5, CUGBSG6, CUGBSG7, CUGBSG8, CUGBSG9, CUGBSG10 has one of the following values: 16, 17, 18, 19, 20 ,21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>((CPE.CUGBSG1 IN SET (16, 17, 18, 19, 20 ,21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE. CUGBSG2 IN SET (16, 17, 18, 19, 20 ,21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG3 IN SET (16, 17, 18, 19, 20 ,21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG4 IN SET (16, 17, 18, 19, 20 ,21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG5 IN SET (16, 17, 18, 19, 20 ,21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG6 IN SET (16, 17, 18, 19, 20 ,21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG7 IN SET (16, 17, 18, 19, 20 ,21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG8 IN SET (16, 17, 18, 19, 20 ,21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG9 IN SET (16, 17, 18, 19, 20 ,21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)) OR (CPE.CUGBSG10 IN SET (16, 17, 18, 19, 20 ,21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31)) ) </rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_PLMNSUB</name>
+                <description>Counters for number of subscribers located outside the Home PLMN</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>PLMNCNT</name>
+                    <description>Number of non-GPRS subscribers located outside the HPLMN</description>
+                    <condition>CSLOC conditions and CC and NDC of the attribute VLRADD do not match the HPLMN</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>((CP2.CSLOC = 0) OR ((CP2.CSLOC = 2 OR CP2.CSLOC = null) AND CP2.UNKNLOCDATECS != null AND CP2.UNKNLOCDATECS > dateToOctetString(users-active-period)) OR (CP2.CSLOC = 5 AND CP2.PURGEDATECS > dateToOctetString(users-active-period))) AND CP2.VLRADD != ""</rule>
+                </counter>
+                <counter>
+                    <name>GPPLMNCNT</name>
+                    <description>Number of GPRS subscribers located outside the HPLMN</description>
+                    <condition>PSLOC conditions and CC and NDC of the attribute SGSNNUM do not match the HPLMN</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>((CP2.PSLOC = 0) OR ((CP2.PSLOC = 2 OR CP2.PSLOC = null) AND CP2.UNKNLOCDATEPS != null AND CP2.UNKNLOCDATEPS > dateToOctetString(users-active-period)) OR (CP2.PSLOC = 5 AND CP2.PURGEDATEPS > dateToOctetString(users-active-period))) AND CP2.SGSNNUM != ""</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_PDPDEF</name>
+                <description>Counter for number of subscribers with PDP-Context data</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>ONEPCNT</name>
+                    <description>Number of subscribers with at least one PDP-Context defined per subscriber basis</description>
+                    <condition>Any of the following attributes is present: APNID1, APNID2, APNID3, APNID4, APNID5, APNID6, APNID7, APNID8, APNID9, APNID10</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.PDPCP != null) OR (CP1.APNID1 != null) OR (CP1.APNID2 != null) OR (CP1.APNID3 != null) OR (CP1.APNID4 != null) OR (CP1.APNID5 != null) OR (CP1.APNID6 != null) OR (CP1.APNID7 != null) OR (CP1.APNID8 != null) OR (CP1.APNID9 != null) OR (CP1.APNID10 != null)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_RSASUBS1</name>
+                <description>Counters for number of subscribers having a specific RSA associated. Counters are defined per RSA. A maximum of 4096 Roaming Service Areas are possible</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NSUBSRSA1</name>
+                    <description>Number of subscribers having the RSA 1 associated</description>
+                    <condition>RSA = 1</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 1)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA2</name>
+                    <description>Number of subscribers having the RSA 2 associated</description>
+                    <condition>RSA = 2</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 2)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA3</name>
+                    <description>Number of subscribers having the RSA 3 associated</description>
+                    <condition>RSA = 3</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 3)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA4</name>
+                    <description>Number of subscribers having the RSA 4 associated</description>
+                    <condition>RSA = 4</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 4)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA5</name>
+                    <description>Number of subscribers having the RSA 5 associated</description>
+                    <condition>RSA = 5</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 5)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA6</name>
+                    <description>Number of subscribers having the RSA 6 associated</description>
+                    <condition>RSA = 6</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 6)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA7</name>
+                    <description>Number of subscribers having the RSA 7 associated</description>
+                    <condition>RSA = 7</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 7)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA8</name>
+                    <description>Number of subscribers having the RSA 8 associated</description>
+                    <condition>RSA = 8</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 8)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA9</name>
+                    <description>Number of subscribers having the RSA 9 associated</description>
+                    <condition>RSA = 9</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 9)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA10</name>
+                    <description>Number of subscribers having the RSA 10 associated</description>
+                    <condition>RSA = 10</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 10)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA11</name>
+                    <description>Number of subscribers having the RSA 11 associated</description>
+                    <condition>RSA = 11</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 11)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA12</name>
+                    <description>Number of subscribers having the RSA 12 associated</description>
+                    <condition>RSA = 12</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 12)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA13</name>
+                    <description>Number of subscribers having the RSA 13 associated</description>
+                    <condition>RSA = 13</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 13)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA14</name>
+                    <description>Number of subscribers having the RSA 14 associated</description>
+                    <condition>RSA = 14</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 14)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA15</name>
+                    <description>Number of subscribers having the RSA 15 associated</description>
+                    <condition>RSA = 15</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 15)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA16</name>
+                    <description>Number of subscribers having the RSA 16 associated</description>
+                    <condition>RSA = 16</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 16)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HLRFE_RSASUBS2</name>
+                <description>Counters for number of subscribers having a specific RSA associated. Counters are defined per RSA. A maximum of 4096 Roaming Service Areas are possible</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NSUBSRSA1</name>
+                    <description>Number of subscribers having the RSA 65 associated</description>
+                    <condition>RSA = 65</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 65)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA2</name>
+                    <description>Number of subscribers having the RSA 66 associated</description>
+                    <condition>RSA = 66</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 66)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA3</name>
+                    <description>Number of subscribers having the RSA 67 associated</description>
+                    <condition>RSA = 67</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 67)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA4</name>
+                    <description>Number of subscribers having the RSA 68 associated</description>
+                    <condition>RSA = 68</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 68)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA5</name>
+                    <description>Number of subscribers having the RSA 69 associated</description>
+                    <condition>RSA = 69</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 69)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA6</name>
+                    <description>Number of subscribers having the RSA 70 associated</description>
+                    <condition>RSA = 70</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 70)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA7</name>
+                    <description>Number of subscribers having the RSA 71 associated</description>
+                    <condition>RSA = 71</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 71)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA8</name>
+                    <description>Number of subscribers having the RSA 72 associated</description>
+                    <condition>RSA = 72</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 72)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA9</name>
+                    <description>Number of subscribers having the RSA 73 associated</description>
+                    <condition>RSA = 73</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 73)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA10</name>
+                    <description>Number of subscribers having the RSA 74 associated</description>
+                    <condition>RSA = 74</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 74)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA11</name>
+                    <description>Number of subscribers having the RSA 75 associated</description>
+                    <condition>RSA = 75</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 75)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA12</name>
+                    <description>Number of subscribers having the RSA 76 associated</description>
+                    <condition>RSA = 76</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 76)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA13</name>
+                    <description>Number of subscribers having the RSA 77 associated</description>
+                    <condition>RSA = 77</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 77)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA14</name>
+                    <description>Number of subscribers having the RSA 78 associated</description>
+                    <condition>RSA = 78</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 78)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA15</name>
+                    <description>Number of subscribers having the RSA 79 associated</description>
+                    <condition>RSA = 79</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 79)</rule>
+                </counter>
+                <counter>
+                    <name>NSUBSRSA16</name>
+                    <description>Number of subscribers having the RSA 80 associated</description>
+                    <condition>RSA = 80</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(CP1.RSA = 80)</rule>
+                </counter>
+            </counter-group>
+
+            <counter-group>
+                <name>GRP_HssEsmUsersStored</name>
+                <description>Counters for the number of EPS Subscription Manager (ESM) users stored in the HSS application</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>TotalNumberOfEpsUsersStored</name>
+                    <description>The number of EPS users</description>
+                    <condition>EpsStaticInf is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsStaticInf.EpsStaInfId != null)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HssIsmUsersStored</name>
+                <description>Counters for the number of ISM subscribers stored in the HSS application</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>TotalNumberOfSubscribersStored</name>
+                    <description>The number of IMS subscribers</description>
+                    <condition>ImsSubs is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>assocId</data-subtype>
+                    <rule>(ImsSubs.ImsSubsId != null)</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOfUsersStored</name>
+                    <description>The number of IMS users</description>
+                    <condition>ImsImpi is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>assocId</data-subtype>
+                    <rule>(ImsImpi.ImsImpiId != null)</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOfPsiUsersStored</name>
+                    <description>The number of IMS users with Public Service Identities (PSIs)</description>
+                    <condition>ImsSubs is present and ImsIsPsi=true</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>assocId</data-subtype>
+                    <rule>(ImsSubs.ImsIsPsi = true)</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOfSipPublicIdsStored</name>
+                    <description>The number of public identities in a Session Initiation Protocol (SIP) Uniform Resource Identifier (URI) format</description>
+                    <condition>ImsImpu is present and IMPU="sip:%" (% presents zero or more characters)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>assocId</data-subtype>
+                    <rule>(ImsImpu.IMPU = "sip:%")</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOfTelPublicIdsStored</name>
+                    <description>The number of public identities in a Telephone Network Communication Unit (TEL) URI format</description>
+                    <condition>ImsImpu is present and IMPU="tel:%" (% presents zero or more characters)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>assocId</data-subtype>
+                    <rule>(ImsImpu.IMPU = "tel:%")</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOfUsersBarred</name>
+                    <description>The number of IMS user identities barred for registration</description>
+                    <condition>ImsImpi is present and imsBarrInd=true</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>assocId</data-subtype>
+                    <rule>(ImsImpi.ImsBarrInd = true)</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOfPublicIdsBarred</name>
+                    <description>The number of public identities barred for session establishment</description>
+                    <condition>ImsImpu is present and ImsSessBarrInd=true</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>assocId</data-subtype>
+                    <rule>(ImsImpu.ImsSessBarrInd = true)</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOfWildcardSipStored</name>
+                    <description>The number of wildcard public identities in a Session Initiation Protocol (SIP) Uniform Resource Identifier (URI) format</description>
+                    <condition>ImsImpu is present and IMPU="sip:%!.*!%" (% presents zero or more characters)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>assocId</data-subtype>
+                    <rule>(ImsImpu.IMPU = "sip:%!.*!%")</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOfWildcardTelStored</name>
+                    <description>The number of wildcard public identities in a Telephony Uniform Resource Identifier (TEL URI) format</description>
+                    <condition>ImsImpu is present and IMPU="tel:%!.*!" (% presents zero or more characters)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>assocId</data-subtype>
+                    <rule>(ImsImpu.IMPU = "tel:%!.*!")</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HssEsmActiveUsers</name>
+                <description>Counters for the number of active ESM users stored in HSS application</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <periodicity>one-day</periodicity>
+                <counter>
+                    <name>TotalNumberOfActiveEpsUsers</name>
+                    <description>The number of active EPS users</description>
+                    <condition>Value of EpsLastActivityDate is within the rolling period</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsDynInf.EpsLastActivityDate >= dateToInteger(users-active-period))</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOfActive2G3GUsers</name>
+                    <description>The number of active 2G/3G users</description>
+                    <condition>The value of EpsSgsnLastActivityDate is within the rolling period</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsSgsnDynInf.EpsSgsnLastActivityDate >= dateToInteger(users-active-period))</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOfActiveEpsUsersOfeMBB</name>
+                    <description>The number of active EPS users of EMBB</description>
+                    <condition>The value of TotalNumberOfActiveEpsUsersOfeMBB is within the rolling period</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsDynInf.EpsUserTypeInTraffic = 1 AND EpsDynInf.EpsLastActivityDate >= dateToInteger(users-active-period))</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HssIsmActiveUsers</name>
+                <description>Counters for the number of active ISM users stored in the HSS application</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <periodicity>one-day</periodicity>
+                <counter>
+                    <name>TotalNumberOfActiveImsUsers</name>
+                    <description>The number of active IMS users</description>
+                    <condition>Value of ImsLastActivityDate is within the rolling period</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>assocId</data-subtype>
+                    <rule>(ImsImpi.ImsLastActivityDate >= dateToInteger(users-active-period))</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HssIsmUsersRegistration</name>
+                <description>Counters for the number of ISM users with registration state stored in the HSS application</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>TotalNumberOfImpiImpuPairReg</name>
+                    <description>Total Number of Registered Public Identity</description>
+                    <condition>ImsCxDynInf is present and ImsImpiImpuState="%$R" (% presents zero or more characters)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>assocId</data-subtype>
+                    <rule>(ImsCxDynInf.ImsImpiImpuState = "%$R")</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOfImpiImpuPairUnReg</name>
+                    <description>Total Number of Unregistered Public Identity</description>
+                    <condition>ImsCxDynInf is present and ImsImpiImpuState="%$U" (% presents zero or more characters)</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>assocId</data-subtype>
+                    <rule>(ImsCxDynInf.ImsImpiImpuState = "%$U")</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HssEsmUsersLocation</name>
+                <description>Counters for the number of ESM users located in the HSS application</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>TotalNumberOfEpsUsersLocated</name>
+                    <description>The number of EPS users currently located</description>
+                    <condition>EpsDynInf is present and EpcLocState=1</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsDynInf.EpsLocState = 1)</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOfEpsUsersPurged</name>
+                    <description>The number of EPS users currently purged</description>
+                    <condition>EpsDynInf is present and EpcLocState=2</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsDynInf.EpsLocState = 2)</rule>
+                </counter>
+                <counter>
+                    <name>NumOfInactiveEpsUsersUnknown</name>
+                    <periodicity>one-day</periodicity>
+                    <description>The number of inactive EPS users with unknown or purged locations</description>
+                    <condition>EpsDynInf is present, EpcLocState!=1, and EpsLastActivityDate is out of the Rolling Period setting</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsDynInf.EpsLocState != 1 AND <![CDATA[ EpsDynInf.EpsLastActivityDate < dateToInteger(users-active-period) ]]>)</rule>
+                </counter>
+                <counter>
+                    <name>NumOfActiveEpsUsersPurged</name>
+                    <periodicity>one-day</periodicity>
+                    <description>The number of active EPS users with purged locations</description>
+                    <condition>EpsDynInf is present, EpcLocState=2, and EpsLastActivityDate is within the Rolling Period setting</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsDynInf.EpsLocState = 2 AND EpsDynInf.EpsLastActivityDate >= dateToInteger(users-active-period))</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOf2G3GUsersPurged</name>
+                    <description>The number of 2G/3G users currently purged</description>
+                    <condition>EpsSgsnDynInf is present and EpsSgsnLocState=2</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsSgsnDynInf.EpsSgsnLocState = 2)</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOf2G3GUsersLocated</name>
+                    <description>The number of 2G/3G users with known locations</description>
+                    <condition>EpsSgsnDynInf is present and EpcSgsnLocState=1</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsSgsnDynInf.EpsSgsnLocState = 1)</rule>
+                </counter>
+                <counter>
+                    <name>NumOfInactive2G3GUsersUnknown</name>
+                    <periodicity>one-day</periodicity>
+                    <description>The number of inactive 2G/3G users with unknown or purged locations</description>
+                    <condition>EpsSgsnDynInf is present, EpcSgsnLocState!=1, and EpsSgsnLastActivityDate is out of the Rolling Period setting</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsSgsnDynInf.EpsSgsnLocState != 1 AND <![CDATA[ EpsSgsnDynInf.EpsSgsnLastActivityDate < dateToInteger(users-active-period) ]]>)</rule>
+                </counter>
+                <counter>
+                    <name>NumOfActive2G3GUsersPurged</name>
+                    <periodicity>one-day</periodicity>
+                    <description>The number of active 2G/3G users with purged locations</description>
+                    <condition>EpsSgsnDynInf is present, EpcSgsnLocState=2, and EpsSgsnLastActivityDate is within the Rolling Period setting</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsSgsnDynInf.EpsSgsnLocState = 2 AND EpsSgsnDynInf.EpsSgsnLastActivityDate >= dateToInteger(users-active-period))</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumberOf2G3GUsersPurged</name>
+                    <description>The number of 2G/3G users currently purged</description>
+                    <condition>EpsSgsnDynInf is present and EpsSgsnLocState=2</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsSgsnDynInf.EpsSgsnLocState = 2)</rule>
+                </counter>
+                <counter>
+                    <name>TotalNumUsersRegNon3GppIpAccess</name>
+                    <description>The number of users registered in a non-3GPP IP access network</description>
+                    <condition>EpsDynInf is present and EpsAaaRegState=2</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(EpsDynInf.EpsAaaRegState = 2)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HssAvgUsersStored</name>
+                <description>Counters for the number of Authentication Vector Generator (AVG) users stored in the HSS application</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>TotalNumberOfAvgUsersStored</name>
+                    <description>The number of AVG users</description>
+                    <condition>AvgStaticInf is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(AvgStaticInf.AvgStaInfId != null)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>GRP_HssSmSessionsStored</name>
+                <description>Counters for the number of Signaling Manager (SM) sessions stored in the HSS application</description>
+                <administrative-state>unlocked</administrative-state>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>HssSmTotalNumberOfSessionsStored</name>
+                    <description>The number of SM sessions stored in the HSS</description>
+                    <condition>SmSessInf is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>(SmSessInf.IPADDRESS != null)</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>SAPCSUBS</name>
+                <description>Counters for the number of SAPC subscribers</description>
+                <administrative-state>unlocked</administrative-state>
+                <periodicity>fifteen-min</periodicity>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>SUBSCRIBERS</name>
+                    <description>Number of subscribers</description>
+                    <condition>SSubs is present</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>mscId</data-subtype>
+                    <rule>SAPC.SSubId != null</rule>
+                </counter>
+            </counter-group>
+            <counter-group>
+                <name>ALL_EIR</name>
+                <periodicity>one-day</periodicity>
+                <description>EIR application subscriber counters</description>
+                <administrative-state>unlocked</administrative-state>
+                <periodicity>fifteen-min</periodicity>
+                <data-type>ldap-entry</data-type>
+                <counter>
+                    <name>NBR_IMEI</name>
+                    <description>Number of IMEIs stored in UDR</description>
+                    <condition>The value is incremented for every NBR_IMEI record provisioned</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>servCommonData</data-subtype>
+                    <rule>(EI6.imeiSvn != null)</rule>
+                </counter>
+                <counter>
+                    <name>NBR_IMEI_CLONE</name>
+                    <description>Number of cloned IMEIs</description>
+                    <condition>The value is incremented for every cloned IMEI record provisioned</condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>servCommonData</data-subtype>
+                    <rule>(EI8.clonedImeiSvn != null)</rule>
+                </counter>
+                <counter>
+                    <name>NBR_IMEI_LOCK</name>
+                    <description>Number of locked IMEIs</description>
+                    <condition>The value is incremented for every locked IMEI record provisioned </condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>servCommonData</data-subtype>
+                    <rule>(EI6.lockedImsi != null)</rule>
+                </counter>
+                <counter>
+                    <name>NBR_IMSI_LOCK</name>
+                    <description>Number of locked IMSIs</description>
+                    <condition>The value is incremented for every locked IMSI record provisioned </condition>
+                    <administrative-state>unlocked</administrative-state>
+                    <data-subtype>servCommonData</data-subtype>
+                    <rule>(EI8.lockedImeiSvn != null)</rule>
+                </counter>
+            </counter-group>
+        </udr-application-counters>
+    </config>
+</edit-config>
+</rpc>

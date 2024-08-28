@@ -1,0 +1,3071 @@
+cncsKeyValueDatabaseRD:
+  enabled: false
+da:
+  autoScaling:
+    maxReplicas: {{ hpaReplica['eric-ccpc-data-access'].max | default(14) }}
+    minReplicas: {{ hpaReplica['eric-ccpc-data-access'].min | default(5) }}
+  dataaccess:
+    resources:
+      limits:
+        cpu: ''
+        ephemeral: 315Mi
+        ephemeralMargin: 20Mi
+        memory: 300Mi
+      requests:
+        cpu: 4000m
+        ephemeral: 300Mi
+        ephemeralMargin: 15Mi
+        memory: 120Mi
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        ephemeralMargin: 15Mi
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 60Mi
+      requests:
+        cpu: 15m
+        memory: 50Mi
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 425m
+    sidecar.istio.io/proxyCPULimit: '20'
+    sidecar.istio.io/proxyMemory: 128Mi
+    sidecar.istio.io/proxyMemoryLimit: 512Mi
+datamodel:
+  redundantCopies: 1
+dms:
+  ipv6stackPreferred: false
+  multiSite:
+    enabled: false
+    locator:
+      localHost: null
+    runtimeConfigMode:
+      enabled: false
+  nameOverride: eric-pcf-dms
+  persistence:
+    backup:
+      persistentVolumeClaim:
+        adminMgr:
+          size: 1Gi
+        enabled: true
+        locator:
+          size: 64Mi
+        server:
+          size: 8Gi
+        storageClassName: {{ storageClassName|default("network-block") }}
+    data:
+      persistentVolumeClaim:
+        enabled: true
+        storageClassName: {{ storageClassName|default("network-block") }}
+    gwsender:
+      persistentVolumeClaim:
+        enabled: false
+        size: 1Gi
+        storageClassName: {{ storageClassName|default("network-block") }}
+  replicaCount:
+    adminMgr: 1
+    locator: 2
+    server: 7
+  resources:
+    adminMgr:
+      requests:
+        cpu: 500m
+    jmxExporter:
+      limits:
+        cpu: '40'
+        memory: 768Mi
+      requests:
+        cpu: 250m
+        memory: 768Mi
+    locator:
+      limits:
+        cpu: '40'
+      requests:
+        cpu: 500m
+    monitor:
+      limits:
+        cpu: '40'
+      requests:
+        cpu: 100m
+    server:
+      limits:
+        cpu: '40'
+        memory: 50Gi
+      requests:
+        cpu: 6000m
+        memory: 50Gi
+dms-operator:
+  ipv6stackPreferred: false
+eric-ccpc-data-counter:
+  datacounter:
+    resources:
+      limits:
+        cpu: 150m
+        ephemeralMargin: 20Mi
+        memory: 36Mi
+      requests:
+        cpu: 50m
+        ephemeralMargin: 15Mi
+        memory: 30Mi
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: 25m
+        ephemeralMargin: 20Mi
+        memory: 55Mi
+      requests:
+        cpu: 5m
+        ephemeralMargin: 15Mi
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: 150m
+        ephemeralMargin: 20Mi
+        memory: 150Mi
+      requests:
+        cpu: 50m
+        memory: 50Mi
+  tolerations: []
+eric-ccpc-dynamic-k8s-controller:
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 100m
+    sidecar.istio.io/proxyCPULimit: 500m
+    sidecar.istio.io/proxyMemory: 128Mi
+    sidecar.istio.io/proxyMemoryLimit: 1Gi
+  resources:
+    eric-ccpc-dynamick8sctr-cleanup-job:
+      limits:
+        cpu: 100m
+        ephemeral-storage: 15Mi
+        memory: 30Mi
+      requests:
+        cpu: 60m
+        ephemeral-storage: 15Mi
+        memory: 10Mi
+    eric-ccpc-dynamick8sctr-cm-reader:
+      limits:
+        cpu: 100m
+        ephemeral-storage: 15Mi
+        memory: 30Mi
+      requests:
+        cpu: 60m
+        ephemeral-storage: 10Mi
+        memory: 20Mi
+    eric-ccpc-dynamick8sctr-cmm-wait:
+      limits:
+        cpu: 200m
+        ephemeral-storage: 15Mi
+        memory: 32Mi
+      requests:
+        cpu: 50m
+        ephemeral-storage: 15Mi
+        memory: 16Mi
+    eric-ccpc-dynamick8sctr-cmmreader-micr-config:
+      limits:
+        cpu: 200m
+        ephemeral-storage: 15Mi
+        memory: 32Mi
+      requests:
+        cpu: 50m
+        ephemeral-storage: 15Mi
+        memory: 16Mi
+    eric-ccpc-dynamick8sctr-log:
+      limits:
+        cpu: 450m
+        ephemeral-storage: 140Mi
+        memory: 375Mi
+      requests:
+        cpu: 300m
+        ephemeral-storage: 60Mi
+        memory: 250Mi
+    eric-ccpc-dynamick8sctr-main:
+      limits:
+        cpu: 500m
+        ephemeral-storage: 15Mi
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        ephemeral-storage: 10Mi
+        memory: 64Mi
+  tolerations: []
+eric-ccpc-state-controller:
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 100m
+    sidecar.istio.io/proxyCPULimit: 200m
+    sidecar.istio.io/proxyMemory: 128Mi
+    sidecar.istio.io/proxyMemoryLimit: 256Mi
+  resources:
+    eric-ccpc-administrative-controller:
+      limits:
+        cpu: 500m
+        ephemeral-storage: 120Mi
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        ephemeral-storage: 15Mi
+        memory: 30Mi
+    eric-ccpc-availability-operational-controller:
+      limits:
+        cpu: 500m
+        ephemeral-storage: 120Mi
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        ephemeral-storage: 15Mi
+        memory: 40Mi
+  tolerations: []
+eric-cloud-native-kvdb-rd-operand:
+  enabled: false
+eric-cloud-native-nf-additions-log-shipper:
+  enabled: false
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+eric-cloud-native-service-mesh-log-shipper:
+  enabled: false
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+eric-cm-mediator:
+  backend:
+    dbname: adp_gs_cm
+    dbuser: customname
+    hostname: eric-data-document-database-pg
+  cmkey:
+    enable: true
+  cmm:
+    tls:
+      enableClientCert: true
+      enabled: true
+      verifyClientCert: true
+  dbbr:
+    backupType: eric-ccpc-configuration-backup
+    enabled: true
+  enabled: true
+  kafka:
+    hostname: eric-data-message-bus-kf
+    port: 9092
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  resources:
+    eric-cm-mediator:
+      requests:
+        cpu: 150m
+    eric-cm-mediator-notifier:
+      requests:
+        cpu: 100m
+  service:
+    endpoints:
+      restapi:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+    nodePort: 0
+eric-cm-mediator-db-pg:
+  enabled: false
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+eric-cm-yang-provider:
+  authorization:
+    enabled: true
+  cliExtensionCmds:
+    showAlarms:
+      enabled: true
+    showAlarmsHistory:
+      enabled: true
+  enableCliCommandAuditLogs: true
+  enabled: true
+  externalTls:
+    netconf:
+      enabled: false
+  externaldb:
+    dbuser: customname
+    host: eric-data-document-database-pg
+  keyManagement:
+    storeHostKeys: false
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  ldap:
+    enableChangePassword: true
+    enabled: true
+    ipv6Enabled: false
+  nbiNotifications:
+    notifyInternalChanges: true
+  objectStorage:
+    secretName: eric-data-object-storage-mn-secret
+  pmMetrics:
+    enableQueryMetricsCommands: true
+    enabled: true
+    httpsHost: eric-pm-server:9089
+  resources:
+    cliExtensionCmds:
+      requests:
+        cpu: 50m
+    notificationController:
+      requests:
+        cpu: 50m
+    objectStorageAdapter:
+      requests:
+        cpu: 50m
+    pmMetrics:
+      requests:
+        cpu: 50m
+    schemaSynchronizer:
+      requests:
+        cpu: 100m
+    sshd:
+      requests:
+        cpu: 50m
+    yangDbAdapter:
+      requests:
+        cpu: 100m
+    yangEngine:
+      requests:
+        cpu: 250m
+  rollback:
+    directory: /rollback_files
+    enableRollbackCommands: true
+    numberOfRollbacksToStore: 20
+  service:
+    annotations:
+      addressPoolName: ccpc{{ instance | default("") }}-oam
+      cloudProviderLB: {}
+      sharedVIPLabel: ccpc-oam
+    cmNbiPorts:
+      dscp: 0
+    loadBalancerIP: ''
+    type: LoadBalancer
+eric-cnom-server:
+  authentication:
+    ldap:
+      enabled: true
+    local:
+      enabled: false
+  dashboards:
+    configMap: eric-ccpc-cnom-dashboards
+  documentDatabase:
+    enabled: false
+  documentDatabasePg:
+    enabled: true
+    host: eric-data-document-database-pg
+  enabled: true
+  externalTls:
+    enabled: true
+  features:
+    metricViewer: true
+  {# The new way is to explicitly provide the FQDN, old way should be removed in the future #}
+  {% if cnom is defined %}
+  fqdn: {{ cnom.fqdn }}
+  {% else %}
+  fqdn: cnom.{{ vnflcm.namespace }}.{{ vnflcm.clusterName }}.{{ oamDomain }}
+  {% endif %}
+  ingress:
+    ingressClass: OAM-IngressClass
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 2m
+    ericsson.com/iem-service-unavailable-grace-period: 2m
+  legalNotice: null
+  metrics:
+    dataPath: files/cnom_metrics_viewer
+    hierarchy:
+      configMap: eric-ccpc-cnom-metrics-hierarchy
+  objectStorageMN:
+    secret: eric-data-object-storage-mn-secret
+  resources:
+    server:
+      requests:
+        cpu: 150m
+  service:
+    endpoints:
+      api:
+        tls:
+          ca:
+          - bundle: ca.pem
+            name: eric-tm-ingress-controller-cr-client-ca
+          verifyClientCertificate: optional
+  tags:
+    ccpc: true
+    pcf: true
+eric-cnom-server-db-pg:
+  brAgent:
+    enabled: false
+  enabled: false
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  log:
+    schema: adp
+  persistentVolumeClaim:
+    enabled: true
+    size: 1Gi
+    storageClassName: network-block
+  postgresDatabase: cnom
+  service:
+    endpoints:
+      postgres:
+        tls:
+          enforced: required
+eric-ctrl-bro:
+  bro:
+    enableConfigurationManagement: true
+    enableNotifications: false
+    vBRMAutoCreate: NONE
+  egress:
+    backupStorageSvr:
+      dscp: 0
+  enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  metrics:
+    enabled: true
+  osmn:
+    credentials:
+      secretName: eric-data-object-storage-mn-secret
+    enabled: false
+  persistence:
+    persistentVolumeClaim:
+      enabled: true
+      size: 1Gi
+      storageClassName: {{ storageClassName|default("network-block") }}
+  resources:
+    backupAndRestore:
+      requests:
+        cpu: 600m
+  service:
+    endpoints:
+      broToAgent:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      cmmHttpNotif:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      restActions:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      scrape:
+        pm:
+          tls:
+            enforced: optional
+            verifyClientCertificate: optional
+eric-data-coordinator-zk:
+  affinity:
+    podAntiAffinity: hard
+  enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  metricsexporter:
+    enabled: true
+  persistence:
+    persistentVolumeClaim:
+      enabled: true
+      storageClassName: "{{ storageClassName|default("network-block") }}"
+  podDisruptionBudget:
+    minAvailable: 50%
+  replicaCount: 2
+  resources:
+    datacoordinatorzk:
+      requests:
+        cpu: 300m
+    metricsexporter:
+      limits:
+        memory: 64Mi
+      requests:
+        cpu: 50m
+  service:
+    endpoints:
+      datacoordinatorzk:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+eric-data-distributed-coordinator-ed:
+  brAgent:
+    backupTypeList:
+    - eric-ccpc-configuration-backup
+    brLabelValue: dc-etcd
+    enabled: true
+    etcd:
+      acls:
+        adminSecret: eric-data-distributed-coordinator-creds
+    properties:
+      applicationProperties: 'dced.agent.restore.type=overwrite
+
+        dced.excluded.paths=/shelter,/kms/core/lock'
+  enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 2m
+    ericsson.com/iem-service-unavailable-grace-period: 2m
+  metricsexporter:
+    enabled: true
+  persistence:
+    brAgent:
+      backupVolume:
+        storageClassName: {{ storageClassName|default("network-block") }}
+    persistentVolumeClaim:
+      enabled: true
+      size: 2Gi
+      storageClassName: {{ storageClassName|default("network-block") }}
+  podDisruptionBudget:
+    minAvailable: 50%
+  resources:
+    brAgent:
+      requests:
+        cpu: 10m
+    dced:
+      requests:
+        cpu: 150m
+    metricsexporter:
+      limits:
+        memory: 64Mi
+      requests:
+        cpu: 100m
+  service:
+    endpoints:
+      dced:
+        tls:
+          enforced: required
+          verifyClientCertificate: optional
+eric-data-document-database-pg:
+  brAgent:
+    backupDataModelConfig: eric-data-document-database-pg-br-agent
+    backupTypeList:
+    - eric-ccpc-configuration-backup
+    - eric-ccpc-policystudio-backup
+    enabled: true
+    logicalDBBackupEnable: true
+  enabled: true
+  highAvailability:
+    replicaCount: 2
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  log:
+    schema: adp
+  persistentVolumeClaim:
+    backup:
+      storageClassName: '{{ storageClassName|default("network-block") }}'
+    housekeeping_threshold: 70
+    storageClassName: '{{ storageClassName|default("network-block") }}'
+  postgresConfig:
+    max_connections: 300
+  postgresDatabase: adp_gs_cm
+  resources:
+    bra:
+      requests:
+        cpu: 100m
+    brm:
+      requests:
+        cpu: 100m
+    metrics:
+      requests:
+        cpu: 130m
+    postgres:
+      requests:
+        cpu: 260m
+  security:
+    postgres:
+      tls:
+        enable: false
+    tls:
+      brAgent:
+        enabled: false
+eric-data-document-database-pg-app:
+  brAgent:
+    backupDataModelConfig: eric-data-document-database-pg-app-br-agent
+    backupTypeList:
+    - eric-ccpc-policystudio-backup
+    enabled: true
+    logicalDBBackupEnable: true
+  enabled: true
+  highAvailability:
+    replicaCount: 2
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  log:
+    schema: adp
+  persistentVolumeClaim:
+    backup:
+      storageClassName: '{{ storageClassName|default("network-block") }}'
+    housekeeping_threshold: 70
+    storageClassName: network-block
+  postgresDatabase: pstudio
+  resources:
+    bra:
+      requests:
+        cpu: 100m
+    brm:
+      requests:
+        cpu: 100m
+    metrics:
+      requests:
+        cpu: 30m
+    postgres:
+      limits:
+        cpu: '1'
+      requests:
+        cpu: 90m
+  security:
+    postgres:
+      tls:
+        enable: false
+    tls:
+      brAgent:
+        enabled: false
+eric-data-key-value-database-rd:
+  enabled: false
+eric-data-message-bus-kf:
+  affinity:
+    podAntiAffinity: hard
+  configurationOverrides:
+    auto.create.topics.enable: true
+    log.retention.bytes: '104857600'
+  enabled: true
+  jmx:
+    enableRemote: false
+    enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 3m
+    ericsson.com/iem-service-unavailable-grace-period: 3m
+  persistence:
+    persistentVolumeClaim:
+      enabled: true
+      size: 25Gi
+      storageClassName: '{{ storageClassName|default("network-block") }}'
+  resources:
+    jmxexporter:
+      requests:
+        cpu: 150m
+    messagebuskf:
+      limits:
+        cpu: '3'
+        memory: 4096Mi
+      requests:
+        cpu: '2'
+        memory: 2048Mi
+  service:
+    endpoints:
+      messagebuskf:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+  tolerations:
+    messagebuskf: []
+eric-data-object-storage-mn:
+  affinity:
+    podAntiAffinity: hard
+  credentials:
+    kubernetesSecretName: ''
+  enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 2m
+    ericsson.com/iem-service-unavailable-grace-period: 2m
+  persistence:
+    persistentVolumeClaim:
+      size: 10Gi
+      storageClassName: '{{ storageClassName|default("network-block") }}'
+  resources:
+    mgt:
+      limits:
+        memory: 2Gi
+eric-data-search-engine:
+  acceptDataLossAtDowngrade: true
+  affinity:
+    podAntiAffinity: hard
+  autoSetRequiredWorkerNodeSysctl: false
+  enabled: true
+  index_management:
+    delete_indices_by_diskspace:
+    - index: adp-app-debug-logs*
+      size: 4gb
+    - index: adp-app-logs*
+      size: 8gb
+    - index: jaeger-span*
+      size: 12gb
+    enabled: true
+    job_interval_in_minutes: 60
+    policies:
+    - description: Remove debug logs older than 3 days
+      indices:
+      - adp-app-debug-logs*
+      priority: 1
+      states:
+      - name: init
+        transitions:
+        - condition: min_index_age=3d
+          destination_state: delete
+      - actions:
+        - delete
+        name: delete
+    - description: Remove non-audit, non-debug logs older than 15 days
+      indices:
+      - adp-app-logs*
+      priority: 1
+      states:
+      - name: init
+        transitions:
+        - condition: min_index_age=15d
+          destination_state: delete
+      - actions:
+        - delete
+        name: delete
+    - description: Remove audit/alarm/security logs older than 30 days
+      indices:
+      - adp-app-audit-logs*
+      - adp-app-asi-logs*
+      - adp-app-security-logs*
+      priority: 1
+      states:
+      - name: init
+        transitions:
+        - condition: min_index_age=30d
+          destination_state: delete
+      - actions:
+        - delete
+        name: delete
+    - description: Remove jeager span and jeager service indices older than 8 days
+      indices:
+      - jaeger-span*
+      - jaeger-service*
+      priority: 1
+      states:
+      - name: init
+        transitions:
+        - condition: min_index_age=8d
+          destination_state: delete
+      - actions:
+        - delete
+        name: delete
+  jvmHeap:
+    data: 2048m
+    ingest: 1024m
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 2m
+    ericsson.com/iem-service-unavailable-grace-period: 2m
+  persistence:
+    data:
+      persistentVolumeClaim:
+        size: 175Gi
+        storageClassName: '{{ storageClassName|default("network-block") }}'
+    master:
+      persistentVolumeClaim:
+        size: 16Mi
+        storageClassName: {{ storageClassName|default("network-block") }}
+  replicaCount:
+    data: 6
+    ingest: 2
+    master: 3
+  resources:
+    data:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 1000m
+        memory: 4Gi
+    ingest:
+      limits:
+        cpu: 500m
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 2Gi
+  service:
+    endpoints:
+      rest:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+    network:
+      protocol:
+        IPv6: false
+eric-data-search-engine-curator:
+  enabled: false
+eric-data-sftp-server:
+  configuration:
+    default_bucket_policy: system-admin * rw:system-read-only * r:* * none
+  enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  objectStorage:
+    accessSecretName: eric-data-object-storage-mn-secret
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1024Mi
+    requests:
+      cpu: 50m
+      memory: 256Mi
+  service:
+    annotations:
+      addressPoolName: ccpc{{ instance|default("") }}-oam
+      sharedVIPLabel: ccpc-oam
+    type: LoadBalancer
+eric-dst-collector:
+  enabled: false
+eric-fh-alarm-handler:
+  alarmhandler:
+    configmap:
+      faultmappings: eric-ccpc-faultmappings
+    rest:
+      fi:
+        api:
+          enabled: true
+  backend:
+    dbname: adp_gs_ah
+    dbuser: customname
+    hostname: eric-fh-alarm-handler-db-pg
+  cmm:
+    enabled: true
+  enabled: true
+  ingress:
+    enabled: false
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  resources:
+    alarmhandler:
+      requests:
+        cpu: 150m
+  service:
+    endpoints:
+      fiapi:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      restapi:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+    type: ClusterIP
+eric-fh-alarm-handler-db-pg:
+  enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  log:
+    schema: adp
+  persistentVolumeClaim:
+    size: 4Gi
+    storageClassName: {{ storageClassName|default("network-block") }}
+  postgresDatabase: adp_gs_ah
+  resources:
+    metrics:
+      requests:
+        cpu: 100m
+    postgres:
+      requests:
+        cpu: 100m
+eric-fh-snmp-alarm-provider:
+  enabled: true
+  ingress:
+    enabled: false
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 2m
+    ericsson.com/iem-service-unavailable-grace-period: 2m
+  probes:
+    snmpAP:
+      livenessProbe:
+        initialDelaySeconds: 120
+  service:
+    annotations:
+      addressPoolName: ccpc{{ instance | default("") }}-oam
+      cloudProviderLB: {}
+      sharedVIPLabel: ccpc-oam
+    loadBalancerIP: ''
+    secretName: false
+    snmpPort:
+      dscp: 0
+    type: LoadBalancer
+  sourceIdentifier: 127.0.0.1
+  sourceIdentifierType: 1
+  yang:
+    enabled: true
+    readConfigFromSecret: false
+    removeByUninstall: false
+eric-ingressgw-ccpc-policy-studio:
+  dscpDualStack: false
+  enabled: true
+  externalTrafficPolicy: {{ externalTrafficPolicy|default("Cluster") }}
+  ports:
+    https-mtls:
+      dscp: null
+      name: https-mtls
+      port: 443
+      targetPort: 8443
+      tcpkeepalive:
+        time: 7200
+  resources:
+    istio-proxy:
+      limits:
+        cpu: ''
+        memory: 2048Mi
+      requests:
+        cpu: 500m
+        memory: 256Mi
+  service:
+    annotations:
+      addressPoolName: ccpc{{ instance | default("") }}-policy-studio
+      cloudProviderLB: {}
+eric-ingressgw-ccpc-provisioning:
+  dscpDualStack: false
+  enabled: true
+  externalTrafficPolicy: {{ externalTrafficPolicy|default("Cluster") }}
+  ports:
+    https-mtls:
+      dscp: null
+      name: https-mtls
+      port: 443
+      targetPort: 8443
+      tcpkeepalive:
+        time: 7200
+  resources:
+    istio-proxy:
+      limits:
+        cpu: ''
+        memory: 2048Mi
+      requests:
+        cpu: 500m
+        memory: 256Mi
+  service:
+    annotations:
+      addressPoolName: ccpc{{ instance | default("") }}-5g-prov
+      cloudProviderLB: {}
+eric-ingressgw-pcf-intersite:
+  dscpDualStack: false
+  enabled: false
+  externalTrafficPolicy: {{ externalTrafficPolicy|default("Cluster") }}
+  resources:
+    istio-proxy:
+      limits:
+        cpu: ''
+        memory: 2048Mi
+      requests:
+        cpu: 500m
+        memory: 256Mi
+  service:
+    annotations:
+      addressPoolName: ccpc{{ instance | default("") }}-5g-geored
+      cloudProviderLB: {}
+eric-ingressgw-pcf-traffic:
+  dscpDualStack: false
+  enabled: true
+  externalTrafficPolicy: {{ externalTrafficPolicy|default("Cluster") }}
+  ports:
+    https-mtls:
+      dscp: null
+      name: https-mtls
+      port: 443
+      targetPort: 8443
+      tcpkeepalive:
+        time: 7200
+  resources:
+    istio-proxy:
+      limits:
+        cpu: ''
+        memory: 2048Mi
+      requests:
+        cpu: 500m
+        memory: 256Mi
+  service:
+    annotations:
+      addressPoolName: ccpc{{ instance | default("") }}-5g-traffic
+      cloudProviderLB: {}
+eric-lm-combined-server:
+  affinity:
+    podAntiAffinity: soft
+  database:
+    credentials: null
+    host: eric-lm-combined-server-db-pg
+    instanceName: eric-lm-combined-server-db-pg
+    name: adp_gs_lm
+    userName: customname
+  egress:
+    licenseServer:
+      dscp: 0
+  enabled: true
+  features:
+    alarmHandling:
+      enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  licenseServerClient:
+    asih:
+      host: eric-si-application-sys-info-handler
+      port: 5000
+      tls: true
+    licenseServer:
+      thrift:
+        host: nels.network.local
+        port: {{ nels.port }}
+  resources:
+    eric-lm-license-consumer-handler:
+      requests:
+        cpu: 50m
+    eric-lm-license-server-client:
+      requests:
+        cpu: 50m
+  service:
+    endpoints:
+      licenseConsumerHandler:
+        restapi:
+          tls:
+            enforced: optional
+            verifyClientCertificate: optional
+eric-lm-combined-server-db-pg:
+  enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  log:
+    schema: adp
+  persistentVolumeClaim:
+    size: 4Gi
+    storageClassName: {{ storageClassName|default("network-block") }}
+  postgresDatabase: adp_gs_lm
+  resources:
+    metrics:
+      requests:
+        cpu: 30m
+    postgres:
+      requests:
+        cpu: 90m
+eric-log-shipper:
+  enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  logshipper:
+    autodiscover:
+      hints:
+        enabled: true
+      logplane: adp-app-logs
+      namespace: .RELEASE.NAMESPACE
+      useContainerInput: true
+    cfgData: ''
+    harvester:
+      ignoreOlder: 24h
+  rbac:
+    automountServiceAccountToken: true
+    createClusterRole: true
+    createClusterRoleBinding: true
+  resources:
+    logshipper:
+      limits:
+        cpu: 500m
+        memory: 1.5Gi
+      requests:
+        cpu: 100m
+        memory: 100Mi
+    security: null
+    tls:
+      logtransformer:
+        enabled: true
+eric-log-transformer:
+  config:
+    adpJson:
+      transformation:
+        enabled: true
+      validation:
+        enabled: true
+  egress:
+    lumberjack:
+      enabled: false
+      remoteHosts: []
+    syslog:
+      enabled: false
+      exclusions: []
+      filter: ''
+      inclusions: []
+      remoteHosts: []
+      tls:
+        enabled: true
+  enabled: true
+  ensureOnceDelivery:
+    enabled: true
+  jvmHeap: 4096m
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 2m
+    ericsson.com/iem-service-unavailable-grace-period: 2m
+  replicaCount: 5
+  resources:
+    logtransformer:
+      limits:
+        cpu: 2000m
+        memory: 6Gi
+      requests:
+        memory: 6Gi
+    metrics:
+      requests:
+        memory: 128Mi
+  searchengine:
+    logplaneConfig:
+    - field: '[facility]'
+      newLogplane: adp-app-audit-logs
+      value: log audit
+    - field: '[severity]'
+      newLogplane: adp-app-debug-logs
+      value: debug
+    - field: '[extra_data][asi][log_plane]'
+      newLogplane: adp-app-asi-logs
+      value: alarm
+    - field: '[facility]'
+      newLogplane: adp-app-security-logs
+      value: security/authorization messages
+    - contains: business-policy-logs
+      field: '[metadata][groups]'
+      newLogplane: eric-ccpc-business-policy-logs
+  service:
+    endpoints:
+      filebeat:
+        tls:
+          enforced: optional
+      syslogIn:
+        tls:
+          enforced: optional
+  syslog:
+    syslogLogplane: adp-app-logs
+eric-mesh-controller:
+  enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  pilot:
+    env:
+      PILOT_ENABLE_INBOUND_PASSTHROUGH: 'true'
+  resources:
+    discovery:
+      limits:
+        cpu: 500m
+        ephemeral-storage: null
+        memory: 2048Mi
+      requests:
+        cpu: 300m
+        ephemeral-storage: null
+        memory: 1024Mi
+    istio-proxy:
+      limits:
+        cpu: 2000m
+        ephemeral-storage: null
+        memory: 1024Mi
+      requests:
+        cpu: 100m
+        ephemeral-storage: null
+        memory: 128Mi
+eric-nrfagent:
+  global:
+    ipStackMode: '''ipv4'''
+    istio:
+      egress:
+        enabled: true
+eric-odca-diagnostic-data-collector:
+  appSysInfoHandler:
+    enabled: true
+  enabled: true
+  env:
+    adminState: locked
+    collectDelayMinutes: 0
+    enableCmConfig: true
+    enableCmypConfig: true
+    enableFileCollector: true
+    enableInitialConfig: true
+    enablePromReceiver: true
+    enableSwICollector: true
+    logIndices:
+    - adp-app-logs*
+    - adp-app-debug-logs*
+    - adp-app-asi-logs*
+  initialConfig:
+    yang-config.json: "{\"ericsson-data-collector-adp:diagnostic-data-collection\"\
+      :\n    {\"data-collector\":\n        {\"profile\": \"defaultProfileForPeriodicalLogExport\"\
+      ,\n          \"collection-interval\": 15,\n          \"administrative-state\"\
+      : \"locked\"},\n      \"collector-profile\": [\n        {\"profile-type\": \"\
+      collection-profile\",\n        \"log-plane\": [\"adp-app-logs*\", \"adp-app-debug-logs*\"\
+      , \"adp-app-asi-logs*\", \"adp-app-audit-logs*\"],\n        \"profile-id\":\
+      \ \"defaultProfileForPeriodicalLogExport\",\n        \"export-ddb-to\": [\"\
+      sftp\"],\n        \"data-to-collect\": [\"logs\", \"software-information\"],\n\
+      \        \"collection-window\": 15}\n      ]\n    }\n  }\n"
+  kms:
+    enabled: true
+  kubernetesInfo:
+    enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  log:
+    streamingMethod: indirect
+  manualService:
+    endpoints:
+      cm_action:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      pm_scrape:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+  objectStorage:
+    enabled: true
+    secretName: eric-data-object-storage-mn-secret
+  pmRemoteWrite:
+    enabled: false
+  promQuery:
+    enabled: true
+  resources:
+    diagnostic-data-collector:
+      limits:
+        cpu: 1500m
+        ephemeral-storage: 17Gi
+        memory: 1Gi
+      requests:
+        cpu: 100m
+        ephemeral-storage: 10Gi
+        memory: 100M
+    diagnostic-data-collector-manual:
+      limits:
+        cpu: 500m
+        ephemeral-storage: 11Gi
+        memory: 250M
+      requests:
+        cpu: 100m
+        ephemeral-storage: 10Gi
+        memory: 100M
+  service:
+    endpoints:
+      cm_subscription:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      pm_rw:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      pm_scrape:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+  sftpCredentials:
+    enabled: false
+  swim:
+    enabled: false
+  tls:
+    enabled: true
+eric-odca-isp-event-monitor:
+  resources:
+    pciem:
+      limits:
+        cpu: 100m
+        memory: 200Mi
+      requests:
+        cpu: 50m
+        memory: 70Mi
+eric-pcf-access-mobility-policy-control:
+  accessmobilitypolicycontrol:
+    resources:
+      limits:
+        cpu: 20
+        ephemeralMargin: 20Mi
+        memory: 300Mi
+      requests:
+        cpu: 410m
+        ephemeralMargin: 15Mi
+        memory: 150Mi
+  autoScaling:
+    maxReplicas: 4
+    minReplicas: 2
+  cmreader:
+    resources:
+      limits:
+        cpu: 20
+        ephemeral: 15Mi
+        memory: 50Mi
+      requests:
+        cpu: 5m
+        memory: 20Mi
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: 20
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: 20
+        ephemeralMargin: 20mi
+        memory: 375Mi
+      requests:
+        cpu: 105m
+        memory: 250Mi
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 370m
+    sidecar.istio.io/proxyCPULimit: '20'
+    sidecar.istio.io/proxyMemory: 128Mi
+    sidecar.istio.io/proxyMemoryLimit: 512Mi
+  tapagent:
+    resources:
+      limits:
+        cpu: 20
+        ephemeralMargin: 20Mi
+        memory: 200Mi
+      requests:
+        cpu: 5m
+        memory: 100Mi
+eric-pcf-charging:
+  autoScaling:
+    maxReplicas: {{ hpaReplica['eric-pcf-charging'].max | default(4) }}
+    minReplicas: {{ hpaReplica['eric-pcf-charging'].min | default(2) }}
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 350m
+    sidecar.istio.io/proxyCPULimit: '20'
+    sidecar.istio.io/proxyMemory: 170Mi
+    sidecar.istio.io/proxyMemoryLimit: 220Mi
+  resources:
+    charging:
+      limits:
+        cpu: ''
+        ephemeral-storage: 15Mi
+        memory: 135Mi
+      requests:
+        cpu: 358m
+        ephemeral-storage: 15Mi
+        memory: 54Mi
+    cmreader:
+      limits:
+        cpu: 20
+        ephemeral: 60Mi
+        memory: 30Mi
+      requests:
+        cpu: 5m
+        memory: 20Mi
+    filecollectorsidecar:
+      limits:
+        cpu: 20
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+    logging:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 256Mi
+      requests:
+        cpu: 60m
+        memory: 256Mi
+    tapagent:
+      limits:
+        cpu: 20
+        ephemeralMargin: 20Mi
+        memory: 200Mi
+      requests:
+        cpu: 10m
+        memory: 100Mi
+eric-pcf-egress-proxy:
+  autoScaling:
+    maxReplicas: {{ hpaReplica['eric-pcf-egress-proxy'].max | default(4) }}
+    minReplicas: {{ hpaReplica['eric-pcf-egress-proxy'].min | default(2) }}
+  egressproxy:
+    resources:
+      limits:
+        cpu: ''
+        ephemeral: 250Mi
+        memory: 200Mi
+      requests:
+        cpu: 300m
+        memory: 170Mi
+  envoymanager:
+    resources:
+      limits:
+        cpu: ''
+        ephemeral: 250Mi
+        memory: 91Mi
+      requests:
+        cpu: 80m
+        memory: 76Mi
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: ''
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 256Mi
+      requests:
+        cpu: 55m
+        ephemeralMargin: 15Mi
+        memory: 50Mi
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 650m
+    sidecar.istio.io/proxyCPULimit: '20'
+    sidecar.istio.io/proxyMemory: 300Mi
+    sidecar.istio.io/proxyMemoryLimit: 1200Mi
+  tapagent:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 200Mi
+      requests:
+        cpu: 10m
+        memory: 100Mi
+eric-pcf-egress-proxy-bsf:
+  autoScaling:
+    maxReplicas: {{ hpaReplica['eric-pcf-egress-proxy-bsf'].max | default(4) }}
+    minReplicas: {{ hpaReplica['eric-pcf-egress-proxy-bsf'].min | default(2) }}
+  egressproxy:
+    resources:
+      limits:
+        cpu: ''
+        ephemeral: 250Mi
+        memory: 200Mi
+      requests:
+        cpu: 300m
+        memory: 170Mi
+  envoymanager:
+    resources:
+      limits:
+        cpu: ''
+        ephemeral: 250Mi
+        memory: 91Mi
+      requests:
+        cpu: 80m
+        memory: 76Mi
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: ''
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 256Mi
+      requests:
+        cpu: 55m
+        ephemeralMargin: 15Mi
+        memory: 50Mi
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 650m
+    sidecar.istio.io/proxyCPULimit: '20'
+    sidecar.istio.io/proxyMemory: 300Mi
+    sidecar.istio.io/proxyMemoryLimit: 1200Mi
+  tapagent:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 200Mi
+      requests:
+        cpu: 10m
+        memory: 100Mi
+eric-pcf-egress-proxy-ccpc:
+  autoScaling:
+    maxReplicas: {{ hpaReplica['eric-pcf-egress-proxy-ccpc'].max         | default(30) }}
+    minReplicas: {{ hpaReplica['eric-pcf-egress-proxy-ccpc'].min         | default(2) }}
+  egressproxy:
+    resources:
+      limits:
+        cpu: ''
+        ephemeral: 250Mi
+        memory: 200Mi
+      requests:
+        cpu: 300m
+        memory: 170Mi
+  envoymanager:
+    resources:
+      limits:
+        cpu: ''
+        ephemeral: 250Mi
+        memory: 91Mi
+      requests:
+        cpu: 80m
+        memory: 76Mi
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: ''
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 256Mi
+      requests:
+        cpu: 55m
+        ephemeralMargin: 15Mi
+        memory: 50Mi
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 650m
+    sidecar.istio.io/proxyCPULimit: '20'
+    sidecar.istio.io/proxyMemory: 300Mi
+    sidecar.istio.io/proxyMemoryLimit: 1200Mi
+  tapagent:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 200Mi
+      requests:
+        cpu: 10m
+        memory: 100Mi
+eric-pcf-egress-proxy-chf:
+  autoScaling:
+    maxReplicas: {{ hpaReplica['eric-pcf-egress-proxy-chf'].max | default(4) }}
+    minReplicas: {{ hpaReplica['eric-pcf-egress-proxy-chf'].min | default(2) }}
+  {% if caas == 'OpenShift' %}
+    #UDM5GP-76258 update resources of egressproxy and envoymanager
+  egressproxy:    
+    resources:
+      limits:
+        cpu: ''
+        ephemeral: 250Mi
+        memory: 200Mi
+      requests:
+        cpu: 300m
+        memory: 170Mi
+  #UDM5GP-76258 update resources of egressproxy and envoymanager
+  envoymanager:
+    resources:
+      limits:
+        cpu: ''
+        ephemeral: 250Mi
+        memory: 91Mi
+      requests:
+        cpu: 80m
+        memory: 76Mi
+    {% endif %}
+  filecollectorsidecar:  
+    resources:
+      limits:
+        cpu: ''
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 256Mi
+      requests:
+        cpu: 55m
+        ephemeralMargin: 15Mi
+        memory: 50Mi
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 650m
+    sidecar.istio.io/proxyCPULimit: '20'
+    sidecar.istio.io/proxyMemory: 300Mi
+    sidecar.istio.io/proxyMemoryLimit: 1200Mi
+  tapagent:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 200Mi
+      requests:
+        cpu: 10m
+        memory: 100Mi
+eric-pcf-end-user-notifier:
+  autoScaling:
+    maxReplicas: {{ hpaReplica['eric-pcf-end-user-notifier'].max | default(60) }}
+    minReplicas: {{ hpaReplica['eric-pcf-end-user-notifier'].min | default(2) }}
+  cmreader:
+    resources:
+      limits:
+        cpu: 20m
+        ephemeral: 60Mi
+        memory: 30Mi
+      requests:
+        cpu: 5m
+        memory: 20Mi
+  endusernotifier:
+    resources:
+      limits:
+        cpu: 2400m
+        ephemeralMargin: 20Mi
+        memory: 800Mi
+      requests:
+        cpu: 700m
+        ephemeralMargin: 15Mi
+        memory: 300Mi
+  logging:
+    resources:
+      limits:
+        cpu: 450m
+        ephemeralMargin: 20Mi
+        memory: 375Mi
+      requests:
+        cpu: 100m
+        memory: 250Mi
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 300m
+    sidecar.istio.io/proxyCPULimit: 2000m
+    sidecar.istio.io/proxyMemory: 128Mi
+    sidecar.istio.io/proxyMemoryLimit: 512Mi
+eric-pcf-geored-controller:
+  autoScaling:
+    maxReplicas: {{ hpaReplica['eric-pcf-geored-controller'].max | default(1) }}
+    minReplicas: {{ hpaReplica['eric-pcf-geored-controller'].min | default(1) }}
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 520m
+    sidecar.istio.io/proxyCPULimit: 1100m
+    sidecar.istio.io/proxyMemory: 100Mi
+    sidecar.istio.io/proxyMemoryLimit: 220Mi
+  resources:
+    cmreader:
+      limits:
+        cpu: 500m
+        ephemeral-storage: 15Mi
+        memory: 43Mi
+      requests:
+        cpu: 260m
+        ephemeral-storage: 15Mi
+        memory: 34Mi
+    georedcontroller:
+      limits:
+        cpu: 500m
+        ephemeral-storage: 15Mi
+        memory: 43Mi
+      requests:
+        cpu: 260m
+        ephemeral-storage: 15Mi
+        memory: 34Mi
+    logging:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 200m
+        memory: 256Mi
+  tolerations: []
+eric-pcf-kvdb-supervisor:
+  cmreader:
+    resources:
+      limits:
+        cpu: 100m
+        ephemeral-storage: 60Mi
+        memory: 30Mi
+      requests:
+        cpu: 60m
+        memory: 20Mi
+  keepalive:
+    resources:
+      limits:
+        cpu: 10m
+        ephemeral: 15Mi
+        memory: 30Mi
+      requests:
+        cpu: 5m
+        memory: 15Mi
+  kvdbsupervisor:
+    resources:
+      limits:
+        cpu: 300m
+        ephemeral: 60Mi
+        memory: 2Gi
+      requests:
+        cpu: 70m
+        memory: 1Gi
+  logging:
+    resources:
+      limits:
+        cpu: 20m
+        ephemeralMargin: 20Mi
+        memory: 100Mi
+      requests:
+        cpu: 10m
+        memory: 50Mi
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: {{ storageClassName|default("network-block") }}
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 27m
+    sidecar.istio.io/proxyCPULimit: 500m
+    sidecar.istio.io/proxyMemory: 128Mi
+    sidecar.istio.io/proxyMemoryLimit: 220Mi
+eric-pcf-license-handler:
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  licensehandler:
+    licenses:
+      data:
+        ampc_bp:
+          enabled: true
+        smpc_bp:
+          enabled: true
+        smpc_data_vp:
+          enabled: false
+        smpc_miot_bp:
+          enabled: true
+        smpc_miot_data_vp:
+          enabled: false
+        smpc_voice_miot_vp:
+          enabled: true
+        smpc_voice_vp:
+          enabled: true
+    resources:
+      limits:
+        cpu: 67m
+        ephemeral: 15Mi
+        memory: 38Mi
+      requests:
+        cpu: 23m
+        memory: 32Mi
+  logging:
+    resources:
+      limits:
+        cpu: 200m
+        ephemeralMargin: 20Mi
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        ephemeralMargin: 15Mi
+        memory: 50Mi
+eric-pcf-nrf-registration:
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: 200m
+        ephemeralMargin: 20Mi
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        ephemeralMargin: 15Mi
+        memory: 50Mi
+  nrfregistration:
+    resources:
+      limits:
+        cpu: 67m
+        ephemeral: 15Mi
+        memory: 35Mi
+      requests:
+        cpu: 23m
+        memory: 29Mi
+  tolerations: []
+eric-pcf-peer-discoverer:
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: 25m
+        memory: 55Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: 150m
+        ephemeralMargin: 20Mi
+        memory: 150Mi
+      requests:
+        cpu: 50m
+        ephemeralMargin: 15Mi
+        memory: 50Mi
+  peerdiscoverer:
+    config:
+      data:
+        connectivityConfiguration:
+          alpnProtocols: h2,http/1.1
+          healthCheck:
+            acceptedCodes:
+            - 200,300
+            - 404,405
+            healthyThreshold: 1
+            httpMethod: GET
+            interval: 60000
+            resource: /nudr-dr/v2/policy-data/ues/imsi-100000/sm-data
+            unhealthyThreshold: 3
+            unhealthyThresholdCodes:
+            - 300,404
+            - 405,600
+          outlier:
+            consecutiveFailures: 3
+          timeout: 500
+          tlsMode: 2
+        targetNFSpecification:
+          maxRedundantNFs: 3
+    resources:
+      limits:
+        cpu: 150m
+        ephemeral: 15Mi
+        memory: 38Mi
+      requests:
+        cpu: 52m
+        memory: 32Mi
+  tolerations: []
+eric-pcf-peer-discoverer-bsf:
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: 25m
+        memory: 55Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: 150m
+        ephemeralMargin: 20Mi
+        memory: 150Mi
+      requests:
+        cpu: 50m
+        ephemeralMargin: 15Mi
+        memory: 50Mi
+  peerdiscoverer:
+    config:
+      data:
+        connectivityConfiguration:
+          alpnProtocols: h2,http/1.1
+          healthCheck:
+            acceptedCodes:
+            - 200,300
+            - 400,401
+            - 404,406
+            healthyThreshold: 1
+            httpMethod: GET
+            interval: 60000
+            resource: /nbsf-management/v1/pcfBindings/pcf-dummy-bindingid
+            unhealthyThreshold: 3
+            unhealthyThresholdCodes:
+            - 300,400
+            - 401,404
+            - 406,600
+          outlier:
+            consecutiveFailures: 3
+          timeout: 500
+          tlsMode: 2
+        targetNFSpecification:
+          maxRedundantNFs: 3
+    resources:
+      limits:
+        cpu: 150m
+        ephemeral: 15Mi
+        memory: 38Mi
+      requests:
+        cpu: 52m
+        memory: 32Mi
+  tolerations: []
+eric-pcf-peer-discoverer-ccpc:
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: 25m
+        memory: 55Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: 150m
+        ephemeralMargin: 20Mi
+        memory: 150Mi
+      requests:
+        cpu: 50m
+        ephemeralMargin: 15Mi
+        memory: 50Mi
+  peerdiscoverer:
+    config:
+      data:
+        connectivityConfiguration:
+          alpnProtocols: h2,http/1.1
+          outlier:
+            consecutiveFailures: 3
+          timeout: 1720
+        targetNFSpecification:
+          maxRedundantNFs: 3
+    resources:
+      limits:
+        cpu: 150m
+        ephemeral: 15Mi
+        memory: 38Mi
+      requests:
+        cpu: 52m
+        memory: 32Mi
+  tolerations: []
+eric-pcf-peer-discoverer-chf:
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: 25m
+        memory: 55Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: 150m
+        ephemeralMargin: 20Mi
+        memory: 150Mi
+      requests:
+        cpu: 50m
+        ephemeralMargin: 15Mi
+        memory: 50Mi
+  peerdiscoverer:
+    config:
+      data:
+        connectivityConfiguration:
+          alpnProtocols: h2,http/1.1
+          healthCheck:
+            acceptedCodes:
+            - 200,300
+            - 400,401
+            - 404,406
+            healthyThreshold: 1
+            httpMethod: GET
+            interval: 60000
+            resource: /nchf-spendinglimitcontrol/v1/subscriptions/imsi100000
+            unhealthyThreshold: 3
+            unhealthyThresholdCodes:
+            - 300,400
+            - 401,404
+            - 406,600
+          outlier:
+            consecutiveFailures: 3
+          timeout: 500
+          tlsMode: 2
+        targetNFSpecification:
+          maxRedundantNFs: 3
+    resources:
+      limits:
+        cpu: 150m
+        ephemeral: 15Mi
+        memory: 38Mi
+      requests:
+        cpu: 52m
+        memory: 32Mi
+  tolerations: []
+eric-pcf-rx-policy-control:
+  autoScaling:
+    maxReplicas: {{ hpaReplica['eric-pcf-rx-policy-control'].max | default(10) }}
+    minReplicas: {{ hpaReplica['eric-pcf-rx-policy-control'].min | default(2) }}
+  cmreader:
+    resources:
+      limits:
+        cpu: ''
+        ephemeral: 60Mi
+        memory: 30Mi
+      requests:
+        cpu: 5m
+        memory: 20Mi
+  dslsidecar:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 4Gi
+      requests:
+        cpu: 75m
+        memory: 100Mi
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: ''
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 375Mi
+      requests:
+        cpu: 100m
+        memory: 250Mi
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 400m
+    sidecar.istio.io/proxyCPULimit: '20'
+    sidecar.istio.io/proxyMemory: 128Mi
+    sidecar.istio.io/proxyMemoryLimit: 512Mi
+  rxpolicycontrol:
+    diameter:
+      dsd:
+        network_type: ip
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 1200Mi
+      requests:
+        cpu: 1053m
+        ephemeralMargin: 15Mi
+        memory: 176Mi
+    rxpcConfiguration:
+      properties:
+        afStrWaitNetlocTimeout: 3000
+eric-pcf-session-management-policy-control:
+  autoScaling:
+    maxReplicas: {{ hpaReplica['eric-pcf-session-management-policy-control'].max | default(5) }}
+    minReplicas: {{ hpaReplica['eric-pcf-session-management-policy-control'].min | default(2) }}
+  cmreader:
+    resources:
+      limits:
+        cpu: ''
+        ephemeral: 60Mi
+        memory: 30Mi
+      requests:
+        cpu: 5m
+        memory: 20Mi
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: ''
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 375Mi
+      requests:
+        cpu: 160m
+        memory: 250Mi
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 300m
+    sidecar.istio.io/proxyCPULimit: '20'
+    sidecar.istio.io/proxyMemory: 128Mi
+    sidecar.istio.io/proxyMemoryLimit: 512Mi
+  sessionmanagementpolicycontrol:
+   #UDM5GP-86623, Increase the limits.memory from 512Mi to 3Gi to avoid OOMKilled issue.
+    resources:
+      limits:
+        cpu: 2400m
+        ephemeral: 315Mi
+        ephemeralMargin: 20Mi
+        memory: 3Gi
+      requests:
+        cpu: 2000m
+        ephemeral: 300Mi
+        ephemeralMargin: 15Mi
+        memory: 1Gi
+    smpcConfiguration:
+      properties:
+        checkForSessionAlive: false
+        inactivityPeriod: 86400
+  tapagent:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 200Mi
+      requests:
+        cpu: 5m
+        memory: 100Mi
+eric-pcf-ue-policy-control:
+  autoScaling:
+    maxReplicas: {{ hpaReplica['eric-pcf-ue-policy-control'].max | default(60) }}
+    minReplicas: {{ hpaReplica['eric-pcf-ue-policy-control'].min | default(2) }}
+  cmreader:
+    resources:
+      limits:
+        cpu: 20
+        ephemeral: 15Mi
+        memory: 50Mi
+      requests:
+        cpu: 5m
+        memory: 20Mi
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: 20
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  logging:
+    resources:
+      limits:
+        cpu: 20
+        ephemeralMargin: 20Mi
+        memory: 375Mi
+      requests:
+        cpu: 200m
+        memory: 250Mi
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 690m
+    sidecar.istio.io/proxyCPULimit: '20'
+    sidecar.istio.io/proxyMemory: 128Mi
+    sidecar.istio.io/proxyMemoryLimit: 512Mi
+  tapagent:
+    resources:
+      limits:
+        cpu: 20
+        ephemeralMargin: 20Mi
+        memory: 200Mi
+      requests:
+        cpu: 5m
+        memory: 100Mi
+  uepolicycontrol:
+    resources:
+      limits:
+        cpu: 20
+        ephemeralMargin: 20Mi
+        memory: 625Mi
+      requests:
+        cpu: 860m
+        ephemeralMargin: 15Mi
+        memory: 150Mi
+eric-pcrf-ipcan-session-management:
+  autoScaling:
+    maxReplicas: {{ hpaReplica['eric-pcrf-ipcan-session-management'].max | default(6) }}
+    minReplicas: {{ hpaReplica['eric-pcrf-ipcan-session-management'].min | default(4) }}
+  cmreader:
+    resources:
+      limits:
+        cpu: ''
+        ephemeral: 60Mi
+        memory: 30Mi
+      requests:
+        cpu: 5m
+        memory: 20Mi
+  dslsidecar:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 4Gi
+      requests:
+        cpu: 60m
+        memory: 100Mi
+  filecollectorsidecar:
+    resources:
+      limits:
+        cpu: ''
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+  ipcansessionmanagement:
+    diameter:
+      dsd:
+        network_type: ip
+    ipsmConfiguration:
+      properties:
+        checkForSessionAlive: false
+        inactivityPeriod: 86400
+    resources:
+      limits:
+        cpu: ''
+        ephemeral: 315Mi
+        memory: 500Mi
+      requests:
+        cpu: 2000m
+        ephemeral: 300Mi
+        memory: 240Mi
+  logging:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 15Mi
+        memory: 375Mi
+      requests:
+        cpu: 90m
+        memory: 250Mi
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 150m
+    sidecar.istio.io/proxyCPULimit: '20'
+    sidecar.istio.io/proxyMemory: 128Mi
+    sidecar.istio.io/proxyMemoryLimit: 512Mi
+  tapagent:
+    resources:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 200Mi
+      requests:
+        cpu: 10m
+        memory: 100Mi
+eric-pm-bulk-reporter:
+  alarmreporter:
+    requests:
+      cpu: 100m
+  applicationId:
+    enabled: true
+  aumSupport:
+    enabled: true
+  bulkreporter:
+    requests:
+      cpu: 100m
+  enabled: true
+  env:
+    iscompressed: true
+    nodeName: {{ nodeName }}
+    nodeType: CCPC
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  objectStorage:
+    enabled: true
+    secretName: eric-data-object-storage-mn-secret
+  persistentVolumeClaim:
+    enabled: false
+    storageClassName: '{{ storageClassName|default("network-block") }}'
+  pmsftp:
+    requests:
+      cpu: 50m
+  security:
+    keyManagement:
+      enabled: true
+    tls:
+      objectStorage:
+        enabled: true
+  service:
+    annotations:
+      addressPoolName: ccpc{{ instance | default("") }}-oam
+      cloudProviderLB: {}
+      sharedVIPLabel: ccpc-oam
+    loadBalancerIP: ''
+    pmBulksftpPort:
+      dscp: 0
+    servicePort: 9022
+    type: LoadBalancer
+  thresholdReporter:
+    enabled: true
+    restAPI: true
+  userConfig:
+    ldap:
+      enabled: true
+      rolesConfig:
+        readOnlyGroup: system-security-admin,system-read-only
+        readWriteGroup: system-admin
+eric-pm-server:
+  config:
+    certm_tls: null
+  enabled: true
+  externalRemoteWrite: []
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  limitRWDestionations: false
+  log:
+    format: json
+  podPriority:
+    eric-pm-server:
+      priorityClassName: ''
+  rbac:
+    appMonitoring:    
+      {% if caas == 'OpenShift' %}
+      # ticket PCVTC-3386
+      {% endif %}
+      enabled: {{ appMonitoring|default("true") }}
+      {% if caas == 'CNIS' %}
+      federation:
+        cadvisorJob: true
+        jobConfiguration: |
+          #- job_name: 'federate-victoria'
+          #  scrape_interval: 1m
+          #  honor_labels: true
+          #  metrics_path: '/select/0/prometheus/federate'
+          #  params:
+          #    'match[]':
+          #      - '{job="kubernetes-nodes",namespace="{{ vnflcm.namespace }}"}'
+          #      - '{job="kubernetes-nodes-cadvisor",namespace="{{ vnflcm.namespace }}"}'
+          #  static_configs:
+          #    - targets:
+          #      - 'eric-victoria-metrics-cluster-vmselect.monitoring:8481'
+        jobOverride: false
+      {% else %}
+      federation:
+        jobConfiguration: |
+          #- job_name: 'federate-3pp-caas'
+          #  scrape_interval: 15s
+          #  honor_labels: true
+          #  metrics_path: '/federate'
+          #  params:
+          #    'match[]':
+          #      - '{job="kubernetes-nodes",namespace="eric-ccpc"}'
+          #      - '{job="kubernetes-nodes-cadvisori",namespace="eric-ccpc"}'
+          #  static_configs:
+          #    - targets:
+          #      - 'eric-pm-server.monitoring:9090'
+      jobOverride: false
+      {% endif %}
+  resources:
+    eric-pm-configmap-reload:
+      requests:
+        cpu: 50m
+    eric-pm-exporter:
+      limits:
+        memory: 48Mi
+      requests:
+        cpu: 50m
+    eric-pm-reverseproxy:
+      requests:
+        cpu: 50m
+    eric-pm-server:
+      limits:
+        cpu: '2'
+        memory: 20Gi
+      requests:
+        cpu: 500m
+        memory: 2048Mi
+  server:
+    configMapOverrideName: eric-ccpc-pm-server-config
+    extraArgs:
+      storage.tsdb.retention.size: 17GB
+    extraSecretMounts:
+    - defaultMode: 420
+      mountPath: /var/run/secrets/etcd/client
+      name: etcd-client-cert
+      readOnly: true
+      secretName: eric-data-distributed-coordinator-ed-etcdctl-client-cert
+      subPath: ''
+    - defaultMode: 420
+      mountPath: /var/run/secrets/etcd/cacert
+      name: etcd-cacert
+      readOnly: true
+      secretName: eric-sec-sip-tls-trusted-root-cert
+      subPath: ''
+    persistentVolume:
+      enabled: true
+      size: 20Gi
+      storageClass: {{ storageClassName|default("network-block") }}
+    retention: 3d
+    serviceAccountName: eric-adp-5g-udm-pm-server
+  service:
+    endpoints:
+      reverseproxy:
+        tls:
+          certificateAuthorityBackwardCompatibility: false
+          enforced: optional
+          verifyClientCertificate: required
+eric-policy-cm-loader:
+  resources:
+    cmloader:
+      limits:
+        cpu: 100m
+        ephemeral-storage: 530Mi
+        memory: 300Mi
+      requests:
+        cpu: 50m
+        ephemeral-storage: 530Mi
+        memory: 150Mi
+    initcontainer:
+      limits:
+        cpu: 100m
+        ephemeral-storage: 30Mi
+        memory: 100Mi
+      requests:
+        cpu: 50m
+        ephemeral-storage: 30Mi
+        memory: 50Mi
+eric-probe-virtual-tap-broker:
+  dtls:
+  enabled: false
+  resources:
+    VirtualTapBroker:
+      limits:
+        cpu: 3000m
+        memory: 512Mi
+      requests:
+        cpu: 600m
+        memory: 256Mi
+eric-sec-access-mgmt:
+  accountManager:
+    enabled: true
+  application:
+    recordLoginTimeEnabled: true
+  enabled: true
+  http:
+    hostValidation:
+      {# The new way is to explicitly provide the HOST, old way should be removed in the future #}
+      {% if iam is defined %}
+      allowedHosts: {{ iam.host }}
+      {% else %}
+      allowedHosts: iam.{{ vnflcm.namespace }}.{{ vnflcm.clusterName }}.{{ oamDomain }}
+      {% endif %}
+  ingress:
+    enabled: false
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  ldap:
+    denyLockedUsers: true
+    enabled: true
+    realm: oam
+  persistence:
+    dbHost: eric-sec-access-mgmt-db-pg
+    dbName: adp_gs_iam
+    dbbr:
+      backupType: configuration-data
+      enabled: true
+  preLoginMessage:
+    messageString: ''
+  replicaCount: 2
+  resources:
+    iam:
+      requests:
+        cpu: 300m
+    sipoauth2:
+      requests:
+        cpu: 50m
+  tls:
+    client:
+      pg:
+        issuer: eric-sec-access-mgmt-db-pg-client-ca
+        subject: customname
+eric-sec-access-mgmt-db-pg:
+  enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  log:
+    schema: adp
+  persistentVolumeClaim:
+    size: 4Gi
+    storageClassName: {{ storageClassName|default("network-block") }}
+  postgresDatabase: adp_gs_iam
+  resources:
+    metrics:
+      requests:
+        cpu: 30m
+    postgres:
+      requests:
+        cpu: 90m
+eric-sec-admin-user-management:
+  enabled: true
+  iam:
+    baseUrl: https://eric-sec-access-mgmt-http:8444
+    enabled: false
+    realm: oam
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  notices:
+    legal: IF YOU ARE NOT AN AUTHORIZED USER, PLEASE EXIT IMMEDIATELY
+    privacy: 'This system processes personal information. Handle personal information
+      with care. Misuse, including unauthorized access, is grounds for legal action.
+      Version: 1.0, Date: October 27, 2020.'
+  resources:
+    aum:
+      requests:
+        cpu: 50m
+  service:
+    endpoints:
+      cmmCallback:
+        tls:
+          verifyClientCertificate: optional
+      metrics:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      probes:
+        tls:
+          enforced: optional
+eric-sec-certm:
+  egress:
+    caServer:
+      dscp: 0
+  enabled: true
+  features:
+    alarmHandling:
+      useRestApi: true
+    yang:
+      enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  resources:
+    certm:
+      limits:
+        ephemeral-storage: null
+      requests:
+        cpu: 300m
+        ephemeral-storage: null
+eric-sec-key-management:
+  enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  replicaCount:
+    kms: 2
+  resources:
+    metrics:
+      requests:
+        cpu: 10m
+    shelter:
+      limits:
+        cpu: 450m
+      requests:
+        cpu: 150m
+    vault:
+      limits:
+        cpu: 450m
+      requests:
+        cpu: 150m
+  shelter:
+    enabled: true
+eric-sec-ldap-server:
+  brAgent:
+    backupTypeList:
+    - eric-ccpc-configuration-backup
+    brLabelValue: LDAPAgent
+    enabled: true
+  enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 2m
+    ericsson.com/iem-service-unavailable-grace-period: 2m
+  ldap:
+    aum:
+      enabled: false
+    pwdpolicy:
+      pwdMaxAge: 7776000
+      pwdMaxFailure: 3
+      pwdMinAge: 0
+    pwdquality: null
+  persistentVolumeClaim:
+    storageClassName: {{ storageClassName|default("network-block") }}
+  replicaCount: 2
+  resources:
+    ldap:
+      requests:
+        cpu: 300m
+        memory: 1Gi
+    ldapagent:
+      requests:
+        cpu: 20m
+    ldapproxy:
+      requests:
+        cpu: 50m
+    metricsExporter:
+      requests:
+        cpu: 30m
+  service:
+    endpoints:
+      ldap:
+        tls:
+          enforced: required
+          verifyClientCertificate: required
+eric-sec-sip-tls:
+  affinity:
+    podAntiAffinity: hard
+  alarmHandler:
+    useAPIDefinition: true
+  alarmInstanceModel:
+    compliantWithFHDRs:
+      enabled: true
+  enabled: true
+  internalCertificate:
+    validLifetimeSeconds: 604800
+  keyManagement:
+    port: 8210
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  metrics:
+    enabled: false
+eric-si-application-sys-info-handler:
+  applicationInfoService:
+    enabled: true
+    hostname: ''
+    port: 9099
+    sendAppReport: true
+  asih:
+    applicationId: {{ nodeName }}
+    pmMetricsTLS: true
+    serverRequestTimeout: 70
+  enabled: true
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  resources:
+    eric-si-application-sys-info-handler:
+      requests:
+        cpu: 20m
+  tolerations: []
+eric-slt-dsl:
+  initialConfig:
+    dsl:
+      enableIPv6: false
+  resources:
+    dsl:
+      limits:
+        cpu: ''
+        memory: 4Gi
+      requests:
+        cpu: 50m
+        memory: 100Mi
+eric-stm-diameter:
+  initialConfig:
+    dsl:
+      enableIPv6: false
+  resources:
+    diameter:
+      limits:
+        cpu: ''
+        memory: 4Gi
+      requests:
+        cpu: 175m
+        memory: 100Mi
+    dsl:
+      limits:
+        cpu: ''
+    dsl-pvtb-client:
+      requests:
+        cpu: '0.25'
+  service:
+    annotations:
+      cloudProviderLB: {}
+    certificates:
+      asymmetricKeyCertificateName: diameter-tls
+      trustedCertificateListName: diameter-tls
+    externalIPv4:
+      annotations:
+        addressPoolNameDiameterOverTCP: "ccpc{{ instance | default("") }}-4g-traffic"
+        sharedVIPLabelDiameterOverTCP: ''
+      enabled: true
+    externalIPv6:
+      annotations:
+        addressPoolNameDiameterOverTCP: "ccpc{{ instance | default("") }}-4g-traffic"
+        sharedVIPLabelDiameterOverTCP: ''
+      enabled: false
+    tcp:
+      enable: true
+eric-tm-ingress-controller-cr:
+  CRDinstalledByUser: true
+  clientCertificate:
+    enabled: true
+  contour:
+    namespaceBound: true
+  enabled: true
+  envoy:
+    disable_http: true
+  envoyWorkloadMode:
+    daemonset:
+      enabled: false
+    deployment:
+      enabled: true
+  externalCertificate:
+    keyAndCertificateName: iccr-external-tls-key/iccr-external-tls-certificate
+  ingressClass: eric-ccpc-ic
+  labels:
+    ericsson.com/iem-pod-not-ready-grace-period: 1m
+    ericsson.com/iem-service-unavailable-grace-period: 1m
+  log:
+    format: adp
+  logLevel:
+    access: info
+  metrics:
+    enabled: false
+  minimumProtocolVersion: '1.2'
+  rbac:
+    create: true
+  resources:
+  {% if caas == 'OpenShift' %}
+  # According ADP Service User Guide
+    contour:
+      limits:
+        cpu: 150m
+        memory: "1000Mi"
+    envoy:
+      limits:
+        cpu: "2"
+        memory: "600Mi"
+  {% else %}
+    contour:
+      limits:
+        memory: "500Mi"
+      requests:
+        cpu: 50m
+    envoy:
+      limits:
+        memory: 1000Mi
+      requests:
+        cpu: 100m
+        memory: 500Mi
+  {% endif %}
+  service:
+    annotations:
+      addressPoolName: ccpc{{ instance | default("") }}-oam
+      cloudProviderLB: {}
+      sharedVIPLabel: ccpc-oam
+    dscp: 0
+    externalTrafficPolicy: Cluster
+    loadBalancerIP: ''
+    type: LoadBalancer
+  tlsSecret: iccr-external-tls-secret
+global:
+  adpBR:
+    brLabelKey: adpbrlabelkey
+  alarms:
+    nfDiscoveryAgentNoAvailableDestination:
+      enabled: true
+  applicationId: ccxx
+  autoScaling:
+    enabled: true
+  container:
+    resources:
+      limits:
+        log: 500Mi
+  createExternalCertificateCR: true
+  database:
+    multiSite:
+      runtimeConfigMode:
+        enabled: false
+  databaseName: eric-pcf-dms
+  diameter:
+    originHostForOutgoingRequests:
+      siteCreatingSession:
+        enabled: true
+  documentDatabasePG:
+    operator:
+      enabled: false
+  egressproxy:
+    istio:
+      udrSubRetransConfig:
+        attempts: 3
+  enableCrashDumps: false
+  eric-dst:
+    enabled: false
+  ericsson:
+    licensing:
+      licenseDomains:
+      - customerId: '{{ license.customerId }}'
+        productType: CCPC
+        swltId: '{{ license.swltId }}'
+  internalMtls:
+    enabled: 'on'
+  istio:
+    annotations:
+      serviceMesh: 12.0.0
+    bootstrapOverride: true
+    egress:
+      enabled: true
+      endpoints:
+        eric-amf-sbi-traffic-mtls:
+          enabled: true
+          host: "*.5gc.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org"
+          ports:
+            http-secure:
+              mode: mTLS
+              port: 443
+        eric-ccrc-sbi-traffic-mtls:
+          enabled: true
+          host: "{{ nrf.0.host }}.5gc.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org" #FQDN for CCRC
+          ports:
+            http-secure:
+              mode: mTLS
+              port: 443
+        eric-policy-studio-target-prov-mtls:
+          enabled: true
+          host: "*.5gc.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org" #FQDN for CCPC
+          ports:
+            http-secure:
+              mode: mTLS
+              port: 443
+          resolution: NONE
+        eric-scp-sbi-traffic-mtls:
+          enabled: true
+          host: "{{ nrf.0.host }}.5gc.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org" #FQDN for CCRC
+          ports:
+            http-secure:
+              mode: mTLS
+              port: 443
+        eric-smf-sbi-traffic-mtls:
+          enabled: true
+          host: "*.5gc.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org"
+          ports:
+            http-secure:
+              mode: mTLS
+              port: 6060
+    ingress:
+      gateways:
+        eric-ccpc-policy-studio-gw:
+          enabled: true
+          ports:
+          - hosts:
+            - ./*
+            mode: mTLS
+            name: https-mtls
+            port: 8443
+            protocol: HTTPS
+            settings:
+              maxProtocolVersion: TLSV1_3
+              minProtocolVersion: TLSV1_2
+          sds:
+            enabled: true
+        eric-ccpc-provisioning-gw:
+          enabled: true
+          ports:
+          - hosts:
+            - ./*
+            mode: mTLS
+            name: https-mtls
+            port: 8443
+            protocol: HTTPS
+            settings:
+              maxProtocolVersion: TLSV1_3
+              minProtocolVersion: TLSV1_2
+          sds:
+            enabled: true
+        eric-pcf-intersite-gw:
+          enabled: false
+        eric-pcf-traffic-gw:
+          enabled: true
+          ports:
+          - hosts:
+            - ./*
+            mode: mTLS
+            name: https-mtls
+            port: 8443
+            protocol: HTTPS
+            settings:
+              maxProtocolVersion: TLSV1_3
+              minProtocolVersion: TLSV1_2
+          sds:
+            enabled: true
+      oauth2:
+        eric-pcf-traffic:
+          enabled: false
+          keys:
+          - issuer: nrf-a-id
+            jwks: '{"keys":[ { "crv":"P-256", "kid":"key-c-id", "kty":"EC", "x":"wO3-TFT5fd-Xqx5f9eGLlJHmR9ZgEvRfEoBLXro97co",
+              "y":"rETYnJ2jUfav7lFr8I0pQnnF_1nDXfnOWG3vv-gvKEc" } ]}'
+          permissive: true
+          rules:
+          - audiences:
+            - pcf-a-id
+            issuers:
+            - nrf-a-id
+            methods:
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+            paths:
+            - /npcf-smpolicycontrol/v1*
+            scopes:
+            - npcf-smpolicycontrol
+            subjects:
+            - smf-a-id
+          - audiences:
+            - pcf-a-id
+            issuers:
+            - nrf-a-id
+            methods:
+            - POST
+            - DELETE
+            paths:
+            - /npcf-ue-policy-control/v1*
+            scopes:
+            - npcf-ue-policy-control
+            subjects:
+            - amf-a-id
+          - audiences:
+            - pcf-a-id
+            issuers:
+            - nrf-a-id
+            methods:
+            - POST
+            - DELETE
+            paths:
+            - /npcf-am-policy-control/v1*
+            scopes:
+            - npcf-am-policy-control
+            subjects:
+            - amf-a-id
+          selector: eric-ingressgw-pcf-traffic
+  licensing:
+    sites:
+    - hostname: '{{ nels.host }}'
+  log:
+    outputs:
+    - k8sLevel
+    streamingMethod: indirect
+  logAnonymization: false
+  logDirSizeMiB: 250
+  logging:
+    level: default:info
+  meshConfig:
+    defaultHttpRetryPolicy:
+      attempts: 0
+    outboundTrafficPolicy:
+      mode: ALLOW_ANY
+  nodeSelector: {}
+  probes:
+    istio-proxy:
+      readinessProbe:
+        failureThreshold: 3
+  profiles:
+    cleartext-geored:
+      enabled: {{ pcfGeo|string|lower }}
+    cleartext-policy-studio-gw:
+      enabled: false
+    cleartext-provisioning-gw:
+      enabled: false
+    cleartext-traffic-gw:
+      enabled: false
+    mtls-geored:
+      enabled: false
+    mtls-policy-studio-gw:
+      enabled: true
+    mtls-provisioning-gw:
+      enabled: true
+    mtls-traffic-gw:
+      enabled: true
+    small-system:
+      enabled: false
+    std-system:
+      enabled: true
+    tls-policy-studio-gw:
+      enabled: false
+    tls-provisioning-gw:
+      enabled: false
+  proxy:
+    autoInject: disabled
+  pullSecret: null
+  registry:
+    imagePullPolicy: IfNotPresent
+    url: null
+  security:
+    policyBinding:
+      create: false
+    policyReferenceMap:
+      default-restricted-security-policy: default-restricted-security-policy
+    tls:
+      enabled: true
+  securityPolicy:
+    rolekind: ''
+  tapagent:
+    {% if caas == 'OpenShift' %}
+    enabled: false
+    {% else %}
+    {% endif %}
+    pvtb:
+      enabled: false
+  timezone: {{ timezone }}
+prov:
+  nameOverride: eric-ccpc-provisioning
+  podAnnotations:
+    sidecar.istio.io/proxyCPU: 100m
+  provisioning:
+    replicaCount: {{ replicaCount['eric-ccpc-provisioning'] | default(12) }}
+  resources:
+    cmreader:
+      limits:
+        cpu: ''
+        ephemeral-storage: 60Mi
+        memory: 30Mi
+      requests:
+        cpu: 60m
+        memory: 20Mi
+    filecollectorsidecar:
+      limits:
+        cpu: ''
+        ephemeral-storage: 25600Mi
+        memory: 38Mi
+      requests:
+        cpu: 5m
+        memory: 19Mi
+    logging:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 307Mi
+      requests:
+        cpu: 200m
+        memory: 256Mi
+    opasidecar:
+      limits:
+        cpu: ''
+        ephemeral-storage: 30Mi
+        memory: 180Mi
+      requests:
+        cpu: 1560m
+        ephemeral-storage: 30Mi
+        memory: 150Mi
+    provisioning:
+      limits:
+        cpu: ''
+        ephemeral-storage: 25600Mi
+        memory: 72Mi
+      requests:
+        cpu: 830m
+        ephemeral-storage: 15Mi
+        memory: 60Mi
+    tapagent:
+      limits:
+        cpu: ''
+        ephemeralMargin: 20Mi
+        memory: 200Mi
+      requests:
+        cpu: 10m
+        memory: 100Mi
+servicemesh:
+  namespace: {{ vnflcm.namespace }}
+topics:
+  job:
+    resources:
+      limits:
+        cpu: '20'
+        memory: 1000Mi
+      requests:
+        cpu: 500m
+        memory: 500Mi

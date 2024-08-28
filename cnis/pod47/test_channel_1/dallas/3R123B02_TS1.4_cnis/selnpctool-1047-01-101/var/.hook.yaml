@@ -1,0 +1,42 @@
+pre_install:
+    - name: disable_puppet_due_to_PCGW-4936
+      executable: "/usr/bin/puppet agent"
+      arg: "--disable 'Disable puppet Dallas 1 installed - PCGW-4936'"
+      host: [pccc-tool-047-01]
+
+
+    - name: bind_dpdk
+      executable: "/lab/testtools/dallas/rhel764/Release/3R130B03/3pp/ltt/dpdk/lts_bind_dpdk"
+      arg: "/var/dallas/tap.conf"
+      host: [pccc-tool-047-01]
+      debug: on
+
+post_install:
+
+    - name: print_memory
+      executable: "/lab/epg_scm4_builds/program/ci/EPG_28R67MX01/epgcats/bin/dpdk-procinfo.sh"
+      arg: "'default output /var/log/ltt_memory.log'"
+      host: [pccc-tool-047-01]
+
+    - name: add routes
+      executable: "/root/add_nonltt_route.sh"
+      host: [pccc-tool-047-01]
+      debug: on
+
+
+post_uninstall:
+    - name: unbind_dpdk
+      executable: "/lab/testtools/dallas/rhel764/Release/3R130B03/3pp/ltt/dpdk/lts_unbind_dpdk"
+      host: [pccc-tool-047-01]
+
+
+    - name: enable_puppet
+      executable: "/usr/bin/puppet agent"
+      arg: "--enable"
+      host: [pccc-tool-047-01]
+
+    - name: run_puppet
+      executable: "/usr/sbin/call_home || true"
+      host: [pccc-tool-047-01]
+      debug: on
+

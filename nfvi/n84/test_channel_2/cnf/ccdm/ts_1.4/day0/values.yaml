@@ -1,0 +1,959 @@
+################################################################################
+# external mTLS enabled eric-ccdm-values.yaml file
+################################################################################
+
+global:
+  timezone: "CET"
+  domainName: sero.gic.ericsson.se
+  clusterName: ccdm.n84-eccd3
+  enableCrashDumps: true
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: "CCDM"
+          customerId: "946060"
+          swltId: "STA-CCDM-12"
+  ipStackMode: "ipv4"
+
+  proxy:
+    holdApplicationUntilProxyStarts: true
+
+  # Prov Funct global parameters
+  activation:
+    # ip protocol stack mode ipv6: true or false
+    ipv6: false
+    kafka:
+      serviceHost: "eric-udr-message-bus-kf"
+      servicePort: 9092
+      # Enable following parameters in case of ICCR or Service Mesh is used
+    ingress:
+      enabled: true
+      oam:
+        enabled: true
+      prov:
+        enabled: true
+    service:
+      allowInsecure: true
+  #for supporting new pull secret levels
+  pullSecret: regcred
+  # global registry
+  registry:
+    url: evnfm-docker-registry.ingress.n84-eccd3.sero.gic.ericsson.se
+    pullSecret: regcred
+
+  # nodeSelector spec value
+  nodeSelector: {}
+
+  # global imagePullPolicy
+  imagePullPolicy: IfNotPresent
+
+  # UDM MESH WA: select IPv4 address or IPv6 address for IPv6 deployments
+  istio:
+    #  kubernetes_service_ipaddress: {{10.96.0.1|2001:14ba:9ea:8800::ffff:1}}
+    # Global configuration for INGRESS/EGRESS mTLS enabled
+    # - Global INGRESS configuration
+    ingress:
+      gateways:
+        # eric-udr-traffic gateway configuring eric-ingressgw-udr-traffic service mesh ingress gateway
+        # Ingress gateway for 5G Traffic (HTTP2) and 5G proxy multisite traffic HTTP2
+        eric-udr-traffic-gw: # Gateway resource name.
+          ports:
+            - port: 443
+              name: https-mtls # The port name key/value pairs must have the following syntax: name: <protocol>[-<suffix>]
+              protocol: HTTPS
+              hosts:
+                - "*"
+              mode: mTLS
+              credentialName: eric-ccdm-sbi-server-certs
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+        # Ingress gateway for 5G Provisioning (HTTP2)
+        eric-eda-provisioning-gw: # Gateway resource name.
+          ports:
+            - port: 443
+              name: https-mtls # The port name key/value pairs must have the following syntax: name: <protocol>[-<suffix>]
+              protocol: HTTPS
+              hosts:
+                - "*"
+              mode: TLS # The port will be configured if global.security.external.authentication is enabled.
+              credentialName: eric-ccdm-prov-server-certs
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+        # eric-ingress-udr-intersite
+        # Ingress gateway for Zookeeper multisite coordination,KV Apache Geode replication and 5G Provisioning Proxy
+        eric-udr-intersite-gw:
+          ports:
+            - port: 443
+              name: https-papi-provisioning # The port name key/value pairs must have the following syntax: name: <protocol>[-<suffix>]
+              protocol: HTTPS
+              hosts:
+                - "*"
+              mode: mTLS
+              credentialName: eric-ccdm-sbi-server-certs
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+            - port: 10334
+              name: tls-eric-udr-kvdb-ag-locators # The port name key/value pairs must have the following syntax: name: <protocol>[-<suffix>]
+              protocol: TLS
+              hosts:
+                - "*"
+              mode: mTLS
+              credentialName: eric-ccdm-sbi-server-certs
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+            - port: 31000
+              name: tls-eric-udr-kvdb-ag-gateway-receivers # The port name key/value pairs must have the following syntax: name: <protocol>[-<suffix>]
+              protocol: TLS
+              hosts:
+                - "*"
+              mode: mTLS
+              credentialName: eric-ccdm-sbi-server-certs
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+            - port: 2181
+              name: tls-eric-udr-zookeeper # The port name key/value pairs must have the following syntax: name: <protocol>[-<suffix>]
+              protocol: TLS
+              hosts:
+                - "*"
+              mode: mTLS
+              credentialName: eric-ccdm-sbi-server-certs
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+            - port: 21000
+              name: http-consistencychecker
+              protocol: HTTPS
+              hosts:
+                - "*"
+              mode: mTLS
+              credentialName: eric-ccdm-sbi-server-certs
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+
+            - port: 389
+              name: tcp-ldap-proxy
+              protocol: TCP
+              hosts:
+                - "*"
+              mode: DISABLE
+    egress:
+      # EGRESS configuration for destinations using mTLS
+      enabled: true
+      # - CCDM egress endpoints
+      endpoints:
+        # EGRESS CCDM ENDPOINTS TO BE DEFINED
+        # - Egress individual rules, one per CCDM peer.
+        # -- CCSM, Nudm interface notifications
+        eric-ccsm-sbi-traffic-mtls:
+          enabled: false
+          host: udm1.n84.5gc.mnc081.mcc240.3gppnetwork.org
+          addresses:
+            - 5.8.6.7
+          ports:
+            - port: 443 # HTTPS target destination
+              name: http2-port-for-mTLS-origination
+              protocol: HTTP2
+              mode: mTLS
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+        # -- CCPC, Npcf interface notifications
+        eric-ccpc-sbi-traffic-mtls:
+          enabled: false
+          host: pcf1.n84.5gc.mnc081.mcc240.3gppnetwork.org
+          addresses:
+            - 5.8.6.10
+          ports:
+            - port: 443 # HTTPS target destination
+              name: http2-port-for-mTLS-origination
+              protocol: HTTP2
+              mode: mTLS
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+        # -- CCRC, Nnr interface NRF registration/notifications
+        eric-ccrc-sbi-traffic-mtls:
+          enabled: false
+          host: nrf1.n84.5gc.mnc081.mcc240.3gppnetwork.org
+          addresses:
+            - 5.8.6.6
+          ports:
+            - port: 443 # HTTPS target destination
+              name: http2-port-for-mTLS-origination
+              protocol: HTTP2
+              mode: mTLS
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+        # -- CCxx wildcard, if EGRESS-WILDCARD enabled EGRESS-CCSM-ENABLED, EGRESS-CCRC-ENABLED and EGRESS-CCPC must be disabled.
+        eric-wildcard-sbi-traffic-mtls:
+          enabled: true
+          host: "*.n84.5gc.mnc081.mcc240.3gppnetwork.org"
+          ports:
+            - port: 443 # HTTPS target destination
+              name: http2-port-for-mTLS-origination
+              protocol: HTTP2
+              mode: mTLS
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+        # -- CCDM alternative site. SM/Zookeeper connetivity among CCDM/UDR geored
+        eric-ccdm-intersite-local-mtls:
+          enabled: true
+          host: udr1-intersite.n84.5gc.mnc081.mcc240.3gppnetwork.org
+          addresses:
+            - 5.8.6.33
+          ports:
+            - port: 10334 # KVDB AG locator
+              name: tcp-port-for-mTLS-origination
+              protocol: TCP
+              mode: mTLS
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+        eric-ccdm-intersite-remote-mtls:
+          enabled: true
+          host: udr2-intersite.n84.5gc.mnc081.mcc240.3gppnetwork.org
+          addresses:
+            - 5.8.6.65
+          ports:
+            - port: 10334
+              name: tcp-locator-mTLS-origination
+              protocol: TCP
+              mode: mTLS
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+            - port: 31000
+              name: tcp-receiver-mTLS-origination
+              protocol: TCP
+              mode: mTLS
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+            - port: 2181 # SM/Zookeeper target destination
+              name: tcp-zk-for-mTLS-origination
+              protocol: TCP
+              mode: mTLS
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+            - port: 443 # Proxy provisioning
+              name: https-port-for-mTLS-origination
+              protocol: TCP
+              mode: mTLS
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+            - port: 21000
+              name: https-port-for-consistencycheck
+              protocol: TCP
+              mode: mTLS
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+        eric-ccdm-sbi-remote-mtls:
+          enabled: true
+          host: udr1.n84.5gc.mnc081.mcc240.3gppnetwork.org
+          addresses:
+            - 5.8.6.49
+          ports:
+            - port: 443 # Proxy provisioning
+              name: https-port-for-mTLS-origination
+              protocol: TCP
+              mode: mTLS
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+
+        # -- List of new remote endpoints where (m)TLS is enabled and it's not covered in the current list. Remove '# ' for enabling the element in the list. Repeat element format for more remote endpoints.
+        # Examples: New CCSM/CCPC/CCRC destinations where wildcard can not be used for identifying multiple destinations .
+        # <endpoint name>: # Free name but be careful that there has not been set previously.
+        #   enabled: true # Enable/Disable the service entry, values allowed [true, false].
+        #   host: "new.5gc.mnc310.mcc014.3gppnetwork.org" # FQDN or wildcard for new endpoint (it should not be defined before).
+        #   addresses: # Addresses is an optional field and it's only required for intersite, meaning communication among CCDM sites. Other destination should not define the address field.
+        #     - 127.0.0.1 # VIP resolution from host defined in the "host" parameter.
+        #   ports: # list of ports for the destination where mtls is required.
+        #   - port: 443 # Port number.
+        #     name: <protocol>-<port name> # For instance, https-newendpoint
+        #     protocol: TCP
+        #     mode: mTLS
+        #   resolution: NONE
+
+# ADP common components
+eric-adp:
+
+  eric-data-document-database-pg:
+    persistentVolumeClaim:
+      storageClassName: network-block
+    nodeSelector: {}
+    #postgresConfig:
+    #  huge_pages: "off" # possible values ["off","on","try"]
+
+  eric-data-coordinator-zk:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+    nodeSelector:
+      brAgent: {}
+      datacoordinatorzk: {}
+
+  eric-pm-bulk-reporter:
+    persistentVolumeClaim:
+      storageClassName: network-block
+    env:
+      # eccd_nodename: cluster name
+      # nf_node_type, one of: NRF,UDM-AUSF,UDR,NSSF,5G_UDM (All the NFs within the same cluster)
+      nodeName: ccdm
+      nodeType: UDR
+      supportedGps: fifteen-min thirty-min one-hour twelve-hour one-day one-min five-min
+    nodeSelector: {}
+
+  eric-data-search-engine:
+    persistence:
+      data:
+        persistentVolumeClaim:
+          storageClassName: network-block
+          size: 135Gi
+      master:
+        persistentVolumeClaim:
+          storageClassName: network-block
+    # ip protocol stack mode ipv6: true or false
+    service:
+      network:
+        protocol:
+          IPv6: false
+    replicaCount:
+      ingest: 2
+      data: 3
+    nodeSelector:
+      data: {}
+      ingest: {}
+      master: {}
+      bragent: {}
+
+  eric-sec-ldap-server:
+    persistence:
+      storageClassName: network-block
+    nodeSelector:
+      ldap: {}
+      ldapAgent: {}
+
+  eric-cnom-server:
+    fqdn: cnom.ccdm.n84-eccd3.sero.gic.ericsson.se
+    nodeSelector: {}
+    legalNotice: "IF YOU ARE NOT AN AUTHORIZED USER, PLEASE EXIT IMMEDIATELY\n\nThis system processes personal information. Handle personal information with care. Misuse, including unauthorized access, is grounds for legal action. Version: 1.0, Date: October 27, 2020."
+
+  eric-cnom-document-database-mg:
+    persistence:
+      storageClass: network-block
+    nodeSelector: {}
+
+  eric-data-distributed-coordinator-ed:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+      brAgent:
+        backupVolume:
+          storageClassName: network-block
+    nodeSelector:
+      brAgent: {}
+      dced: {}
+
+  eric-cm-yang-provider:
+    ldap:
+      ipv6Enabled: false
+    persistentVolumeClaim:
+      storageClassName: network-block
+    nodeSelector: {}
+    externaldb:
+      dbuser: custom-user
+
+  eric-ctrl-bro:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+        size: 32Gi
+    nodeSelector: {}
+
+  eric-fh-snmp-alarm-provider:
+    nodeSelector:
+      snmp-sender: eric-ccdm
+    oamVIP:
+      enabled: true
+      vip: "10.137.48.163"
+      nodeName: "n84-eccd3-ccdm-10-137-48-163"
+      destIp: "10.36.242.99"
+    service:
+      secretName: "snmp-alarm-provider-config"
+
+  eric-pm-server:
+    server:
+      persistentVolume:
+        storageClass: network-block
+# Modify pm-server PV and rbac monitoring application level
+        size: 40Gi
+    rbac:
+      appMonitoring:
+        enabled: true
+        configFileCreate: false
+    nodeSelector: {}
+
+  eric-tm-ingress-controller-cr:
+    internalSecurity:
+      enabled: false
+    nodeSelector:
+      contour: {}
+      envoy: {}
+
+  eric-log-shipper:
+    nodeSelector: {}
+
+  eric-log-transformer:
+    nodeSelector: {}
+    egress:
+      syslog:
+        enabled: false
+        certificates:
+          asymmetricKeyCertificateName: eric-log-transformer-client-certificate
+          trustedCertificateListName: eric-log-transformer-cacerts
+        remoteHosts:
+          - host: hostname
+            port: 22
+        # Remove # characters to enable inclusion rule.
+        # If this inclusion rule is enabled, only the log events with facility field set to "security/authorization messages" will be sent to syslog receiver.
+        #inclusions:
+        #  - field: "[facility]"
+        #    value: "security/authorization messages"
+
+  eric-data-search-engine-curator:
+    actions: |
+      1:
+        action: delete_indices
+        description: Remove debug logs older than 3 days
+        options:
+          disable_action: false
+          ignore_empty_list: true
+        filters:
+        - filtertype: pattern
+          kind: prefix
+          value: adp-app-debug-logs-
+        - filtertype: age
+          source: name
+          direction: older
+          timestring: '%Y.%m.%d'
+          unit: days
+          unit_count: 3
+      2:
+        action: delete_indices
+        description: Remove non-audit, non-debug logs older than 15 days
+        options:
+          disable_action: false
+          ignore_empty_list: true
+        filters:
+        - filtertype: pattern
+          kind: prefix
+          value: adp-app-logs-
+        - filtertype: age
+          source: name
+          direction: older
+          timestring: '%Y.%m.%d'
+          unit: days
+          unit_count: 15
+      3:
+        action: delete_indices
+        description: Remove audit logs older than 30 days
+        options:
+          disable_action: false
+          ignore_empty_list: true
+        filters:
+        - filtertype: pattern
+          kind: prefix
+          value: adp-app-audit-logs-
+        - filtertype: age
+          source: name
+          direction: older
+          timestring: '%Y.%m.%d'
+          unit: days
+          unit_count: 30
+      4:
+        action: delete_indices
+        description: Remove debug indices when accumulated indices with this prefix reaches 90 GB
+        options:
+          disable_action: false
+          ignore_empty_list: true
+        filters:
+        - filtertype: pattern
+          kind: prefix
+          value: adp-app-debug-logs-
+        - filtertype: space
+          disk_space: 90
+      5:
+        action: delete_indices
+        description: Remove non-audit, non-debug indices when accumulated indices with this prefix reaches 110 GB
+        options:
+          disable_action: false
+          ignore_empty_list: true
+        filters:
+        - filtertype: pattern
+          kind: prefix
+          value: adp-app-logs-
+        - filtertype: space
+          disk_space: 110
+      6:
+        action: delete_indices
+        description: Remove alarm logs older than 30 days
+        options:
+          disable_action: false
+          ignore_empty_list: true
+        filters:
+        - filtertype: pattern
+          kind: prefix
+          value: adp-app-asi-logs-
+        - filtertype: age
+          source: name
+          direction: older
+          timestring: '%Y.%m.%d'
+          unit: days
+          unit_count: 30
+      7:
+        action: delete_indices
+        description: Remove security logs older than 30 days
+        options:
+          disable_action: false
+          ignore_empty_list: true
+        filters:
+        - filtertype: pattern
+          kind: prefix
+          value: adp-app-security-logs-
+        - filtertype: age
+          source: name
+          direction: older
+          timestring: '%Y.%m.%d'
+          unit: days
+          unit_count: 30
+    nodeSelector: {}
+
+  eric-odca-diagnostic-data-collector:
+    nodeSelector: {}
+
+  eric-fh-alarm-handler:
+    backend:
+      dbuser: custom-user
+    nodeSelector: {}
+
+  eric-cm-mediator:
+    nodeSelector: {}
+    backend:
+      dbuser: custom-user
+
+  eric-data-message-bus-kf:
+    nodeSelector: {}
+
+  eric-sec-sip-tls:
+    nodeSelector: {}
+
+  eric-sec-key-management:
+    nodeSelector: {}
+
+  eric-sw-inventory-manager:
+    nodeSelector: {}
+
+  eric-lm-combined-server:
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: "10.221.14.88"
+      nodeSelector: {}
+    licenseConsumerHandler:
+      nodeSelector: {}
+    #licenseServerIpAddresses:
+    #  ip1:
+    #  ip2:
+
+# eric-udr-release
+eric-udr:
+
+  # eric-udr-message-bus-kf:
+  eric-data-message-bus-kf:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+
+  eric-data-kvdb-ag:
+    annotations:
+      serviceMesh: 2.2.0
+    sidecarIstioInject:
+      locator:
+        enabled: true
+      server:
+        enabled: true
+      adminMgr:
+        enabled: true
+    persistence:
+      data:
+        persistentVolumeClaim:
+          storageClassName: network-block
+      backup:
+        persistentVolumeClaim:
+          storageClassName: network-block
+          adminMgr:
+            size: 32Gi
+    multiSite:
+      locator:
+        localHost: udr1-intersite.n84.5gc.mnc081.mcc240.3gppnetwork.org
+    replicaCount:
+      server: 4
+
+  eric-udr-backuprestore:
+    persistence:
+      storageClass: network-block
+
+  eric-udr-ldap-balancer:
+    deploy:
+      minReplica: 2
+      maxReplica: 6
+
+  eric-udr-ldapfe:
+    service:
+      minReplica: 2
+      maxReplica: 100
+
+  eric-udr-nudrsvc:
+    minReplica: 2
+    maxReplica: 100
+
+  eric-udr-provisioningfe:
+    minReplica: 2
+    maxReplica: 100
+
+  eric-udr-rest-notifchecker:
+    minReplica: 2
+    maxReplica: 100
+
+  eric-udr-rest-notifsender:
+    minReplica: 2
+    maxReplica: 100
+
+  eric-udr-soap-notifchecker:
+    minReplica: 2
+    maxReplica: 100
+
+  eric-udr-soap-notifsender:
+    minReplica: 2
+    maxReplica: 100
+
+  eric-udr-notificationsubscription:
+    minReplica: 2
+    maxReplica: 100
+
+  eric-udr-gudrestfe:
+    istio:
+      outlierDetection:
+        consecutiveGatewayErrors: 20
+    minReplica: 2
+    maxReplica: 100
+
+
+# Provisioning Function
+eric-act-ccdm:
+
+  eric-act-aaa:
+    misc:
+      replicaCount: 2
+    aaa:
+      jobs:
+        # timeout for pre-install hook
+        activeDeadlineSeconds: "1200"
+
+  eric-act-mapi-provisioning:
+    misc:
+      replicaCount: 2
+
+  eric-act-user-data-activator:
+    uda:
+      misc:
+        replicaCount: 2
+        synchronizerCount: 2
+
+  eric-act-proclog-cassandra-stasher:
+    misc:
+      proclog_stasher:
+        replicaCount: 1
+
+  eric-act-proclog-manager:
+    misc:
+      replicaCount: 1
+    config:
+      proclog_days_retained: 1
+
+  eric-act-service-locator-registry:
+    misc:
+      replicaCount: 2
+
+  eric-data-wide-column-database-cd:
+    persistence:
+      dataVolume:
+        persistentVolumeClaim:
+          storageClassName: network-block
+          size: 32G
+    # ip protocol stack mode ipv6: true or false
+    resources:
+      cassandra:
+        network:
+          useIPv6: false
+    nodeSelector:
+      bra: {}
+      authJob: {}
+      cassandra: {}
+    replicaCount: 3
+
+  eric-act-log-transformer:
+    nodeSelector: {}
+    replicaCount: 1
+
+  eric-act-mb-kf:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+        size: 20Gi
+    replicas: 3
+
+  eric-act-application-monitor:
+    kafka:
+      serviceHost: "eric-udr-message-bus-kf"
+      servicePort: 9092
+
+  oam:
+    httpProxy:
+      class: "ccdm"
+      prefix: "oam."
+      secret: "iccr-external-tls-secret"
+  prov:
+    virtualService:
+      gatewayName: eric-eda-provisioning-gw
+
+# nrfagent
+eric-nrfagent:
+
+  global:
+    cm_uri_prefix: http://eric-cm-mediator:5003/cm/api/v1.1
+    kafka_connection: eric-udr-message-bus-kf:9092
+    monitoring:
+      namespace: "current"
+    # ip protocol stack mode ipv6: ipv4 or ipv6
+    ipStackMode: "ipv4"
+
+
+# ccdm pre-install hook configuration
+servicemesh:
+
+  imageCredentials:
+    registry:
+      url: evnfm-docker-registry.ingress.n84-eccd3.sero.gic.ericsson.se
+      pullSecret: regcred
+    pullPolicy: IfNotPresent
+    repoPath: proj-adp-gs-service-mesh
+  # Time to wait for service mesh to be up and running (10 * 5 secs)
+  looplimit: 10
+
+
+################################################################################
+# eric-ccdm-service-mesh
+################################################################################
+eric-udm-mesh-integration:
+  eric-mesh-gateways:
+    eric-ingressgw-udr-traffic:
+      serviceAnnotations:
+        metallb.universe.tf/address-pool: udr-signaling
+        metallb.universe.tf/allow-shared-ip: udr-signaling
+      resources:
+        requests:
+          cpu: 500m
+          memory: 128Mi
+        limits:
+          cpu: 2000m
+          memory: 512Mi
+      replicaCount: 10
+      externalTrafficPolicy : "Cluster"
+    eric-ingressgw-eda-provisioning:
+      serviceAnnotations:
+        metallb.universe.tf/address-pool: ccdm-prov
+        metallb.universe.tf/allow-shared-ip: ccdm-prov
+      resources:
+        requests:
+          cpu: 500m
+          memory: 128Mi
+        limits:
+          cpu: 2000m
+          memory: 256Mi
+      replicaCount: 6
+      externalTrafficPolicy : "Cluster"
+    eric-ingressgw-udr-ldap-provisioning:
+      serviceAnnotations:
+        metallb.universe.tf/address-pool: ccdm-prov
+        metallb.universe.tf/allow-shared-ip: ccdm-prov
+      resources:
+        requests:
+          cpu: 500m
+          memory: 128Mi
+        limits:
+          cpu: 2000m
+          memory: 256Mi
+      replicaCount: 2
+      externalTrafficPolicy : "Cluster"
+    eric-ingressgw-udr-ldap-traffic:
+      serviceAnnotations:
+        metallb.universe.tf/address-pool: udr-signaling
+        metallb.universe.tf/allow-shared-ip: udr-signaling
+      resources:
+        requests:
+          cpu: 500m
+          memory: 128Mi
+        limits:
+          cpu: 2000m
+          memory: 512Mi
+      replicaCount: 2
+      externalTrafficPolicy : "Cluster"
+    eric-ingressgw-udr-intersite:
+      resources:
+        requests:
+          cpu: 500m
+          memory: 128Mi
+        limits:
+          cpu: 2000m
+          memory: 256Mi
+      replicaCount: 10
+      externalTrafficPolicy : "Cluster"
+

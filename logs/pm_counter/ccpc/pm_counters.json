@@ -1,0 +1,7 @@
+[
+ {"counter-name": "eric_ccpc_provisioning_requests_recv"},
+ {"counter-name": "eric_ccpc_provisioning_successful_responses_sent"},
+ {"counter-name": "eric_pcf_npcf_smpolicycontrol_requests_sent"},
+ {"counter-name": "eric_pcf_npcf_smpolicycontrol_successful_responses_sent"},
+ {"counter-name": "eric_pcf_npcf_smpolicycontrol_unsuccessful_responses_sent"}
+]

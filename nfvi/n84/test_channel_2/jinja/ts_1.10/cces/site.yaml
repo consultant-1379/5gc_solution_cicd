@@ -1,0 +1,66 @@
+nodeName: n84-cces2
+nodeType: CCES
+
+vnflcm:
+  clusterName: n84-eccd3
+  namespace: cces
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day0:
+    username: sysadmin
+    password: Pa$$w0rd4LDAP
+  day1:
+  - username: ccesoam
+    password: Changeme1st!
+    groups:
+    - nef-admin
+    - apigm-admin
+    - sragent-admin
+    - nrfagent-admin
+    - system-admin
+  - username: ccessec
+    password: Changeme1st!
+    groups:
+    - nef-security-admin
+    - apigm-security-admin
+    - sragent-security-admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+snmp:
+  agentEngineId: 8000137001C0A899ECCD10CEA6
+
+license:
+  customerId: "946060"
+  swltId: STA-CCES-16
+
+nefInstanceId: ddd9b5b3-fa57-4cb1-ace7-99eccd10cea6
+
+ddc:
+  remotePath: /home/admin/ddc/eccd3/n84-cces2
+
+diameter:
+  remoteIp: 25.51.0.252
+  remotePort: 3868
+
+nef:
+  host: nef2.n84
+  port: 443
+nefNbiTrust:
+  host: nef2-nbi-trust.n84
+
+replicaCount:
+  eric-data-wide-column-database-cd: 3
+  eric-cces-common-entity: 2
+  eric-cces-timer-service: 2
+  eric-apigm-api-proxy: 2
+
+minReplica:
+  eric-cces-common-entity: 2
+  eric-cces-timer-service: 2
+  eric-apigm-api-proxy: 2
+
+

@@ -1,0 +1,10 @@
+{
+  "clusterName": "n189-eccd1",
+  "additionalParams": {
+       "namespace": "ccpc",
+       "helm_client_version": "3.13",
+       "applicationTimeOut": "3600",
+       "skipJobVerification": "false",
+       "skipVerification": "true"
+      }
+}

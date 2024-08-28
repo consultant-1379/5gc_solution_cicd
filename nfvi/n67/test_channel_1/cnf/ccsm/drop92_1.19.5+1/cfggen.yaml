@@ -1,0 +1,51 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global.yaml
+# targetDir: .
+# jsonschema: ccsm/jsonschema.yaml
+# jsonschemaGlobal: common/global-jsonschema.yaml
+templateDir: ../../../../../../config_template/templates/
+#jsonschemaGlobal: ../../jsonschemas/schema-global.yaml
+
+files:
+- template: ccsm/drop92_1.19.5+1/values.yaml.jinja2
+  target: day0/values.yaml
+- template: common/instantiate.json.jinja2
+  target: day0/instantiate.json
+- template: common/user-config.xml.jinja2
+  target: day1/user-config.xml
+- template: ccsm/drop92_1.19.5+1/nrfagent-config.xml.jinja2
+  target: day1/nrfagent-config.xml
+- template: ccsm/drop92_1.19.5+1/ausf-config.xml.jinja2
+  target: day1/ausf-config.xml
+- template: ccsm/drop92_1.19.5+1/udm-config.xml.jinja2
+  target: day1/udm-config.xml
+- template: ccsm/drop92_1.19.5+1/avg-config/1-seed-config.xml.jinja2
+  target: day1/avg-config/1-seed-config.xml
+- template: ccsm/drop92_1.19.5+1/avg-config/2-customerkey-config.xml.jinja2
+  target: day1/avg-config/2-customerkey-config.xml
+- template: ccsm/drop92_1.19.5+1/avg-config/3-arpf-config.xml.jinja2
+  target: day1/avg-config/3-arpf-config.xml
+- template: ccsm/drop92_1.19.5+1/avg-config/4-hnkey-config.xml.jinja2
+  target: day1/avg-config/4-hnkey-config.xml
+- template: ccsm/drop92_1.19.5+1/avg-config/5-a4key-config.xml.jinja2
+  target: day1/avg-config/5-a4key-config.xml
+- template: ccsm/drop92_1.19.5+1/avg-config/6-fset-config.xml.jinja2
+  target: day1/avg-config/6-fset-config.xml
+- template: ccsm/drop92_1.19.5+1/hss-config.xml.jinja2
+  target: day1/hss-config.xml
+- template: ccsm/drop92_1.19.5+1/ccsm-sctp-config.xml.jinja2
+  target: day1/ccsm-sctp-config.xml
+- template: ccsm/drop92_1.19.5+1/hssepc-config.xml.jinja2
+  target: day1/hssepc-config.xml
+- template: ccsm/drop92_1.19.5+1/hss-remote-nf-profile.xml.jinja2
+  target: day1/hss-remote-nf-profile.xml
+- template: ccsm/drop92_1.19.5+1/udm-remote-nf-profile.xml.jinja2
+  target: day1/udm-remote-nf-profile.xml
+- template: ccsm/drop92_1.19.5+1/diameter-config.xml.jinja2
+  target: day1/diameter-config.xml
+- template: ccsm/drop92_1.19.5+1/eir-config.xml.jinja2
+  target: day1/eir-config.xml
+- template: ccsm/drop92_1.19.5+1/ddc-config.xml.jinja2
+  target: day1/ddc-config.xml
+- template: common/snmp-config.xml.jinja2
+  target: day1/snmp-config.xml

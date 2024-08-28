@@ -1,0 +1,1277 @@
+global:
+  timezone: CET
+  applicationId: n84-pcc2
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: 'PACKET_CORE_CONTROLLER'
+          customerId: '946060'
+          swltId: 'STA-PCC-9'
+  sm:
+    pgw:
+      enabled: true
+    sgw:
+      enabled: true
+    smf:
+      enabled: true
+
+eric-pc-routing-engine:
+  interfaces:
+    type: macvlan
+    macvlan:
+      - master: eth1
+eric-odca-diagnostic-data-collector:
+  env:
+    sftphost: 10.36.242.1:22
+    sftpFileLocation: "pcc-2-ddc"
+  sftpCredentials:
+    username: ubuntu
+    password: ubuntu
+  resources:
+      diagnostic-data-collector:
+        requests:
+          cpu: 0
+          memory: 0
+
+eric-pm-bulk-reporter:
+  env:
+    iscompressed: 'true'
+    nodeName: 'n84-pcc2'
+  resources:
+      bulkreporter:
+        requests:
+          cpu: 0
+          memory: 0
+      alarmreporter:
+        requests:
+          cpu: 0
+          memory: 0
+      pmsftp:
+        requests:
+          cpu: 0
+          memory: 0
+
+eric-pm-server:
+  rbac:
+    appMonitoring:
+      enabled: true
+      configFileCreate: false
+  server:
+    persistentVolume:
+      enabled: true
+  resources:
+      server:
+        requests:
+          cpu: 0
+          memory: 0
+      configmapReload:
+        requests:
+          cpu: 0
+          memory: 0
+
+
+eric-pc-mm:
+  eric-pc-mm-controller:
+    requests:
+      cpu: 2
+      memory: 5Gi
+    limits:
+      cpu: 2
+      memory: 5Gi
+    replicaCount: 1
+    service:
+      useK8sNwSBI: true
+      sbi:
+        loadBalancerIP: 5.8.6.25
+    nodeSelector:
+      pcc-mm-pod: controller
+    securityContext:
+      appArmorProfile: docker-pcc
+    configMap: |-
+      #!/bin/sh -f
+      #set -x
+      gsh modify_eea_algorithm -name eea0 -prio 3
+      gsh modify_eea_algorithm -name eea1 -prio 2
+      gsh modify_eea_algorithm -name eea2 -prio 1
+      gsh modify_eea_algorithm -name eea3 -prio 0
+      gsh modify_eia_algorithm -name eia1 -prio 2
+      gsh modify_eia_algorithm -name eia2 -prio 1
+      gsh modify_eia_algorithm -name eia3 -prio 0
+      gsh modify_nia_algorithm -name nia1 -prio 2
+      gsh modify_nia_algorithm -name nia2 -prio 1
+      gsh modify_nia_algorithm -name nia3 -prio 0
+      gsh modify_sctp_sys -noass 8192 -icmpact 1 -tmesbufs 3 -sctpoutbufs 1500 -twfc 20 -twfnb 1 -trec 5000 -ulmbs 500000 -totasmem 0 -ulmsfipart 70 -wbct 70 -upii 0 -udii 0 -tmir 0
+      gsh modify_ne -uuid 543dc31c-6220-46c4-9c32-720bbdc2842d
+      
+      gsh create_bfd -nw PRAN_SCTP_1 -dtx 300 -mrx 300 -mult 3
+      gsh create_bfd -nw PRAN_SCTP_2 -dtx 300 -mrx 300 -mult 3
+      gsh create_bfd -nw SIG_SCTP_1 -dtx 300 -mrx 300 -mult 3
+      gsh create_bfd -nw SIG_SCTP_2 -dtx 300 -mrx 300 -mult 3
+      gsh create_bfd -nw MEDIA -dtx 300 -mrx 300 -mult 3
+      gsh create_bfd -nw OM_EXTERNAL -dtx 300 -mrx 300 -mult 3
+      gsh create_bfd_neighbor -nw PRAN_SCTP_1 -ip 11.2.4.254
+      gsh create_bfd_neighbor -nw PRAN_SCTP_2 -ip 11.2.29.254
+      gsh create_bfd_neighbor -nw SIG_SCTP_1 -ip 11.2.2.254
+      gsh create_bfd_neighbor -nw SIG_SCTP_2 -ip 11.2.3.254
+      gsh create_bfd_neighbor -nw MEDIA -ip 11.2.1.254
+      gsh create_bfd_neighbor -nw OM_EXTERNAL -ip 10.36.241.254
+
+      gsh create_diameter_application -da s6a -ls true -dh s6a-pccc -rn ericsson.se
+      gsh create_diameter_peer -ip 6.73.0.1 -dh s6a-pccc -rn ericsson.se -pn 1
+      gsh create_diameter_realm -da s6a -rn ericsson.se -dpl 1 -ls true
+      gsh create_dns -dn epc.mnc081.mcc240.3gppnetwork.org.
+
+      gsh create_eth_port -eqp 1.1 -ep 1 -fc false -as up
+      gsh create_eth_port -eqp 1.2 -ep 1 -fc false -as up
+      gsh create_eth_port -eqp 1.3 -ep 1 -fc false -as up
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 3904
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 3929
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 3902
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 3123
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 3901
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 3727
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 3904
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 3929
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 3902
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 3123
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 3901
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 3727
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 3904
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 3929
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 3902
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 3123
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 3901
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 3727
+
+      gsh modify_feature_state -fsi  amf_multiple_network_slices_support -fs ACTIVATED
+      gsh create_ga -gan MSTZ
+      gsh create_ga_ta_range -gan MSTZ -tan TaLteZone1 -mcc 240 -mnc 81 -first 1 -last 2304
+      gsh create_ga_time_zone -gan MSTZ -tz Hongkong
+      gsh create_imsins -imsi 24081 -rs home -dn mnc081.mcc240.gprs -np e214 -ac true -na international -rd 5 -ad 86582 -m1 NULL -m2 NULL -m3 NULL -eplp NULL -rn ericsson.se -hn esm -s8 gtp -gcc NULL -wcc NULL -lcc NULL -rfsp NULL -arph 1 -arpm 2 -gss gr -vlbo NULL -aifv true -mavs 1 -mavr 2 -earplr 0 -st true -sra noaction -ssc NULL -iess NULL -pcr false -sps8 NULL -ivss NULL -sdssc none -qpmll NULL -srgr true -uut NULL -nia denied -drcl 0 -urcl 0 -vlbaoi NULL -iri NULL -crs allowed_cs_service -arpnl NULL -qpmw 1 -qpmg 1 -mps NULL
+
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_3902_SIG_SCTP_1
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_3727_SIG_SCTP_2
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_3904_PRAN_SCTP_1
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_3929_PRAN_SCTP_2
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_3901_MEDIA
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_OM_EXTERNAL
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_3902_SIG_SCTP_1
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_3727_SIG_SCTP_2
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_3904_PRAN_SCTP_1
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_3929_PRAN_SCTP_2
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_3901_MEDIA
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_OM_EXTERNAL
+
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_3902_SIG_SCTP_1
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_3727_SIG_SCTP_2
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_3904_PRAN_SCTP_1
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_3929_PRAN_SCTP_2
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_3901_MEDIA
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_OM_EXTERNAL
+
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_3902_SIG_SCTP_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_3727_SIG_SCTP_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_3904_PRAN_SCTP_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_3929_PRAN_SCTP_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_3901_MEDIA -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_OM_EXTERNAL -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_3902_SIG_SCTP_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_3727_SIG_SCTP_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_3904_PRAN_SCTP_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_3929_PRAN_SCTP_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_3901_MEDIA -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_OM_EXTERNAL -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_3902_SIG_SCTP_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_3727_SIG_SCTP_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_3904_PRAN_SCTP_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_3929_PRAN_SCTP_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_3901_MEDIA -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_OM_EXTERNAL -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+
+      gsh create_ip_interface -ifn ETH_1_1_1_3904_PRAN_SCTP_1 -ip 11.2.4.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 3904 -ifp ETH_1_1_1_3904_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_ip_interface -ifn ETH_1_1_1_3929_PRAN_SCTP_2 -ip 11.2.29.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 3929 -ifp ETH_1_1_1_3929_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_ip_interface -ifn ETH_1_1_1_3902_SIG_SCTP_1 -ip 11.2.2.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 3902 -ifp ETH_1_1_1_3902_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_ip_interface -ifn ETH_1_1_1_3727_SIG_SCTP_2 -ip 11.2.3.1 -mask 255.255.255.0 -rip NULL -eqp 1.1 -ep 1 -vid 3727 -ifp ETH_1_1_1_3727_SIG_SCTP_2 -nw SIG_SCTP_2
+      gsh create_ip_interface -ifn ETH_1_1_1_3901_MEDIA -ip 11.2.1.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 3901 -ifp ETH_1_1_1_3901_MEDIA -nw MEDIA
+      gsh create_ip_interface -ifn ETH_1_1_1_OM_EXTERNAL -ip 10.36.241.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 3123 -ifp ETH_1_1_1_OM_EXTERNAL -nw OM_EXTERNAL
+      
+      gsh create_ip_interface -ifn ETH_1_2_1_3904_PRAN_SCTP_1 -ip 11.2.4.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 3904 -ifp ETH_1_2_1_3904_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_ip_interface -ifn ETH_1_2_1_3929_PRAN_SCTP_2 -ip 11.2.29.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 3929 -ifp ETH_1_2_1_3929_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_ip_interface -ifn ETH_1_2_1_3902_SIG_SCTP_1 -ip 11.2.2.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 3902 -ifp ETH_1_2_1_3902_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_ip_interface -ifn ETH_1_2_1_3727_SIG_SCTP_2 -ip 11.2.3.2 -mask 255.255.255.0 -rip NULL -eqp 1.2 -ep 1 -vid 3727 -ifp ETH_1_2_1_3727_SIG_SCTP_2 -nw SIG_SCTP_2
+      gsh create_ip_interface -ifn ETH_1_2_1_3901_MEDIA -ip 11.1.26.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 3901 -ifp ETH_1_2_1_3901_MEDIA -nw MEDIA
+      gsh create_ip_interface -ifn ETH_1_2_1_OM_EXTERNAL -ip 10.36.241.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 3123 -ifp ETH_1_2_1_OM_EXTERNAL -nw OM_EXTERNAL
+      
+      gsh create_ip_interface -ifn ETH_1_3_1_3904_PRAN_SCTP_1 -ip 11.2.4.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 3904 -ifp ETH_1_3_1_3904_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_ip_interface -ifn ETH_1_3_1_3929_PRAN_SCTP_2 -ip 11.2.29.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 3929 -ifp ETH_1_3_1_3929_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_ip_interface -ifn ETH_1_3_1_3902_SIG_SCTP_1 -ip 11.2.2.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 3902 -ifp ETH_1_3_1_3902_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_ip_interface -ifn ETH_1_3_1_3727_SIG_SCTP_2 -ip 11.2.3.3 -mask 255.255.255.0 -rip NULL -eqp 1.3 -ep 1 -vid 3727 -ifp ETH_1_3_1_3727_SIG_SCTP_2 -nw SIG_SCTP_2
+      gsh create_ip_interface -ifn ETH_1_3_1_3901_MEDIA -ip 11.2.1.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 3901 -ifp ETH_1_3_1_3901_MEDIA -nw MEDIA
+      gsh create_ip_interface -ifn ETH_1_3_1_OM_EXTERNAL -ip 10.36.241.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 3123 -ifp ETH_1_3_1_OM_EXTERNAL -nw OM_EXTERNAL
+
+      gsh create_ip_network -nw MEDIA -local false
+      gsh create_ip_network -nw OM_EXTERNAL -local false      
+      gsh create_ip_network -nw SIG_SCTP_2 -local false
+      gsh create_ip_network -nw SIG_SCTP_1 -local false
+      gsh create_ip_network -nw PRAN_SCTP_1 -local false
+      gsh create_ip_network -nw PRAN_SCTP_2 -local false
+
+      gsh create_ip_service -sn Gn-GTP-C -nw MEDIA
+      gsh create_ip_service -sn N2-1 -dscp NULL -nw PRAN_SCTP_1
+      gsh create_ip_service -sn N2-2 -dscp NULL -nw PRAN_SCTP_2
+      gsh create_ip_service -sn OAM -dscp NULL -nw OM_EXTERNAL
+      gsh create_ip_service -sn S1-MME-1 -nw PRAN_SCTP_1
+      gsh create_ip_service -sn S1-MME-2 -nw PRAN_SCTP_2
+      gsh create_ip_service -sn S10-GTP-C -nw MEDIA
+      gsh create_ip_service -sn S11-GTP-C -nw MEDIA
+      gsh create_ip_service -sn S6a-1 -nw SIG_SCTP_1
+      gsh create_ip_service -sn S6a-2 -nw SIG_SCTP_2
+      gsh create_ip_service -sn SBI-Server -dscp NULL -nw SIG_SCTP_1
+      gsh create_ip_service -sn SBI-Client -dscp NULL -nw SIG_SCTP_1
+
+      gsh create_ip_service_address -sn Gn-GTP-C -ip 106.101.0.21
+      gsh create_ip_service_address -sn N2-1 -ip 10.132.128.101
+      gsh create_ip_service_address -sn N2-2 -ip 10.132.144.101
+      gsh create_ip_service_address -sn OAM -ip 214.12.117.206
+      gsh create_ip_service_address -sn S10-GTP-C -ip 106.101.0.53
+      gsh create_ip_service_address -sn S11-GTP-C -ip 106.101.0.85
+      gsh create_ip_service_address -sn S1-MME-1 -ip 10.132.128.156
+      gsh create_ip_service_address -sn S1-MME-2 -ip 10.132.144.156
+      gsh create_ip_service_address -sn S6a-1 -ip 106.102.0.85
+      gsh create_ip_service_address -sn S6a-2 -ip 106.102.0.117
+      gsh create_ip_service_address -sn SBI-Server -ip 5.8.6.25
+      gsh create_ip_service_address -sn SBI-Client -ip 29.1.64.125
+
+      gsh create_local_diameter_host -dh s6a-pccc -rn ericsson.se -no 2
+      gsh create_n2 -n2 n2 -pt 3 -no 3
+      gsh modify_ne -cnid NULL -isdn 00 -ni n84-amf2 -nl 4 -rbnri 6 -mgi 32768 -mc 13 -daf 0 -tlo currentTai -ssm allUe -ivh false -dan NULL -hcmv 2 -cpsm false -dpmm false -qna false -aifav true -gtdm false -lrc 14 -hhfdut 60 -nifc NULL -nift NULL -pdri 180 -upt 0 -nrudrr sgw -ari 255 -asi 2 -ap 13 -rac 64
+      gsh modify_nea_algorithm -name nea0 -prio 1
+      gsh modify_nea_algorithm -name nea1 -prio 2
+      gsh modify_nea_algorithm -name nea2 -prio 3
+      gsh modify_nea_algorithm -name nea3 -prio 0
+      gsh create_nels_configuration -nci 1 -h 10.221.14.88 -p 9095
+      gsh create_node_credential -nci SERVER
+      gsh create_node_credential -nci CLIENT
+
+      gsh create_nrf_service_instance -nsin srv_3 -nsn nnrf_nfmanagement -fqdn nrf2.n84.5gc.mnc081.mcc240.3gppnetwork.org -fpn 443
+      gsh create_nrf_service_instance -nsin srv_4 -nsn nnrf_nfdiscovery -fqdn nrf2.n84.5gc.mnc081.mcc240.3gppnetwork.org -fpn 443
+      gsh create_nssf_service_instance -nsin nssf_ava_1 -nsn nnssf_nssaiavailability -fqdn nssf2.n84.5gc.mnc081.mcc240.3gppnetwork.org -fpn 443
+      gsh create_nssf_service_instance -nsin nssf_srv_1 -nsn nnssf_nsselection -fqdn nssf2.n84.5gc.mnc081.mcc240.3gppnetwork.org -fpn 443
+      gsh create_plmn -mcc 240 -mnc 81 -pn 24081 -fnn NULL -snn NULL -ci false -me false -s5 gtp -local true -voip no -sl true -nbt NULL -urcl 0 -drcl 0 -tr NULL -ecvh true -gswgli off -sn true
+
+
+      gsh create_router_instance -eqp 1.1 -nw PRAN_SCTP_1 -ip 11.2.4.1 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw PRAN_SCTP_2 -ip 11.2.29.1 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw SIG_SCTP_1 -ip 11.2.2.1 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw SIG_SCTP_2 -ip 11.2.3.1 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw MEDIA -ip 11.2.1.1 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw OM_EXTERNAL -ip 10.36.241.1 -sn NULL -sc NULL -sl NULL
+      
+      gsh create_router_instance -eqp 1.2 -nw PRAN_SCTP_1 -ip 11.2.4.2 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw PRAN_SCTP_2 -ip 11.2.29.2 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw SIG_SCTP_1 -ip 11.2.2.2 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw SIG_SCTP_2 -ip 11.2.3.2 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw MEDIA -ip 11.2.1.2 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw OM_EXTERNAL -ip 10.36.241.2 -sn NULL -sc NULL -sl NULL
+      
+      gsh create_router_instance -eqp 1.3 -nw PRAN_SCTP_1 -ip 11.2.4.3 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw PRAN_SCTP_2 -ip 11.2.29.3 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw SIG_SCTP_1 -ip 11.2.2.3 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw SIG_SCTP_2 -ip 11.2.3.3 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw MEDIA -ip 11.2.1.3 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw OM_EXTERNAL -ip 10.36.241.3 -sn NULL -sc NULL -sl NULL
+      
+      gsh create_s11 -s11 S11 -s11sg off
+      gsh create_s1_mme -s1 S1 -no 1  -sar false
+      gsh modify_sbi -uhf fqdn
+      gsh create_sctp_end_point -no 1 -primsn S1-MME-1 -secsn S1-MME-2 -portno 36412 -pn 4gsctpS1
+      gsh create_sctp_end_point -no 2 -primsn S6a-1 -secsn S6a-2 -portno 3868 -pn default
+      gsh create_sctp_end_point -no 3 -portno 38412 -pn S1_MME_SCTP -primsn N2-1 -secsn N2-2
+      gsh create_sctp_profile -pn 4gsctpS1 -assrtx 20 -irto 200 -minrto 100 -maxrto 400 -pathrtx 10 -bunt 0 -pmtu 1400
+      gsh create_sctp_profile -pn S1_MME_SCTP -assrtx 20 -irto 200 -minrto 100 -maxrto 400 -pathrtx 10 -bunt 0 -pmtu 1400
+      gsh create_sctp_profile -pn default -pmtu 1400
+      gsh modify_snmp -aa "( -host 214.12.117.206  -port 25161 ),( -host 127.0.0.1 -port 25161 )"
+      gsh modify_snmp -as UNLOCKED -aa "(-host 127.0.0.1 -port 25161)" -aad NULL -eId NULL
+      gsh create_snmp_target_v2c -ip 10.139.0.180 -name DallasIPv4
+
+
+      gsh create_static_route -eqp 1.1 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.4.254
+      gsh create_static_route -eqp 1.1 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.29.254
+      gsh create_static_route -eqp 1.1 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.2.254
+      gsh create_static_route -eqp 1.1 -nw SIG_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.3.254
+      gsh create_static_route -eqp 1.1 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.1.254
+      gsh create_static_route -eqp 1.1 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 10.36.241.254
+      
+      gsh create_static_route -eqp 1.2 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.4.254
+      gsh create_static_route -eqp 1.2 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.29.254
+      gsh create_static_route -eqp 1.2 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.2.254
+      gsh create_static_route -eqp 1.2 -nw SIG_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.3.254
+      gsh create_static_route -eqp 1.2 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.1.254
+      gsh create_static_route -eqp 1.2 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 10.36.241.254
+      
+      gsh create_static_route -eqp 1.3 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.4.254
+      gsh create_static_route -eqp 1.3 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.29.254
+      gsh create_static_route -eqp 1.3 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.2.254
+      gsh create_static_route -eqp 1.3 -nw SIG_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.3.254
+      gsh create_static_route -eqp 1.3 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.1.254
+      gsh create_static_route -eqp 1.3 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 10.36.241.254
+      gsh modify_subscriber_authentication -mavp off -savp off
+      gsh create_supported_slice -sn 2 -sst 2 -sd 2
+      gsh modify_ue_trace_log -rp 15
+    
+      gsh modify_gtp_v1 -gnce on -ngncre 3 -tgncre 60 -gnsue on -ngnsure 3 -tgnsure 60 -gpce on -ngpcre 3 -tgpcre 60 -gpue on -ngpure 3 -tgpure 60 -iuue on -niuure 3 -tiuure 60 -ughp true -trgl 24 -trbe 90 -rbef 24 -nrc 2 -trc 6 -nrd 3 -trd 2 -nru 3 -tru 3 -nrsc 3 -trsc 3 -nri 3 -tri 3 -nrfr 2 -trfr 7 -nfsc 2 -tafsc 1 -nfrc 2 -tafrc 1 -nrrc 2 -trrc 1 -cic off -spre true
+      gsh modify_gtp_v2 -nrrc 3 -trac 3 -nrds 3 -trds 2 -nrcs 2 -nrmb 2 -trmb 2 -nrrab 2 -trrab 1 -nri 3 -tri 3 -nrfr 2 -trfr 7 -nfrc 2 -tfrc 1 -nfac 2 -tfac 1 -nrca 2 -trca 1 -nrdbc 2 -trdbc 4 -nrmbc 2 -trmbc 4 -era on -nre 3 -tre 60 -trsl 24 -nrcn 1 -trcn 4 -nrpc 2 -trpc 7 -tnsc 10 -nns 2 -tas 1 -nnr 2 -tar 1 -nnsc 2 -tasc 1 -pb on -sncr on -trer 1 -eras off -nres 3 -tres 3000 -eris 60 -trcs 4000 -eriss 60 -nress 3 -tress 3 -trcss 4000 -trdss 2 -trmbs 2 -trmbcs 4 -nrcss 2 -nrdss 3 -nrmbs 2 -nrmbcs 2 -mmbr off -mabr off -nrmab 2 -trmab 2 -trml 24 -nbsig on -rnccpe true -rnccsi true -dnd 0
+      gsh modify_gw_management -gfst 3 -gsp 60 -gust 50 -ptud 1200 -stud 1200 -genp 24
+
+ 
+      gsh modify_qos -gbg NULL -gbw NULL -pe true -co EF -st AF2.1 -in1 AF1.1 -in2 BE -in3 BE -bg BE -gosq off -smah on -smam off -smas off -cqm standard -idgv 0 -qcil 1-9,65,66,69,70
+      gsh modify_s6a -ar 1 -rar 100000 -aanh false -nbsih on
+
+      gsh modify_sftp_auth -sah true
+      gsh modify_sw_m -ft 1200 -ul NULL
+      gsh modify_tai_list_option -um visited -mtll 1 -mta 720
+
+      gsh modify_capacity_state -csi attach_iot_limit -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi attach_limit -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi attach_lte_limit -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi context_limit -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi enhanced_uplink_mbr -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi payload_limit -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi qos_hsdpa_mbr -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi sms_limit -fs ACTIVATED -al 0
+
+
+  eric-pc-mm-forwarder:
+    requests:
+       cpu: 1
+       memory: 1Gi
+    limits:
+       cpu: 1
+       memory: 1Gi
+    replicaCount: 1
+    nodeSelector:
+      pcc-mm-pod: non-controller
+    ipv6: false
+    networks:
+    - ipam: {}
+      master: eth1
+      mtu: 2090
+      name: ext1
+      type: macvlan
+    securityContext:
+      appArmorProfile: docker-pcc
+  eric-pc-mm-mobility:
+    requests:
+       cpu: 2
+       memory: 4Gi
+    limits:
+       cpu: 2
+       memory: 4Gi
+    service:
+      useK8sNwSBI: true
+      sbi:
+        loadBalancerIP: 5.8.6.25
+    nodeSelector:
+      pcc-mm-pod: non-controller
+    replicaCount: 2
+    securityContext:
+      appArmorProfile: docker-pcc
+
+  eric-pc-mm-sctp:
+    requests:
+       cpu: 1
+       memory: 1Gi
+    limits:
+       cpu: 1
+       memory: 1Gi
+    nodeSelector:
+      pcc-mm-pod: non-controller
+    replicaCount: 2
+    securityContext:
+      appArmorProfile: docker-pcc
+
+eric-pc-mm-controller-supervisor:
+  nodeSelector:
+    pcc-mm-pod: non-controller
+
+
+eric-pc-sm:
+  eric-pc-sm-diameter:
+    diameter:
+      replicaCount: 1
+      resources:
+        requests:
+          memory: "0.5G"
+          cpu: "0.25"
+        limits:
+          memory: "0.5G"
+          cpu: "0.25"
+
+  eric-pc-sm-http-client:
+    global:
+      nodeSelector:
+        pcc-sm-pod: non-controller
+    httpclient:
+      replicaCount: 2
+    ipAllocator:
+      resources:
+        requests:
+          memory: "0.5G"
+          cpu: "0.25"
+        limits:
+          memory: "0.5G"
+          cpu: "0.25"
+
+  eric-pc-sm-ip-allocator:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+  eric-pc-sm-controller:
+    nodeSelector:
+      pcc-sm-pod: controller
+    controller:
+      testing:
+      resources:
+        requests:
+          memory: "0.5G"
+          cpu: "0.25"
+        limits:
+          memory: "0.5G"
+          cpu: "0.25"
+
+  eric-pc-sm-notification-forwarder:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    notifForwarder:
+      ingress:
+        enabled: false
+      service:
+        annotations:
+          metallb.universe.tf/address-pool: smf-notification
+          metallb.universe.tf/allow-shared-ip: smf-notification
+      replicaCount: 1
+      resources:
+        requests:
+          memory: "0.5G"
+          cpu: "0.25"
+        limits:
+          memory: "0.5G"
+          cpu: "0.25"
+
+
+  eric-pc-sm-nsmf-forwarder:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    nsmfForwarder:
+      replicaCount: 2
+      ingress:
+        enabled: false
+      loadBalancerIP:
+        nsmf: 5.8.6.17
+    resources:
+      nsmfforwarder:
+        requests:
+          memory: "0.5G"
+          cpu: "0.25"
+        limits:
+          memory: "0.5G"
+          cpu: "0.25"
+
+  eric-pc-sm-smf-pgw-session:
+    smf:
+      replicaCount: 4
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    resources:
+        smf:
+        requests:
+          memory: "2G"
+          cpu: "0.5"
+        limits:
+          memory: "2G"
+          cpu: "0.5"
+
+  eric-pc-sm-udp-forwarder:
+    forwarder:
+      resources:
+        requests:
+          memory: "0.5G"
+          cpu: "0.25"
+        limits:
+          memory: "0.5G"
+          cpu: "0.25"
+
+  eric-pc-sm-target-database-replica-rd:
+    resources:
+      redis:
+        requests:
+          cpu: "0.1"
+          memory: "100M"
+        limits:
+          cpu: "0.1"
+          memory: "100M"
+  eric-pc-sm-target-database-master-rd:
+      resources:
+      redis:
+        requests:
+          cpu: "0.1"
+          memory: "100M"
+        limits:
+          cpu: "0.1"
+          memory: "100M"
+
+
+eric-pc-vpn-gw:
+  eric-pc-vpn-gw:
+    global:
+      serviceNames:
+        pc:
+          rs:
+            controller: ''
+  
+    replicaCount: 1
+  
+    vpnGateway:
+      enabled: true
+      # peerTimeout:
+      log:
+        signaling: true
+        payload: false
+  
+    service:
+      type: ''
+      multinetworkInterface:
+        - name: "eric-pc-vpn-gw-common"
+          interface: "vpn-gw-common"
+  
+    resources:
+      dataPlane:
+        limits:
+          cpu: '2'
+          memory: 2Gi
+        requests:
+          cpu: 1
+          memory: 1Gi
+  
+    cm_source_env: false
+
+
+  macvlan:
+  - master: eth1
+    name: common
+
+
+eric-data-object-storage-mn:
+  resources:
+    requests:
+      memory: 0
+      cpu: 0
+  nodeSelector:
+    pcc-sm-pod: non-controller
+    pcc-mm-pod: non-controller
+
+eric-pc-routing-engine-api:
+    resources:
+      requests:
+        cpu: 0
+        memory: 0
+
+eric-dst-query:
+    resources:
+      # Two values available cassandra and elasticserach (default)
+      cassandra:
+        requests:
+          memory: 0
+          cpu: 0
+      elasticsearch:
+        requests:
+          memory: 0
+          cpu: 0
+eric-dst-agent:
+    resources:
+      requests:
+        memory: 0
+        cpu: 0
+eric-dst-collector:
+    resources:
+      # Two values available cassandra and elasticserach (default)
+      cassandra:
+        requests:
+          memory: 0
+          cpu: 0
+      elasticsearch:
+        requests:
+          memory: 0
+          cpu: 0
+eric-sec-sip-tls:
+    resources:
+      sip:
+        requests:
+          memory: 0
+          cpu: 0
+
+eric-sec-access-mgmt:
+    resources:
+      iam:
+        requests:
+          memory: 0
+          cpu: 0
+
+
+eric-sec-key-management:
+  resources:
+      vault:
+        requests:
+          memory: 0
+          cpu: 0
+      unsealer:
+        requests:
+          memory: 0
+          cpu: 0
+  replicas: 2
+
+eric-tm-external-connectivity-frontend:
+    images:
+      controller:
+        resources:
+          requests:
+            cpu: 0
+            memory: 0
+      speaker:
+        resources:
+          requests:
+            cpu: 0
+            memory: 0
+eric-data-document-database-pg-cm:
+    resources:
+      postgres:
+        requests:
+          memory: 0
+          cpu: 0
+      metrics:
+        requests:
+          memory: 0
+          cpu: 0
+      kube_client:
+        requests:
+          memory: 0
+          cpu: 0
+      base_os:
+        requests:
+          memory: 0
+          cpu: 0
+eric-data-document-database-pg:
+    resources:
+      postgres:
+        requests:
+          memory: 0
+          cpu: 0
+      metrics:
+        requests:
+          memory: 0
+          cpu: 0
+      kube_client:
+        requests:
+          memory: 0
+          cpu: 0
+      base_os:
+        requests:
+          memory: 0
+          cpu: 0
+      brm:
+        requests:
+          memory: 0
+          cpu: 0
+      bra:
+        requests:
+          memory: 0
+          cpu: 0
+
+eric-data-document-database-pg-fh:
+    resources:
+      postgres:
+        requests:
+          memory: 0
+          cpu: 0
+      metrics:
+        requests:
+          memory: 0
+          cpu: 0
+      kube_client:
+        requests:
+          memory: 0
+          cpu: 0
+      base_os:
+        requests:
+          memory: 0
+          cpu: 0
+eric-data-document-database-pg-sec:
+    resources:
+      postgres:
+        requests:
+          memory: 0
+          cpu: 0
+      metrics:
+        requests:
+          memory: 0
+          cpu: 0
+      kube_client:
+        requests:
+          memory: 0
+          cpu: 0
+      base_os:
+        requests:
+          memory: 0
+          cpu: 0
+eric-data-document-database-pg-iam:
+    resources:
+      postgres:
+        requests:
+          memory: 0
+          cpu: 0
+      metrics:
+        requests:
+          memory: 0
+          cpu: 0
+      kube_client:
+        requests:
+          memory: 0
+          cpu: 0
+      base_os:
+        requests:
+          memory: 0
+          cpu: 0
+eric-data-document-database-pg-ah:
+    resources:
+      postgres:
+        requests:
+          memory: 0
+          cpu: 0
+      metrics:
+        requests:
+          memory: 0
+          cpu: 0
+      kube_client:
+        requests:
+          memory: 0
+          cpu: 0
+      base_os:
+        requests:
+          memory: 0
+          cpu: 0
+
+eric-data-search-engine:
+  resources:
+    master:
+      requests:
+        cpu: 0
+        memory: 0
+    ingest:
+      requests:
+        cpu: 0
+        memory: 0
+    data:
+      requests:
+        cpu: 0
+        memory: 0
+      limits:
+        memory: "6Gi"
+  replicaCount:
+    data: 3
+  persistence:
+    data:
+      persistentVolumeClaim:
+        size: "100Gi"
+
+eric-data-search-engine-curator:
+  actions: |
+    1:
+      action: delete_indices
+      description: >-
+        Delete indices older than 7 days (based on index name), for pc-sm and
+        pc-mm prefixed indices. (Exclude pc-mm-worker-report-log, pc-mm-list-subscriber-result-log
+        and pc-mm-gf-imeicheck-log). Ignore the error if the filter does not result in an
+        actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(pc-mm-.*|pc-sm-app)-log-.*$'
+      - filtertype: pattern
+        kind: regex
+        value: '^pc-mm-(worker-report|list-subscriber-result|gf-imeicheck)-log.*$'
+        exclude: True
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    2:
+      action: delete_indices
+      description: >-
+        Delete indices older than 1000 days (based on index name), for isp log
+        prefixed indices. Ignore the error if the filter does not result in
+        an actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(pcc-isp-log).*$'
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 1000
+    3:
+      action: delete_indices
+      description: >-
+        Delete indices older than 24 hours (based on index name), for indices
+        that might contain sensitive information.
+        Ignore the error if the filter does not result in an actionable list
+        of indices(ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^pc-mm-(worker-report|list-subscriber-result|gf-imeicheck)-log.*$'
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 1
+    4:
+      action: delete_indices
+      description: >-
+        Delete indices older than 30 days (based on index name), for audit log
+        and alarm log prefixed indices. Ignore the error if the filter does
+        not result in an actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(adp-app-audit-logs|adp-app-alarm-log).*$'
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 30
+    5:
+      action: delete_indices
+      description: >-
+        Delete indices older than 7 days (based on index name), for common service.
+        Ignore the error if the filter does not result in an actionable list of
+        indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(adp-app-logs|cnom-app-log|pcc-kcdbrd-app-log).*$'
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    6:
+      action: delete_indices
+      description: >-
+        Delete older indices when the total space is greater than upper limit, for pc-mm and
+        pc-sm prefixed indices. Ignore the error if the filter does not result in an
+        actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(pc-mm-.*|pc-sm-app)-log.*$'
+      - filtertype: space
+        disk_space: 30
+        use_age: true
+        source: creation_date
+    7:
+      action: delete_indices
+      description: >-
+        Delete older indices when the total space is greater than upper limit, for isp log
+        prefixed indices. Ignore the error if the filter does not result in an
+        actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(pcc-isp-log).*$'
+      - filtertype: space
+        disk_space: 1
+        use_age: true
+        source: creation_date
+    8:
+      action: delete_indices
+      description: >-
+        Delete older indices when the total space is greater than upper limit, for audit log
+        and alarm log prefixed indices. Ignore the error if the filter does not result in an
+        actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(adp-app-audit-logs|adp-app-alarm-log).*$'
+      - filtertype: space
+        disk_space: 1
+        use_age: true
+        source: creation_date
+    9:
+      action: delete_indices
+      description: >-
+        Delete older indices when the total space is greater than upper limit, for common service
+        prefixed indices. Ignore the error if the filter does not result in an
+        actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(adp-app-logs|cnom-app-log|pcc-kvdbrd-app-log).*$'
+      - filtertype: space
+        disk_space: 90
+        use_age: true
+        source: creation_date
+
+
+eric-data-distributed-coordinator-ed:
+  resources:
+    etcd:
+      requests:
+        cpu: 0
+        memory: 0
+  persistence:
+    persistentVolumeClaim:
+      size: "4Gi"
+
+eric-pc-mm-gtp-forwarder:
+  resources:
+    requests:
+      cpu: 1
+      memory: 1Gi
+    limits:
+      cpu: 1
+      memory: 1Gi
+  replicaCount: 1
+
+eric-sec-ldap-server:
+  resources:
+    ldap:
+      requests:
+        cpu: 0
+        memory: 0
+    ldapagent:
+      requests:
+        cpu: 0
+        memory: 0
+
+
+eric-fh-snmp-alarm-provider:
+  nodeSelector:
+    snmp-sender: eric-pcc
+  service:
+    annotations:
+      sharedVIPLabel: pcc-oam
+      addressPoolName: pcc-oam
+    secretName: snmp-alarm-provider-config
+  oamVIP:
+    enabled: true
+    vip: "214.12.117.194"
+    nodeName: ""    
+    destIp: "10.36.242.99"
+  resources:
+      alarmprovider:
+        requests:
+          memory: 0
+          cpu: 0
+
+eric-cnom-server:
+  resources:
+    requests:
+        memory: 0
+        cpu: 0
+    limits:
+      memory: 1Gi
+      cpu: 500m
+  service:
+    type: LoadBalancer
+  annotations:
+    metallb.universe.tf/address-pool: pcc-oam
+    metallb.universe.tf/allow-shared-ip: pcc-oam
+
+eric-pc-key-value-database-rd:
+  eric-pc-kvdb-rd-operator:
+      resources:
+        requests:
+          memory: 200Mi
+          cpu: 500m
+        limits:
+          memory: 200Mi
+          cpu: 500m
+
+  eric-pc-kvdb-rd-server:
+      resources:
+        node:
+          limits:
+            memory: 750Mi
+            cpu: 500m
+          requests:
+            memory: 750Mi
+            cpu: 500m
+        metricExporter:
+          limits:
+            memory: 200Mi
+            cpu: 100m
+          requests:
+            memory: 200Mi
+            cpu: 100m
+      numberOfMaster: 3
+
+eric-cm-mediator:
+    resources:
+      cm-mediator:
+        requests:
+          memory: 0
+          cpu: 0
+eric-data-coordinator-zk:
+    resources:
+      datacoordinatorzk:
+        requests:
+          cpu: 0
+          memory: 0
+      jmxExporter:
+        requests:
+          cpu: 0
+          memory: 0
+
+eric-data-message-bus-kf:
+    resources:
+      messagebuskf:
+        requests:
+          cpu: 0
+          memory: 0
+      jmxExporter:
+        requests:
+          cpu: 0
+          memory: 0
+
+eric-fh-alarm-handler:
+    resources:
+      alarmhandler:
+        requests:
+          memory: 0
+          cpu: 0
+
+
+
+eric-pc-kvdb-rd-server:
+  numberOfMaster: 6
+
+eric-pc-controller-ldap-admin-creds:
+  adminCredentials:
+    adminuser: day0
+    adminpasswd: "$6$XcFGoO/Kh1Ruh8ng$J3pHByyQ8Wpq2J5M2H6Ukkf9acGwOWHwvtimlT4.BR0Mtq9264b2ktiEmjRczmQWqFVCkYAiJb3rxXAPtlxLk1"
+eric-cm-yang-provider:
+  service:
+    annotations:
+      sharedVIPLabel: "pcc-oam"
+      addressPoolName: "pcc-oam"
+eric-data-sftp-server:
+  service:
+    annotations:
+      sharedVIPLabel: "pcc-oam"
+      addressPoolName: "pcc-oam"
+eric-log-shipper:
+  logshipper:
+    cfgData: |
+      paths:
+        - /var/log/containers/eric-pc-sm-*_pcc_*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: pc-sm-app-log
+      symlinks: true
+      json.add_error_key: true
+
+      paths:
+        - /var/log/containers/eric-pc-routing-*_pcc_*.log
+        - /var/log/containers/eric-pc-networking-cm-agent-*_pcc_*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: pc-routing-app-log
+      symlinks: true
+      json.add_error_key: true
+
+      paths:
+        - /var/log/containers/eric-cnom-server-*_pcc_*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: cnom-app-log
+      symlinks: true
+      json.add_error_key: true
+
+      paths:
+        # Note that these are not regexps but Go globs. In particular,
+        # [0-9]* means "a digit followed by a sequence of characters".
+        - /var/log/containers/eric-pc-mm-controller-[0-9]*_pcc_*.log
+        - /var/log/containers/eric-pc-mm-forwarder-[0-9]*_pcc_*.log
+        - /var/log/containers/eric-pc-mm-mobility-[0-9]*_pcc_*.log
+        - /var/log/containers/eric-pc-mm-sctp-[0-9]*_pcc_*.log
+      tags: ["docker", "json-in-log"]
+      symlinks: true
+      json.add_error_key: true
+      json.overwrite_keys: true
+
+      # These containers/microservices do not follow the ADP Design rules
+      # to log directly as JSON.
+      paths:
+        - /var/log/containers/eric-pc-mm-*_pcc_*.log
+      exclude_files:
+        - 'eric-pc-mm-(controller|forwarder|mobility|sctp)-[0-9]+_.*\.log'
+      tags: ["docker"]
+      fields:
+        logplane: pc-mm-app-log
+      symlinks: true
+      json.add_error_key: true
+      json.overwrite_keys: true
+
+      paths:
+        - /var/log/containers/eric-pc-kvdb-rd-*_pcc_*.log
+      exclude_files:
+        - 'eric-pc-kvdb-rd-*_eric-pc-kvdb-rd-logcar-*.log'
+      tags: ["docker"]
+      fields:
+        logplane: pcc-kvdbrd-app-log
+      symlinks: true
+      json.add_error_key: true
+      json.overwrite_keys: true
+
+      paths:
+        - /var/log/containers/eric-pc-kvdb-rd-*_pcc_eric-pc-kvdb-rd-logcar-*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: pcc-kvdbrd-app-log
+      symlinks: true
+      json.add_error_key: true
+
+      paths:
+        - /var/log/containers/eric-cnom-*_pcc_*.log
+      exclude_files:
+        - 'eric-cnom-server'
+      tags: ["docker"]
+      fields:
+        logplane: cnom-app-log
+      symlinks: true
+      json.add_error_key: true
+      json.overwrite_keys: true
+
+      paths:
+        - /var/log/containers/eric-pc-vpn-gw-*_pcc_*.log
+      tags: ["docker", "json-in-log", "vpn-gw"]
+      fields:
+        logplane: vpn-gw-app-log
+      symlinks: true
+      json.add_error_key: true
+
+      # Set alarm handler logs with tag "json-in-log"
+      # in order to parse json content and separate alarm
+      # history logs on logstash. And keep other logs on
+      # adp-app-logs log plane.
+      paths:
+        - /var/log/containers/eric-fh-alarm-handler-*_pcc_*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: adp-app-logs
+      symlinks: true
+      json.add_error_key: true
+
+      paths:
+        - /var/log/containers/eric-cm-yang-provider-*_pcc_yang-db-adapter-*.log
+        - /var/log/containers/eric-fh-snmp-alarm-provider-*_pcc_eric-fh-snmp-alarm-provider-*.log
+        - /var/log/containers/eric-pm-bulk-reporter-*_pcc_eric-pm-sftp-*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: adp-app-logs
+      symlinks: true
+      json.add_error_key: true
+
+      paths:
+        - /var/log/containers/*_pcc_*.log
+      exclude_files:
+        - 'eric-pc-mm-.*\.log'
+        - 'eric-pc-sm-.*\.log'
+        - 'eric-pc-kvdb-rd-.*\.log'
+        - 'eric-pc-routing-.*\.log'
+        - 'eric-pc-networking-cm-agent-.*\.log'
+        - 'eric-cnom-.*\.log'
+        - 'eric-tm-.*\.log'
+        - 'calico-node-.*\.log'
+        - 'eric-fh-alarm-handler-.*\.log'
+        - 'eric-cm-yang-provider-.*yang-db-adapter-.*\.log'
+        - 'eric-fh-snmp-alarm-provider-.*eric-fh-snmp-alarm-provider-.*\.log'
+        - 'eric-pm-bulk-reporter-.*eric-pm-sftp-.*\.log'
+        - 'eric-pc-vpn-gw-.*\.log'
+      tags: ["docker"]
+      fields:
+        logplane: adp-app-logs
+      symlinks: true
+      json.add_error_key: true
+      json.overwrite_keys: true
+
+eric-log-transformer:
+    replicaCount: 2
+    resources:
+      requests:
+        cpu: 0
+        memory: 0
+      logtransformer:
+        requests:
+          cpu: 0
+          memory: 0
+
+eric-lm-combined-server:
+  licenseServerClient:
+    licenseServer:
+      thrift:
+        host: 10.221.14.88
+        port: 9095
+

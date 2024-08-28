@@ -1,0 +1,150 @@
+nodeName: n84-ccsm1
+nodeType: CCSM
+
+vnflcm:
+  clusterName: n84-eccd1
+  namespace: ccsm
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day0:
+    username: sysadmin
+    password: Pa$$w0rd4LDAP
+  day1:
+  - username: ccsmoam
+    password: Changeme@1st
+    groups:
+    - ausf_admin
+    - udm_sensitive_key_admin
+    - udm_admin
+    - system-admin
+    - nrfagent-admin
+    - hssepc_admin
+    - ccsm-admin
+    - eir_admin
+  - username: ccsmsec
+    password: Changeme@1st
+    groups:
+    - udm_security_admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+snmp:
+  agentEngineId: 8000137001C0A899ECCD107E28
+license:
+  customerId: "946060"
+  swltId: STA-CCSM-12
+
+udmInstanceId: 841d1b7c-5103-11e9-8c09-99eccd107e28
+ausfInstanceId: 0c765084-9cc5-49c6-9876-ae2f5fa2a63f
+eirInstanceId: 77fba27d-6a44-4074-8d9a-99eccd1fc6ef
+hssInstanceId: 9448c0d3-6590-4e54-b90f-5f7ca0dfc48d
+
+ddc:
+  remotePath: /home/admin/ddc/n84-ccsm1
+
+ausf:
+  host: ausf1.n84
+  port: 443
+udm:
+  host: udm1.n84
+  port: 443
+eir:
+  host: eir1.n84
+  port: 443
+hss:
+  host: hss1.n84
+  port: 80
+
+minReplica:
+  eric-udm-cancelepclocation: 2
+  eric-udm-capacity: 2
+  eric-udm-eapauth: 2
+  eric-udm-eapprimeauth: 2
+  eric-udm-epsauth: 5
+  eric-udm-gbaauth: 2
+  eric-udm-imsauth: 2
+  eric-udm-iratamfdereg: 3
+  eric-udm-iratamflocation: 2
+  eric-udm-iratsndereg: 3
+  eric-udm-iwk5g2g: 2
+  eric-udm-sdmamdata: 3
+  eric-udm-sdmimplicitunsub: 2
+  eric-udm-sdmmultipledataset: 2
+  eric-udm-sdmnotif: 2
+  eric-udm-sdmnssai: 2
+  eric-udm-sdmsmdata: 2
+  eric-udm-sdmsmfselect: 2
+  eric-udm-sdmsubscriptions: 5
+  eric-udm-sdmuectxtsmf: 2
+  eric-udm-ueauth: 3
+  eric-udm-uecmamfget: 2
+  eric-udm-uecmamfderegnotifier: 1
+  eric-udm-uecmamfregupdate: 2
+  eric-udm-uecmreg: 4
+  eric-udm-uecmsmfderegistration: 2
+  eric-udm-uecmsmfregistration: 3
+  eric-ausf-capacity: 2
+  eric-ausf-engine: 2
+  eric-eir-eireic: 4
+  eric-hssepc-capacity: 2
+  eric-hssepc-s6adiameter: 4
+  eric-hssepc-iratsndereg: 4
+  eric-hssepc-s6aauthentication: 5
+  eric-hssepc-s6acancellocation: 4
+  eric-hssepc-s6adeletesubscriber: 2
+  eric-hssepc-s6ainsertsubscriber: 2
+  eric-hssepc-s6anotify: 2
+  eric-hssepc-s6apurge: 2
+  eric-hssepc-s6aupdatelocation: 5
+  eric-hssepc-soap: 2
+  eric-hssepc-subscriptionupdate: 2
+
+maxReplica:
+  eric-udm-cancelepclocation: 2
+  eric-udm-capacity: 2
+  eric-udm-eapauth: 2
+  eric-udm-eapprimeauth: 2
+  eric-udm-epsauth: 6
+  eric-udm-gbaauth: 2
+  eric-udm-imsauth: 2
+  eric-udm-iratamfdereg: 3
+  eric-udm-iratamflocation: 2
+  eric-udm-iratsndereg: 3
+  eric-udm-iwk5g2g: 2
+  eric-udm-sdmamdata: 3
+  eric-udm-sdmimplicitunsub: 3
+  eric-udm-sdmmultipledataset: 2
+  eric-udm-sdmnotif: 2
+  eric-udm-sdmnssai: 2
+  eric-udm-sdmsmdata: 3
+  eric-udm-sdmsmfselect: 3
+  eric-udm-sdmsubscriptions: 5
+  eric-udm-sdmuectxtsmf: 2
+  eric-udm-ueauth: 3
+  eric-udm-uecmamfget: 2
+  eric-udm-uecmamfderegnotifier: 1
+  eric-udm-uecmamfregupdate: 2
+  eric-udm-uecmreg: 5
+  eric-udm-uecmsmfderegistration: 2
+  eric-udm-uecmsmfregistration: 4
+  eric-ausf-capacity: 2
+  eric-ausf-engine: 2
+  eric-eir-eireic: 5
+  eric-hssepc-capacity: 2
+  eric-hssepc-s6adiameter: 4
+  eric-hssepc-iratsndereg: 5
+  eric-hssepc-s6aauthentication: 5
+  eric-hssepc-s6acancellocation: 5
+  eric-hssepc-s6adeletesubscriber: 2
+  eric-hssepc-s6ainsertsubscriber: 2
+  eric-hssepc-s6anotify: 2
+  eric-hssepc-s6apurge: 2
+  eric-hssepc-s6aupdatelocation: 6
+  eric-hssepc-soap: 2
+  eric-hssepc-subscriptionupdate: 2
+
+vtap:
+  tapagent: false

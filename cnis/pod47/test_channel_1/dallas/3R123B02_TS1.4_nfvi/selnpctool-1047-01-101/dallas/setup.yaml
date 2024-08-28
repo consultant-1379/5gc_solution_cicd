@@ -1,0 +1,8 @@
+log_server: 10.130.46.40
+system_file_dir: '/var/dallas/dualmode5gc'
+config_file_dir: '/var/dallas/dualmode5gc'
+replay_file_dir: /lab/epg_st_utils/captures/latest
+otp_dir: /lab/testtools/app/rhes7.x86_64/erlang_otp/OTP19_2/lib/erlang/
+erlport_dir: /lab/testtools/app/rhes6.x86_64/erlport/
+max_otp_proc: 5000000
+auth_key: /lab/epg_st_utils/lao/etc/testlab_dsakey

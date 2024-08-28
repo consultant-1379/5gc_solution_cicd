@@ -1,0 +1,23 @@
+## The configuration is used for Grafana accessing data-search-engine to get logs (only for internal test usage)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+  generation: 1
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: allow-eric-data-search-engine-tls  # change xxx-allow to allow-xxx to align with fivegcsafe
+  namespace: ccsm
+  selfLink: /apis/networking.k8s.io/v1/namespaces/ccsm/networkpolicies/allow-eric-data-search-engine-tls
+spec:
+  egress:
+  - {}
+  ingress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: eric-data-search-engine
+      component: eric-data-search-engine
+      role: ingest-tls
+  policyTypes:
+  - Ingress

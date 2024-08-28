@@ -1,0 +1,13 @@
+{
+  "clusterName": "n47-eccd1",
+  "additionalParams": {
+       "namespace": "ccpc",
+       "applicationTimeOut": "3600",
+       "skipJobVerification": "true",
+       "cleanUpResources": false,
+       "isAutoRollbackAllowed": false,
+       "disableOpenapiValidation": false,
+       "helmNoHooks": false,
+       "skipVerification": "true"
+      }
+}

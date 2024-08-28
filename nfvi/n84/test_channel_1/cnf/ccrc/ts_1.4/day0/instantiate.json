@@ -1,0 +1,12 @@
+{
+  "clusterName": "n84-eccd1",
+  "additionalParams": {
+    "namespace": "ccrc",
+    "applicationTimeOut": "1200",
+    "commandTimeOut": "1200",
+    "disableOpenapiValidation": true,
+    "skipJobVerification": true,
+    "skipVerification": true
+  }
+}
+

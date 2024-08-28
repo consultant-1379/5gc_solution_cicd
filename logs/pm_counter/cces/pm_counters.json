@@ -1,0 +1,7 @@
+[
+ { "counter-name": "eric_nef_nnef_afsessionwithqos_provisioning_requests_recv"},
+ { "counter-name": "eric_nef_nnef_afsessionwithqos_provisioning_successful_responses_sent"},
+ { "counter-name": "eric_nef_nnef_afsessionwithqos_overload_reject"},
+ { "counter-name": "eric_nef_nnef_afsessionwithqos_overload_unsuccessful_ratio"},
+ { "counter-name": "eric_nef_nnef_afsessionwithqos_prov_overload_reject"}
+]

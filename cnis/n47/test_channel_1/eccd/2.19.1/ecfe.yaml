@@ -1,0 +1,221 @@
+apiVersion: v1
+data:
+  config: |
+    bgp-bfd-peers:
+    - peer-address: 214.13.225.194
+      peer-asn: 4200000000
+      my-asn: 4259841731
+      min-rx: 300ms
+      min-tx: 300ms
+      multiplier: 3
+      my-address-pools:
+      - ingress
+      - pcc-oam
+      - ccdm-oam
+      - ccdm-prov
+      - ccsm-oam
+      - ccrc-oam
+      - ccrc-prov
+      - eda-oam
+      - ccpc-oam
+      - ccpc-prov
+      - pcg-oam
+     # - oam-pool
+      - n47_nf_om_pool
+    - peer-address: 214.13.225.195
+      peer-asn: 4200000000
+      my-asn: 4259841731
+      min-rx: 300ms
+      min-tx: 300ms
+      multiplier: 3
+      my-address-pools:
+      - ingress
+      - pcc-oam
+      - ccdm-oam
+      - ccdm-prov
+      - ccsm-oam
+      - ccrc-oam
+      - ccrc-prov
+      - eda-oam
+      - ccpc-oam
+      - ccpc-prov
+      - pcg-oam
+     # - oam-pool
+      - n47_nf_om_pool
+    - peer-address: 11.110.2.252
+      peer-asn: 102
+      my-asn: 3802
+      min-rx: 300ms
+      min-tx: 300ms
+      multiplier: 3
+      my-address-pools:
+      - nels
+      - ccdm-intersite
+      - smf-service
+      - smf-notification
+      - amf-namf
+      - udm-signaling
+      - ausf-signaling
+      - ccdm-5g-traffic
+      - ccdm-4g-traffic
+      - ccpc-4g-traffic
+      - nssf-signaling
+      - nrf-signaling
+      - pcf-signaling
+
+    - peer-address: 11.110.2.253
+      peer-asn: 102
+      my-asn: 3802
+      min-rx: 300ms
+      min-tx: 300ms
+      multiplier: 3
+      my-address-pools:
+      - nels
+      - ccdm-intersite
+      - smf-service
+      - smf-notification
+      - amf-namf
+      - udm-signaling
+      - ausf-signaling
+      - ccdm-5g-traffic
+      - ccdm-4g-traffic
+      - ccpc-4g-traffic
+      - nssf-signaling
+      - nrf-signaling
+      - pcf-signaling
+    address-pools:
+    #- name: oam-pool
+    #  protocol: bgp
+    #  addresses:
+    #  -  214.13.224.129-214.13.224.158
+    #  auto-assign: true
+    - name: ingress
+      protocol: bgp
+      addresses:
+      - 214.13.224.129/32
+      auto-assign: false
+    - name: smf-service
+      protocol: bgp
+      addresses:
+      - 107.2.0.65/32
+      auto-assign: false
+    - name: smf-notification
+      protocol: bgp
+      addresses:
+      - 107.2.0.33/32
+      auto-assign: false
+    - name: amf-namf
+      protocol: bgp
+      addresses:
+      - 106.2.2.1/32
+      auto-assign: false
+    - name: pcc-oam
+      protocol: bgp
+      addresses:
+      - 214.13.224.130/32
+      auto-assign: false
+    - name: ccdm-oam
+      protocol: bgp
+      addresses:
+      - 214.13.224.131/32
+      auto-assign: false
+    - name: ccdm-intersite
+      protocol: bgp
+      addresses:
+      - 5.8.6.191/32
+      auto-assign: false
+    - name: ccdm-4g-traffic
+      protocol: bgp
+      addresses:
+      - 106.2.4.91/32
+      auto-assign: false
+    - name: ccdm-5g-traffic
+      protocol: bgp
+      addresses:
+      - 106.2.4.84/32
+      auto-assign: false
+    - name: ccpc-4g-traffic
+      protocol: bgp
+      addresses:
+      - 106.2.4.88/32
+      auto-assign: false
+    - name: ccdm-prov
+      protocol: bgp
+      addresses:
+      - 214.13.224.132/32
+      auto-assign: false
+    - name: ccsm-oam
+      protocol: bgp
+      addresses:
+      - 214.13.224.133/32
+      auto-assign: false
+    - name: ausf-signaling
+      protocol: bgp
+      addresses:
+      - 106.2.4.83/32
+      auto-assign: false
+    - name: udm-signaling
+      protocol: bgp
+      addresses:
+      - 106.2.4.82/32
+      auto-assign: false
+    - name: nrf-signaling
+      protocol: bgp
+      addresses:
+      - 106.2.4.80/32
+      auto-assign: false
+    - name: nssf-signaling
+      protocol: bgp
+      addresses:
+      - 106.2.4.81/32
+      auto-assign: false
+    - name: pcf-signaling
+      protocol: bgp
+      addresses:
+      - 106.2.4.87/32
+      auto-assign: false
+    - name: ccrc-oam
+      protocol: bgp
+      addresses:
+      - 214.13.224.134/32
+      auto-assign: false
+    - name: ccrc-prov
+      protocol: bgp
+      addresses:
+      - 214.13.224.135/32
+      auto-assign: false
+    - name: eda-oam
+      protocol: bgp
+      addresses:
+      - 214.13.224.136/32
+      auto-assign: false
+    - name: pcg-oam
+      protocol: bgp
+      addresses:
+      - 214.13.224.137/32
+      auto-assign: false
+    - name: ccpc-prov
+      protocol: bgp
+      addresses:
+      - 214.13.224.140/32
+      auto-assign: false
+    - name: ccpc-oam
+      protocol: bgp
+      addresses:
+      - 214.13.224.138/32
+    - name: n47_nf_om_pool
+      protocol: bgp
+      addresses:
+      - 214.13.226.1-214.13.226.30
+      auto-assign: true
+    - name: nels
+      protocol: bgp
+      addresses:
+      - 5.8.6.47/32
+      auto-assign: false
+
+kind: ConfigMap
+metadata:
+  annotations:
+  name: ecfe-ccdadm
+  namespace: kube-system

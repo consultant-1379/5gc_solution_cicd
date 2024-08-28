@@ -1,0 +1,389 @@
+global:
+  timezone: CET
+  profiles:
+    small-system:
+      enabled: false
+    std-system:
+      enabled: true
+    cleartext:
+      enabled: false
+    mtls:
+      enabled: true
+    mtls-and-cleartext:
+      enabled: false
+  pullSecret: regcred
+  # Workaround to be compatible with CCD 2.20
+  jwtPolicy: third-party-jwt
+  ipStackMode: "ipv4"
+  istio:
+    # Update the value according to kubernetes service ipaddress in default namespace
+    kubernetes_service_ipaddress: 10.96.0.1
+    tlsHandledByServiceMesh: true
+    egress:
+      enabled: true
+      endpoints:
+        eric_nrf_sbi_traffic:
+          mode: MUTUAL
+          host: "*.5gc.mnc081.mcc240.3gppnetwork.org"
+          port: 443
+        eric_nrf_kvdb_sbi_traffic:
+          host: "*.kvdb.nrf.3gppnetwork.org"
+        eric_nrf_nbi_traffic:
+          mode: MUTUAL
+          host: "*.sic.com"
+          port: 443
+        eric_nssf_sbi_traffic:
+          mode: MUTUAL
+#          host: "*.3gppnetwork.org"
+          port: 443
+        eric_nssf_kvdb_sbi_traffic:
+          host: "*.kvdb.nssf.3gppnetwork.org"
+  nodeSelector: {}
+  # CLI prompt setting
+  applicationId: "n67-ccrc1"
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: "CCRC"
+          customerId: "946060"
+          swltId: "STA-CCRC-4"
+  eric_nrf:
+    enabled: true
+  eric-nrf-extnotify:
+    enabled: false
+  eric-nrf-dns:
+    enabled: false
+  eric_nssf:
+    enabled: true
+  nrf:
+    features:
+      policyControl:
+        enabled: false
+      dnsEpcSupport:
+        enabled: false
+    istio:
+      traffic_ingressGatewayHTTPSPort: 443
+  nssf:
+    istio:
+      traffic_ingressGatewayHTTPSPort: 443
+
+  tapagent:
+    enabled: false
+  license:
+    nrf:
+      sau_tps_ratio: 2
+      miot_sau_tps_ratio: 2
+      dn_sau_tps_ratio: 2
+      dn_miot_sau_tps_ratio: 2
+    nssf:
+      sau_tps_ratio: 0.2
+  security:
+    policyBinding:
+      create: false
+tags:
+  # enable below function of CCRC COMMON
+  eric-probe-adapter: false
+eric-udm-mesh-integration:
+  eric-ingressgw-nrf-traffic:
+    externalTrafficPolicy: Local
+    service:
+      loadBalancerIP: ""
+      annotations:
+        sharedVIPLabel: "nrf-signaling"
+        addressPoolName: "nrf-signaling"
+    ports:
+      - port: 8091
+        targetPort: 8091
+        name: geode-locators
+        protocol: TCP
+      - port: 8092
+        targetPort: 8092
+        name: geode-gateway-receivers
+        protocol: TCP
+      - port: 443
+        targetPort: 8443
+        name: tls
+        tcpkeepalive:
+          ###tcp_keepalive_time in the unit of sec
+          time: 500
+          ###tcp_keepalive_interval in the unit of sec
+          interval: 10
+          ###tcp_keepalive_probes
+          probes: 6
+    secretVolumes: []
+  eric-ingressgw-nssf-traffic:
+    externalTrafficPolicy: Local
+    service:
+      loadBalancerIP: ""
+      annotations:
+        sharedVIPLabel: "nssf-signaling"
+        addressPoolName: "nssf-signaling"
+    ports:
+      - port: 8091
+        targetPort: 8091
+        name: geode-locators
+        protocol: TCP
+      - port: 8092
+        targetPort: 8092
+        name: geode-gateway-receivers
+        protocol: TCP
+      - port: 443
+        targetPort: 8443
+        name: tls
+        tcpkeepalive:
+          ###tcp_keepalive_time in the unit of sec
+          time: 500
+          ###tcp_keepalive_interval in the unit of sec
+          interval: 10
+          ###tcp_keepalive_probes
+          probes: 6
+    secretVolumes: []
+eric-nrf:
+  eric-nrf-dns:
+    service:
+      annotations:
+        metallb.universe.tf/allow-shared-ip: ccrc-dns-traffic
+        metallb.universe.tf/address-pool: ccrc-dns
+      externalTrafficPolicy: Local
+      loadBalancerIP: ""
+  eric-nrf-extnotify:
+    ingress:
+      fqdn: nrf.ericsson.com
+  eric-nrf-provision:
+    ingress:
+      fqdn: prov.nrf.ericsson.com
+  eric-data-kvdb-ag-operator:
+    nodeSelector:
+      operator: {}
+  eric-data-kvdb-ag:
+    multiSite:
+      enabled: false
+    nodeSelector:
+      locator: {}
+      server: {}
+      adminMgr: {}
+    persistence:
+      data:
+        persistentVolumeClaim:
+          storageClassName: "network-block"
+      backup:
+        persistentVolumeClaim:
+          enabled: true
+          storageClassName: "network-block"
+      gwsender:
+        persistentVolumeClaim:
+          enabled: true
+          storageClassName: "network-block"
+    affinity:
+      podAntiAffinity: hard
+eric-nssf:
+  eric-data-kvdb-ag-operator:
+    nodeSelector:
+      operator: {}
+  eric-data-kvdb-ag:
+    multiSite:
+      enabled: false
+    nodeSelector:
+      locator: {}
+      server: {}
+      adminMgr: {}
+    persistence:
+      data:
+        persistentVolumeClaim:
+          storageClassName: "network-block"
+      backup:
+        persistentVolumeClaim:
+          enabled: true
+          storageClassName: "network-block"
+      gwsender:
+        persistentVolumeClaim:
+          enabled: true
+          storageClassName: "network-block"
+    affinity:
+      podAntiAffinity: hard
+  eric-nssf-provisioning:
+    ingress:
+      fqdn: nssf-prov.ccrc.n67-eccd1.sero.gic.ericsson.se
+eric-adp-5g-udm:
+  eric-cm-mediator:
+    nodeSelector: {}
+  eric-pm-server:
+    server:
+      persistentVolume:
+        storageClass: "network-block"
+    nodeSelector: {}
+    # Configure values for application monitoring
+    rbac:
+      appMonitoring:
+        enabled: true
+        configFileCreate: false
+  eric-pm-bulk-reporter:
+    nodeSelector: {}
+    env:
+      nodeName: "ccrc"
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+    service:
+      loadBalancerIP: ""
+      annotations:
+        sharedVIPLabel: ccrc-oam
+        addressPoolName: ccrc-oam
+  eric-data-search-engine:
+    # Manually configure the sysctl for the CCD worker nodes.
+    autoSetRequiredWorkerNodeSysctl: false
+    nodeSelector:
+      data: {}
+      ingest: {}
+      bragent: {}
+      master: {}
+    persistence:
+      data:
+        persistentVolumeClaim:
+          storageClassName: "network-block"
+      master:
+        persistentVolumeClaim:
+          storageClassName: "network-block"
+  eric-data-search-engine-curator:
+    nodeSelector: {}
+  eric-data-document-database-pg:
+    nodeSelector: {}
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+    postgresConfig:
+      max_connections: 300
+  eric-log-transformer:
+    nodeSelector: {}
+    networkPolicy:
+      egress:
+      #  - cidr: 172.17.100.0/22
+      #    ports:
+      #    - protocol: TCP
+      #      port: 514
+      #    - protocol: UDP
+      #      port: 514
+    egress:
+      syslog:
+        enabled: false
+        tls:
+          enabled: true
+        remoteHosts:
+        #  - host: hostname
+        #    port: 514
+        #inclusions:
+        #  - field: "[facility]"
+        #    value: "log audit"
+        #  - field: "[other]"
+        #    value: "other value"
+        #exclusions:
+        #  - logplane:
+        #    rules:
+        #      - field: "[field1]"
+        #        value: "value1"
+        #      - field: "[field2]"
+        #        value: "value2"
+        filter: #|
+  eric-data-coordinator-zk:
+    nodeSelector:
+      datacoordinatorzk: {}
+      brAgent: {}
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+  eric-data-message-bus-kf:
+    nodeSelector: {}
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+  eric-fh-snmp-alarm-provider:
+    nodeSelector: {}
+    service:
+      loadBalancerIP: ""
+      annotations:
+        sharedVIPLabel: "ccrc-oam"
+        addressPoolName: "ccrc-oam"
+    oamVIP:
+      enabled: false
+      vip: ""
+      destIp: ""
+  eric-log-shipper:
+    nodeSelector: {}
+  eric-cm-yang-provider:
+    nodeSelector: {}
+    ldap:
+      ipv6Enabled: false
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+    service:
+      loadBalancerIP: ""
+      annotations:
+        sharedVIPLabel: "ccrc-oam"
+        addressPoolName: "ccrc-oam"
+  eric-cnom-document-database-mg:
+    nodeSelector: {}
+    persistence:
+      storageClass: "network-block"
+  eric-ctrl-bro:
+    nodeSelector: {}
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+  eric-sec-ldap-server:
+    persistence:
+      storageClassName: "network-block"
+    nodeSelector:
+      ldap: {}
+      ldapProxy: {}
+  eric-sw-inventory-manager:
+    nodeSelector: {}
+  eric-data-distributed-coordinator-ed:
+    nodeSelector:
+      brAgent: {}
+      dced: {}
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+      brAgent:
+        backupVolume:
+          storageClassName: "network-block"
+  eric-fh-alarm-handler:
+    nodeSelector: {}
+  eric-tm-ingress-controller-cr:
+    service:
+      loadBalancerIP: ""
+      annotations:
+        sharedVIPLabel: "ccrc-oam"
+        addressPoolName: "ccrc-oam"
+    minimumProtocolVersion: "1.2"
+    nodeSelector:
+      contour: {}
+      envoy: {}
+  eric-sec-admin-user-management:
+    nodeSelector: {}
+  eric-sec-key-management:
+    nodeSelector: {}
+  eric-sec-sip-tls:
+    nodeSelector: {}
+  eric-cnom-server:
+    nodeSelector: {}
+    fqdn: cnom.ccrc.n67-eccd1.sero.gic.ericsson.se
+  eric-odca-diagnostic-data-collector:
+    nodeSelector: {}
+  eric-lm-combined-server:
+    licenseConsumerHandler:
+      nodeSelector: {}
+    licenseServerClient:
+      nodeSelector: {}
+      licenseServer:
+        thrift:
+          host: "10.221.14.88"
+    licenseServerIpAddresses:
+      # licenseServerIpAddresses.ip1 - the first IP address of a license server in the hosts file
+      ip1: ""
+      # licenseServerIpAddresses.ip2 - the second IP address of a license server in the hosts file for Geographical Redundency
+      ip2: ""
+  eric-data-object-storage-mn:
+    affinity:
+      podAntiAffinity: "hard"
+    nodeSelector: {}
+    persistentVolumeClaim:
+      storageClassName: "network-block"

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <capabilities>
+        <capability>urn:ietf:params:netconf:base:1.0</capability>
+    </capabilities>
+</hello>
+]]>]]>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
+    <edit-config>
+        <target>
+            <running/>
+        </target>
+        <config>
+            <nssf xmlns="urn:rdns:com:ericsson:oammodel:ericsson-nssf">
+                <nf-profile>
+                    <instance-id>13a1de33-ec45-4cd6-a842-ce5bb3cba3d8</instance-id>
+                    <requested-status>registered</requested-status>
+                    <requested-heartbeat-timer>60</requested-heartbeat-timer>
+                    <plmn-id>
+                        <mcc>240</mcc>
+                        <mnc>81</mnc>
+                    </plmn-id>
+                    <snssai>
+                        <id>1</id>
+                        <sst>1</sst>
+                        <sd>000002</sd>
+                    </snssai>
+                    <nsi>testNSI</nsi>
+                    <fqdn>nssf1.n89.nssf.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                    <allowed-plmn>
+                        <mcc>240</mcc>
+                        <mnc>81</mnc>
+                    </allowed-plmn>
+                    <allowed-nf-type>amf</allowed-nf-type>
+                    <allowed-nssai>
+                        <id>1</id>
+                        <sst>1</sst>
+                        <sd>000002</sd>
+                    </allowed-nssai>
+                    <priority>1</priority>
+                    <capacity>100</capacity>
+                    <service>
+                        <instance-id>nnssf-nsselection-0001</instance-id>
+                        <name>nnssf-nsselection</name>
+                        <scheme>https</scheme>
+                        <requested-status>registered</requested-status>
+                        <fqdn>nssf1.n89.nssf.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                        <ip-endpoint>
+                            <id>1</id>
+                            <transport>tcp</transport>
+                            <port>443</port>
+                        </ip-endpoint>
+                        <allowed-plmn>  
+                            <mcc>240</mcc> 
+                            <mnc>81</mnc>
+                        </allowed-plmn>
+                        <allowed-nf-type>amf</allowed-nf-type>
+                        <allowed-nssai>
+                            <id>1</id>
+                            <sst>1</sst>
+                            <sd>000002</sd>
+                        </allowed-nssai>
+                        <priority>1</priority>
+                        <capacity>100</capacity>
+                    </service>
+                    <service>
+                        <instance-id>nnssf-nssaiavailability-0001</instance-id>
+                        <name>nnssf-nssaiavailability</name>
+                        <scheme>https</scheme>
+                        <requested-status>registered</requested-status>
+                        <fqdn>nssf1.n89.nssf.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                        <ip-endpoint>
+                            <id>1</id>
+                            <transport>tcp</transport>
+                            <port>443</port>
+                        </ip-endpoint>
+                        <allowed-plmn>
+                            <mcc>240</mcc>
+                            <mnc>81</mnc>
+                        </allowed-plmn>
+                        <allowed-nf-type>amf</allowed-nf-type>
+                        <allowed-nssai>
+                            <id>1</id>
+                            <sst>1</sst>
+                            <sd>000002</sd>
+                        </allowed-nssai>
+                        <priority>1</priority>
+                        <capacity>100</capacity>
+                    </service>
+                </nf-profile>
+                <nsselection-service>
+                    <preferred-amf-response>static-amf-list</preferred-amf-response>
+                </nsselection-service>
+                <!--<optional-feature>-->
+                    <!-- whether enable vp license -->
+                    <!--<nssf-automation-analytics>deactivated</nssf-automation-analytics>-->
+                    <!--<nssf-automation-analytics-miot>deactivated</nssf-automation-analytics-miot>-->
+                    <!-- <nssf-dynamic-policy-framework>deactivated</nssf-dynamic-policy-framework> -->
+                    <!-- <nssf-dynamic-policy-framework-miot>deactivated</nssf-dynamic-policy-framework-miot> -->
+                <!--</optional-feature>-->
+                <!--administrative-state: When set to unlocked NSSF can handle traffic normally. When Set to shutting-down/locked NSSF reject all traffic and deregisters its profile at NRF.-->
+                <administrative-state>unlocked</administrative-state>
+
+            </nssf>
+        </config>
+    </edit-config>
+</rpc>

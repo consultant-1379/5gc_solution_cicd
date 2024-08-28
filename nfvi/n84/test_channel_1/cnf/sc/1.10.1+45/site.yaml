@@ -1,0 +1,43 @@
+nodeName: n84-sc1
+nodeType: SC
+
+vnflcm:
+  clusterName: n84-eccd1
+  namespace: sc
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day0:
+    username: admin
+    password: rootroot
+  day1:
+  - username: tsadm
+    password: tsadm
+    groups: [ system-admin system-security-admin sc-admin bsf-admin bsf-security-admin scp-admin scp-security-admin sc-security-admin sc-read-only ]
+
+cnom:
+  fqdn: cnom.sc.n84-eccd1.sero.gic.ericsson.se
+
+
+license:
+  customerId: '946060'
+  swltId: STA-SC-8
+snmp:
+  agentEngineId: 8000137001C0A88A9FD5C92D86
+  heartbeatInterval: 600
+ddc:
+  remotePath: /home/admin/ddc/eccd1/n84-sc1
+sc:
+  bsfSigLbIp: 5.8.6.11
+  bsfDiameterLbIp: 5.8.6.12
+  scpSigLbIp: 5.8.6.35
+  bsfSbiHost: bsf1.n84
+  scpSbiHost: scp1.n84
+  smfSbiNotifyHost: smf1-notif.n84-eccd1
+  smfSbiNotifyIp: 5.8.6.2
+locality: LN1
+
+shared_vip_oam_label: sc-oam
+addressPoolName_oam: sc-oam

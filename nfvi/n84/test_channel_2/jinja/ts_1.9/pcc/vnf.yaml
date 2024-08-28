@@ -1,0 +1,136 @@
+vnflcm:
+  vnfInstanceName: n84-pcc2
+  vnfProductName: PCC
+  vnfSoftwareVersion: CXP9041577_1.R51C
+  instantiate_file: ../../../../../../../ts-config/templates/common/instantiate.json.jinja2
+  rendered-instantiate-file: ../../../cnf/pcc/ts_1.9/day0/instantiate.json
+  values_file: ../../../../../../../ts-config/templates/pcc/1.22/values.yaml.jinja2
+  rendered-values-file: ../../../cnf/pcc/ts_1.9/day0/values.yaml
+  clusterName: n84-eccd3
+  namespace: pcc
+  InstantiateVnfRequest:
+    applicationTimeOut: 2400
+    skipVerification: "true"
+
+# day0:
+  # k8s-secret:
+ # - name: snmp-alarm-provider-config
+ #   sources:
+ #  - { type: file, key: config.json, file: ../../../templates/snmp-config.json.jinja2 }
+
+verify-running: true
+ignore-not-running:
+- eric-data-search-engine-curator
+
+day1:
+  access:
+    oam: n84-pcc2.sero.gic.ericsson.se
+    amf-oam: n84-amf2.sero.gic.ericsson.se
+    ldap-admin:
+      user: sysadmin
+      pass: sysadmin
+    users:
+    - user: tsadm
+      pass: tsadm
+      pass_init: tsadm
+      groups: [ system-admin system-security-admin mm-config-admin mm-itc-admin mm-security-admin mm-admin mm-expert-admin sm-admin sm-cdr-admin sm-charging-admin sm-itc-admin sm-operator sm-tracing-admin sm-uetrace-admin system-troubleshooter admin ]
+    configs:
+    - file: ../../../../../../../ts-config/templates/common/user-config.txt.jinja2
+      rendered-file: ../../../cnf/pcc/ts_1.9/day1/user-config.txt
+      proto: ssh
+      pre-delay: 30
+      pre-verify-pods-ready:
+        check-interval: 30
+        deployments:
+        - eric-cm-yang-provider
+      post-delay: 30
+      retry-interval: 30
+
+  app-config:
+  - file: ../../../../../../../ts-config/templates/pcc/1.22/vpngw-config.txt.jinja2
+    rendered-file: ../../../cnf/pcc/ts_1.9/day1/vpngw-config.txt
+    user-id: 0
+    proto: ssh
+    retry-interval: 30
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/pcc/1.22/pc-sm-config.txt.jinja2
+    rendered-file: ../../../cnf/pcc/ts_1.9/day1/pc-sm-config.txt
+    user-id: 0
+    proto: ssh
+    retry-interval: 30
+    post-verify-pods-ready:
+      check-interval: 30
+      deployments:
+      - eric-pc-sm-smf-pgw-session
+    post-delay: 120
+  - file: ../../../../../../../ts-config/templates/pcc/1.22/pc-sm-config-scp.txt.jinja2
+    rendered-file: ../../../cnf/pcc/ts_1.9/day1/pc-sm-config-scp.txt
+    condition:
+      sitedata-param: indirectCommunication.enabled
+      expected-value: true
+    user-id: 0
+    proto: ssh
+    retry-interval: 30
+    post-delay: 10
+
+  - file: ../../../../../../../ts-config/templates/common/ddc-config.txt.jinja2
+    rendered-file: ../../../cnf/pcc/ts_1.9/day1/ddc-config.txt
+    user-id: 0
+    proto: ssh
+    retry-interval: 30
+    post-delay: 10
+
+
+  amf-tls:
+    cert-files:
+    - ../../../../certs/cnf/test_channel_2/pcc/amf-sbi-server.crt
+    - ../../../../certs/cnf/test_channel_2/pcc/amf-sbi-server.key
+    - ../../../../certs/cnf/test_channel_2/pcc/amf-sbi-client.crt
+    - ../../../../certs/cnf/test_channel_2/pcc/amf-sbi-client.key
+    - ../../../../certs/root/RootCA.crt
+    commands: |-
+      openssl pkcs12 -export -out amf-sbi-server.p12 -inkey ~/amf-sbi-server.key -in ~/amf-sbi-server.crt -password pass:ericsson
+      openssl pkcs12 -export -out amf-sbi-client.p12 -inkey ~/amf-sbi-client.key -in ~/amf-sbi-client.crt -password pass:ericsson
+      gsh action_node_credential_install_credential_from_uri -nci SERVER -uri ~/amf-sbi-server.p12 -cp ericsson
+      gsh action_node_credential_install_credential_from_uri -nci CLIENT -uri ~/amf-sbi-client.p12 -cp ericsson
+      gsh action_cert_m_install_trusted_cert_from_uri -uri ~/RootCA.crt
+      gsh create_trust_category -tci CA -tcr "-cei RootCA.crt"
+      gsh modify_ip_service -sn SBI-Client -nci CLIENT -tci CA
+      gsh modify_ip_service -sn SBI-Server -nci SERVER -tci CA
+      gsh modify_nrf_service_instance -nsin nnrf_nfm_1 -scheme https
+      gsh modify_nrf_service_instance -nsin nnrf_nfd_1 -scheme https
+      gsh modify_nssf_service_instance -nsin nnssf_sel_1 -scheme https
+      gsh modify_nssf_service_instance -nsin nnssf_ava_1 -scheme https
+      gsh modify_nrf_service_instance -nsin nnrf_nfm_2 -scheme https
+      gsh modify_nrf_service_instance -nsin nnrf_nfd_2 -scheme https
+      gsh modify_nssf_service_instance -nsin nnssf_sel_2 -scheme https
+      gsh modify_nssf_service_instance -nsin nnssf_ava_2 -scheme https
+      gsh check_config
+      gsh activate_config_pending
+      gsh checkpoint { -cpn postconfig } -default_sc true
+  # smf-tls:
+    # commands: |-
+      # config
+      # epg node secm certm node-credential smf-sbi-server subject-name "C=SE, ST=Stockholm, L=Stockholm, O=Ericsson, CN=SMF"
+      # epg node secm certm node-credential smf-sbi-server key-info rsa-2048
+      # epg node secm certm node-credential smf-sbi-client subject-name "C=SE, ST=Stockholm, L=Stockholm, O=Ericsson, CN=SMF"
+      # epg node secm certm node-credential smf-sbi-client key-info rsa-2048
+      # epg node secm certm trusted-certificate RootCA
+      # epg node secm certm trust-category trust-category
+      # epg node secm certm trust-category trust-category trusted-certificates RootCA
+      # epg pgw sbi connection-client-profile client-profile-1 transport-layer-security node-credential smf-sbi-client trust-category trust-category
+      # epg pgw sbi connection-server-profile server-profile-1 transport-layer-security node-credential smf-sbi-server trust-category trust-category
+      # no epg pgw sbi connection-client-profile client-profile-1 transport-layer-security no-transport-layer-security
+      # no epg pgw sbi connection-server-profile server-profile-1 transport-layer-security no-transport-layer-security
+      # epg pgw sbi connection-client-profile client-profile-2 transport-layer-security node-credential smf-sbi-client trust-category trust-category
+      # no epg pgw sbi connection-client-profile client-profile-2 transport-layer-security no-transport-layer-security
+      # commit
+    # sleep_before: 60
+  k8s-config:
+  - cmd: |-
+      create ingress eric-data-search-engine --rule="pcc-eric-data-search-engine.ingress.n84-eccd3.sero.gic.ericsson.se/*=eric-data-search-engine:9200"
+
+sitedata:
+- site.yaml
+- ../site_global.yaml 
+

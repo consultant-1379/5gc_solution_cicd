@@ -1,0 +1,522 @@
+global:
+  createExternalCertificateCR: true
+  timezone: CET
+  registry:
+    url: evnfm-docker-registry.ingress.n84-eccd3.sero.gic.ericsson.se
+    imagePullPolicy: IfNotPresent
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: "CCSM"
+          customerId: "946060"
+          swltId: "STA-CCSM-1"
+#
+# Service Mesh global settings
+#
+  multiTenancy:
+    enabled: true
+  defaultNodeSelector: {}
+    # 5gc-ericsson-se/vnf: ccsm
+#
+# CCSM global settings
+#
+  resources:
+    enabled: 'on'
+  hpa:
+    enabled: 'on'
+  psp:
+    enabled: 'off'
+    policy: 'eric-ccsm-psp-restricted'
+  scheduler:
+    nodeSelector: {}
+      # 5gc-ericsson-se/vnf: ccsm
+  istio:
+    sidecar:
+      inject: true
+    nrfagent_nf_ingressgws:
+      - eric-ccsm-ausf-gateway
+      - eric-ccsm-udm-gateway
+    ingress:
+      enabled: true
+      ausfGateway:
+        enabled: true
+        ports:
+          - port: 8080
+            name: https-mtls
+            protocol: HTTPS
+            hosts:
+              - "*"
+            mode: mTLS
+            settings:
+              secretName: eric-ccsm-sbi-server-certs
+              externalcertificate:
+                trustedCertificateListName: eric-ccsm-sbi-server-certs-cacert
+                asymmetricKeyCertificateName: eric-ccsm-sbi-server-asymetric-key/eric-ccsm-sbi-server-certs
+              minProtocolVersion: TLSV1_2
+              maxProtocolVersion: TLSV1_3
+              cipherSuites: {}
+      udmGateway:
+        enabled: true
+        ports:
+          - port: 8081
+            name: https-mtls
+            protocol: HTTPS
+            hosts:
+              - "*"
+            mode: mTLS
+            settings:
+              secretName: eric-ccsm-sbi-server-certs
+              externalcertificate:
+                trustedCertificateListName: eric-ccsm-sbi-server-certs-cacert
+                asymmetricKeyCertificateName: eric-ccsm-sbi-server-asymetric-key/eric-ccsm-sbi-server-certs
+              minProtocolVersion: TLSV1_2
+              maxProtocolVersion: TLSV1_3
+              cipherSuites: {}
+      udmHssGateway:
+        enabled: false
+        ports:
+          - port: 8082
+            name: http-clear
+            protocol: HTTP
+            hosts:
+              - "*"
+    egress:
+      enabled: true
+      endpoints:
+        eric-ccsm-sbi-traffic-mtls:
+          enabled: true
+          host: "*.n84.5gc.mnc081.mcc240.3gppnetwork.org"
+          ports:
+            - port: 443
+              name: https-port-for-mTLS-origination
+              protocol: HTTP2
+              mode: mTLS
+              cacert: /etc/istio/egress-ca-certs/ca-chain.cert.pem
+          resolution: NONE
+#
+# Overwrite the Service Mesh specific settings
+#
+eric-ccsm-service-mesh:
+  eric-mesh-gateways:
+    eric-ingressgw-ausf-traffic:
+      gatewayType: ingress
+      enabled: true
+      concurrency: 0
+      daemonSet: true
+      labels:
+        app: istio-ingressgateway
+        istio: eric-ausf-traffic
+      # set autoscaleEnabled to false when daemonSet: true
+      autoscaleEnabled: false
+      # specify autoscaleMin and autoscaleMax when autoscaleEnabled: true
+      # autoscaleMin: 2
+      # autoscaleMax: 5
+      # specify replicaCount when daemonSet: false and autoscaleEnabled: false
+      # replicaCount: 2
+      resources:
+        requests:
+          cpu: 250m
+          memory: 250Mi
+        limits:
+          cpu: 1000m
+          memory: 250Mi
+      cpu:
+        targetAverageUtilization: 80
+      memory:
+        targetAverageUtilization: 80
+      type: LoadBalancer
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      serviceAnnotations:
+        metallb.universe.tf/address-pool: ausf-signaling
+      externalTrafficPolicy: Cluster
+      env:
+        ISTIO_META_IDLE_TIMEOUT: 300s
+      ports:
+        - name: https-mtls
+          port: 443
+          targetPort: 8080
+      podAntiAffinityTermLabelSelector:
+        - key: istio
+          operator: In
+          values: eric-ausf-traffic
+          topologyKey: "kubernetes.io/hostname"
+      runAsRoot: false
+      revision: ""
+    eric-ingressgw-udm-traffic:
+      gatewayType: ingress
+      enabled: true
+      concurrency: 0
+      daemonSet: true
+      labels:
+        app: istio-ingressgateway
+        istio: eric-udm-traffic
+      # set autoscaleEnabled to false when daemonSet: true
+      autoscaleEnabled: false
+      # specify autoscaleMin and autoscaleMax when autoscaleEnabled: true
+      # autoscaleMin: 2
+      # autoscaleMax: 10
+      # specify replicaCount when daemonSet: false and autoscaleEnabled: false
+      # replicaCount: 2
+      resources:
+        requests:
+          cpu: 500m
+          memory: 350Mi
+        limits:
+          cpu: 1000m
+          memory: 350Mi
+      cpu:
+        targetAverageUtilization: 80
+      memory:
+        targetAverageUtilization: 80
+      type: LoadBalancer
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      serviceAnnotations:
+        metallb.universe.tf/address-pool: udm-signaling
+      externalTrafficPolicy: Cluster
+      env:
+        ISTIO_META_IDLE_TIMEOUT: 300s
+      ports:
+        - name: https-mtls
+          port: 443
+          targetPort: 8081
+        - name: http-clear
+          port: 82
+          targetPort: 8082
+      podAntiAffinityTermLabelSelector:
+        - key: istio
+          operator: In
+          values: eric-udm-traffic
+          topologyKey: "kubernetes.io/hostname"
+      runAsRoot: false
+      revision: ""
+#
+# Overwrite the CCSM specific settings
+#
+
+# Overwrite the NRF-Agent Helm values here
+eric-ccsm-nrfagent:
+  enabled: true
+  global:
+    istio:
+      egress:
+        nrfAgent_secretName: eric-ccsm-sbi-client-certs
+        # ExternalCertificate parameters will only take action if
+        # the 'nrfAgent_secretName' is different from CCSM egress secret's name
+        externalcertificate:
+          trustedCertificateListName: eric-ccsm-nrfagent-sbi-client-certs-cacerts
+          asymmetricKeyCertificateName: eric-ccsm-nrfagent-sbi-client-key/eric-ccsm-nrfagent-sbi-client-certs-cacert
+    #ip protocol stack mode: ipv4 or ipv6
+    ipStackMode: "'ipv4'"
+
+# Overwrite the AUSF Helm values here
+eric-ccsm-ausf:
+  enabled: true
+  eric-ausf-engine:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-ausf-capacity:
+    minReplicas: 2
+    maxReplicas: 10
+
+# Overwrite the AUSF Helm values here
+eric-ccsm-udm:
+  enabled: true
+  eric-udm-sdmnotif:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-sdmsubscriptions:
+    minReplicas: 3
+    maxReplicas: 30
+  eric-udm-autoprovisioning:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-ueauth:
+    minReplicas: 3
+    maxReplicas: 10
+  eric-udm-sdmnssai:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-uecmamfget:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-authevents:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-ueshcm:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-sdmsmfselect:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-sdmuectxtsmf:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-sidf:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-sdmmultipledataset:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-uecmamfderegnotifier:
+    minReplicas: 1
+    maxReplicas: 20
+  eric-udm-uecmsmfregistration:
+    minReplicas: 4
+    maxReplicas: 20
+  eric-udm-iratamflocation:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-cancelepclocation:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-sdmsmdata:
+    minReplicas: 3
+    maxReplicas: 20
+  eric-udm-sdmamdata:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-uecmsmfderegistration:
+    minReplicas: 4
+    maxReplicas: 10
+  eric-udm-uecmreg:
+    minReplicas: 3
+    maxReplicas: 20
+  eric-udm-pcscfrestoration:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-iwk5g2g:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-hss4gnotifier:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-uecmamfregupdate:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-capacity:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-eapauth:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-eapprimeauth:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-epsauth:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-gbaauth:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-imsauth:
+    minReplicas: 2
+    maxReplicas: 10
+
+# Overwrite the ADP Generic Services Helm values here
+eric-ccsm-adp:
+  enabled: true
+  eric-lm-combined-server:
+    licenseConsumerHandler:
+      nodeSelector: {}
+    licenseServerClient:
+      nodeSelector: {}
+      licenseServer:
+        thrift:
+          host: "10.221.14.88"
+          port: 9095
+  eric-lm-unique-object-reporter:
+    nodeSelector: {}
+    uoi:
+      ip: "10.221.171.132"
+      hostname: "centralnels.nels.ericsson.com"
+      port: 8060
+  eric-cm-mediator:
+    nodeSelector: {}
+  eric-cnom-server:
+    nodeSelector: {}
+    fqdn: cnom.ccsm.n84-eccd3.sero.gic.ericsson.se
+    dashboards:
+      configMap: eric-ccsm-cnom-dashboard
+    legalNotice: >
+      IF YOU ARE NOT AN AUTHORIZED USER, PLEASE EXIT IMMEDIATELY
+
+
+      This system processes personal information. Handle personal information
+      with care.  Misuse, including unauthorized access, is grounds for legal
+      action.  Version: 1.0, Date: October 27, 2020.
+  eric-sec-access-mgmt:
+    statefulset:
+      nodeSelector: {}
+    fqdn: iam.ccsm.n84-eccd3.sero.gic.ericsson.se
+  eric-sec-admin-user-management:
+    nodeSelector: {}
+    notices:
+      legal: "IF YOU ARE NOT AN AUTHORIZED USER, PLEASE EXIT IMMEDIATELY"
+      privacy: >
+        This system processes personal information. Handle personal information
+        with care.  Misuse, including unauthorized access, is grounds for legal
+        action. Version: 1.0, Date: October 27, 2020.
+  eric-sec-certm:
+    nodeSelector: {}
+  eric-sec-key-management:
+    nodeSelector: {}
+  eric-tm-ingress-controller-cr:
+    nodeSelector:
+      contour: {}
+      envoy: {}
+    service:
+      annotations:
+        sharedVIPLabel: "ccsm-oam"
+        addressPoolName: "ccsm-oam"
+  eric-data-distributed-coordinator-ed:
+    nodeSelector:
+      brAgent: {}
+      dced: {}
+    persistence:
+      persistentVolumeClaim:
+        size: 2Gi
+        storageClassName: network-block
+      brAgent:
+        backupVolume:
+          storageClassName: network-block
+    resources:
+      etcd:
+        limits:
+# WA of ADPPRG-40342
+          memory: "10G"
+          cpu: "2"
+# WA end
+    env:
+      etcd:
+        # Limitation due to HY74536:
+        # ETCD PVC full after few days
+        ETCD_SNAPSHOT_COUNT: 10000
+  eric-cnom-document-database-mg:
+    nodeSelector: {}
+    persistence:
+      storageClass: network-block
+  eric-pm-server:
+    nodeSelector: {}
+    server:
+      nodeSelector: {}
+      persistentVolume:
+        storageClass: network-block
+# Modify pm-server PV and rbac monitoring application level
+        size: 40Gi
+    rbac:
+      appMonitoring:
+        enabled: true
+        configFileCreate: false
+  eric-sec-ldap-server:
+    nodeSelector:
+      ldap: {}
+      ldapAgent: {}
+    persistence:
+      storageClassName: network-block
+  eric-cm-yang-provider:
+    nodeSelector: {}
+ #   persistentVolumeClaim:
+ #     storageClassName: network-block
+    service:
+      type: LoadBalancer
+      loadBalancerIP: ""
+      annotations:
+        addressPoolName: "ccsm-oam"
+        sharedVIPLabel: "ccsm-oam"
+  eric-pm-bulk-reporter:
+    nodeSelector: {}
+    env:
+      nodeName: ccsm
+      nodeType: CCSM
+    persistentVolumeClaim:
+      storageClassName: network-block
+      size: 500Mi
+    service:
+      annotations:
+        sharedVIPLabel: "ccsm-oam"
+        addressPoolName: "ccsm-oam"
+      loadBalancerIP: ""
+      type: LoadBalancer
+  eric-data-document-database-pg:
+    nodeSelector: {}
+    persistentVolumeClaim:
+      storageClassName: network-block
+      size: 8Gi
+    #Un-comment lines below if huge pages setting need to be activated.
+    #postgresConfig:
+    #  huge_pages: "off"
+  eric-data-document-database-pg-ah:
+    nodeSelector: {}
+    persistentVolumeClaim:
+      storageClassName: network-block
+      size: 4Gi
+  eric-data-document-database-pg-lm:
+    nodeSelector: {}
+    persistentVolumeClaim:
+      storageClassName: network-block
+      size: 4Gi
+  eric-data-message-bus-kf:
+    nodeSelector: {}
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+        size: 10Gi
+  eric-data-search-engine:
+    nodeSelector:
+      bragent: {}
+      data: {}
+      ingest: {}
+      master: {}
+    persistence:
+      data:
+        persistentVolumeClaim:
+          size: 100Gi
+          storageClassName: network-block
+    service:
+      network:
+        protocol:
+          IPv6: false
+  eric-data-search-engine-curator:
+    nodeSelector: {}
+  eric-data-coordinator-zk:
+    nodeSelector:
+      brAgent: {}
+      datacoordinatorzk: {}
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+        size: 10Gi
+  eric-fh-alarm-handler:
+    nodeSelector: {}
+  eric-fh-snmp-alarm-provider:
+    nodeSelector:
+      snmp-sender: eric-ccsm
+    oamVIP:
+      enabled: true
+      vip: "10.137.48.165"
+      destIp : "10.36.242.99"
+    service:
+      type: LoadBalancer
+      loadBalancerIP: ""
+      annotations:
+        metallb.universe.tf/address-pool: ccsm-oam
+        metallb.universe.tf/allow-shared-ip: ccsm-oam
+  eric-ctrl-bro:
+    nodeSelector: {}
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+        size: 2Gi
+  eric-log-shipper:
+    nodeSelector: {}
+  eric-log-transformer:
+    nodeSelector: {}
+  eric-odca-diagnostic-data-collector:
+    nodeSelector: {}
+  eric-sec-sip-tls:
+    nodeSelector: {}
+  eric-sw-inventory-manager:
+    nodeSelector: {}
+

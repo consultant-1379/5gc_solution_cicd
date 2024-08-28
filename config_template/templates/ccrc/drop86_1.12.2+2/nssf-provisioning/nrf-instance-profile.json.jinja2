@@ -1,0 +1,27 @@
+{
+   "nrfInstanceName":"nrf-slice-common-region-001",
+   "nrfInstanceInfoList":[
+      {% if nrfGeo == true and siteId == 1 %}
+      {
+         "adminState":"UNLOCKED",
+         "nrfInstanceId":"{{ ccrc.nrf.instanceId }}",
+         "nrfId":"https://{{ nrf.0.host }}.5gc.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org/nnrf-disc/v1/",
+         "nrfNfMgtUri":"https://{{ nrf.0.host }}.5gc.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org/nnrf-nfm/v1/"
+      }
+      {% elif nrfGeo == true and siteId == 2 %}
+      {
+         "adminState":"UNLOCKED",
+         "nrfInstanceId":"{{ ccrc.nrf.geored.remote.instanceId }}",
+         "nrfId":"https://{{ ccrc.nrf.geored.remote.host }}.5gc.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org/nnrf-disc/v1/",
+         "nrfNfMgtUri":"https://{{ ccrc.nrf.geored.remote.host }}.5gc.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org/nnrf-nfm/v1/"
+      }
+      {% else %}
+      {
+         "adminState":"UNLOCKED",
+         "nrfInstanceId":"{{ ccrc.nrf.instanceId }}",
+         "nrfId":"https://{{ nrf.0.host }}.5gc.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org/nnrf-disc/v1/",
+         "nrfNfMgtUri":"https://{{ nrf.0.host }}.5gc.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org/nnrf-nfm/v1/"
+      }
+      {% endif %}
+   ]
+}

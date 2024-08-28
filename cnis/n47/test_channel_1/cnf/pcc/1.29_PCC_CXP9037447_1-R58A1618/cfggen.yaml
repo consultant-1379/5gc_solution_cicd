@@ -1,0 +1,19 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global.yaml
+# targetDir: .
+# jsonschema: ccrc/jsonschema.yaml
+# jsonschemaGlobal: common/global-jsonschema.yaml
+templateDir: ../../../../../../config_template/templates/
+#jsonschemaGlobal: ../jsonschemas/schema-global.yaml
+
+files:
+- template: pcc/1.29_PCC_CXP9037447_1-R58A1618/values.yaml.jinja2
+  target: ./day0/values.yaml
+- template: common/instantiate.json.jinja2
+  target: ./day0/instantiate.json
+- template: common/user-config.txt.jinja2
+  target: ./day1/user-config.txt
+- template: pcc/1.29_PCC_CXP9037447_1-R58A1618/pc-sm-config.txt.jinja2
+  target: ./day1/smf-config.txt
+- template: pcc/1.29_PCC_CXP9037447_1-R58A1618/vpngw-config.txt.jinja2
+  target: ./day1/vpngw-config.txt

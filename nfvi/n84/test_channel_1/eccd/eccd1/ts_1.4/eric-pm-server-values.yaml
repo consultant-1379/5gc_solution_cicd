@@ -1,0 +1,54 @@
+global:
+  registry:
+    url: registry.eccd.local:5000
+  security:
+    tls:
+      enabled: false
+imageCredentials:
+  repoPath: ""
+images:
+  configmapReload:
+    name: eric-pm-configmap-reload
+    tag: 4.0.0-7-15047dff
+  pmExporter:
+    name: eric-pm-exporter
+    tag: 4.0.0-7-15047dff
+  server:
+    name: eric-pm-server
+    tag: 4.0.0-7-15047dff
+rbac:
+  appMonitoring:
+    configFileCreate: false
+    enabled: false
+resources:
+  server:
+    limits:
+      cpu: "8"
+      memory: 16Gi
+server:
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - eric-pm-server
+        topologyKey: kubernetes.io/hostname
+  configMapOverrideName: eric-pm-server-ccd
+  extraArgs:
+    storage.tsdb.retention.size: 140GB
+  extraSecretMounts:
+  - defaultMode: 420
+    mountPath: /var/run/secrets/etcd/client
+    name: etcd-certs
+    readOnly: true
+    secretName: etcd-certs
+  name: server
+  persistentVolume:
+    enabled: true
+    size: 150Gi
+  replicaCount: "2"
+  retention: 15d
+  serviceAccountName: eric-pm-server

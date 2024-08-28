@@ -1,0 +1,73 @@
+######################################
+## CaaS Variables
+######################################
+caas: CNIS
+systemProfile: standard
+kubernetes_service_ipaddress: 10.96.0.1
+
+storageClassName: network-block
+
+######################################
+## Site Variables
+###############################
+timezone: CET
+mnc: '81'
+mcc: '240'
+# EPC domain: epc.mnc081.mcc240.3gppnetwork.org
+# 5GC domain: 5gc.mnc081.mcc240.3gppnetwork.org
+oamDomain: seli.gic.ericsson.se
+locality: LN1
+nels:
+  host: nelsaas-vnf1-thrift.sero.gic.ericsson.se
+  port: 9095
+snmpServer:
+  host: 11.100.3.51
+ingressDomain: node182-cluster1.seli.gic.ericsson.se
+
+######################################
+## Geography Redundancy Variables
+######################################
+
+amfGeo: false
+smfGwcGeo: false
+nrfGeo: false
+nssfGeo: false
+hssGeo: false
+udrGeo: false
+pcfGeo: false
+
+######################################
+## CNF Variables
+######################################
+
+###################
+## CCRC
+###################
+
+nrf:
+- host: ccrc1-nrf-sig.site1-cluster1
+  ipv4: 172.17.128.9
+  port: 443
+
+nssf:
+- host: ccrc1-nssf-sig.site1-cluster1
+  port: 443
+
+
+###################
+## SC
+###################
+
+indirectCommunication:
+  enabled: false
+
+######################################
+## Miscellaneous Variables
+######################################
+dnsServer:
+- 10.221.16.10
+sftpServer:
+  host: 11.100.3.51
+  username: root
+  password: bG1jX3hkZw==   # base64
+  hostKey: AAAAB3NzaC1yc2EAAAADAQABAAABAQCu+vgpZjwHdzh8MPYaBW1LPtXa3zwzt9ySLSyv4wtOx5ijJOdcY97aITsgTu/TWvBjstXVd2H8NXx+/X8xUDYbfzxMN1rbIKh0/UTT9f/J6Noetj9cnP+NT39gCc3ei/9H3YWkekfp/i1wE95R/khF7fe3+T6kFaatEzPeEXMvinqy7CHSksKNrd4kO+YvFDxtmGGDSdy8nKYppBdrAQlmmzip7s3q1dKhOKkTRLTI/NZd2ALRNpoFp0mVFEDD3QHZwyne8kSvjxl0YZqk/6egv71Lstqu7gmgjxxyFSJtFyUhjszjusfKBEnVff8OOrJr6G+sAV36oCywA/vShCoR

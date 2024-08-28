@@ -1,0 +1,155 @@
+global:
+  timezone: CET
+  applicationId: n84-pcg1
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: PACKET_CORE_GATEWAY
+          customerId: 946060
+          swltId: STA-PCG-8
+
+
+eric-pc-kvdb-rd-server:
+  numberOfMaster: 7
+
+eric-pc-routing-engine:
+  interfaces:
+    type: macvlan
+    macvlan:
+      - master: eth4
+
+eric-pc-up-data-plane:
+  replicaCount: 18
+  acceleratedIo:
+    enabled: true
+    driver: bifurcated
+  applications:
+  - name: app100
+  nodeSelector:
+    type: high-throughput
+  resources:
+    dataPlane:
+      limits:
+        cpu: 14
+        hugepages-1Gi: 1Gi
+        memory: 18Gi
+        intel.com/dp_sriov_mlx5_left: "1"
+        intel.com/dp_sriov_mlx5_right: "1"
+      requests:
+        cpu: 14
+        hugepages-1Gi: 1Gi
+        memory: 18Gi
+        intel.com/dp_sriov_mlx5_left: "1"
+        intel.com/dp_sriov_mlx5_right: "1"
+  interfaces:
+    - name: net0
+      type: host-device
+      resourceName: intel.com/dp_sriov_mlx5_left
+    - name: net1
+      type: host-device
+      resourceName: intel.com/dp_sriov_mlx5_right
+  tolerations:
+  - effect: NoSchedule
+    key: high-throughput
+    operator: Equal
+    value: "true"
+
+eric-pc-up-pfcp-endpoint:
+  replicaCount: 18
+
+snmp-alarm-provider-secret-creation:
+  enabled: false
+
+eric-cloud-native-base:
+  eric-si-application-sys-info-handler:
+    asih:
+      applicationId: n84-pcg1
+
+  eric-fh-snmp-alarm-provider:
+    service:
+      annotations:
+        addressPoolName: pcg-oam
+        sharedVIPLabel: pcg-oam
+#delete it due to PCSOLCI-2484 fix this
+#      secretName: snmp-alarm-provider-config
+      oamVIP:
+        enabled: false
+
+  eric-log-transformer:
+    replicaCount: 3
+
+  eric-data-search-engine:
+    autoSetRequiredWorkerNodeSysctl: false
+    replicaCount:
+      data: 3
+    persistence:
+      data:
+        persistentVolumeClaim:
+          size: 50Gi
+    resources:
+      data:
+        limits:
+          memory: 3Gi
+
+  eric-odca-diagnostic-data-collector:
+    resources:
+      # According to CPI for any number of DP pods
+      diagnostic-data-collector:
+        limits:
+          memory: 1Gi
+          cpu: 1500m
+          ephemeral-storage: 25Gi
+
+  eric-pm-server:
+    server:
+      persistentVolume:
+        enabled: true
+        size: 36Gi
+    resources:
+      # According to CPI for 18 DP pod
+      eric-pm-server:
+        limits:
+          cpu: 3
+          memory: 12Gi
+        requests:
+          cpu: 1500m
+          memory: 8Gi
+
+  eric-lm-combined-server:
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: nelsaas-vnf1-thrift.sero.gic.ericsson.se
+          port: 9095
+
+  eric-dst-agent:
+    tolerations:
+      - key: "high-throughput"
+        value: "true"
+        operator: Equal
+        effect: NoSchedule
+
+
+eric-cloud-native-nf-additions:
+  eric-cm-yang-provider:
+    service:
+      annotations:
+        addressPoolName: pcg-oam
+        sharedVIPLabel: pcg-oam
+
+  eric-data-sftp-server:
+    service:
+      annotations:
+        sharedVIPLabel: "pcg-oam"
+        addressPoolName: "pcg-oam"
+
+  eric-sec-ldap-server:
+    adminCredentials:
+      adminuser: sysadmin
+      adminpasswd: "$6$RX7JVYVK8XQ/xXY3$3yRUytjm7Ch4Nou6Y4QeSUC4qC0B8bwWY..pqME/ST/qipan1XapeD1jj2CUstnT/Q/88r8Ec8IINqZVcHG7n/"
+
+cnom-loadBalancer-service:
+  enabled: true
+  annotations:
+    metallb.universe.tf/address-pool: "pcg-oam"
+    metallb.universe.tf/allow-shared-ip: "pcg-oam"

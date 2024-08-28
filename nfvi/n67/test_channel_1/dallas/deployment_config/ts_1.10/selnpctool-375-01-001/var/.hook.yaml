@@ -1,0 +1,41 @@
+pre_install:
+    - name: disable_puppet_due_to_PCGW-4936
+      executable: "/usr/bin/puppet agent"
+      arg: "--disable 'Disable puppet Dallas 1 installed - PCGW-4936'"
+      host: [tool-01-001, tool-01-102, tool-01-103, tool-01-201, tool-01-202]
+
+    - name: bind_dpdk
+     # executable: "/lab/testtools/dallas/rhel664/Release/3R103C01/3pp/ltt/dpdk/lts_bind_dpdk"
+      executable: /lab/testtools/dallas/testRelease/eguazho/packages/3R196A12_daemon/3pp/ltt/dpdk/lts_bind_dpdk
+      arg: "/var/dallas/tap.conf"
+      host: [tool-01-201, tool-01-202]
+      debug: on
+
+
+post_install:
+    - name: print_memory
+      executable: "/lab/epg_scm4_builds/program/ci/EPG_28R53S01/epgcats/bin/dpdk-procinfo.sh"
+      arg: "'default output /var/log/ltt_memory.log'"
+      host: [tool-01-001, tool-01-102, tool-01-103, tool-01-201, tool-01-202]
+
+    - name: add routes
+      executable: "/root/add_nonltt_route.sh"
+      host: [tool-01-102, tool-01-103,tool-01-201, tool-01-202]
+      debug: on
+
+
+post_uninstall:
+    - name: unbind_dpdk
+     # executable: "/lab/testtools/dallas/rhel664/Release/3R103C01/3pp/ltt/dpdk/lts_unbind_dpdk"
+      executable: /lab/testtools/dallas/testRelease/eguazho/packages/3R196A12_daemon/3pp/ltt/dpdk/lts_unbind_dpdk
+      host: [tool-01-201, tool-01-202]
+
+    - name: enable_puppet
+      executable: "/usr/bin/puppet agent"
+      arg: "--enable"
+      host: [tool-01-001, tool-01-102, tool-01-103, tool-01-201, tool-01-202]
+
+    - name: run_puppet
+      executable: "/usr/sbin/call_home || true"
+      host: [tool-01-001, tool-01-102, tool-01-103, tool-01-201, tool-01-202]
+      debug: on

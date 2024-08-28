@@ -1,0 +1,93 @@
+######################################
+## CNF general information
+######################################
+nodeName: n182
+nodeType: CCES
+#instance: 1
+vnflcm:
+  clusterName: n182
+  namespace: cces
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+snmp:
+  agentEngineId: 800000c10400000001
+  heartbeatInterval: 600
+
+users:
+  day0:
+    username: sysadmin
+    password: Pa$$w0rd4LDAP
+
+  day1:
+  - username: ccesoam
+    password: Changeme1st!
+    groups:
+    - nef-admin
+    - apigm-admin
+    - sragent-admin
+    - nrfagent-admin
+    - system-admin
+  - username: ccessec
+    password: Changeme1st!
+    groups:
+    - nef-security-admin
+    - apigm-security-admin
+    - sragent-security-admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+license:
+  customerId: "946060"
+  swltId: STA-CCES-13
+
+cnom:
+  fqdn: cnom.cces1.n182.seli.gic.ericsson.se
+
+
+#snmp:
+#  agentEngineId: 8000137001C0A899ECCD10CEA6
+
+ddc:
+  remotePath: /lab/pccc_logs/5GC-CICD/ci/N182_DDC/n182-cces-ddc
+
+vtap:
+  tapagent: true
+
+######################################
+## CNF specific information
+######################################
+cces:
+  iamFqdn: iam.cces1.n182.seli.gic.ericsson.se
+  nef:
+    instanceId: ddd9b5b3-fa57-4cb1-ace7-89eccd10cea6
+    host: cces1-5g-sbi-traffic.site1-cluster1
+    port: 443
+    nbi:
+      trust:
+        host: cces1-5g-nbi-trust-traffic.site1-cluster1
+    diameter:
+      host: n182-eccd1-cces1-nef
+      peer:
+        host: ccpc1-4g-traffic.site1-cluster1.n182.pcf.5gc
+        ip: 172.17.128.8
+        port: 3868
+
+######################################
+## CNF dimensioning specific
+######################################
+
+replicaCount:
+  eric-cces-common-entity: 2
+  eric-cces-timer-service: 2
+  eric-apigm-api-proxy: 2
+
+hpaReplica:
+  eric-cces-common-entity: {min: 2, max: 2}
+  eric-cces-timer-service: {min: 2, max: 2}
+  eric-apigm-api-proxy: {min: 2, max: 2}
+  eric-data-wide-column-database-cd: 5
+
+
+

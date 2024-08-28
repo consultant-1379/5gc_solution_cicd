@@ -1,0 +1,5 @@
+[
+ {"counter-name": "eric_udr_nudr_dr_requests_recv_total"},
+ {"counter-name": "eric_udr_nudr_dr_successful_responses_sent_total"},
+ {"counter-name": "eric_udr_nudr_dr_unsuccessful_responses_sent_total"}
+]

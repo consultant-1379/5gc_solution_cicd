@@ -1,0 +1,35 @@
+pcg:
+  batch_size: 10
+  collection:
+  - name: show_swim
+    cmd: 'show swim | nomore'
+  - name: user_plane_association
+    cmd: 'user-plane association info'
+  - name: network_instance_internet_routing_bfd
+    cmd: 'network-instances network-instance internet routing bfd ip-sh session-information'
+  - name: network_instance_ran_routing_bfd
+    cmd: 'network-instances network-instance ran routing bfd ip-sh session-information'
+  - name: network_instance_signaling_routing_bfd
+    cmd: 'network-instances network-instance signaling routing bfd ip-sh session-information'
+    #network-instances network-instance <network-instance-name> routing bgp <autonomous-system-number> rib chunk-statistics
+    #Modify the following lines according to your environment configuration 
+  - name: network_instance_internet_routing_bgp_rib_chunk-statistics
+    cmd: 'network-instances network-instance internet routing bgp 7005 rib chunk-statistics'
+  - name: network_instance_ran_routing_bgp_rib_chunk-statistics
+    cmd: 'network-instances network-instance ran routing bgp 7004 rib chunk-statistics'
+  - name: network_instance_signaling_routing_bgp_rib_chunk-statistics
+    cmd: 'network-instances network-instance signaling routing bgp 7002 rib chunk-statistics'
+    #network-instances network-instance <network-instance-name> routing bgp <autonomous-system-number> rib client-real-time [ipv4 | ipv6]
+    #Modify the following lines according to your environment configuration 
+  - name: network_instance_internet_routing_bgp_rib_client_real_time
+    cmd: 'network-instances network-instance internet routing bgp 7005 rib client-real-time'
+  - name: network_instance_ran_routing_bgp_rib_client_real_time
+    cmd: 'network-instances network-instance ran routing bgp 7004 rib client-real-time'
+  - name: network_instance_signaling_routing_bgp_rib_client_real_time
+    cmd: 'network-instances network-instance signaling routing bgp 7002 rib client-real-time'
+  - name: show-alarm-history
+    cmd: 'show alarm-history'
+  - name: show-running-config
+    cmd: 'show running-config | nomore'
+
+

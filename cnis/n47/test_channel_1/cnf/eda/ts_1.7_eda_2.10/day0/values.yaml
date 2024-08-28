@@ -1,0 +1,108 @@
+global:
+  timezone: CET
+  domainName: sero.gic.ericsson.se
+  clusterName: eda2.n47-eccd1
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: EDA
+          customerId: 946060
+          swltId: STA-EDA-13
+  activation:
+    service:
+      prov:
+        annotations:
+          metallb.universe.tf/allow-shared-ip: eda-oam
+          metallb.universe.tf/address-pool: eda-oam
+      oam:
+        annotations:
+          metallb.universe.tf/allow-shared-ip: eda-oam
+          metallb.universe.tf/address-pool: eda-oam
+  kubeApi:
+    port: 6443
+eric-tm-ingress-controller-cr:
+  service:
+    annotations:
+      sharedVIPLabel: eda-oam
+      addressPoolName: eda-oam
+  resources:
+    contour:
+      limits:
+        memory: 500Mi
+      requests:
+        memory: 500Mi
+
+
+
+eric-data-wide-column-database-cd:
+  persistence:
+    dataVolume:
+      persistentVolumeClaim:
+        storageClassName: network-block
+        size: 200G
+eric-act-activation-engine:
+  statefulset:
+    storageClass: network-block
+  deployment:
+    replicas: 2
+  initContainers:
+    eric-act-hss-validator:
+      imageName: hss-validator-image
+      tag: 1.29.102
+
+eric-cnom-document-database-mg:
+  persistence:
+    storageClass: network-block
+    persistentVolumeClaim:
+      storageClassName: network-block
+
+eric-cloud-native-base:
+  eric-si-application-sys-info-handler:
+    asih:
+      applicationId: n47-eda2
+  eric-fh-snmp-alarm-provider:
+    service:
+      annotations:
+        sharedVIPLabel: eda-oam
+        addressPoolName: eda-oam
+  eric-data-message-bus-kf:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+  eric-data-document-database-pg:
+    persistentVolumeClaim:
+      storageClassName: network-block
+  eric-data-search-engine:
+    autoSetRequiredWorkerNodeSysctl: false
+    persistence:
+      data:
+        persistentVolumeClaim:
+          storageClassName: network-block
+      master:
+        persistentVolumeClaim:
+          storageClassName: network-block
+  eric-data-coordinator-zk:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+  eric-data-distributed-coordinator-ed:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+  eric-ctrl-bro:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+  eric-pm-server:
+    server:
+      persistentVolume:
+        storageClass: network-block
+  eric-lm-combined-server:
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: 10.155.142.68
+          port: 9095
+profile:
+  small-telco-system: false # Check para no. A73 Optional parameter.
+  standard-telco-system: true # Check para no. A74 Optional parameter.

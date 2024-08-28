@@ -1,0 +1,409 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "eric-pc-mm-forwarder.name" . }}
+  labels:
+    app: {{ template "eric-pc-mm-forwarder.app". }}
+    component: eric-pc-mm-forwarder
+    chart: {{ template "eric-pc-mm-forwarder.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "eric-pc-mm-forwarder.app" . }}
+      component: eric-pc-mm-forwarder
+      release: {{ .Release.Name }}
+  replicas: {{ .Values.replicaCount }}
+  updateStrategy:
+    type: RollingUpdate
+  serviceName: {{ template "eric-pc-mm-forwarder.name" . }}
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app: {{ template "eric-pc-mm-forwarder.app" . }}
+        component: eric-pc-mm-forwarder
+        chart: {{ template "eric-pc-mm-forwarder.chart" . }}
+        release: {{ .Release.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+      {{- if or .Values.securityContext.appArmorProfile .Values.networks }}
+      annotations:
+        {{- if .Values.securityContext.appArmorProfile }}
+        container.apparmor.security.beta.kubernetes.io/{{ template "eric-pc-mm-forwarder.name" . }}: localhost/{{ .Values.securityContext.appArmorProfile }}
+        {{- if eq .Values.netSysctls.initContainer "update" }}
+        container.apparmor.security.beta.kubernetes.io/ensure-net-sysctls: localhost/{{ .Values.securityContext.appArmorProfile }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.networks }}
+        k8s.v1.cni.cncf.io/networks: |
+          [{{- $root := . -}}
+          {{- $lastIndex := sub (len $root.Values.networks) 1 }}
+          {{- range $i, $nw := $root.Values.networks }}
+            {
+              "interface": {{ printf "eth%d" ($i | add1) | quote }},
+              "interfaceRequest": {{ printf "eth%d" ($i | add1) | quote }},
+              "name": {{ printf "pc-mm-%s" .name | lower | replace "_" "-" | quote }}
+            }{{- if ne $i $lastIndex -}},{{ end }}
+          {{- end }}
+          ]
+        {{- end }}
+      {{- end }}
+    spec:
+      serviceAccountName: eric-pc-mm
+      {{- if .Values.netSysctls.inSecurityContext }}
+      securityContext:
+        sysctls:
+        - name: net.ipv4.conf.all.proxy_arp
+          value: "0"
+        - name: net.ipv4.conf.default.proxy_arp
+          value: "0"
+        - name: net.ipv4.conf.all.accept_local
+          value: "1"
+        - name: net.ipv4.conf.default.accept_local
+          value: "1"
+        - name: net.ipv4.conf.all.arp_announce
+          value: "2"
+        - name: net.ipv4.conf.default.arp_announce
+          value: "2"
+        - name: net.ipv4.conf.lo.arp_announce
+          value: "2"
+        - name: net.ipv4.conf.all.arp_ignore
+          value: "1"
+        - name: net.ipv4.conf.default.arp_ignore
+          value: "1"
+        - name: net.ipv4.conf.lo.arp_ignore
+          value: "1"
+        - name: net.ipv4.conf.all.forwarding
+          value: "1"
+        - name: net.ipv4.conf.default.forwarding
+          value: "1"
+        - name: net.ipv4.conf.all.rp_filter
+          value: "0"
+        - name: net.ipv4.conf.default.rp_filter
+          value: "0"
+        - name: net.ipv4.conf.lo.rp_filter
+          value: "0"
+        - name: net.ipv4.conf.all.src_valid_mark
+          value: "1"
+        - name: net.ipv4.conf.default.src_valid_mark
+          value: "1"
+        - name: net.ipv4.conf.lo.src_valid_mark
+          value: "1"
+        - name: net.ipv4.fwmark_reflect
+          value: "1"
+        - name: net.ipv4.ip_local_port_range
+          value: "49152 61000"
+        - name: net.ipv6.conf.all.accept_dad
+          value: "0"
+        - name: net.ipv6.conf.default.accept_dad
+          value: "0"
+        - name: net.ipv6.conf.lo.accept_dad
+          value: "0"
+        - name: net.ipv6.conf.all.dad_transmits
+          value: "0"
+        - name: net.ipv6.conf.default.dad_transmits
+          value: "0"
+        - name: net.ipv6.conf.lo.dad_transmits
+          value: "0"
+        - name: net.ipv6.conf.all.disable_ipv6
+          value: "0"
+        - name: net.ipv6.conf.default.disable_ipv6
+          value: "0"
+        {{ if .Values.ipv6 }}
+        - name: net.ipv6.conf.all.forwarding
+          value: "1"
+        - name: net.ipv6.conf.default.forwarding
+          value: "1"
+        - name: net.ipv6.fwmark_reflect
+          value: "1"
+        {{- end }}
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | trim | nindent 8 }}
+      {{- else if .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.global.nodeSelector | trim | nindent 8 }}
+      {{- end }}
+      terminationGracePeriodSeconds: 25
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: component
+                  operator: In
+                  values:
+                  - eric-pc-mm-forwarder
+              topologyKey: "kubernetes.io/hostname"
+      {{- if include "eric-pc-mm-forwarder.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ template "eric-pc-mm-forwarder.pullSecrets" . }}
+      {{- end }}
+      initContainers:
+      {{- if not (has .Values.netSysctls.initContainer (list "check" "update" "none")) }}
+      {{- fail "Invalid netSysctls.initContainer" }}
+      {{- end }}
+      {{- if has .Values.netSysctls.initContainer (list "check" "update") }}
+      - name: ensure-net-sysctls
+        command: ["/sbin/cMME_init/with_json_logs",
+                 "/Core/DPE_root/CB/CB-container/LoadUnits/net/ensure_nw_sysctls",
+                 {{- if eq .Values.netSysctls.initContainer "update" }}
+                 "--update",
+                 {{- end }}
+                 {{- if .Values.ipv6 }}
+                 "--with-ipv6",
+                 {{- end }}
+                 # interfaces for external networks
+                 {{- range $idx, $netw := .Values.networks }}
+                 {{ printf "eth%d" ($idx | add1) | quote }},
+                 {{- end }}
+                 # regular k8s interfaces
+                 "all", "lo", "eth0"]
+        image: {{ template "eric-pc-mm-forwarder.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values.global.images "eric-pc-mm-forwarder" "name" }}:{{ index .Values.global.images "eric-pc-mm-forwarder" "tag" }}
+        {{- if .Values.netSysctls.tolerateMismatch }}
+        env:
+        - name: TOLERATE_NET_SYSCTL_MISMATCH
+          value: "true"
+        {{- end }}
+        resources:
+          limits:
+            memory: {{ .Values.limits.memory }}
+            cpu: {{ .Values.limits.cpu }}
+          requests:
+            memory: {{ .Values.requests.memory }}
+            cpu: {{ .Values.requests.cpu }}
+        {{- if eq .Values.netSysctls.initContainer "update" }}
+        securityContext:
+          capabilities:
+            add: ["SYS_ADMIN"]
+        {{- end }}
+      {{- end }}
+      - name: init
+        command: ["/sbin/cMME_init/with_json_logs", "/sbin/cMME_init/init_container.sh"]
+        image: {{ template "eric-pc-mm-forwarder.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values.global.images "eric-pc-mm-forwarder" "name" }}:{{ index .Values.global.images "eric-pc-mm-forwarder" "tag" }}
+        resources:
+          limits:
+            memory: {{ .Values.limits.memory }}
+            cpu: {{ .Values.limits.cpu }}
+          requests:
+            memory: {{ .Values.requests.memory }}
+            cpu: {{ .Values.requests.cpu }}
+      containers:
+      - name: {{ template "eric-pc-mm-forwarder.name" . }}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "touch /var/run/.shutdown_requested; while pidof eqma_cp1500; do sleep 1; done"]
+        env:
+        {{- if .Values.global.probe.enabled }}
+        - name: PROBE_EVENT_REPORT_BROKER_DNS_NAME
+          value: {{ .Values.global.probe.domain }}
+        - name: PROBE_EVENT_REPORT_BROKER_PORT
+          value: {{ .Values.global.probe.env.reporterPort | quote }}
+        {{- end }}
+        {{- if .Values.global.objectStorage.enabled }}
+        - name: OBJECT_STORAGE_HOST
+          value: {{ .Values.global.objectStorage.mcHost }}
+        - name: OBJECT_STORAGE_ENABLED
+          value: "true"
+            {{- if .Values.global.objectStorage.tls.enabled }}
+        - name: OBJECT_STORAGE_TLS_ENABLED
+          value: "true"
+        - name: OBJECT_STORAGE_URL
+          value: https://{{ .Values.global.objectStorage.kubernetesUrlName }}.{{ $.Release.Namespace }}.svc.{{ $.Values.global.objectStorage.clusterDomain }}:{{ .Values.global.objectStorage.port }}
+            {{- else }}
+        - name: OBJECT_STORAGE_TLS_ENABLED
+          value: "false"
+        - name: OBJECT_STORAGE_URL
+          value: http://{{ .Values.global.objectStorage.kubernetesUrlName }}.{{ $.Release.Namespace }}.svc.{{ $.Values.global.objectStorage.clusterDomain }}:{{ .Values.global.objectStorage.port }}
+          {{- end }}
+        {{- end }}
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: PCC_IPV6_ENABLED
+          value: {{ .Values.ipv6 | quote }}
+        {{- if .Values.tcpMss }}
+        - name: TCP_MSS
+          value: {{ .Values.tcpMss | quote }}
+        {{- end }}
+        {{- if .Values.podMtu }}
+        - name: POD_MTU
+          value: {{ .Values.podMtu | quote }}
+        {{- end }}
+        - name: EXTERNAL_INTERFACES
+          value: {{ include "eric-pc-mm-forwarder.externalInterfaces" .Values.networks | quote }}
+        - name: DEPLOYMENT
+          value: {{ .Values.deployment | quote }}
+        - name: INTERNAL_SERVICE_ENDPOINT_PORT
+          value: {{ .Values.global.internalServiceEndpoint.port | quote }}
+        - name: TIMEZONE
+          value: {{ .Values.global.timezone | quote }}
+        {{- if .Values.externalDatabase.enabled }}
+        - name: REDIS_LOAD_BALANCER_SERVICE_NAME
+          value: {{ .Values.externalDatabase.serviceName }}
+        {{- end }}
+        - name: ULOG_TEE
+          value: {{ .Values.logging.stdout | default false | quote }}
+        - name: KUBERNETES_VCPU_LIMIT
+          value: {{ .Values.limits.cpu | quote }}
+        - name: KUBERNETES_MEM_LIMIT
+          value: {{ .Values.limits.memory | quote }}
+        {{- range $key, $value := .Values.mtu }}
+        {{- if $value }}
+        - name: {{ $key | upper -}}_MTU
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+        - name: HEADLESS_OPERATION_LIVENESS_TIMEOUT
+          value: {{ .Values.liveness.headlessTimeout | default 3600 | quote }}
+        - name: EQMA_LIVENESS_TIMEOUT
+          value: {{ .Values.liveness.eqmaTimeout | default 45 | quote }}
+        - name: LOGDRIVER_CONFIG
+          value: {{ include "eric-pc-mm-forwarder.logdriverConfig" .Values.logs | quote }}
+        - name: LOGPLANE_CONFIG
+          value: {{ include "eric-pc-mm-forwarder.logplaneConfig" .Values.logs | quote }}
+        {{- if .Values.netSysctls.tolerateMismatch }}
+        - name: TOLERATE_NET_SYSCTL_MISMATCH
+          value: "true"
+        {{- end }}
+        - name: SHARED_STORAGE_ENABLED
+        {{- if .Values.global.persistentVolumeClaimName }}
+          value: "true"
+        {{- else }}
+          value: "false"
+        {{- end }}
+        command: ["/sbin/cMME_init/cMME_init"]
+        image: {{ template "eric-pc-mm-forwarder.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values.global.images "eric-pc-mm-forwarder" "name" }}:{{ index .Values.global.images "eric-pc-mm-forwarder" "tag" }}
+        imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+        resources:
+          limits:
+            memory: {{ .Values.limits.memory }}
+            cpu: {{ .Values.limits.cpu }}
+            ovs-cni.network.kubevirt.io/data_bridge: 1
+        {{- if index .Values.limits "ephemeral-storage" }}
+            ephemeral-storage: {{ index .Values.limits "ephemeral-storage" }}
+        {{- end }}
+          requests:
+            memory: {{ .Values.requests.memory }}
+            cpu: {{ .Values.requests.cpu }}
+            ovs-cni.network.kubevirt.io/data_bridge: 1
+        {{- if index .Values.requests "ephemeral-storage" }}
+            ephemeral-storage: {{ index .Values.requests "ephemeral-storage" }}
+        {{- end }}
+        securityContext:
+          capabilities:
+            add:
+            - "NET_ADMIN"
+            - "SYS_PTRACE"
+            {{- if .Values.capSysAdminForMainContainer }}
+            - "SYS_ADMIN"
+            {{- end }}
+        volumeMounts:
+        - mountPath: /pod_storage
+          name: pod-storage
+        - mountPath: /container_storage
+          name: container-storage
+        {{- if .Values.global.persistentVolumeClaimName }}
+        - mountPath: /Core/home
+          name: {{ template "eric-pc-mm-forwarder.name" . }}
+          subPath: home
+        - mountPath: /Core/DPE_root/SiteSpecificData
+          name: {{ template "eric-pc-mm-forwarder.name" . }}
+          subPath: ss
+        - mountPath: /Core/log
+          name: {{ template "eric-pc-mm-forwarder.name" . }}
+          subPath: log/pcmm/DPE_COMMONLOG/
+        {{- else }}
+        - mountPath: /Core/home
+          name: core-home-ephemeral
+        - mountPath: /Core/DPE_root/SiteSpecificData
+          name: core-ssd-ephemeral
+        - mountPath: /Core/log
+          name: core-log-ephemeral
+        {{- end }}
+        - mountPath: /conf/gsntrace
+          name: {{ template "eric-pc-mm-forwarder.name" . }}-gsntrace-config
+        - mountPath: /conf/dpeconfig
+          name: {{ template "eric-pc-mm-forwarder.name" . }}-dpe-config
+        - mountPath: /conf/nginx
+          name: {{ template "eric-pc-mm-forwarder.name" . }}-nginx-config
+        {{- if .Values.global.objectStorage.enabled }}
+        - name: object-store-user
+          mountPath: /conf/objectstore
+          {{- if .Values.global.objectStorage.tls.enabled }}
+        - mountPath: /tls/ca
+          name: cert-authority
+          {{- end }}
+        {{- end }}
+        livenessProbe:
+          exec:
+            command:
+            - /sbin/cMME_init/liveness_check
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 1
+      {{- $dot := . -}}
+      {{- range $logplane, $logcars := .Values.logs }}
+      {{- range $tag, $logcar := $logcars -}}
+      {{- if and $logcar.drivers (has "logcar" $logcar.drivers) }}
+      - name: {{ template "eric-pc-mm-forwarder.logcarTag" $tag }}
+        image: {{ template "eric-pc-mm-forwarder.logcarRegistryUrl" $dot }}/{{ $dot.Values.imageCredentials.repoPath }}/{{ index $dot.Values.global.images "eric-pc-mm-logcar" "name" }}:{{ index $dot.Values.global.images "eric-pc-mm-logcar" "tag" }}
+        imagePullPolicy: {{ $dot.Values.imageCredentials.pullPolicy }}
+        resources:
+{{ toYaml $dot.Values.resources.logcar | indent 10 }}
+        command: ["/logcar", {{ $tag | quote }}]
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      volumes:
+      {{- if .Values.global.objectStorage.enabled }}
+      - name: object-store-user
+        secret:
+           secretName: {{ .Values.global.objectStorage.credentials.kubernetesSecretName }}
+           defaultMode: 0400
+        {{- if .Values.global.objectStorage.tls.enabled }}
+      - name: cert-authority
+        secret:
+          secretName: {{ .Values.global.objectStorage.tls.caSecret }}
+        {{- end }}
+      {{- end }}
+      - name: {{ template "eric-pc-mm-forwarder.name" . }}-gsntrace-config
+        configMap:
+          name: eric-pc-mm-gsntrace-config
+      - name: {{ template "eric-pc-mm-forwarder.name" . }}-dpe-config
+        configMap:
+          name: eric-pc-mm-dpe-config
+      - name: {{ template "eric-pc-mm-forwarder.name" . }}-nginx-config
+        configMap:
+          name: {{ template "eric-pc-mm-forwarder.name" . }}-nginx-config
+      {{- if .Values.global.persistentVolumeClaimName }}
+      - name: {{ template "eric-pc-mm-forwarder.name" . }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.global.persistentVolumeClaimName }}
+      {{- else }}
+        {{- range tuple "core-home-ephemeral" "core-ssd-ephemeral" "core-log-ephemeral" }}
+      - name: {{ . }}
+        emptyDir:
+          {{- if $.Values.useMemoryBackedStorage }}
+          medium: Memory
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      - name: container-storage
+        emptyDir:
+          medium: Memory
+      - name: pod-storage
+        emptyDir:
+          medium: Memory

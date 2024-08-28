@@ -1,0 +1,13 @@
+
+{
+  "clusterName": "n89",
+  "additionalParams": {
+    "namespace": "ccsm",
+    "applicationTimeOut": "3600",
+    "skipJobVerification": true,
+    "skipVerification": true,
+    "helmNoHooks": false,
+    "cleanUpResources": true,
+    "disableOpenapiValidation": false
+ }
+}

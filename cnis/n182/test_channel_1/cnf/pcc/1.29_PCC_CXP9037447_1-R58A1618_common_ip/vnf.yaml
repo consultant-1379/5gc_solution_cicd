@@ -1,0 +1,191 @@
+vnflcm:
+  vnfInstanceName: eric-pcc
+  vnfProductName: PCC
+  vnfSoftwareVersion: CXP9037447_1.R58A
+  instantiate-file: day0/instantiate.json
+  values-file: day0/values.yaml
+  namespace: pcc
+access-info:
+  oam: pcc1-n182.seli.gic.ericsson.se
+  amf-oam: amf1-n182.seli.gic.ericsson.se
+  ldap-admin:
+    user: day0
+    pass: ZGF5MA==
+  users:
+  - user: pcc-admin
+    pass: V3BwX01tZV9uNDctMQ==
+    pass-init: cGNjLWFkbWlu
+pipeline:
+- module: create-namespace
+# fivegcsafe doesn't create this secret, remove it
+# - module: create-k8s-secret
+#   name: eric-pc-controller-ldap-admin-creds
+#   sources:
+#   - type: literal
+#     key: adminuser
+#     value: sysadmin
+#   - type: literal
+#     key: passwd
+#     value: sysAdm1n@Day0
+#   - type: literal
+#     key: adminpasswd
+#     value: $6$fzLPYlRZCpweJMJC$AiNfP0WYE3npY8Za6GxMFoGj75TOl.TS6tmnnky2Bv5wY0Ek8RIoJlr9pyj0LF3wMMaNsNTUH4jp2lIHviJGS0
+- module: create-k8s-secret
+  name: snmp-alarm-provider-config #eric-pc-controller-snmp-alarm-provider-config
+  sources:
+  - type: file
+    key: config.json
+    file: day0/snmp-config.json
+- module: instantiate
+- module: verify-pod-running
+  ignore-not-running:
+  - eric-data-search-engine-curator
+# - module: run-k8s-command
+#   cmd: create ingress eric-data-search-engine --rule="pcc-eric-data-search-engine.ingress.n182-eccd1.sero.gic.ericsson.se/*=eric-data-search-engine:9200"
+# - module: run-k8s-command
+#   name: Create pm server ingress
+#   cmd: create ingress eric-pm-server --rule="eric-pm-server-pcc1.node182-cluster1.sero.gic.ericsson.se/*=eric-pm-server:9090"
+- module: verify-pod-ready
+  check-interval: 30
+  deployments:
+  - eric-cm-yang-provider
+  - eric-pc-mm-controller
+  - eric-pc-sm-controller
+- module: sleep
+  duration: 30
+
+# post config:
+# - add users
+# - config AMF tls
+# - config app
+# - config SMF tls
+# config AMF tls
+- module: run-k8s-command
+  name: Upload SMF certificates
+  # NOTE: THIS NEEDS TO BE UPDATED. Pem files needs to be created and stored in certs
+  cmd: |
+    cp {file1} -c controller {pod1}:smf-sbi-server.pem
+    cp {file2} -c controller {pod1}:smf-sbi-client.pem
+    cp {file3} -c controller {pod1}:RootCA.crt
+    cp {file1} -c controller {pod2}:smf-sbi-server.pem
+    cp {file2} -c controller {pod2}:smf-sbi-client.pem
+    cp {file3} -c controller {pod2}:RootCA.crt
+  inline-files:
+    file1: ../../../../certs/cnf_common_ip/pcc/smf-sbi-server.pem
+    file2: ../../../../certs/cnf_common_ip/pcc/smf-sbi-client.pem
+    file3: ../../../../certs/root/RootCA.crt
+  inline-intermediate-values:
+    pod1: get pod -l app.kubernetes.io/name=eric-pc-sm-controller -o jsonpath='{.items[0].metadata.name}'
+    pod2: get pod -l app.kubernetes.io/name=eric-pc-sm-controller -o jsonpath='{.items[1].metadata.name}'
+- module: sleep
+  duration: 30
+- module: run-k8s-command
+  name: Upload AMF certificates
+  cmd: |
+    cp {file1} -c eric-pc-mm-controller {pod}:/Core/log/client-certificate-pkcs12.p12
+    cp {file2} -c eric-pc-mm-controller {pod}:/Core/log/server-certificate-pkcs12.p12
+    cp {file3} -c eric-pc-mm-controller {pod}:/Core/log/RootCA.crt
+  inline-files:
+    file1: ../../../../certs/cnf_common_ip/pcc/amf-sbi-client.p12
+    file2: ../../../../certs/cnf_common_ip/pcc/amf-sbi-server.p12
+    file3: ../../../../certs/root/RootCA.crt
+  inline-intermediate-values:
+    pod: get pod -l app.kubernetes.io/name=eric-pc-mm-controller -l eric-pc-mm-controller-role=active
+      -o jsonpath='{.items[0].metadata.name}'
+- module: sleep
+  duration: 30
+  
+- module: load-cmyp-user-config
+  file: day1/user-config.txt
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 30
+- module: change-initial-password
+- module: sleep
+  duration: 30
+
+- module: load-cmyp-app-config
+  file: day1/pc-mm-external-certificates.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 30
+# - module: load-cmyp-app-config
+#   file: pc-sm-external-certificates.txt
+#   user-id: 0
+#   proto: ssh
+#   retry-interval: 30
+# - module: sleep
+#   duration: 30
+- module: load-cmyp-app-config
+  file: day1/pc-sm-config.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 10
+- module: load-cmyp-app-config
+  file: day1/ddc-config.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 10
+- module: load-cmyp-app-config
+  file: day1/vpngw-config.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 10
+- module: load-cmyp-app-config
+  file: day1/pc-mm-config.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 10
+- module: load-cmyp-app-config
+  file: day1/pc-sm-config-nef.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 10
+
+- module: load-cmyp-app-config
+  file: day1/pc-sm-config-external-certificates.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 30
+- module: verify-pod-ready
+  check-interval: 30
+  deployments:
+  - eric-pc-sm-smf-pgw-session
+  - eric-pc-sm-controller
+# Add a new networkpolicy file required by fivegcsafe test
+- module: run-k8s-command
+  name: Create networkpolicy to allow accessing eric-pm-server, eric-data-search-engine and eric-fh-alarm-handler
+  cmd: |
+    apply -f {file1}
+    apply -f {file2}
+    apply -f {file3}
+  inline-files:
+    file1: network-policy/eric-pm-server-allow.yaml
+    file2: network-policy/eric-data-search-engine-allow.yaml
+    file3: network-policy/eric-fh-alarm-handler-allow.yaml
+# Align the way to create ingress with fivegcsafe, or it can't be accessed in fivegcsafe test
+- module: run-k8s-command
+  name: Create ingresses eric-pm-server, eric-data-search-engine and eric-fh-alarm-handler
+  cmd: |
+    apply -f {file1}
+    apply -f {file2}
+    apply -f {file3}
+  inline-files:
+    file1: ingress/eric-pm-server-ingress.yaml
+    file2: ingress/eric-data-search-engine-ingress.yaml
+    file3: ingress/eric-fh-alarm-handler-ingress.yaml

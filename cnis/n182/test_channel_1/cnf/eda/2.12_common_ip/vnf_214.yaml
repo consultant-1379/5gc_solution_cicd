@@ -1,0 +1,132 @@
+vnflcm:
+  vnfInstanceName: eric-eda2
+  vnfProductName: EDA
+  vnfSoftwareVersion: 1.49.95-4
+  values-file: day0/values.yaml
+  instantiate-file: day0/instantiate.json
+  namespace: eda2
+  clusterName: n182
+
+access-info:
+  oam: oam.eda2.n182.seli.gic.ericsson.se
+  # Day0 Service account. Used for provision-eda-account-management. Mandatory.
+  ldap-admin:
+    user: admin@ericsson.com
+    # The password must be base64 encoded.
+    pass: UGFzc3dvcmQhMTIzNA==
+  # Day1 Service account. Used for provision-eda-config. Mandatory.
+  users:
+  - user: cai3guser
+    pass: Q2FpM2d1c2VyQA==
+  oauth2-client:
+    # OAuth2 client name. It will be created. Mandatory.
+    name: oauth
+    # The client id in UUIDv4 format. Mandatory.
+    id: 35661fd0-8e05-11ee-9870-454441a1c4d1
+    # The client secret in UUIDv4 format. Mandatory.
+    secret: 0e1c7763-7947-4f5f-94a9-78ed5fef1edb
+    # The necessary scopes for authorization when requesting resources from the REST APIs.
+    auth-scopes: # Combined with those in fivegcsafe
+    - scopes.ericsson.com/activation/account_management.roles.write
+    - scopes.ericsson.com/activation/account_management.users.write
+    - scopes.ericsson.com/activation/account_management.service_accounts.write
+    - scopes.ericsson.com/activation/activation_logic_properties.write
+    - scopes.ericsson.com/activation/oauth.authn.user.write
+    - scopes.ericsson.com/activation/oauth.core.user.read
+    - scopes.ericsson.com/activation/oauth.core.user.write
+    - scopes.ericsson.com/activation/oauth.core.client.read
+    - scopes.ericsson.com/activation/oauth.core.client.write
+    - scopes.ericsson.com/activation/roles.read
+    - scopes.ericsson.com/activation/roles.write
+    - scopes.ericsson.com/activation/network_element_management.read
+    - scopes.ericsson.com/activation/network_element_management.write
+pipeline:
+- module: create-namespace
+- module: instantiate
+- module: verify-pod-running
+- module: run-k8s-command
+  name: Patch CCDM certification files
+  # NOTE: THIS NEEDS TO BE UPDATED. Pem files must be generated and stored in certs
+  cmd: |
+    patch secret eric-act-client-certificate --patch '{{"data":{{"ccdmkeystore.p12": "'$(base64 -w 0 < "{file1}")'"}}}}'
+    patch secret eric-act-client-certificate --patch '{{"data":{{"iamcert.crt": "'$(base64 -w 0 < "{file2}")'"}}}}'
+    patch secret eric-act-client-certificate --patch '{{"data":{{"istioicert.crt": "'$(base64 -w 0 < "{file3}")'"}}}}'
+  inline-files:
+    file1: ../../../../certs/cnf_common_ip/ccdm/ccdmkeystore.p12
+    file2: ../../../../certs/cnf_common_ip/ccdm/iamcert.crt
+    file3: ../../../../certs/cnf_common_ip/ccdm/istioicert.crt
+- module: run-k8s-command
+  name: Patch alarm-provider
+  cmd: |
+    patch secret eric-fh-snmp-alarm-provider --patch '{"data":{"config.json":"'$(base64 -w 0 < "snmp-config.json")'"}}'
+    rollout restart deployment/eric-fh-snmp-alarm-provider
+- module: sleep
+  duration: 60
+- module: provision-eda-onboarding
+  # A first admin user which is an onboarding GUI user but not used for CNAT automation.
+  first-admin-user:
+    user: superuser@ericsson.com
+    pass: UGFzc3dvcmQhMTIzNA==
+# Module 'provision-eda-account-management' is to provision account management.
+- module: provision-eda-account-management # Day0 account needed?
+  prov-info:
+  - api-path: am-rest/v1/roles
+    data-file: day1/account-management/role.json
+    method: POST
+    headers:
+      Content-Type: application/json
+  - api-path: am-rest/v1/service-accounts
+    data-file: day1/account-management/day1-service-account.json
+    method: POST
+    headers:
+      Content-Type: application/json
+  - api-path: am-rest/v1/users
+    data-file: day1/account-management/day1-user.json
+    method: POST
+    headers:
+      Content-Type: application/json
+# Module 'provision-eda-config' is to provision EDA. Including network element management and activation logic properties management, etc.
+- module: provision-eda-config
+  prov-info:
+  - api-path: cm-rest/v1/network-elements
+    data-files:
+    #- provisioning/network-elements/ccdm-pf-mapi-1.json
+    #- provisioning/network-elements/ccdm-pf-mapi-2.json
+    #- provisioning/network-elements/ccdm-udr-ldap-1.json
+    #- provisioning/network-elements/ccdm-udr-ldap-2.json
+    - day1/ne/CCDM-MAPI.node
+    - day1/ne/CCDM-LDAP1.node
+    - day1/ne/CCSM-NOTI.node
+    method: POST
+    headers:
+      Content-Type: application/json
+  # there is no day1/group directory, is it needed?
+  - api-path: cm-rest/v1/routings
+    data-files:
+    #- provisioning/routings/arpf.json
+    #- provisioning/routings/cudb-eir.json
+    #- provisioning/routings/pcf.json
+    #- provisioning/routings/udm.json
+    #- provisioning/routings/udr.json
+    #- provisioning/routings/udr-auc.json
+    #- provisioning/routings/udr-sapc.json
+    - day1/routing/ARPF.routing
+    - day1/routing/CUDB.routing
+    - day1/routing/CUDB_EIR.routing
+    - day1/routing/CUDB_HLR.routing
+    - day1/routing/HSS_FE_EPS.routing
+    - day1/routing/PCF.routing
+    - day1/routing/UDM.routing
+    - day1/routing/UDR.routing
+    - day1/routing/UDR_AUC.routing
+    - day1/routing/UDR_HLR.routing
+    - day1/routing/UDR_SAPC.routing
+    method: POST
+    headers:
+      Content-Type: application/json
+  - api-path: cm-rest/v1/activation-logic/global-actions/routing-preference
+    data-value:
+      value: UDR
+    method: POST
+    headers:
+      Content-Type: application/json

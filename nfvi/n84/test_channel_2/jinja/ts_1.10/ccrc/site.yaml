@@ -1,0 +1,70 @@
+nodeName: n84-ccrc2
+nodeType: CCRC
+
+vnflcm:
+  clusterName: n84-eccd3
+  namespace: ccrc
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day0:
+    username: sysadmin
+    password: Pa$$w0rd4LDAP
+  day1:
+  - username: ccrcoam
+    password: Changeme1st!
+    groups:
+    - nrf-admin
+    - nssf-admin
+    - nrfagent-admin
+    - system-admin
+  - username: ccrcsec
+    password: Changeme1st!
+    groups:
+    - nrf-security-admin
+    - nssf-security-admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+snmp:
+  agentEngineId: 8000137001C0A899ECCD12A63F
+license:
+  customerId: "946060"
+  swltId: STA-CCRC-4
+
+nrf:
+- instanceId: 0c765084-9cc5-49c6-9876-84eccd32a63f
+- instanceId: 0c765084-9cc5-49c6-9876-28eccd52a63f
+
+nssf:
+- instanceId: 13a1de33-ec45-4cd6-a842-84eccd3ba3d8
+- instanceId: 13a1de33-ec45-4cd6-a842-28eccd5ba3d8
+
+ddc:
+  remotePath: /home/admin/ddc/eccd1/n84-ccrc2
+amf:
+- amfInstanceId: 3fb31bb6-99ee-4a34-b714-84eccd36c3cf
+- amfInstanceId: 3fb31bb6-99ee-4a34-b714-28eccd56c3cf
+
+kvdb:
+- siteId: 1
+- siteId: 2
+
+minReplica:
+  eric-nrf-discovery: 2
+  eric-nrf-management: 2
+  eric-nrf-management-notification: 2
+  eric-nssf-slice-selection-control: 2
+  eric-nssf-nssai-availability: 2
+  eric-nssf-notification: 2
+
+maxReplica:
+  eric-nrf-discovery: 10
+  eric-nrf-management: 6
+  eric-nrf-management-notification: 12
+  eric-nssf-slice-selection-control: 5
+  eric-nssf-nssai-availability: 3
+  eric-nssf-notification: 3
+

@@ -1,0 +1,97 @@
+######################################memory: 600Mi
+## CNF general information
+######################################
+nodeName: n84-ccrc1
+nodeType: CCRC
+#instance: ""
+vtap:
+  tapagent: false
+
+vnflcm:
+  clusterName: n84-eccd1
+  namespace: ccrc
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+ericPmServer:
+  jobOverride: false
+  
+registry:
+  url: docker-registry.evnfm.n84-eccd2.sero.gic.ericsson.se
+  
+users:
+  day1:
+  - username: ccrcoam
+    password: Changeme1st!
+    groups:
+    - nrf-admin
+    - nssf-admin
+    - nrfagent-admin
+    - system-admin
+  - username: ccrcsec
+    password: Changeme1st!
+    groups:
+    - nrf-security-admin
+    - nssf-security-admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+cnom:
+  fqdn: cnom.ccrc.n84-eccd1.sero.gic.ericsson.se
+
+# nssfProvFqdn: nssf-prov.ccrc.n84-eccd1.sero.gic.ericsson.se
+
+snmp:
+  agentEngineId: 8000137001C0A884ECCD12A63F
+license:
+  customerId: "946060"
+  swltId: STA-CCRC-4
+
+ccrc:
+  nrf:
+    instanceId: 0c765084-9cc5-49c6-9876-84eccd12a63f
+  nssf:
+    instanceId: 13a1de33-ec45-4cd6-a842-84eccd1ba3d8
+    provisioning:
+      fqdn: nssf-prov.ccrc.n84-eccd1.sero.gic.ericsson.se
+      amf:
+        regionId: 255
+        setId: 1
+        instanceId:
+        - 3fb31bb6-99ee-4a34-b714-84eccd16c3cf
+ddc:
+  remotePath: /home/admin/ddc/eccd1/n84-ccrc1
+amf:
+- amfInstanceId: 3fb31bb6-99ee-4a34-b714-84eccd16c3cf
+
+kvdb:
+- siteId: 1
+
+######################################
+## CNF dimensioning specific
+######################################
+hpaReplica:
+  eric-nrf-discovery: {min: 2, max: 10}
+  eric-nrf-management: {min: 2, max: 6}
+  eric-nrf-management-notification: {min: 2, max: 12}
+  eric-nssf-slice-selection-control: {min: 2, max: 5}
+  eric-nssf-nssai-availability: {min: 2, max: 3}
+  eric-nssf-notification: {min: 2, max: 3}
+
+# minReplica:
+#   # eric-nrf-discovery: 2
+#   # eric-nrf-management: 2
+#   eric-nrf-management-notification: 2
+#   # eric-nssf-slice-selection-control: 2
+#   eric-nssf-nssai-availability: 2
+#   eric-nssf-notification: 2
+
+# maxReplica:
+  # eric-nrf-discovery: 10
+  # eric-nrf-management: 6
+  # eric-nrf-management-notification: 12
+  # eric-nssf-slice-selection-control: 5
+  # eric-nssf-nssai-availability: 3
+  # eric-nssf-notification: 3
+

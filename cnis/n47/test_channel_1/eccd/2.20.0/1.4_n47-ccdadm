@@ -1,0 +1,1827 @@
+[ccdadm@seroiuvm00085_N47 2.20.0-1085-3fee7336]# cat ccdadm-config.yaml
+infra:
+    console_password_hash: "$6$ccd_salt$bdsvOPC8.9fSGFdPc/pOrZ/bdAx56yuTFJGBCj6wGmL1qvSAW9L7OsAVLWM8E7pUs90Bh0EvKbZthv76MCT3r."
+    networks:
+    - name: ccdprov
+      gateway_ipv4: 172.18.0.1
+      ip_pools:
+        - start: 172.18.0.4
+          end: 172.18.0.7
+          prefix: 24
+    - name: ccdintsp
+      vlan: 3220
+      gateway_ipv4: 10.0.10.2
+      ip_pools:
+        - start: 10.0.10.101
+          end: 10.0.10.254
+          prefix: 24
+    - name: sdiagent
+      vlan: 70
+      gateway_ipv4: 172.18.37.1
+      ip_pools:
+        - start: 172.18.37.101
+          end: 172.18.37.128
+          prefix: 24
+    - name: ccdsanreplsp
+      vlan: 3608
+      gateway_ipv4: 10.0.70.1
+      ip_pools:
+        - start: 10.0.70.2
+          end: 10.0.70.12
+          prefix: 27
+    - name: ccdsan2sp
+      vlan: 3609
+      gateway_ipv4: 10.0.69.1
+      ip_pools:
+        - start: 10.0.69.2
+          end: 10.0.69.101
+          prefix: 24
+    - name: ccdecfeomsp
+      vlan: 805
+      gateway_ipv4: 214.13.225.193
+      ip_pools:
+        - start: 214.13.225.198
+          end: 214.13.225.254
+          prefix: 26
+    - name: ecfesig
+      vlan: 139
+      gateway_ipv4: 11.110.2.254
+      ip_pools:
+        - start: 11.110.2.100
+          end: 11.110.2.130
+          prefix: 24
+    iaas:
+        type: metal3
+        spec:
+            bm_hosts_file: "bmhosts.yaml"
+            provisioning_dhcp_cidr: "172.18.0.0/24"
+            provisioning_interface: "bond_control"
+            ironic_endpoint: "172.18.0.2"
+        hds_agent:
+            pod_ip_address: "172.18.37.1"
+            npagent_options: "-frequency=60 -log_dir=/opt/ericsson/hds/logs"
+            interface: sdi_agent
+        nameservers:
+           - "10.221.16.10"
+           - "10.221.16.11"
+        ntp_servers:
+           - "10.221.17.6"
+           - "10.221.17.46"
+        timezone: "Europe/Stockholm"
+    bootstrap:
+        authorized_keys:
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDlIsCQke64zfTLfqWH0H5T6OHbwaVUOcFejyjykL8HepBCqxtYy9ZwIgWwvtFRUsXK5DJhuL51klHCsCUMEvduma+28L2bIsCTkLW2BkNfxyYzNacsw27on+quLw3VZft/6ezBGOoXC9rjQ21lGhjxdbFFcqfUPljZWF4bGaxMRcs6Efm6iTVyDHNQsyP+V19kEYDs3C5rE5+RViZKov/VU5Wz5sKXJeZu4EIsEVBGF/LjuMgCWL+eX0OIStlxpQwidFULgLES+Mgu2Mfw+0499mqYQIqHppxmg7uIBIaM60VXGun9aGZ5LTXbvFpmo53aFZZpU2kufifBvf6/fQiP ccdadm@stargate
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBaDMo16IFKyjG6wIfn+Ca5LJTwC2DpI8Lf6jZZdvsKssLdIksZdNPUV7aseXfg8vUkSvILC61wD/Y7bMJL96ipRUSfOyxvO3mi7xWLx0T56Tigmsu3o4Rq0F0an5by9qvCrz1HhkeBmA97+f/fmfiXD067SSbefT/v6CHjR8wQQfT47mimwgwK5rGeR0dcCjdFn1ba2JyE0pINVfOhlqunoqjs7HO6Pp9Gs/MC9pHkwRWVXK2rbZXROn7WyBTjKb6afN9s4uAwQv9BBj63nsJdPDrYnjUoOrIf05ay6rrciNT8wLWQ7vhS3/wfqMguS87CWR20zTzUCT/uhjTz/sagwBwA23vQSY/eqKNgr9E87k6DuiIr0wxNzpx9dFCO8CPSmIpYP603gTpOg5cXRNfPBlzVRANjHpyQYB3qUqFgvnfWdyWyl/r+jIPq2e8UaKPBVsvrwueApGgjUzusX1Qgc6tx57ycjKBjudClvyDxP6C9E0szHcc9jaEi+ncfkUgJM0EpYcIbrkpxtixhf9g2S5MZRlSlJZO15OZ0aI/k6FXFb1gPzJdAkypmYshUgjjfPfb+IctbcvmzXbA8L5at2+TmvrGxJQfVH0YukJ9Tdrmlkv1PN09174QUq/35w4JvJYE7iKyZ3KCyP3LA4DuzoEvHxF3vRBG+I/GXXeqow== operator@n47-sdim-1
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDda8tneskFX6vt48aUauc9z+gBdJ6zQ06tkH3vu8yQhoNuTED6A7EHwE/pxVVzv4uyVXHH3LpfNsCETbPbvNa9Y5LhI7nr3XakaJUPpek3Tw5Qqh8fFqft2jJRHfJExN4ZL4cWsoUgvi+tYrIJcabh9RM9hmmmeMmaVifzDmp8i1FPZ87yyeaQUgixdHxutcpojF8bza17n0XOr1wwKWswVpEGY//EnRiZSnXZvy9qcvUcZBQyR4hUGpKQACPTzQGkdV+8WXjdROi4ghHsNzn0y7EWEz0I5YP+5V5o/uHspqajuM+IjVoLgaDpC89gLy1D1GFnh0MrcHc2kDtE90Mc9SE9atf1DgkcodEje9ynGYr86LQm4RN7zS56WM3GUz1IPMUnqydU2b7LgUthZueTigS8HrW9dL0e2QHAM0WPhyyqLVDq9xrie6Yd6v1v4vYz5CaJiAj1DpS4VlT7xiApb2odtt5GbXdKox1me//f8VS+SAhdhGpILMuNdzTpx7SBUDJr2VZhRUTA8ZqfOcUzjooCviFdGHQ3xB7V0RHQdU+PL2Yqjk6rWfcNrgwy/ETOTGLCBLIY2vbG26N7yoH94llvHhxEGlVokqid5VObk2aa8AtQNpONS4p1kkUU2i6Fc87QlRX9reX9i9c5nqlBk9U4u4Y5ZdfiTSFdYko3Hw== operator@n47-rte-primary
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCt4zy7y1HyFIxWCArQR9ubsPMWe+/VYl+gXyiT7DdDplwu6Gu8CqvZl015fAjVipJMMArz5UldaTYvDH9iBh1/7l8cH0RQ7DZoJTxlHmHOefHCdfeGlhRLe67iJkwDfwQ5T0lhbRF+XKPnt1WRLN471Am9xqzAAkla/sDIIxch5agwwbXpnnDN4x7+4FMvyXbicQZMK1pAS30cLw1CHnLftvwlgTKxY044rfkXqJmWjfA0XwfDCEQb5L+8MKO9Nu5XHTUfrauD14pid1dfsxXmd1am8idvAYLHh7WvP039jTnv2Tly97eYFOSTHX25CKoZr4J3wwUTCZfQbVj9mHj7OaAhYgCL/XtXQgYRaq33NgcISli20zKSZr9IBTKsnwmsByq7PV31mLiDS8L89/1761NjuZnxj5T0ZlWLNqPYC1QaHjL/LGOLtWJ8E5orqsooPbPNBkYtsXuTHJnW564DNPcBhytSwmU1ZXLtOXTowslgyg9NIpdGrh4O8BoQ+qoeLwb+kalr/Xi6ieOXiOPunhw7eES8TTPvDBzpT+SJvxGTTDoAepjPDx/nxlXna4NpOEl27RDBrLubOWByFLomVFLN4bY3HR87PxEe+Ukjco10Gt2S/pbmtuMxoQmfpCUR+Bwuvv414e+1zK7Q/SJbo54eUrqRODAHDi3H85CHvw== operator@n47-rte-secondary
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCcEvwXvJqgRf4LHGuJkB1azyqJeV5UiRVJvjHvxj/6jm8HVNJDNWnc2CKW8bHx8UsXIKnTwXSZj0JUDx7ig+IphunBHixUV8CIHTVJ1s5RzY6LJS4yvlh8qTDPKZT0PZTzhbPwWY+bfLQsKxjI0wt3GTrIHD8GbruGryaGWoCHBLuK24+9HMEHwixI/se3dL57irSSGbVSSjxQrlACI9ekVa6P9vjHHMOiTGTqzlMcbkCnB7A/c0+L3pe+3XeS9ttrnVbpu0xr1jDFDw3eHxhtIMZq/1mCYIJi8uIr+xAt/lwo89jZ4bx3rt2BqabUe+Pchq4f2Sh39dgwN2VSR4Uyrz6/j0200q9+/pTb12CBDAwJ4rzdtyF0ZZe9bKf24lrPdncZqTE95s8a2cGykXgR5YeUXR+wBKc4ldXfEYqbmlxUU4bbRpIqRhYBxAd/ubY3KJnvJAxPAHI+VEkOts17Kt6dlnPN4G30sFxEhawMzKmDRiJlJUNomLBBVSumTUVe8ySHwo6KbEBUIc69hAP6zQFI+5qf0sl1AXewzLUO7VHaSLR/SDhYI469kJgsD17hHrxB/Tj1MzXV08HmKg26DCU9Yj5erMeih1uiUg0lzvB/3UsAw6Fn5UqmBkBMQSDU7deTNqNqXJwiD5bXGZWf7ovXROMFH1TPTY0NWwWt9Q== sysadmin@n47-sdim-1
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCtdS6d3gSyu3UcEpRlF/MSz9OkWVgPG7J/GbTxK+MKoEcJCJEi07aEIVLdQfrQOMqcYRfHG2n3cBz/0xN7okkWhDihNTvsO/Sk/v/KViSjBaPoAiLq12FmSLTWXYfJZQDeOalnGNgS/T8S5MYwcB++jFXQZ9f5RlZT7KuMT/O8WCGkB1y3TYTUrOiy5wid6aMKfqD3ZpVAU5Zmm1hNb8MUQTzJDnGrjXZ8r/jIRvQB3IJekbhn4duc/GMkmB1grs+SVKwI2QIyuYzHVVfZBgZhPmpgpgRFlXR55DBYt1Wq8BKpC/3DZD+kmKSD7cgbkzSVvHByRLUlbM+rCrok1pLKv94qCjA0Se79XtXNQCs0OpBzu2VqJhmQvn9iw4Y4JKSArlF1hOlXvEH/CwlzWmVpmJKFe4Xd/dEiRDraSYg1TVwpR+xIC8d+KxPhrStXqNM1AgXynRHtyHkSbvW58+wD/PnbjxF7h7y0amDBeQhBboo3a09Y3KaCYTFwPwHEsnczrmK2EK9gp9/qsGBfG1aRLNe+jwb9fdFKToi0muH76FgU7ATlIZsv7dlE8EwJrXhWJYtj3qGPn3A4kR2FLaMBjMdMqmMVdQW+0+uOkQhMUsIfSmMYe37jlF6awGBOz3b9Np1ySE9FxLLHB7A3XSxbmiTyP9F912W6+jrSuOtOVQ== sysadmin@n47-rte-primary
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDEOtsJCp0JNIFq2R9HT01PYDyyK5/6t5aQB1wu+E2ZQbSDcJWShzYjSwLZSDzH+EGAKPAFiF7KXwZYb/ibEVaLPEJYH9hk7OVnVzJJL8mhKBLrWlMX1pJ8PrImKXkzp6YK3QfEVT5/ex0Xht3UvHLq2a367RRv60lZiL/8n9i8/lFLhlutoZiL+xCGgfc8dwVKTij8diuG9pD57k0prKd+LWIS3pQJMSh6LXwzBhOIDrxwfmr2QsFdtQgp1fnCMzQ8KCwSZJC3EBaRghOSSAokIcgPLTDLnJUmz0R+zmhpBj+1eST1wh2G6yoRYE1rlYeWNpREC7c4oT9FUqi2DIND4Zg/nhCvz7tI3rl2YXbd/1Ty/pDv/w89ahx30l/n1fPc4BlLCLGIUzruIHqUOCMV3M4OfRoZLiQK9EJEutgZ0DOL1vW/K8AUdt/N98i4vyUXxSQrrL64h6dDnP2am/MkQYAb8Z0ClTr89OWh5m4Yd1JrIE7u4OD9h+BNvVfedwxTWs1lpzDKo/Ne/HGmmt6bAF0CX132nXma0dF16QCwBp/39JQb7qOCL/F9usHTl7Xc3SqN2tMkinLK7uWMbt9Ud6YeDod+8MYi6KwcsTMoH/CxZiUNqTdKmxSXeXzMpdLb7eEIkMDabAo2zw8jDtQ8qCnabt8S0/if1OvzWoT5hQ== sysadmin@n47-rte-secondary
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDmkbENU3XxQhYK0PcH4BqFFma6OqbITImwTKNR2fURx1x1foZ6PkjmDqLs/0k3lxdVADuOPLcYCeyEwiccim47v8FzRXibibf6LxrNDncy3SwN1VN0zXCNCT3oNJnmwzjmZmW9CH22z00MxswdUK4RPpO+e1rlFQm0Xn5R4zfrTPXrTIn2tdybNOlCqcS6ScK8/unIHL5XsdZoWVdmG7kMePzGdLPdmC+dqGR83uWYjNT9KUVTh4q4cmeThXc7PE3yTfI3vWj1ZhrarWIOylPCOvmhB8p2+rWJySKIH5Z5x9fKC1N9v9Y+3T9IHsRojdhfLxEBeX3FifqxswEA3RYnhRetfY6ZQz4ip15oUUg1jkBk61OEiMCJyF6q603/kx3cGoTf+QlWSgM/B2vZiLBTj8tsqCI5ClSbMPxUIo38gV4QaWn89lKHt1e3bztGFmlGW/wk5DfZecvHexmKa67I0mk0AmR6BQc4bZZRw3rrTGWoPh/BGbR1HLel4HX4UxMGoMXGU6WhaEJU3J8NOa3C/9hHBlb4TzGSRUgg0JTqCDUmyqwXryzhQBAy1ivUcr9wxazV+St4/WsbXOYjpLMJn8jgjOy9qzxJC4MC4E+kgGUXFQV/Nkfjryhtw+zYpUchU3VxFa3La/f6gj9vNHuRdBS+LDPqe3D4HdJNmqvb5w== sysadmin@n47-sdim-2
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQpqiAafHhi65QlL+LLpDo/ExKfX8/z66pSP1eOuJTsRFohbY7btHsMXgbAHRqBKy3UECoXSxqQqpRYRuDr0A2UCrRW/HgyN59p2M0noXE/CU+nDOXZ/4bhcfKWR4DwAd8qvgT1yruwBEmXBhof6/Xy89jSHsgZJOpIkmQ34CUVaUOn2NMtC9EOSzhBWBTBoVVxUzIXovsOh3938wX4yGnG/X+IrnenGWIOdMkl5KEGLUYuTsB17aXeSWftlVIqEsw0UfRVoQM51ze0exZOfJZKt7n4SIB7Amt4TkIKgJ4TJzGuWCi5IfHiKpfyt2So45VZOPMBQAEoyiQgxOUXRFR eeyuyue@seliiuts02102.seli.gic.ericsson.se
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLGIoEdXxe+YrGpdWVjbpucia8bgM0uDByJ3FRovbTkqOFCUW+4OWzvVBtGYVgIDYZjEV7Cf1+z+WRjbIwUedbQC7lL1Mka7wDO4xiOXlBNrYuBq5nqXihPueysTbZn+n4D/5T6b/8hk0BpNmsiDGLJYpUqiyHArZIgAg/9+MrAbjyS8tzP6X0ESV/gv/fUQB9o8afGKo75TdvTsTAy+d3wdKDxQABD9Nvr4adR+EiQpzlb2SfylB/uMx4M+VvzlcABWlHfiKpQVFQ17FMkdNRwf2yVqfxElo3T58zCnqeWLadrAG64G+PNULttVFjvwVlwaCeazLK73c7gJ4dBEnt eeyuyue@seroicts12201
+
+        net_config_file: "eph_net_cfg.yaml"
+        type: preprovisioned
+        spec:
+            kubeconfig: "kube/kubeconfig.yaml"
+        k8s_internal_net_interface: "ccd_int"
+    controlplane:
+        control_plane_external_vip: "214.13.225.196"
+        control_plane_internal_vip: "10.0.10.2"
+        control_plane_provisioning_vip: "172.18.0.2"
+        control_plane_registry_vip: "10.0.10.1"
+        control_plane_port: 6443
+        host_workloads: true
+        k8s_internal_net_interface: "ccd_int"
+        pool_cfg:
+            name: control-plane
+            max_pods_per_node: 250
+            count: 3
+            node_labels:
+             - "nic-type-sriov=false"
+             - "node-role.rook-ceph/cluster=non-osd"
+             - "isolation-interrupts=false"
+             - "ecfe-speaker=true"
+            disable_sctp_kernel_module: true
+            cpu_isolation_config:
+              isolation_interrupts: false
+            authorized_keys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDlIsCQke64zfTLfqWH0H5T6OHbwaVUOcFejyjykL8HepBCqxtYy9ZwIgWwvtFRUsXK5DJhuL51klHCsCUMEvduma+28L2bIsCTkLW2BkNfxyYzNacsw27on+quLw3VZft/6ezBGOoXC9rjQ21lGhjxdbFFcqfUPljZWF4bGaxMRcs6Efm6iTVyDHNQsyP+V19kEYDs3C5rE5+RViZKov/VU5Wz5sKXJeZu4EIsEVBGF/LjuMgCWL+eX0OIStlxpQwidFULgLES+Mgu2Mfw+0499mqYQIqHppxmg7uIBIaM60VXGun9aGZ5LTXbvFpmo53aFZZpU2kufifBvf6/fQiP ccdadm@stargate
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBaDMo16IFKyjG6wIfn+Ca5LJTwC2DpI8Lf6jZZdvsKssLdIksZdNPUV7aseXfg8vUkSvILC61wD/Y7bMJL96ipRUSfOyxvO3mi7xWLx0T56Tigmsu3o4Rq0F0an5by9qvCrz1HhkeBmA97+f/fmfiXD067SSbefT/v6CHjR8wQQfT47mimwgwK5rGeR0dcCjdFn1ba2JyE0pINVfOhlqunoqjs7HO6Pp9Gs/MC9pHkwRWVXK2rbZXROn7WyBTjKb6afN9s4uAwQv9BBj63nsJdPDrYnjUoOrIf05ay6rrciNT8wLWQ7vhS3/wfqMguS87CWR20zTzUCT/uhjTz/sagwBwA23vQSY/eqKNgr9E87k6DuiIr0wxNzpx9dFCO8CPSmIpYP603gTpOg5cXRNfPBlzVRANjHpyQYB3qUqFgvnfWdyWyl/r+jIPq2e8UaKPBVsvrwueApGgjUzusX1Qgc6tx57ycjKBjudClvyDxP6C9E0szHcc9jaEi+ncfkUgJM0EpYcIbrkpxtixhf9g2S5MZRlSlJZO15OZ0aI/k6FXFb1gPzJdAkypmYshUgjjfPfb+IctbcvmzXbA8L5at2+TmvrGxJQfVH0YukJ9Tdrmlkv1PN09174QUq/35w4JvJYE7iKyZ3KCyP3LA4DuzoEvHxF3vRBG+I/GXXeqow== operator@n47-sdim-1
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDda8tneskFX6vt48aUauc9z+gBdJ6zQ06tkH3vu8yQhoNuTED6A7EHwE/pxVVzv4uyVXHH3LpfNsCETbPbvNa9Y5LhI7nr3XakaJUPpek3Tw5Qqh8fFqft2jJRHfJExN4ZL4cWsoUgvi+tYrIJcabh9RM9hmmmeMmaVifzDmp8i1FPZ87yyeaQUgixdHxutcpojF8bza17n0XOr1wwKWswVpEGY//EnRiZSnXZvy9qcvUcZBQyR4hUGpKQACPTzQGkdV+8WXjdROi4ghHsNzn0y7EWEz0I5YP+5V5o/uHspqajuM+IjVoLgaDpC89gLy1D1GFnh0MrcHc2kDtE90Mc9SE9atf1DgkcodEje9ynGYr86LQm4RN7zS56WM3GUz1IPMUnqydU2b7LgUthZueTigS8HrW9dL0e2QHAM0WPhyyqLVDq9xrie6Yd6v1v4vYz5CaJiAj1DpS4VlT7xiApb2odtt5GbXdKox1me//f8VS+SAhdhGpILMuNdzTpx7SBUDJr2VZhRUTA8ZqfOcUzjooCviFdGHQ3xB7V0RHQdU+PL2Yqjk6rWfcNrgwy/ETOTGLCBLIY2vbG26N7yoH94llvHhxEGlVokqid5VObk2aa8AtQNpONS4p1kkUU2i6Fc87QlRX9reX9i9c5nqlBk9U4u4Y5ZdfiTSFdYko3Hw== operator@n47-rte-primary
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCt4zy7y1HyFIxWCArQR9ubsPMWe+/VYl+gXyiT7DdDplwu6Gu8CqvZl015fAjVipJMMArz5UldaTYvDH9iBh1/7l8cH0RQ7DZoJTxlHmHOefHCdfeGlhRLe67iJkwDfwQ5T0lhbRF+XKPnt1WRLN471Am9xqzAAkla/sDIIxch5agwwbXpnnDN4x7+4FMvyXbicQZMK1pAS30cLw1CHnLftvwlgTKxY044rfkXqJmWjfA0XwfDCEQb5L+8MKO9Nu5XHTUfrauD14pid1dfsxXmd1am8idvAYLHh7WvP039jTnv2Tly97eYFOSTHX25CKoZr4J3wwUTCZfQbVj9mHj7OaAhYgCL/XtXQgYRaq33NgcISli20zKSZr9IBTKsnwmsByq7PV31mLiDS8L89/1761NjuZnxj5T0ZlWLNqPYC1QaHjL/LGOLtWJ8E5orqsooPbPNBkYtsXuTHJnW564DNPcBhytSwmU1ZXLtOXTowslgyg9NIpdGrh4O8BoQ+qoeLwb+kalr/Xi6ieOXiOPunhw7eES8TTPvDBzpT+SJvxGTTDoAepjPDx/nxlXna4NpOEl27RDBrLubOWByFLomVFLN4bY3HR87PxEe+Ukjco10Gt2S/pbmtuMxoQmfpCUR+Bwuvv414e+1zK7Q/SJbo54eUrqRODAHDi3H85CHvw== operator@n47-rte-secondary
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCcEvwXvJqgRf4LHGuJkB1azyqJeV5UiRVJvjHvxj/6jm8HVNJDNWnc2CKW8bHx8UsXIKnTwXSZj0JUDx7ig+IphunBHixUV8CIHTVJ1s5RzY6LJS4yvlh8qTDPKZT0PZTzhbPwWY+bfLQsKxjI0wt3GTrIHD8GbruGryaGWoCHBLuK24+9HMEHwixI/se3dL57irSSGbVSSjxQrlACI9ekVa6P9vjHHMOiTGTqzlMcbkCnB7A/c0+L3pe+3XeS9ttrnVbpu0xr1jDFDw3eHxhtIMZq/1mCYIJi8uIr+xAt/lwo89jZ4bx3rt2BqabUe+Pchq4f2Sh39dgwN2VSR4Uyrz6/j0200q9+/pTb12CBDAwJ4rzdtyF0ZZe9bKf24lrPdncZqTE95s8a2cGykXgR5YeUXR+wBKc4ldXfEYqbmlxUU4bbRpIqRhYBxAd/ubY3KJnvJAxPAHI+VEkOts17Kt6dlnPN4G30sFxEhawMzKmDRiJlJUNomLBBVSumTUVe8ySHwo6KbEBUIc69hAP6zQFI+5qf0sl1AXewzLUO7VHaSLR/SDhYI469kJgsD17hHrxB/Tj1MzXV08HmKg26DCU9Yj5erMeih1uiUg0lzvB/3UsAw6Fn5UqmBkBMQSDU7deTNqNqXJwiD5bXGZWf7ovXROMFH1TPTY0NWwWt9Q== sysadmin@n47-sdim-1
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCtdS6d3gSyu3UcEpRlF/MSz9OkWVgPG7J/GbTxK+MKoEcJCJEi07aEIVLdQfrQOMqcYRfHG2n3cBz/0xN7okkWhDihNTvsO/Sk/v/KViSjBaPoAiLq12FmSLTWXYfJZQDeOalnGNgS/T8S5MYwcB++jFXQZ9f5RlZT7KuMT/O8WCGkB1y3TYTUrOiy5wid6aMKfqD3ZpVAU5Zmm1hNb8MUQTzJDnGrjXZ8r/jIRvQB3IJekbhn4duc/GMkmB1grs+SVKwI2QIyuYzHVVfZBgZhPmpgpgRFlXR55DBYt1Wq8BKpC/3DZD+kmKSD7cgbkzSVvHByRLUlbM+rCrok1pLKv94qCjA0Se79XtXNQCs0OpBzu2VqJhmQvn9iw4Y4JKSArlF1hOlXvEH/CwlzWmVpmJKFe4Xd/dEiRDraSYg1TVwpR+xIC8d+KxPhrStXqNM1AgXynRHtyHkSbvW58+wD/PnbjxF7h7y0amDBeQhBboo3a09Y3KaCYTFwPwHEsnczrmK2EK9gp9/qsGBfG1aRLNe+jwb9fdFKToi0muH76FgU7ATlIZsv7dlE8EwJrXhWJYtj3qGPn3A4kR2FLaMBjMdMqmMVdQW+0+uOkQhMUsIfSmMYe37jlF6awGBOz3b9Np1ySE9FxLLHB7A3XSxbmiTyP9F912W6+jrSuOtOVQ== sysadmin@n47-rte-primary
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDEOtsJCp0JNIFq2R9HT01PYDyyK5/6t5aQB1wu+E2ZQbSDcJWShzYjSwLZSDzH+EGAKPAFiF7KXwZYb/ibEVaLPEJYH9hk7OVnVzJJL8mhKBLrWlMX1pJ8PrImKXkzp6YK3QfEVT5/ex0Xht3UvHLq2a367RRv60lZiL/8n9i8/lFLhlutoZiL+xCGgfc8dwVKTij8diuG9pD57k0prKd+LWIS3pQJMSh6LXwzBhOIDrxwfmr2QsFdtQgp1fnCMzQ8KCwSZJC3EBaRghOSSAokIcgPLTDLnJUmz0R+zmhpBj+1eST1wh2G6yoRYE1rlYeWNpREC7c4oT9FUqi2DIND4Zg/nhCvz7tI3rl2YXbd/1Ty/pDv/w89ahx30l/n1fPc4BlLCLGIUzruIHqUOCMV3M4OfRoZLiQK9EJEutgZ0DOL1vW/K8AUdt/N98i4vyUXxSQrrL64h6dDnP2am/MkQYAb8Z0ClTr89OWh5m4Yd1JrIE7u4OD9h+BNvVfedwxTWs1lpzDKo/Ne/HGmmt6bAF0CX132nXma0dF16QCwBp/39JQb7qOCL/F9usHTl7Xc3SqN2tMkinLK7uWMbt9Ud6YeDod+8MYi6KwcsTMoH/CxZiUNqTdKmxSXeXzMpdLb7eEIkMDabAo2zw8jDtQ8qCnabt8S0/if1OvzWoT5hQ== sysadmin@n47-rte-secondary
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDmkbENU3XxQhYK0PcH4BqFFma6OqbITImwTKNR2fURx1x1foZ6PkjmDqLs/0k3lxdVADuOPLcYCeyEwiccim47v8FzRXibibf6LxrNDncy3SwN1VN0zXCNCT3oNJnmwzjmZmW9CH22z00MxswdUK4RPpO+e1rlFQm0Xn5R4zfrTPXrTIn2tdybNOlCqcS6ScK8/unIHL5XsdZoWVdmG7kMePzGdLPdmC+dqGR83uWYjNT9KUVTh4q4cmeThXc7PE3yTfI3vWj1ZhrarWIOylPCOvmhB8p2+rWJySKIH5Z5x9fKC1N9v9Y+3T9IHsRojdhfLxEBeX3FifqxswEA3RYnhRetfY6ZQz4ip15oUUg1jkBk61OEiMCJyF6q603/kx3cGoTf+QlWSgM/B2vZiLBTj8tsqCI5ClSbMPxUIo38gV4QaWn89lKHt1e3bztGFmlGW/wk5DfZecvHexmKa67I0mk0AmR6BQc4bZZRw3rrTGWoPh/BGbR1HLel4HX4UxMGoMXGU6WhaEJU3J8NOa3C/9hHBlb4TzGSRUgg0JTqCDUmyqwXryzhQBAy1ivUcr9wxazV+St4/WsbXOYjpLMJn8jgjOy9qzxJC4MC4E+kgGUXFQV/Nkfjryhtw+zYpUchU3VxFa3La/f6gj9vNHuRdBS+LDPqe3D4HdJNmqvb5w== sysadmin@n47-sdim-2
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQpqiAafHhi65QlL+LLpDo/ExKfX8/z66pSP1eOuJTsRFohbY7btHsMXgbAHRqBKy3UECoXSxqQqpRYRuDr0A2UCrRW/HgyN59p2M0noXE/CU+nDOXZ/4bhcfKWR4DwAd8qvgT1yruwBEmXBhof6/Xy89jSHsgZJOpIkmQ34CUVaUOn2NMtC9EOSzhBWBTBoVVxUzIXovsOh3938wX4yGnG/X+IrnenGWIOdMkl5KEGLUYuTsB17aXeSWftlVIqEsw0UfRVoQM51ze0exZOfJZKt7n4SIB7Amt4TkIKgJ4TJzGuWCi5IfHiKpfyt2So45VZOPMBQAEoyiQgxOUXRFR eeyuyue@seliiuts02102.seli.gic.ericsson.se
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLGIoEdXxe+YrGpdWVjbpucia8bgM0uDByJ3FRovbTkqOFCUW+4OWzvVBtGYVgIDYZjEV7Cf1+z+WRjbIwUedbQC7lL1Mka7wDO4xiOXlBNrYuBq5nqXihPueysTbZn+n4D/5T6b/8hk0BpNmsiDGLJYpUqiyHArZIgAg/9+MrAbjyS8tzP6X0ESV/gv/fUQB9o8afGKo75TdvTsTAy+d3wdKDxQABD9Nvr4adR+EiQpzlb2SfylB/uMx4M+VvzlcABWlHfiKpQVFQ17FMkdNRwf2yVqfxElo3T58zCnqeWLadrAG64G+PNULttVFjvwVlwaCeazLK73c7gJ4dBEnt eeyuyue@seroicts12201
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCztGrZqd8Ubh73K3SGKnd0c7XbZHBJ2gtt1zEkyHC3FEemtj8FjeNwTKNMu8iKihMJexN93vFwlqeB0Tg1smbs0bx84DRJCBv6Ync2/KpbQrhaZk06Z6I4Mi9N/2a0GrTsxLcWWN/GxCUT105F+jOxqXLOBGhi1mMPapEjcyQcVHunUs0ggyBMZxsimfNQoKTOUK8vXQNrIZ6rqWWFXA7p2dSuifHFdrr2AX+nYiVYTS7kloqNaR5IhZNgTvKlweR3ORkbFo0Z6fU4rypjrS3FwdyceZYXs49uD7CrFC1esJfnA875BBx+LbdedbR/ne/CyLu206F5KPBJJUZ8yK3h rdcchsh@seroiuts01674.sero.gic.ericsson.se
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDjG/OHOfCBWEoHPCm6qm7To+Oz8Lh+7leH8EWZzhBqEeO4DOq7x/QpIMDgp1gTMuB3OKWwdhhAteHITgn8FUC6zEDmZGnmnprcFl/7jwj17wXc+bMqjQt5vDzz6W038eJwhUK2v9hr4PfI91GerDvqILjGjNXPNkNOA+rYqw+uqlrgkKyRI5/2r0Px5rv0vXL+U/rE4KUKOg6Hz+3pyYYwEGkKSBK362ZpfuWysMsE80pdHd3yVzU65ohmP5DljZsSxS7WdqknS7Ay1ojcMuCnyNfTHgHLl84W3rpx3tYhSCfKgcr046P394eGOrpQohdu7hAdImrZWqTvdJpaxfmV5gPGpgN+o9HjviCsf7pThXdQ4yYKsSEMXKTUZrePLefyn4seEyR6drTRyDyqLi+nQyWi7MNjXfsxtD+Zde1yIDCYfZ/VxcYBShX/y8hkvExyOsjxYuaGE7ptp+CWXAN+LpgLojBLIEF3uRwm+MbuNUxbmxlUXnlC9jJul3embkvNqsLhCiQN8QYOTMkm5u4NvipVWFK1kQZqePVLsaDzErZcgvJYyKietZtuyarp7fJ212oRm4dfJUyAHHUxyhaLOlkSsTsEojYkbtObPSXOdEi7X4fWaKDtN5yEwdYeVg646LyQEgCEYIYkRynea31pMT/f5HEheIN+2bk+cuufhw== root@seroiuvm00085.sc.sero.gic.ericsson.se
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDHjf+dFHLTGcm4Stkz6xLH6AicL/lNyTq0GbssDHvotG2epQmJ5A06OqH/B17CRbrHbVxUs5oVGgerSzVPZV0/sVZ+GnZ0ndkBlSkwFE0+zWJT1s1K7jBYQ8DMLnAqmuIfdokDdh6C5U1ZEsmXWLcsXi8HLgk1LuA36Op1zXJy0ETCp0si7yYgX7DCu5bfhk3fC5+KFeKB8VKrsaFwMBIEKfERc0F09o4hJzntenrmCIfIzQmvDnpOHAZEz/UHbVC+AfMUbI0yv86tNVEKqFVSBIROSffXCQbUKoH8kZ/7CEyKzYx5CF7GvKb3Rmth3boASlOK3I06shMFj8VBb42NqLTma2Ulipkp0/BSdJLM81X7IVP5cJdAcaIQnRn4MW0QIOCvUH9mgSVFEXNcEyCkzJowrttqZRUl7tbGEnTguq7lsTjdLlFN2Nc46t7zXFXEADcBedvC8QIsE7c1NngJI6E3dyzawm9vhGjKly6KcHLFI9Z6wNMSCPfC3warQY8= exiaron@localhost
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDHjf+dFHLTGcm4Stkz6xLH6AicL/lNyTq0GbssDHvotG2epQmJ5A06OqH/B17CRbrHbVxUs5oVGgerSzVPZV0/sVZ+GnZ0ndkBlSkwFE0+zWJT1s1K7jBYQ8DMLnAqmuIfdokDdh6C5U1ZEsmXWLcsXi8HLgk1LuA36Op1zXJy0ETCp0si7yYgX7DCu5bfhk3fC5+KFeKB8VKrsaFwMBIEKfERc0F09o4hJzntenrmCIfIzQmvDnpOHAZEz/UHbVC+AfMUbI0yv86tNVEKqFVSBIROSffXCQbUKoH8kZ/7CEyKzYx5CF7GvKb3Rmth3boASlOK3I06shMFj8VBb42NqLTma2Ulipkp0/BSdJLM81X7IVP5cJdAcaIQnRn4MW0QIOCvUH9mgSVFEXNcEyCkzJowrttqZRUl7tbGEnTguq7lsTjdLlFN2Nc46t7zXFXEADcBedvC8QIsE7c1NngJI6E3dyzawm9vhGjKly6KcHLFI9Z6wNMSCPfC3warQY8= exiaron@localhost
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCoxnziVsaW1ibb9QQ2VAPIlrQipE/L2ox0ZjutkSN1gpgUWz0MOqZnqNZ99Sgw1BOfZo2b9hRze9aRo1Kb0PfGNfkerIOIsoCj/UyCuRxktyw7ppyaCpp0fNUvMBU7cp/aAJJ90Vv/Gh0mbgDdHE1SQku+hXJTJAn8opsdFlG1lVkxZZ0agFKKJL79uGa3RxlSYiUN+mQ6nl6lC0bryowHNMlGjBEj+krrKILyy/t9qvBsD+P8mdfT8kh1zc1aQmFvhNde80g0ngl0QC9etWl5NpHnrZtSTcAcTHZEIwGbSEWlALot4tz4Co2nw7ltw9oOAV4kiZvQDei968WkjFcb zdrpasi@seroicts12205
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0zg7G8iVlNM/iPP6YZzjSJMhoS4VfaT5HJyVVNcuRUilVV2h4oeuS8oc9OxEwQjr/BjJfKZ23YqaXjWb+5fDAueqDea50/hXNAGLQKtZ2oIYijvylSSJH5Kw/n9LgE8hqYocRHVXQfVVnKIc4o4jBopTxi1Lv/oQXPQ1UB0awu89zJ9mu/hJd/rGkX0I1OcvemiJg8ESKquNrnvW+RDsYezlPQQpbthfij6CZ/+WS4Xyvcq/eg9EhHZhb/z72OphfDcutztiPD6sVN31cxTrjgBtvALksXTM0FVTHAyYKULO3rQ9KLYN1/d2IefuU1MhM3c8A4worNOfyMbtrd/GJ checkmk@fuelhost
+            - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA3OCmrNF45Xc+3OXzX72jltQoxpwMCcY4igAQ8dHyP9gdroxyv0zkmVqLdveLcQv050VHPq1z+jijEbDBNSEMA+e+hqNmo7JBI57Y561yokD7f3YuzKYskG4oH+f0C5XB50dsWV2hYo5xt5zB03cc2g3PsYlzdUs4r3U7N9yqNde/P6rh8Rt2WPm8/KSoKrXs4HsAmyT1T3yeRTHKClcnbPQ0RG/tUvNSoMWRuoakTNaFAFA0CXM2sGJTKSvGgRWJibGXalq6W8K3+5WVGtmOxJ14T3z1KJ3ZDkBmBkJ1tBchqbaAAaOrwmsJw37Z1JEJnilW0O+TWRMbOhKqENC1Vw== eybdfgm@eselnts1420
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDDzCWdoI9OHSxM1UvfwkP5ZfY+nFROj19rX4bUOSaGXrbES5ZHsUIcWCt755LWmCz/MeIQYmRxWyJPVvBZdTIjANZjOdc3Zzvfo2rKFYxw/vvBXhjZkLUUTMjhC58NtvZCQKPP3nUFqpbty417in5aYHggVNclcKYDd1awNHafXyhWi/YCghEV3rpzGo8CN5pn9lOz3ailoeGKspgvfp1GrihuCUW4lkl6V9b9xD/nAT5mnxAY1SWl4feJjTGJhNwiQ0hnMmI3jW03qbvJNZnLIPHKbSytjZgVV8ysKYOQehTrQPALtvRIOEt/mUdL9WeevKriL5dNnGQ88egtLl4n earibou@seroiuts01675.sero.gic.ericsson.se
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6vf9a/7mPExjOrTOizJKLu/oypKFdM6XzdLsrKUVjjfsq5SbGtuvQpZNEggFJW2XmgfBBj+/U7ldEgF0JObP2v7CtFZVXU7IfoNbs2+kAAbpacG52kQHSBA6T2JgLGkjpcczQxEP3F4q8lqP6y6gpOUAR2/c4uSFPrkIE0HWx4cPqCdwJEKlVSq9UNCGMEhwyoclnnEq2FceKjNIBP4V74m5rms781agEsec3SXM+VOtwgDVMFny7cFlcPnT+fQN8xTF8M2RGA4erzY2/K7RCz95rktplpdID8JNnAwjPTs+3877ecB3rSGJUew1/IEBDm7O25Wjmrx4es3xGsqIl ezpodsa@eselnts1498
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3QRyHHfusPQzsKkKWJr9tqN6ELWWMAc0EAxJ7AC/Vw5o9FSakCg/E4nvHIuW/hyS9kR4xPmzenFExMEm8Lf8mzPe2qqBeOyvpfw2WWmwrNqBbctZJw912kWnbjYtq/GYV+Nbt+kf+0VJy+P6eR5UlJ6Hyy+cFXAzFYDnTrJWgQp7INnSikJlKdj6+tVzNOw+MWF4iGBPiKn39eyvoMQg9qwbL9hBqDDuHwtq4lj3uN+mcJOzVjGfDGYEcjsiHdccI7X0OlntoiyvSGg1B+JuYw0r3l2esKtjlW4hwfWC5JPIiJtmiFl4MbephrVIYXhNiisoe89TdhwFsJ0a5FAzN 5G_lab_key
+            net_config:
+              routes:
+                config:
+                  - destination: 0.0.0.0/0
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfesig
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_sig
+                  - destination: 10.155.193.164/29
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: sdiagent
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: sdi_agent
+                  #DNS1
+                  - destination: 10.221.16.10/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #DNS2
+                  - destination: 10.221.16.11/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NTP1
+                  - destination: 10.221.17.6/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NTP2
+                  - destination: 10.221.17.46/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #CCDADM on stargateserver
+                  - destination: 10.143.225.0/26
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NodeTS SELI
+                  - destination: 10.120.112.208/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NodeTS SERO
+                  - destination: 10.117.109.16/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #User NodeTS
+                  - destination: 10.63.174.224/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  - destination: 10.221.14.88/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #Routes towards CNIS CI Jenkins slaves - SSH access needed, so routing over ccd_ecfe_om
+                  - destination: 10.117.160.132/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  # Route towards arm.seli.gic.ericsson.se docker hub
+                  - destination: 10.210.147.183/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  # Route towards arm.seli.gic.ericsson.se docker hub
+                  - destination: 10.210.99.200/29
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #CITRIX TS ROUTES USER
+                  # PDU-PC-ALL-LHSD
+                  - destination: 10.117.91.192/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  # PDU-PC-ALL-LHSD(2)
+                  - destination: 10.63.174.224/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  # PDU-PC-ALL-LHSD(3)
+                  - destination: 10.63.204.96/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  # PDU-PC-ALL-LHSD(4)
+                  - destination: 10.63.216.112/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  # PDU-PC-STT-TS
+                  - destination: 10.86.66.144/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  # ( E2C servers)
+                  - destination: 10.200.122.144/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  # SERO-WHSD-PDU-PC-ALL-New-1
+                  - destination: 10.63.196.192/26
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  # SERO-WHSD-PDU-PC-ALL-1
+                  - destination: 10.63.47.192/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  # PDU-PC-ALL-TPC-LHSD
+                  - destination: 10.117.101.64/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  # SERO-STC-Common-NodeTS-Linux-LHSD
+                  - destination: 10.117.109.16/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  # NELS license host ECCD
+                  - destination: 10.221.171.134/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  # NELS license host PCC
+                  - destination: 10.221.14.88/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+
+              interfaces:
+                - name: eno5
+                  type: ethernet
+                  state: up
+                  #description: Control bond member
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: eno6
+                  type: ethernet
+                  state: up
+                  #description: Control bond member
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: bond_control
+                  type: bond
+                  state: up
+                  #description: Control bond
+                  ipv4:
+                    enabled: true
+                    dhcp: false
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdprov
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdprov
+                            ip-version: 4
+                  ipv6:
+                    enabled: false
+                  link-aggregation:
+                    options:
+                      miimon: "100"
+                    mode: active-backup
+                    slaves:
+                      - interface-name:
+                          value: eno5
+                      - interface-name:
+                          value: eno6
+                - name: sdi_agent
+                  state: up
+                  type: vlan
+                  #description: SDI agent interface
+                  vlan:
+                    base-iface:
+                      interface-name:
+                        value: bond_control
+                    id:
+                      vlan-from-net:
+                        value: 70
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: sdiagent
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: sdiagent
+                            ip-version: 4
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                - name: ens1f0
+                  type: ethernet
+                  state: up
+                  #description: ovs bond slave
+                  mtu: 9000
+                - name: ens1f1
+                  type: ethernet
+                  state: up
+                  #description: ovs bond slave
+                  mtu: 9000
+                - name: bond_data
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens1f0
+                      - interface-name:
+                          value: ens1f1
+                - name: br_data
+                  type: ovs-bridge
+                  state: up
+                  ovs-bridge:
+                    options:
+                      stp: false
+                      rstp: false
+                    port:
+                      - name: bond_data
+                      - name: ccd_int
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3220
+                      - name: ccd_san2
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3609
+                      - name: app_ecfe_om
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 805
+                      - name: app_ecfe_sig
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 139
+                - name: ccd_int
+                  type: ovs-interface
+                  state: up
+                  #description: Internal Kubernetes network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdintsp
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdintsp
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                  mtu: 9000
+                - name: ccd_san2
+                  type: ovs-interface
+                  state: up
+                  #description: Ceph traffic network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdsan2sp
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdsan2sp
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                  mtu: 9000
+                - name: app_ecfe_om
+                  type: ovs-interface
+                  state: up
+                  #description: ECFE O&M network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdecfeomsp
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdecfeomsp
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                  mtu: 9000
+                - name: app_ecfe_sig
+                  type: ovs-interface
+                  state: up
+                  #description: ECFE O&M network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                  mtu: 3000
+    worker_pools:
+        - pool_cfg:
+            name: pool1
+            max_pods_per_node: 250
+            count: 5
+            initial_deployment_count: 5
+            node_labels:
+              - "nic-type-sriov=false"
+              - "label_with_underscore=val"
+              - "label_with_empty_val="
+              - "cnis-appl-control-plane=true"
+              - "node-role.rook-ceph/cluster=osd"
+              - "hosted-storage=storage-node"
+              - "ecfe-speaker=true"
+            authorized_keys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDlIsCQke64zfTLfqWH0H5T6OHbwaVUOcFejyjykL8HepBCqxtYy9ZwIgWwvtFRUsXK5DJhuL51klHCsCUMEvduma+28L2bIsCTkLW2BkNfxyYzNacsw27on+quLw3VZft/6ezBGOoXC9rjQ21lGhjxdbFFcqfUPljZWF4bGaxMRcs6Efm6iTVyDHNQsyP+V19kEYDs3C5rE5+RViZKov/VU5Wz5sKXJeZu4EIsEVBGF/LjuMgCWL+eX0OIStlxpQwidFULgLES+Mgu2Mfw+0499mqYQIqHppxmg7uIBIaM60VXGun9aGZ5LTXbvFpmo53aFZZpU2kufifBvf6/fQiP ccdadm@stargate
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBaDMo16IFKyjG6wIfn+Ca5LJTwC2DpI8Lf6jZZdvsKssLdIksZdNPUV7aseXfg8vUkSvILC61wD/Y7bMJL96ipRUSfOyxvO3mi7xWLx0T56Tigmsu3o4Rq0F0an5by9qvCrz1HhkeBmA97+f/fmfiXD067SSbefT/v6CHjR8wQQfT47mimwgwK5rGeR0dcCjdFn1ba2JyE0pINVfOhlqunoqjs7HO6Pp9Gs/MC9pHkwRWVXK2rbZXROn7WyBTjKb6afN9s4uAwQv9BBj63nsJdPDrYnjUoOrIf05ay6rrciNT8wLWQ7vhS3/wfqMguS87CWR20zTzUCT/uhjTz/sagwBwA23vQSY/eqKNgr9E87k6DuiIr0wxNzpx9dFCO8CPSmIpYP603gTpOg5cXRNfPBlzVRANjHpyQYB3qUqFgvnfWdyWyl/r+jIPq2e8UaKPBVsvrwueApGgjUzusX1Qgc6tx57ycjKBjudClvyDxP6C9E0szHcc9jaEi+ncfkUgJM0EpYcIbrkpxtixhf9g2S5MZRlSlJZO15OZ0aI/k6FXFb1gPzJdAkypmYshUgjjfPfb+IctbcvmzXbA8L5at2+TmvrGxJQfVH0YukJ9Tdrmlkv1PN09174QUq/35w4JvJYE7iKyZ3KCyP3LA4DuzoEvHxF3vRBG+I/GXXeqow== operator@n47-sdim-1
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDda8tneskFX6vt48aUauc9z+gBdJ6zQ06tkH3vu8yQhoNuTED6A7EHwE/pxVVzv4uyVXHH3LpfNsCETbPbvNa9Y5LhI7nr3XakaJUPpek3Tw5Qqh8fFqft2jJRHfJExN4ZL4cWsoUgvi+tYrIJcabh9RM9hmmmeMmaVifzDmp8i1FPZ87yyeaQUgixdHxutcpojF8bza17n0XOr1wwKWswVpEGY//EnRiZSnXZvy9qcvUcZBQyR4hUGpKQACPTzQGkdV+8WXjdROi4ghHsNzn0y7EWEz0I5YP+5V5o/uHspqajuM+IjVoLgaDpC89gLy1D1GFnh0MrcHc2kDtE90Mc9SE9atf1DgkcodEje9ynGYr86LQm4RN7zS56WM3GUz1IPMUnqydU2b7LgUthZueTigS8HrW9dL0e2QHAM0WPhyyqLVDq9xrie6Yd6v1v4vYz5CaJiAj1DpS4VlT7xiApb2odtt5GbXdKox1me//f8VS+SAhdhGpILMuNdzTpx7SBUDJr2VZhRUTA8ZqfOcUzjooCviFdGHQ3xB7V0RHQdU+PL2Yqjk6rWfcNrgwy/ETOTGLCBLIY2vbG26N7yoH94llvHhxEGlVokqid5VObk2aa8AtQNpONS4p1kkUU2i6Fc87QlRX9reX9i9c5nqlBk9U4u4Y5ZdfiTSFdYko3Hw== operator@n47-rte-primary
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCt4zy7y1HyFIxWCArQR9ubsPMWe+/VYl+gXyiT7DdDplwu6Gu8CqvZl015fAjVipJMMArz5UldaTYvDH9iBh1/7l8cH0RQ7DZoJTxlHmHOefHCdfeGlhRLe67iJkwDfwQ5T0lhbRF+XKPnt1WRLN471Am9xqzAAkla/sDIIxch5agwwbXpnnDN4x7+4FMvyXbicQZMK1pAS30cLw1CHnLftvwlgTKxY044rfkXqJmWjfA0XwfDCEQb5L+8MKO9Nu5XHTUfrauD14pid1dfsxXmd1am8idvAYLHh7WvP039jTnv2Tly97eYFOSTHX25CKoZr4J3wwUTCZfQbVj9mHj7OaAhYgCL/XtXQgYRaq33NgcISli20zKSZr9IBTKsnwmsByq7PV31mLiDS8L89/1761NjuZnxj5T0ZlWLNqPYC1QaHjL/LGOLtWJ8E5orqsooPbPNBkYtsXuTHJnW564DNPcBhytSwmU1ZXLtOXTowslgyg9NIpdGrh4O8BoQ+qoeLwb+kalr/Xi6ieOXiOPunhw7eES8TTPvDBzpT+SJvxGTTDoAepjPDx/nxlXna4NpOEl27RDBrLubOWByFLomVFLN4bY3HR87PxEe+Ukjco10Gt2S/pbmtuMxoQmfpCUR+Bwuvv414e+1zK7Q/SJbo54eUrqRODAHDi3H85CHvw== operator@n47-rte-secondary
+
+            net_config:
+              routes:
+                config:
+                  # Default route
+                  - destination: 0.0.0.0/0
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfesig 
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_sig
+                  #DNS1
+                  - destination: 10.221.16.10/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #DNS2
+                  - destination: 10.221.16.11/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NTP1
+                  - destination: 10.221.17.6/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NTP2
+                  - destination: 10.221.17.46/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #CCDADM on stargateserver
+                  - destination: 10.143.225.0/26
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NodeTS SELI
+                  - destination: 10.120.112.208/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NodeTS SERO
+                  - destination: 10.117.109.16/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  - destination: 10.221.14.88/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+              interfaces:
+                # Control interfaces
+                - name: eno5
+                  type: ethernet
+                  state: up
+                  #description: Control bond member
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: eno6
+                  type: ethernet
+                  state: up
+                  #description: Control bond member
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: bond_control
+                  type: bond
+                  state: up
+                  #description: Control bond
+                  ipv4:
+                    enabled: false
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                  link-aggregation:
+                    options:
+                      miimon: "100"
+                    mode: active-backup
+                    slaves:
+                      - interface-name:
+                          value: eno5
+                      - interface-name:
+                          value: eno6
+                - name: sdi_agent
+                  state: up
+                  type: vlan
+                  #description: SDI agent interface
+                  vlan:
+                    base-iface:
+                      interface-name:
+                        value: bond_control
+                    id:
+                      vlan-from-net:
+                        value: 70
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: sdiagent
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: sdiagent
+                            ip-version: 4
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                # Data interfaces
+                - name: ens1f0
+                  type: ethernet
+                  state: up
+                  #description: ovs bond slave
+                  mtu: 9000
+                - name: ens1f1
+                  type: ethernet
+                  state: up
+                  #description: ovs bond slave
+                  mtu: 9000
+                - name: bond_data
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens1f0
+                      - interface-name:
+                          value: ens1f1
+                - name: br_data
+                  type: ovs-bridge
+                  state: up
+                  ovs-bridge:
+                    options:
+                      stp: false
+                      rstp: false
+                    port:
+                      - name: bond_data
+                      - name: ccd_int
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3220
+                      - name: ccd_san2
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3609
+                      - name: app_ecfe_om
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 805
+                      - name: app_ecfe_sig
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 139
+
+                - name: ccd_int
+                  type: ovs-interface
+                  state: up
+                  #description: Internal Kubernetes network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdintsp
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdintsp
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                  mtu: 9000
+                - name: ccd_san2
+                  type: ovs-interface
+                  state: up
+                  #description: Ceph traffic network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdsan2sp
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdsan2sp
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                  mtu: 9000
+                - name: app_ecfe_om
+                  type: ovs-interface
+                  state: up
+                  #description: ECFE O&M network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdecfeomsp
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdecfeomsp
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                  mtu: 9000
+                # Storage interface (CEPH Replication)
+                - name: ens3f0
+                  type: ethernet
+                  state: up
+                  #description: Storage Ceph Replication bond member
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: ens3f1
+                  type: ethernet
+                  state: up
+                  #description: Storage Ceph Replication bond member
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: bond_storage
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  #description: CEPH replication storage bond, storage vlan 3608
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens3f0
+                      - interface-name:
+                          value: ens3f1
+                - name: ccd_repl
+                  type: vlan
+                  state: up
+                  #description: Ceph replication traffic network
+                  vlan:
+                    base-iface:
+                      interface-name:
+                        value: bond_storage
+                    id:
+                      vlan-from-net:
+                        value: 3608
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdsanreplsp
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdsanreplsp
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                  mtu: 9000
+                - name: app_ecfe_sig
+                  type: ovs-interface
+                  state: up
+                  #description: ECFE O&M network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                  mtu: 3000
+#pool2 sriov
+        - pool_cfg:
+            name: pool2
+            max_pods_per_node: 250
+            count: 5 
+            initial_deployment_count: 5
+            node_labels:
+              - "nic-type-sriov=true"
+              - "label_with_underscore=val"
+              - "label_with_empty_val="          
+            hugepage_config:
+              type: 1GB
+              pagecount_2mb: 0
+              pagecount_1gb: 64
+            cpu_isolation_config:
+              reserved_cpus: 0,40,1,41,2,42,3,43
+              cpu_manager_policy: static
+              topology_manager_policy: single-numa-node
+              isolation_interrupts: true  
+            user_node_scripts:
+              post_kubeadm_init: IyEvYmluL2Jhc2ggLXgKCiMgU2NyaXB0IHRvIGJpbmQgVkYgZGV2aWNlcyB0byBEUERLIGRyaXZlcgoKIyBXSE8gICAgIFdIRU4gICAgICAgV0hBVAojIC0tLS0tLS0gLS0tLS0tLS0tLSAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQojIGVlYW1qaCAgMjAyMC8xMS8yMyBJbml0aWFsIHZlcnNpb24KIyBlZWFtamggIDIwMjAvMTIvMTcgVXBkYXRlZCB0byByZW1vdmUgTWVsbGFub3ggYWQgYWRkIGRyaXZlciBzZWxlY3Rpb24uCgojIHZmZHBka19pbnRlbAojCiMgU2V0IHRoaXMgcGFyYW1ldGVyIHRvIHRoZSBwZXJjZW50YWdlIG9mIFZGIGRldmljZXMgdG8gYmUgYm91bmQgdG8gYSBEUERLIGRyaXZlci4KIyBGb3IgZXhhbXBsZSwgaWYgYSBQRiBoYXMgY29uZmlndXJlZCAxNiBWRnMsIGFuZCB0aGlzIHBhcmFtZXRlciBpcyBzZXQgdG8gMjUsIHRoZW4KIyA0IFZGcyB3aWxsIGJlIGJvdW5kIHRvIERQREsuICBUaGUgdmFsdWUgd2lsbCBiZSByb3VuZGVkIHRvIHRoZSBuZWFyZXN0IGludGVnZXIKIyAgICAgICAgICAKIyBEZWZhdWx0IHZhbHVlID0gMTAwCgp2ZmRwZGtfaW50ZWw9MTAwCgojIGRwZGtfZHJpdmVyCiMKIyBTZXQgdGhpcyBwYXJhbWV0ZXIgdG8gdGhlIG5hbWUgb2YgdGhlIGRyaXZlciB0byBiZSB1c2VkIGZvciBhIGRwZGsgZGV2aWNlLiAgCiMgVmFsaWQgdmFsdWVzIGFyZSAnaWdiX3VpbycgYW5kICd2ZmlvLXBjaScKIyBEZWZhdWx0IHZhbHVlID0gaWdiX3VpbwojCmRwZGtfZHJpdmVyPSJtbHg1X2NvcmUiCiMKIyAtLS0tLS0tLS0gRG8gbm90IG1vZGlmeSBiZWxvdyB0aGlzIGxpbmUgLS0tLS0tLS0tLQoKCnByaW50X2Vycm9yKCkgewogIHRpbWVzdGFtcD0kKGRhdGUgLS1yZmMtMzMzOT0ic2Vjb25kcyIpCiAgZWNobyAiJHRpbWVzdGFtcCBFUlJPUjogJDEiCiAgZXhpdCAxCn0KCmlmIFsgIiR2ZmRwZGtfaW50ZWwiID09ICIiIF0KdGhlbiB2ZmRwZGtfaW50ZWw9MTAwCmZpCgppZiBbICIkdmZkcGRrX2ludGVsIiAtbHQgMCBdIHx8IFsgIiR2ZmRwZGtfaW50ZWwiIC1ndCAxMDAgXQp0aGVuIHByaW50X2Vycm9yICJQYXJhbWV0ZXIgdmZkcGRrX2ludGVsIG11c3QgYmUgYW4gaW50ZWdlciBiZXR3ZWVuIDAgYW5kIDEwMCIKZmkKIAppZiBbICIkZHBka19kcml2ZXIiID09ICIiIF0KdGhlbiBkcGRrX2RyaXZlcj0ibWx4NV9jb3JlIgpmaQoKI2lmIFsgIiRkcGRrX2RyaXZlciIgIT0gIm1seDVfY29yZSIgXSAmJiBbICIkZHBka19kcml2ZXIiICE9ICJtbHg1X2NvcmUiIF0KI3RoZW4gcHJpbnRfZXJyb3IgIlBhcmFtZXRlciBkcGRrX2RyaXZlciBjYW4gb25seSBiZSBtbHg1X2NvcmUgb3IgbWx4NV9jb3JlIgojZmkKCmRldmljZXM9JChscyAvc3lzL2NsYXNzL25ldCkKCmZvciBkZXZpY2UgaW4gJGRldmljZXMKZG8KICBpZiBbIC1mIC9zeXMvY2xhc3MvbmV0LyRkZXZpY2UvZGV2aWNlL3NyaW92X251bXZmcyBdCiAgdGhlbgogICAgbnVtX3NyaW92PSQoY2F0IC9zeXMvY2xhc3MvbmV0LyRkZXZpY2UvZGV2aWNlL3NyaW92X251bXZmcykKICAgIHZlbmRvcj0kKGNhdCAvc3lzL2NsYXNzL25ldC8kZGV2aWNlL2RldmljZS92ZW5kb3IpCiAgICBpZiBbICIkbnVtX3NyaW92IiAtZ3QgMCBdICYmIFsgIiR2ZW5kb3IiID09ICIweDE1YjMiIF07IHRoZW4KICAgICAgbGV0IG51bV9kcGRrPSRudW1fc3Jpb3YqJHZmZHBka19pbnRlbC8xMDAKICAgICAgZm9yIGkgaW4gYHNlcSAwICQoKCRudW1fZHBkay0xKSlgOyBkbwogICAgICAgIGRyaXZlcmN0bCBzZXQtb3ZlcnJpZGUgJChscyAtbCAvc3lzL2NsYXNzL25ldC8kZGV2aWNlL2RldmljZS92aXJ0Zm4ke2l9IHwgY3V0IC1kICIvIiAtZiA4KSAkZHBka19kcml2ZXIKICAgICAgZG9uZQogICAgZmkKICBmaQpkb25lCgo=
+            authorized_keys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDlIsCQke64zfTLfqWH0H5T6OHbwaVUOcFejyjykL8HepBCqxtYy9ZwIgWwvtFRUsXK5DJhuL51klHCsCUMEvduma+28L2bIsCTkLW2BkNfxyYzNacsw27on+quLw3VZft/6ezBGOoXC9rjQ21lGhjxdbFFcqfUPljZWF4bGaxMRcs6Efm6iTVyDHNQsyP+V19kEYDs3C5rE5+RViZKov/VU5Wz5sKXJeZu4EIsEVBGF/LjuMgCWL+eX0OIStlxpQwidFULgLES+Mgu2Mfw+0499mqYQIqHppxmg7uIBIaM60VXGun9aGZ5LTXbvFpmo53aFZZpU2kufifBvf6/fQiP ccdadm@stargate
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBaDMo16IFKyjG6wIfn+Ca5LJTwC2DpI8Lf6jZZdvsKssLdIksZdNPUV7aseXfg8vUkSvILC61wD/Y7bMJL96ipRUSfOyxvO3mi7xWLx0T56Tigmsu3o4Rq0F0an5by9qvCrz1HhkeBmA97+f/fmfiXD067SSbefT/v6CHjR8wQQfT47mimwgwK5rGeR0dcCjdFn1ba2JyE0pINVfOhlqunoqjs7HO6Pp9Gs/MC9pHkwRWVXK2rbZXROn7WyBTjKb6afN9s4uAwQv9BBj63nsJdPDrYnjUoOrIf05ay6rrciNT8wLWQ7vhS3/wfqMguS87CWR20zTzUCT/uhjTz/sagwBwA23vQSY/eqKNgr9E87k6DuiIr0wxNzpx9dFCO8CPSmIpYP603gTpOg5cXRNfPBlzVRANjHpyQYB3qUqFgvnfWdyWyl/r+jIPq2e8UaKPBVsvrwueApGgjUzusX1Qgc6tx57ycjKBjudClvyDxP6C9E0szHcc9jaEi+ncfkUgJM0EpYcIbrkpxtixhf9g2S5MZRlSlJZO15OZ0aI/k6FXFb1gPzJdAkypmYshUgjjfPfb+IctbcvmzXbA8L5at2+TmvrGxJQfVH0YukJ9Tdrmlkv1PN09174QUq/35w4JvJYE7iKyZ3KCyP3LA4DuzoEvHxF3vRBG+I/GXXeqow== operator@n47-sdim-1
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDda8tneskFX6vt48aUauc9z+gBdJ6zQ06tkH3vu8yQhoNuTED6A7EHwE/pxVVzv4uyVXHH3LpfNsCETbPbvNa9Y5LhI7nr3XakaJUPpek3Tw5Qqh8fFqft2jJRHfJExN4ZL4cWsoUgvi+tYrIJcabh9RM9hmmmeMmaVifzDmp8i1FPZ87yyeaQUgixdHxutcpojF8bza17n0XOr1wwKWswVpEGY//EnRiZSnXZvy9qcvUcZBQyR4hUGpKQACPTzQGkdV+8WXjdROi4ghHsNzn0y7EWEz0I5YP+5V5o/uHspqajuM+IjVoLgaDpC89gLy1D1GFnh0MrcHc2kDtE90Mc9SE9atf1DgkcodEje9ynGYr86LQm4RN7zS56WM3GUz1IPMUnqydU2b7LgUthZueTigS8HrW9dL0e2QHAM0WPhyyqLVDq9xrie6Yd6v1v4vYz5CaJiAj1DpS4VlT7xiApb2odtt5GbXdKox1me//f8VS+SAhdhGpILMuNdzTpx7SBUDJr2VZhRUTA8ZqfOcUzjooCviFdGHQ3xB7V0RHQdU+PL2Yqjk6rWfcNrgwy/ETOTGLCBLIY2vbG26N7yoH94llvHhxEGlVokqid5VObk2aa8AtQNpONS4p1kkUU2i6Fc87QlRX9reX9i9c5nqlBk9U4u4Y5ZdfiTSFdYko3Hw== operator@n47-rte-primary
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCt4zy7y1HyFIxWCArQR9ubsPMWe+/VYl+gXyiT7DdDplwu6Gu8CqvZl015fAjVipJMMArz5UldaTYvDH9iBh1/7l8cH0RQ7DZoJTxlHmHOefHCdfeGlhRLe67iJkwDfwQ5T0lhbRF+XKPnt1WRLN471Am9xqzAAkla/sDIIxch5agwwbXpnnDN4x7+4FMvyXbicQZMK1pAS30cLw1CHnLftvwlgTKxY044rfkXqJmWjfA0XwfDCEQb5L+8MKO9Nu5XHTUfrauD14pid1dfsxXmd1am8idvAYLHh7WvP039jTnv2Tly97eYFOSTHX25CKoZr4J3wwUTCZfQbVj9mHj7OaAhYgCL/XtXQgYRaq33NgcISli20zKSZr9IBTKsnwmsByq7PV31mLiDS8L89/1761NjuZnxj5T0ZlWLNqPYC1QaHjL/LGOLtWJ8E5orqsooPbPNBkYtsXuTHJnW564DNPcBhytSwmU1ZXLtOXTowslgyg9NIpdGrh4O8BoQ+qoeLwb+kalr/Xi6ieOXiOPunhw7eES8TTPvDBzpT+SJvxGTTDoAepjPDx/nxlXna4NpOEl27RDBrLubOWByFLomVFLN4bY3HR87PxEe+Ukjco10Gt2S/pbmtuMxoQmfpCUR+Bwuvv414e+1zK7Q/SJbo54eUrqRODAHDi3H85CHvw== operator@n47-rte-secondary
+
+            net_config:
+              routes:
+                config:
+                  # Default route
+                  - destination: 0.0.0.0/0
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfesig
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_sig
+                  #DNS1
+                  - destination: 10.221.16.10/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #DNS2
+                  - destination: 10.221.16.11/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NTP1
+                  - destination: 10.221.17.6/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NTP2
+                  - destination: 10.221.17.46/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #CCDADM on stargateserver
+                  - destination: 10.143.225.0/26
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NodeTS SELI
+                  - destination: 10.120.112.208/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NodeTS SERO
+                  - destination: 10.117.109.16/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  - destination: 10.221.14.88/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+              interfaces:
+                # Control interfaces
+                - name: eno5
+                  type: ethernet
+                  state: up
+                  #description: Control bond member
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: eno6
+                  type: ethernet
+                  state: up
+                  #description: Control bond member
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: bond_control
+                  type: bond
+                  state: up
+                  #description: Control bond
+                  ipv4:
+                    enabled: false
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                  link-aggregation:
+                    options:
+                      miimon: "100"
+                    mode: active-backup
+                    slaves:
+                      - interface-name:
+                          value: eno5
+                      - interface-name:
+                          value: eno6
+                - name: sdi_agent
+                  state: up
+                  type: vlan
+                  #description: SDI agent interface
+                  vlan:
+                    base-iface:
+                      interface-name:
+                        value: bond_control
+                    id:
+                      vlan-from-net:
+                        value: 70
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: sdiagent
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: sdiagent
+                            ip-version: 4
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                # Data interfaces
+                - name: ens1f0
+                  type: ethernet
+                  state: up
+                  #description: ens1f0 physical interface (SR-IOV)
+                  mtu: 9000
+                  ethernet:
+                    sr-iov:
+                      total-vfs: 8
+                - name: ens1f1
+                  type: ethernet
+                  state: up
+                  #description: ens1f1 physical interface (SR-IOV)
+                  mtu: 9000
+                  ethernet:
+                    sr-iov:
+                      total-vfs: 8
+                - name: ens4f0
+                  type: ethernet
+                  state: up
+                  #description: ens4f0 physical interface (SR-IOV)
+                  mtu: 9000
+                  ethernet:
+                    sr-iov:
+                      total-vfs: 8
+                - name: ens4f1
+                  type: ethernet
+                  state: up
+                  #description: ens4f1 physical interface (SR-IOV)
+                  mtu: 9000
+                  ethernet:
+                    sr-iov:
+                      total-vfs: 8
+                - name: ens2f0
+                  type: ethernet
+                  state: up
+                  #description: ovs bond slave
+                  mtu: 9000
+                - name: ens2f1
+                  type: ethernet
+                  state: up
+                  #description: ovs bond slave
+                  mtu: 9000
+                - name: bond_data
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens2f0
+                      - interface-name:
+                          value: ens2f1
+                - name: br_data
+                  type: ovs-bridge
+                  state: up
+                  ovs-bridge:
+                    options:
+                      stp: false
+                      rstp: false
+                    port:
+                      - name: bond_data
+                      - name: ccd_int
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3220
+                      - name: ccd_san2
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3609
+                      - name: app_ecfe_om
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 805
+                      - name: app_ecfe_sig
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 139
+
+                - name: ccd_int
+                  type: ovs-interface
+                  state: up
+                  #description: Internal Kubernetes network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdintsp
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdintsp
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                  mtu: 9000
+                - name: ccd_san2
+                  type: ovs-interface
+                  state: up
+                  #description: Ceph traffic network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdsan2sp
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdsan2sp
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                  mtu: 9000
+                - name: app_ecfe_om
+                  type: ovs-interface
+                  state: up
+                  #description: ECFE O&M network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdecfeomsp
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdecfeomsp
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                - name: app_ecfe_sig
+                  type: ovs-interface
+                  state: up
+                  #description: ECFE O&M network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                  mtu: 3000
+
+#pool3 without ceph and sriov
+        - pool_cfg:
+            name: pool3
+            max_pods_per_node: 250
+            count: 13
+            initial_deployment_count: 13
+            node_labels:
+              - "nic-type-sriov=false"
+              - "label_with_underscore=val"
+              - "label_with_empty_val="
+              - "ecfe-speaker=true"
+            authorized_keys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDlIsCQke64zfTLfqWH0H5T6OHbwaVUOcFejyjykL8HepBCqxtYy9ZwIgWwvtFRUsXK5DJhuL51klHCsCUMEvduma+28L2bIsCTkLW2BkNfxyYzNacsw27on+quLw3VZft/6ezBGOoXC9rjQ21lGhjxdbFFcqfUPljZWF4bGaxMRcs6Efm6iTVyDHNQsyP+V19kEYDs3C5rE5+RViZKov/VU5Wz5sKXJeZu4EIsEVBGF/LjuMgCWL+eX0OIStlxpQwidFULgLES+Mgu2Mfw+0499mqYQIqHppxmg7uIBIaM60VXGun9aGZ5LTXbvFpmo53aFZZpU2kufifBvf6/fQiP ccdadm@stargate
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBaDMo16IFKyjG6wIfn+Ca5LJTwC2DpI8Lf6jZZdvsKssLdIksZdNPUV7aseXfg8vUkSvILC61wD/Y7bMJL96ipRUSfOyxvO3mi7xWLx0T56Tigmsu3o4Rq0F0an5by9qvCrz1HhkeBmA97+f/fmfiXD067SSbefT/v6CHjR8wQQfT47mimwgwK5rGeR0dcCjdFn1ba2JyE0pINVfOhlqunoqjs7HO6Pp9Gs/MC9pHkwRWVXK2rbZXROn7WyBTjKb6afN9s4uAwQv9BBj63nsJdPDrYnjUoOrIf05ay6rrciNT8wLWQ7vhS3/wfqMguS87CWR20zTzUCT/uhjTz/sagwBwA23vQSY/eqKNgr9E87k6DuiIr0wxNzpx9dFCO8CPSmIpYP603gTpOg5cXRNfPBlzVRANjHpyQYB3qUqFgvnfWdyWyl/r+jIPq2e8UaKPBVsvrwueApGgjUzusX1Qgc6tx57ycjKBjudClvyDxP6C9E0szHcc9jaEi+ncfkUgJM0EpYcIbrkpxtixhf9g2S5MZRlSlJZO15OZ0aI/k6FXFb1gPzJdAkypmYshUgjjfPfb+IctbcvmzXbA8L5at2+TmvrGxJQfVH0YukJ9Tdrmlkv1PN09174QUq/35w4JvJYE7iKyZ3KCyP3LA4DuzoEvHxF3vRBG+I/GXXeqow== operator@n47-sdim-1
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDda8tneskFX6vt48aUauc9z+gBdJ6zQ06tkH3vu8yQhoNuTED6A7EHwE/pxVVzv4uyVXHH3LpfNsCETbPbvNa9Y5LhI7nr3XakaJUPpek3Tw5Qqh8fFqft2jJRHfJExN4ZL4cWsoUgvi+tYrIJcabh9RM9hmmmeMmaVifzDmp8i1FPZ87yyeaQUgixdHxutcpojF8bza17n0XOr1wwKWswVpEGY//EnRiZSnXZvy9qcvUcZBQyR4hUGpKQACPTzQGkdV+8WXjdROi4ghHsNzn0y7EWEz0I5YP+5V5o/uHspqajuM+IjVoLgaDpC89gLy1D1GFnh0MrcHc2kDtE90Mc9SE9atf1DgkcodEje9ynGYr86LQm4RN7zS56WM3GUz1IPMUnqydU2b7LgUthZueTigS8HrW9dL0e2QHAM0WPhyyqLVDq9xrie6Yd6v1v4vYz5CaJiAj1DpS4VlT7xiApb2odtt5GbXdKox1me//f8VS+SAhdhGpILMuNdzTpx7SBUDJr2VZhRUTA8ZqfOcUzjooCviFdGHQ3xB7V0RHQdU+PL2Yqjk6rWfcNrgwy/ETOTGLCBLIY2vbG26N7yoH94llvHhxEGlVokqid5VObk2aa8AtQNpONS4p1kkUU2i6Fc87QlRX9reX9i9c5nqlBk9U4u4Y5ZdfiTSFdYko3Hw== operator@n47-rte-primary
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCt4zy7y1HyFIxWCArQR9ubsPMWe+/VYl+gXyiT7DdDplwu6Gu8CqvZl015fAjVipJMMArz5UldaTYvDH9iBh1/7l8cH0RQ7DZoJTxlHmHOefHCdfeGlhRLe67iJkwDfwQ5T0lhbRF+XKPnt1WRLN471Am9xqzAAkla/sDIIxch5agwwbXpnnDN4x7+4FMvyXbicQZMK1pAS30cLw1CHnLftvwlgTKxY044rfkXqJmWjfA0XwfDCEQb5L+8MKO9Nu5XHTUfrauD14pid1dfsxXmd1am8idvAYLHh7WvP039jTnv2Tly97eYFOSTHX25CKoZr4J3wwUTCZfQbVj9mHj7OaAhYgCL/XtXQgYRaq33NgcISli20zKSZr9IBTKsnwmsByq7PV31mLiDS8L89/1761NjuZnxj5T0ZlWLNqPYC1QaHjL/LGOLtWJ8E5orqsooPbPNBkYtsXuTHJnW564DNPcBhytSwmU1ZXLtOXTowslgyg9NIpdGrh4O8BoQ+qoeLwb+kalr/Xi6ieOXiOPunhw7eES8TTPvDBzpT+SJvxGTTDoAepjPDx/nxlXna4NpOEl27RDBrLubOWByFLomVFLN4bY3HR87PxEe+Ukjco10Gt2S/pbmtuMxoQmfpCUR+Bwuvv414e+1zK7Q/SJbo54eUrqRODAHDi3H85CHvw== operator@n47-rte-secondary
+            net_config:
+              routes:
+                config:
+                  # Default route
+                  - destination: 0.0.0.0/0
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfesig 
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_sig
+                  #DNS1
+                  - destination: 10.221.16.10/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #DNS2
+                  - destination: 10.221.16.11/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NTP1
+                  - destination: 10.221.17.6/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NTP2
+                  - destination: 10.221.17.46/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #CCDADM on stargateserver
+                  - destination: 10.143.225.0/26
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NodeTS SELI
+                  - destination: 10.120.112.208/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  #NodeTS SERO
+                  - destination: 10.117.109.16/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+                  - destination: 10.221.14.88/32
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdecfeomsp
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: app_ecfe_om
+              interfaces:
+                # Control interfaces
+                - name: eno5
+                  type: ethernet
+                  state: up
+                  #description: Control bond member
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: eno6
+                  type: ethernet
+                  state: up
+                  #description: Control bond member
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: bond_control
+                  type: bond
+                  state: up
+                  #description: Control bond
+                  ipv4:
+                    enabled: false
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                  link-aggregation:
+                    options:
+                      miimon: "100"
+                    mode: active-backup
+                    slaves:
+                      - interface-name:
+                          value: eno5
+                      - interface-name:
+                          value: eno6
+                - name: sdi_agent
+                  state: up
+                  type: vlan
+                  #description: SDI agent interface
+                  vlan:
+                    base-iface:
+                      interface-name:
+                        value: bond_control
+                    id:
+                      vlan-from-net:
+                        value: 70
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: sdiagent
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: sdiagent
+                            ip-version: 4
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                # Data interfaces
+                - name: ens1f0
+                  type: ethernet
+                  state: up
+                  #description: ovs bond slave
+                  mtu: 9000
+                - name: ens1f1
+                  type: ethernet
+                  state: up
+                  #description: ovs bond slave
+                  mtu: 9000
+                - name: bond_data
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens1f0
+                      - interface-name:
+                          value: ens1f1
+                - name: br_data
+                  type: ovs-bridge
+                  state: up
+                  ovs-bridge:
+                    options:
+                      stp: false
+                      rstp: false
+                    port:
+                      - name: bond_data
+                      - name: ccd_int
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3220
+                      - name: ccd_san2
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3609
+                      - name: app_ecfe_om
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 805
+                      - name: app_ecfe_sig
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 139
+
+                - name: ccd_int
+                  type: ovs-interface
+                  state: up
+                  #description: Internal Kubernetes network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdintsp
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdintsp
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                  mtu: 9000
+                - name: ccd_san2
+                  type: ovs-interface
+                  state: up
+                  #description: Ceph traffic network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdsan2sp
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdsan2sp
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                  mtu: 9000
+                - name: app_ecfe_om
+                  type: ovs-interface
+                  state: up
+                  #description: ECFE O&M network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdecfeomsp
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdecfeomsp
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                  mtu: 9000
+                - name: app_ecfe_sig
+                  type: ovs-interface
+                  state: up
+                  #description: ECFE O&M network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: true
+                    dhcp: false
+                  mtu: 3000
+
+kubernetes:
+  ip_version: 4
+  ingress_cluster_ip: "10.97.74.168"
+  pod_cidr_blocks:
+    - "192.168.0.0/16"
+  service_cidr_blocks:
+    - "10.96.0.0/12"
+  apiserver_extra_sans:
+    - "n47-vpod1-kubeapi.sero.gic.ericsson.se"
+    - "api.eccd.local"
+  ca_cert: |
+    -----BEGIN CERTIFICATE-----
+    MIIDBTCCAe2gAwIBAgIJAL6L60ootqLdMA0GCSqGSIb3DQEBCwUAMBgxFjAUBgNV
+    BAMMDUt1YmVybmV0ZXMtY2EwIBcNMjIwOTAyMTExNjMwWhgPMjA1MDAxMTgxMTE2
+    MzBaMBgxFjAUBgNVBAMMDUt1YmVybmV0ZXMtY2EwggEiMA0GCSqGSIb3DQEBAQUA
+    A4IBDwAwggEKAoIBAQDqoeo9jVf31TuvvtVYuo8ePHB82rT6TYECZpuOStFkCG+j
+    qfwEugFK/SlN1wBzTwbvHPOWpw3kqb9liKuhkrTt+b8baSMHavLigrwzJ05Y31hh
+    BdPtA+kOM73fzKhFutWtMPKaVNk6wtZDQRL5w6zTsjVHROm4PHPkfegGfLpbtoaK
+    7oQwRzIEgn8wR0qdV42yCFadfOTn37QNNbFO7GwSVVRoW8Cut73XPw7pDThNrSgv
+    aPGn39cn5DPZ3iPz0ydskGi0WiotTagvHLorlbOjBKNknJCyVarfHLyZE5i2JYUo
+    muHXp2+RXUpWKVExCkanZqAAM7mhw/RQmNoX2RqZAgMBAAGjUDBOMB0GA1UdDgQW
+    BBSEdCqb366Upm0/ldwP4ygChg3U5jAfBgNVHSMEGDAWgBSEdCqb366Upm0/ldwP
+    4ygChg3U5jAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQAG8g+2XYz1
+    TlHZMSiqA8iirXJzKlbv6o53KLHY2Ul4X7tTnGK4SVKQW2UATzlM4Gp2jw8IJrIN
+    yK65wR7tzV6ktw7qt7Q8nXQQQL3zp0UjYBBOKcHtpPP6wySCqTMxJ3NXPNJkesPf
+    LKHVKIDbklrc9qe1m+XIJl3QqSrsVP4ZDQe+g96AWcVBvFePzTJNd+rANehSXtWv
+    T1UN7VJZWVHJRn35J3BTON3BnwpjgKnfOLtf/3rpUyC4F/rRfLrsGJ2x67LDZJVY
+    EpnjpUYKsDRW/TXidYb4bIdYp7/8ZRoigvitesIUgwBKl7YLD5xjH6ek1B+VN//g
+    qvbZHs0ef+3S
+    -----END CERTIFICATE-----
+  ca_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpAIBAAKCAQEA6qHqPY1X99U7r77VWLqPHjxwfNq0+k2BAmabjkrRZAhvo6n8
+    BLoBSv0pTdcAc08G7xzzlqcN5Km/ZYiroZK07fm/G2kjB2ry4oK8MydOWN9YYQXT
+    7QPpDjO938yoRbrVrTDymlTZOsLWQ0ES+cOs07I1R0TpuDxz5H3oBny6W7aGiu6E
+    MEcyBIJ/MEdKnVeNsghWnXzk59+0DTWxTuxsElVUaFvArre91z8O6Q04Ta0oL2jx
+    p9/XJ+Qz2d4j89MnbJBotFoqLU2oLxy6K5WzowSjZJyQslWq3xy8mROYtiWFKJrh
+    16dvkV1KVilRMQpGp2agADO5ocP0UJjaF9kamQIDAQABAoIBAQCyM72DeEl6qpIF
+    fcvt8utmDINm4HkZrimwmBvHK53y+tFHnYASWu9GdBadzxDBgyECFJwRLNnJdP8v
+    72hjc9hE8i0qdWSsapcEYETuGQlRSHiIX/PAjPrB1Zx9UKPxKeDGBGoNuymtjnNL
+    ay4tUmd99Vivw3A7hHaE8Pd7jdnAcuExZhxwcr7e+GQo4MROzr/Zmrgv16s0aR4t
+    Pr8vUMajldtlN/DyOSwbbPoiLbR9oS3HITv4YSD33TbNt6wwPBQgS7S17kFRBuqR
+    ZD7fX81Jq07MaayF8H4EAB48dibu/pXD6cGbGb3gpkZHqMR1LNeNwQjzDKnzyyPs
+    qoXpfJFdAoGBAPyuWLJjiWAdVUIGB3OSdJ/+76PJIMRgxMpGirMrVFz8jMwHVBS7
+    rYVLM9qvG7Ya/3Y0h5QAcd5o3mLfOdcPxasvDrFUi1MSJdJyWqwxfinHa8YnIlEG
+    P7ZNsKL7/ceOVAvEzEbZ7FlBFka5BinbCH5kIODTUQWJFGiCgFtQy6cjAoGBAO22
+    4RhtfVAfVVbfzYB3C+U6HdPMoWZbFqQv/AfyWo1jeR4XJZ/fV1CeeKG+YAK/xvdv
+    w2wEAsQkY1SneYZ6pdAnZF1F/ALfbqXWcE7gBJPVRJtY/a1M4YVuteM02i4jP5xX
+    EefsSzQMmmZ4dMenOIb88nxmxg0QuUIAfwamKjETAoGAB8rEl3O0V89vwqJ29lxs
+    1kZBU5avOP8W8nnsawwKBPgQy3XqZN1Iw5SHG9ZMj3gTqqyCBdFhsY8gVII3wWcO
+    HHJODK/jwAMOQYgfPbIlBtrMewbX6xG7Qz7wFIaa092Sv+4osoKj5Di6nCG2i/Hi
+    OCuUS/qYRAhvJa3okWhTb2sCgYARq+6/6iPOuQWXF7wnOLJhsBhXjnbRLSRZwFd0
+    H8griqGOYxog8HGFRMKjA4wPqEIaUuysMwAhpLLdsDWQkb2R49vKM1GwxPtsyKxA
+    sNamRsx63/q7z2NUkA5lfaBanbQ04yQpoZ9VlzpDM+E6lmvVXSiJpvpCLmQXTAIl
+    dGTekQKBgQDUzNiAYTsTk0DeUEct8dfDq8DCGyhiSBUHKw6DLi4yB9yWDvFcuerW
+    Z6oN/etnXx4yfEidNSVGU7QWEDNUwgM8einptpR5FcFHDOQ0d8SMpyJLyv4ptJeM
+    yW627r0/X9sXhO/Wyd3ohJqezzS7M4dHHtCJ+NWF3ovwPOfAoc6iXQ==
+    -----END RSA PRIVATE KEY-----
+license:
+  nels_host: 10.221.14.88
+  licensing_domains:
+  - customer_id: '946060'
+    product_type: ECCD
+    swlt_id: STA-CCD-26
+
+addons:
+   - name: whereabouts
+     spec: {}
+   - name: calico
+     spec:
+       mtu: 9000
+       ipv4_pool_ipip_mode: Never
+       interface_name: ccd_int
+
+   - name: ecfe
+     spec:
+      node_selectors:
+       speaker:
+         ecfe-speaker: "true"
+      allocate_speakers: true
+      speakers_allowed_on_control_plane: true
+      config: |
+        bgp-bfd-peers:
+        - peer-address: 214.13.225.194
+          peer-asn: 4200000000
+          my-asn: 4259841731
+          min-rx: 300ms
+          min-tx: 300ms
+          multiplier: 3
+          my-address-pools:
+         # - ingress
+          - oam-pool
+          - n47_nf_om_pool
+        - peer-address: 214.13.225.195
+          peer-asn: 4200000000
+          my-asn: 4259841731
+          min-rx: 300ms
+          min-tx: 300ms
+          multiplier: 3
+          my-address-pools:
+         # - ingress
+          - oam-pool
+          - n47_nf_om_pool
+        - peer-address: 11.110.2.252
+          peer-asn: 102
+          my-asn: 3802
+          min-rx: 600ms
+          min-tx: 600ms
+          multiplier: 3
+          my-address-pools:
+          - nels
+        - peer-address: 11.110.2.253
+          peer-asn: 102
+          my-asn: 3802
+          min-rx: 600ms
+          min-tx: 600ms
+          multiplier: 3
+          my-address-pools:
+          - nels
+        address-pools:
+        - name: oam-pool
+          protocol: bgp
+          addresses:
+          -  214.13.224.129-214.13.224.158
+          auto-assign: true
+        - name: n47_nf_om_pool
+          protocol: bgp
+          addresses:
+          - 214.13.226.1-214.13.226.30
+          auto-assign: true
+        - name: nels
+          protocol: bgp
+          addresses:
+          - 5.8.6.47/32
+   - name: cr-registry
+     spec:
+      storage_class: network-block
+      storage_size: 250Gi
+      user_id: admin
+      password: "UmVHc3RSQE40N3ZwMQ=="
+      hostname: "n47-vpod1-registry.sc.sero.gic.ericsson.se"
+
+   - name: tiller
+     spec:
+       max_history: 200
+
+   - name: ingress
+     spec:
+       replicas: 4
+       ingress_service:
+         annotations:
+           ingress: nginx
+           metallb.universe.tf/address-pool: oam-pool
+         type: LoadBalancer
+         loadbalancer_ip:  214.13.224.129
+
+   - name: pm-server
+     spec:
+       pm_server_memory_limit: 16Gi
+       pm_server_memory_requests: 16Gi
+       pm_server_ephemeral_storage_limit: 32Gi
+       pm_server_ephemeral_storage_requests: 32Gi
+       pm_server_retention_time: 15d
+       pm_server_volume_size: 528Gi
+       node_exporter_memory_requests: 100Mi
+       node_exporter_memory_limit: 512Mi
+
+   - name: metrics-server
+     spec: {}
+
+   - name: pm_webhook_snmp
+     spec:
+       snmp_trap_receiver_host:
+          - "10.33.211.22"
+       snmp_trap_receiver_port: 8162
+       snmp_trap_receiver_community: public
+       debug: false
+
+   - name: multus
+     spec: {}
+
+   - name: ovs-cni
+     spec: {}
+
+   - name: sriov-network-device-plugin
+     spec:
+       node_selectors:
+         "node-role.kubernetes.io/worker": "worker"
+       tolerations:
+         - "{ effect: NoSchedule, key: node-role.kubernetes.io/master }"
+       sriov_network_device_plugin_configmap_name: "sriov-dp-configmap"
+       sriov_network_device_plugin_configmap_data: >
+        {
+            "resourceList": [{
+                     "resourceName": "mlnx_left",
+                     "resourcePrefix": "mellanox.com",
+                     "isRdma": true,
+                     "selectors": {
+                         "vendors": ["15b3"],
+                         "pfNames": ["ens1f0","ens4f0"],
+                         "drivers": ["mlx5_core"],
+                         "isRdma": true
+                     }
+                 },
+                 {
+                     "resourceName": "mlnx_right",
+                     "resourcePrefix": "mellanox.com",
+                     "isRdma": true,
+                     "selectors": {
+                         "vendors": ["15b3"],
+                         "pfNames": ["ens1f1","ens4f1"],
+                         "drivers": ["mlx5_core"],
+                         "isRdma": true
+                     }
+                 }
+             ]
+         }
+
+   - name: ccd-licensing
+     spec:
+       storage_class: network-block
+
+#   - name: fluent-bit
+#     spec: {}
+#   - name: fluentd
+#     spec:
+#       logger_external_server_host: ["n74_fuelhost1.sero.gic.ericsson.se"]
+#       logger_external_server_port: [514]
+#       logger_ca_crt: |
+#         
+#       logger_tls_crt: |
+#         
+#       logger_tls_key: |
+#   - name: dex
+#     spec:
+#         ingress_class: ngingx
+#         dex_ingress_host: n47dex1.sero.gic.ericsson.se
+#         dex_issuer_url: https://n47dex1.sero.gic.ericsson.se
+#         dex_expiry_signing_keys: "24h"
+#         dex_expiry_id_tokens: "4h"
+#         dex_enable_pwdb: true
+#         dex_static_passwords:
+#         - email: cnisadmin@example.com
+#           hash: $2a$10$bD4z01SFhR/7bpOdISPIgesJDveGDqqGRmXatzjWQzLtKE3YmBWdu
+#           username: cnisadmin
+#           userID: 08a8684b-db88-4b73-90a9-3cd1661f5466
+#         kube_oidc_auth: true
+#         kube_oidc_client_id: n47kuberos1.sero.gic.ericsson.se
+#         connectors:
+#         - type: ldap
+#           id: ldap
+#           name: LDAP
+#           host: cloudidam1.sero.gic.ericsson.se:389
+#           insecure_no_ssl: true
+#           bind_dn: CN=cnisadmin,OU=CCD,DC=cloudidam,DC=sero,DC=gic,DC=ericsson,DC=se
+#           bind_pw: Ldap123
+#           usersearch_base_dn: OU=CCD,DC=cloudidam,DC=sero,DC=gic,DC=ericsson,DC=se
+#           usersearch_filter: (objectClass=user)
+#           usersearch_username: sAMAccountName
+#           usersearch_id_attr: sAMAccountName
+#           usersearch_email_attr: userPrincipalName
+#           usersearch_name_attr: givenName
+#           groupsearch_base_dn: OU=CCD,DC=cloudidam,DC=sero,DC=gic,DC=ericsson,DC=se
+#           groupsearch_filter: (objectClass=group)
+#           groupsearch_user_attr: distinguishedName
+#           groupsearch_group_attr: member
+#           groupsearch_name_attr: cn
+
+#   - name: auth-client
+#     spec:
+#         auth_client_ingress_host: n47kuberos1.sero.gic.ericsson.se  
+
+   - name: ceph
+     spec:
+       spec:
+         drive_groups:
+           - all: true
+         networks:
+           public:
+             name: ccdsan2sp
+           private:
+             name: ccdsanreplsp
+       storage_classes:
+       - name: network-block
+         type: rbd
+         default: true
+         spec:
+           replication: x3
+           target_size_ratio: 0.5
+       - name: network-file
+         type: cephfs
+         default: false
+         spec:
+           replication: x3
+           target_size_ratio: 0.5
+value_packs:
+  - /home/ccdadm/CNIS_vPOD1/2.20.0-1085-3fee7336/value_packs/CXP9039695R5A.tar.gz
+# will be filled by automation
+[ccdadm@seroiuvm00085_N47 2.20.0-1085-3fee7336]# ssh sysadmin@10.86.88.46
+root
+ssh ceeinfra@192.168.0.11

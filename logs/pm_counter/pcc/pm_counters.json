@@ -1,0 +1,10 @@
+[
+ {"counter-name": "pcmm_SYS_gsnApCpuUsage"},
+ {"counter-name": "pcmm_SYS_gsnApSuUsage"},
+ {"counter-name": "pcmm_SYS_gsnSs7SctpDpCpuUsage"},
+ {"counter-name": "pcmm_sctpOlpAbortExistingAssoc"},
+ {"counter-name": "pcmm_sctpOlpAbortNewAssoc"},
+ {"counter-name": "pcmm_gsnOverloadProtectionIgnoredExistingConnections"},
+ {"counter-name": "pcmm_gsnOverloadProtectionIgnoredNewConnections"},
+ {"counter-name": "pcmm_gsnAutomaticConnectionRestarts"}
+]

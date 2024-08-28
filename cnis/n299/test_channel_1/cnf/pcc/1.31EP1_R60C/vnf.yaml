@@ -1,0 +1,139 @@
+vnflcm:
+  vnfInstanceName: node299-cluster1-pcc1
+  vnfProductName: PCC
+  vnfSoftwareVersion: CXP9041577_1.R60C
+  instantiate-file: instantiate.json
+  values-file: values.yaml
+  namespace: pcc1
+  evnfmName: n299
+  csar-url: https://arm.sero.gic.ericsson.se/artifactory/proj-pc-cloud-drop-generic-local/eric-pc-controller/R60C/csar/PCC_CXP9041577_1-R60C91.csar
+access-info:
+  oam: pcc1-oam.node299-cluster1.sero.gic.ericsson.se
+  amf-oam: pcc1-pcmm-oam.node299-cluster1.sero.gic.ericsson.se
+  ldap-admin:
+    user: sysadmin
+    pass: c3lzQWRtMW5ARGF5MA==
+  users:
+  - user: pcc-admin
+    pass: RG01R0NAUzBsdXQhb24=
+    pass-init: Q2hhbmdlbWVAMXN0
+pipeline:
+- module: create-namespace
+- module: create-k8s-secret
+  name: eric-pc-controller-ldap-admin-creds
+  sources:
+  - type: literal
+    key: adminuser
+    value: sysadmin
+  - type: literal
+    key: passwd
+    value: sysAdm1n@Day0
+  - type: literal
+    key: adminpasswd
+    value: $6$fzLPYlRZCpweJMJC$AiNfP0WYE3npY8Za6GxMFoGj75TOl.TS6tmnnky2Bv5wY0Ek8RIoJlr9pyj0LF3wMMaNsNTUH4jp2lIHviJGS0
+- module: create-k8s-secret
+  name: eric-pc-controller-snmp-alarm-provider-config
+  sources:
+  - type: file
+    key: config.json
+    file: snmp-config.json
+- module: instantiate
+- module: verify-pod-running
+  ignore-not-running:
+  - eric-data-search-engine-curator
+- module: run-k8s-command
+  cmd: create ingress eric-data-search-engine --rule="pcc-eric-data-search-engine.ingress.node299-eccd1.sero.gic.ericsson.se/*=eric-data-search-engine:9200"
+- module: run-k8s-command
+  name: Upload SMF certificates to Active sm controller
+  cmd: |
+    cp {server-cert} -c controller {pod}:/tmp/smf-sbi-server.pem
+    cp {client-cert} -c controller {pod}:/tmp/smf-sbi-client.pem
+    cp {root-cert} -c controller   {pod}:/tmp/
+  inline-files:
+    server-cert: ../../../../certs/cnf/pcc/pcc1-smf-sbi-server.pem
+    client-cert: ../../../../certs/cnf/pcc/pcc1-smf-sbi-client.pem
+    root-cert: ../../../../certs/root/RootCA/ca.crt
+  inline-intermediate-values:
+    pod: get service eric-pc-sm-controller -o jsonpath='{.spec.selector.app}'
+- module: sleep
+  duration: 60
+- module: run-k8s-command
+  name: Upload AMF certificates
+  cmd: |
+    cp {client-cert} -c eric-pc-mm-controller {pod}:/tmp/amf-sbi-client.p12
+    cp {server-cert} -c eric-pc-mm-controller {pod}:/tmp/amf-sbi-server.p12
+    cp {root-cert} -c eric-pc-mm-controller   {pod}:/tmp/
+  inline-files:
+    client-cert: ../../../../certs/cnf/pcc/pcc1-amf-sbi-client.p12
+    server-cert: ../../../../certs/cnf/pcc/pcc1-amf-sbi-server.p12
+    root-cert: ../../../../certs/root/RootCA/ca.crt
+  inline-intermediate-values:
+    pod: get pod -l app.kubernetes.io/name=eric-pc-mm-controller -l eric-pc-mm-controller-role=active
+      -o jsonpath='{.items[0].metadata.name}'
+- module: run-k8s-command
+  name: Create pm server ingress
+  cmd: create ingress eric-pm-server --rule="eric-pm-server-pcc1.node299-cluster1.sero.gic.ericsson.se/*=eric-pm-server:9090"
+- module: verify-pod-ready
+  check-interval: 30
+  deployments:
+  - eric-cm-yang-provider
+  - eric-pc-mm-controller
+- module: sleep
+  duration: 30
+- module: load-cmyp-user-config
+  file: user-config.txt
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 30
+- module: change-initial-password
+- module: load-cmyp-app-config
+  file: pc-mm-external-certificates.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 30
+- module: sleep
+  duration: 10
+- module: load-cmyp-app-config
+  file: pc-mm-config-cnat.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 60
+- module: sleep
+  duration: 10
+- module: load-cmyp-app-config
+  file: pc-sm-external-certificates.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 30
+- module: load-cmyp-app-config
+  file: vpngw-config-cnat.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 10
+- module: load-cmyp-app-config
+  file: pc-sm-config-cnat.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: verify-pod-ready
+  check-interval: 30
+  deployments:
+  - eric-pc-sm-smf-pgw-session
+- module: sleep
+  duration: 120
+- module: load-cmyp-app-config
+  file: ddc-config-cnat.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 10

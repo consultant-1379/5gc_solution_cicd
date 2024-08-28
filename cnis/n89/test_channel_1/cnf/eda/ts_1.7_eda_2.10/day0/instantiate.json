@@ -1,0 +1,8 @@
+{ "clusterName": "n89",
+  "additionalParams": {
+    "namespace": "eda2",
+    "applicationTimeOut": "2000",
+    "commandTimeOut": "2000"
+  }
+}
+

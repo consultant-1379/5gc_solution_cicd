@@ -1,0 +1,11 @@
+[
+	{"logplane.keyword": "adp-app-asi-logs"},
+	{"logplane.keyword": "adp-app-audit-logs"},
+	{"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-bsf-manager"},
+	{"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-bsf-worker"},
+	{"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-scp-manager"},
+	{"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-scp-worker"},
+	{"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-sc-slf"},
+	{"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-data-message-bus-kf"},
+	{"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-data-coordinator-zk"}
+]

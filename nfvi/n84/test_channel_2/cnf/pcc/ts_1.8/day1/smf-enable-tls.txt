@@ -1,0 +1,28 @@
+epg node secm certm node-credential smf-sbi-server install-credential-from-uri uri smf-sbi-server.crt
+epg node secm certm node-credential smf-sbi-client install-credential-from-uri uri smf-sbi-client.crt
+
+config
+epg node secm certm trusted-certificate RootCA
+commit
+end
+
+
+epg node secm certm trusted-certificate RootCA install-trusted-cert-from-uri uri RootCA.crt
+config
+epg node secm certm trust-category trust-category
+epg node secm certm trust-category trust-category trusted-certificates RootCA
+commit
+end
+
+
+config
+
+
+epg pgw sbi connection-client-profile client-profile-1 transport-layer-security node-credential smf-sbi-client trust-category trust-category
+epg pgw sbi connection-server-profile server-profile-1 transport-layer-security node-credential smf-sbi-server trust-category trust-category
+no epg pgw sbi connection-client-profile client-profile-1 transport-layer-security no-transport-layer-security
+no epg pgw sbi connection-server-profile server-profile-1 transport-layer-security no-transport-layer-security
+epg pgw sbi connection-client-profile client-profile-2 transport-layer-security node-credential smf-sbi-client trust-category trust-category
+no epg pgw sbi connection-client-profile client-profile-2 transport-layer-security no-transport-layer-security
+commit
+end

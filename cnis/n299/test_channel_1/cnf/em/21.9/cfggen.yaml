@@ -1,0 +1,33 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global.yaml
+templateDir: ../../../../../../../ts-config/templates/
+jsonschema: ../jsonschemas/schema-cnf.yaml
+jsonschemaGlobal: ../jsonschemas/schema-global.yaml
+targetDir: .
+
+files:
+- template: em/21.9/instantiate.json.jinja2
+  target: instantiate.json
+- template: em/21.9/values-adp.yaml.jinja2
+  target: adp/values.yaml
+- template: em/21.9/user-config.yaml.jinja2
+  target: adp/user-config.yaml
+- template: common/snmp-config.json.jinja2
+  target: adp/snmp-config.json
+- template: em/21.9/values-ha.yaml.jinja2
+  target: ha/values.yaml
+- template: em/21.9/values-http.yaml.jinja2
+  target: http/values.yaml
+- template: em/21.9/values-kvdb.yaml.jinja2
+  target: kvdb/values.yaml
+- template: em/21.9/values-mgr.yaml.jinja2
+  target: mgr/values.yaml
+- template: em/21.9/values-om.yaml.jinja2
+  target: om/values.yaml
+- template: em/21.9/values-util.yaml.jinja2
+  target: util/values.yaml
+  # to be able to use batch-install with cnat, these files needs to be in top directory
+- template: em/21.9/user-config.yaml.jinja2
+  target: user-config.yaml
+- template: common/snmp-config.json.jinja2
+  target: snmp-config.json

@@ -1,0 +1,68 @@
+######################################
+## CNF general information
+######################################
+nodeName: node299-cluster1-cces1
+nodeType: CCES
+instance: 1
+
+vnflcm:
+  clusterName: node299-cluster1
+  namespace: cces1
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day1:
+  - username: cces-admin
+    password: Changeme@1st
+    groups:
+    - nef-admin
+    - apigm-admin
+    - sragent-admin
+    - nrfagent-admin
+    - system-admin
+  - username: cces-sec
+    password: Changeme@1st
+    groups:
+    - nef-security-admin
+    - apigm-security-admin
+    - sragent-security-admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+license:
+  customerId: "946060"
+  swltId: STA-CCES-13 #DM5GC-NODE299-C1-CCES1-1   #STA-CCES-13
+
+cnom:
+  fqdn: cnom.cces1-oam.node299-cluster1.sero.gic.ericsson.se
+snmp:
+  agentEngineId: 800000c104636365733163317331
+  sourceIdentifier: 10.221.124.9 #cces1-oam.node299-cluster1.sero.gic.ericsson.se
+
+ddc:
+  remotePath: /root/ddc/node299-cluster1-cces1
+
+#vtap:
+#  tapagent: false
+
+######################################
+## CNF specific information
+######################################
+cces:
+  iamFqdn: iam.cces1-oam.node299-cluster1.sero.gic.ericsson.se
+  iamDomain: cces1-oam.node299-cluster1.sero.gic.ericsson.se
+  nef:
+    instanceId: ddd9b5b3-fa57-4cb1-ace7-4e4546a1c1d1-4e4546a1c1d1
+    host: cces1-5g-sbi-traffic.site1-cluster1
+    port: 443
+    nbi:
+      trust:
+        host: cces1-5g-nbi-trust-traffic.site1-cluster1
+    diameter:
+      host: node299-cluster1-cces1-nef
+      peer:
+        host: node299-cluster1-ccpc1-pcrf
+        ip: 172.17.128.8
+        port: 3868

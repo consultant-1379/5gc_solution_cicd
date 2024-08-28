@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <capabilities>
+        <capability>
+            urn:ietf:params:netconf:base:1.0
+        </capability>
+    </capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <edit-config>
+        <target>
+            <running/>
+        </target>
+        <config>
+            <diameter xmlns="urn:rdns:com:ericsson:oammodel:ericsson-diameter-adp">
+                <transport>
+                  <node>
+                    <id>GxHostServer</id>
+                    <origin-realm>{{ vnflcm.clusterName }}.epc.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org</origin-realm>
+                    {% if caas == 'CNIS' %}
+                    <origin-host>{{ pcrf.host }}.5gc.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org</origin-host>
+                    {% else %}
+                    <origin-host>{{ pcrf.host }}.mnc{{ mnc|mnc|mnc3 }}.mcc{{ mcc|mcc }}.3gppnetwork.org</origin-host>
+                    {% endif %}
+                    <product-name>CCPC</product-name>
+                    <vendor-id>193</vendor-id>
+                    <firmware-revision>1</firmware-revision>
+                  </node>
+                  <local-endpoint>
+                     <id>TransportEndpointServer</id>
+                     <node>GxHostServer</node>
+                  </local-endpoint>
+                </transport>
+            </diameter>
+        </config>
+    </edit-config>
+</rpc>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <capabilities>
+        <capability>
+            urn:ietf:params:netconf:base:1.0
+        </capability>
+    </capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <edit-config>
+        <target>
+            <running/>
+        </target>
+        <config>
+            <pcf xmlns="urn:rdns:com:ericsson:oammodel:ericsson-pcf">
+                <sm-policy-control>
+                    <pcrf-app-config>
+                        <nudr-predefined-dnn>internet</nudr-predefined-dnn>
+                        <nudr-predefined-snssai>
+                            <sst>1</sst>
+                            <sd>000002</sd>
+                        </nudr-predefined-snssai>
+                    </pcrf-app-config>
+                </sm-policy-control>
+                <subs-id-type>supi-imsi</subs-id-type>
+                <administrative-state>unlocked</administrative-state>
+                <nf-profile>
+                    <instance-id>98aae42e-da25-4329-acf0-63e2986785aa</instance-id>
+                    <requested-status>registered</requested-status>
+                    <locality>N89</locality>
+                    <plmn-id>
+                        <mcc>240</mcc>
+                        <mnc>81</mnc>
+                    </plmn-id>
+                    <snssai>
+                        <id>0</id>
+                        <sst>1</sst>
+                        <sd>000002</sd>
+                    </snssai>
+                    <fqdn>pcf1.n89.pcf.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                    <capacity>100</capacity>
+                    <pcf-info>
+                        <dnn>ims</dnn>
+                        <dnn>internet</dnn>
+                        <supi-range>
+                            <id>0</id>
+                            <supi-start>240810000000000</supi-start>
+                            <supi-end>240810002000000</supi-end>
+                        </supi-range>
+                    </pcf-info>
+                    <service>
+                        <instance-id>npcf-smpolicycontrol-0001</instance-id>
+                        <name>npcf-smpolicycontrol</name>
+                        <scheme>https</scheme>
+                        <requested-status>registered</requested-status>
+                        <fqdn>pcf1.n89.pcf.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                        <ip-endpoint>
+                            <id>1</id>
+                            <port>443</port>
+                        </ip-endpoint>
+                        <allowed-nf-type>smf</allowed-nf-type>
+                        <capacity>100</capacity>
+                    </service>
+                </nf-profile>
+                <remote-nf-type-discovery-mode>
+                <remote-nf-type>udr</remote-nf-type>
+                <mode>nrf-only</mode>
+                </remote-nf-type-discovery-mode>
+            </pcf>
+        </config>
+    </edit-config>
+</rpc>

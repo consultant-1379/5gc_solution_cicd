@@ -1,0 +1,139 @@
+global:
+  hosts:
+    so: ""
+    iam: "evnfm-iam.ingress.pod47-eccd1.seln.ete.ericsson.se"
+    vnfm: "evnfm.ingress.pod47-eccd1.seln.ete.ericsson.se"
+    wano: ""
+    pf: ""
+    uds: ""
+    gr: ""
+    gas: "evnfm-oss.ingress.pod47-eccd1.seln.ete.ericsson.se"
+  registry:
+    # If deploying from the director node on a CCD environment, the url can be retrieved using:
+    # kubectl get ingress eric-lcm-container-registry-ingress -n kube-system -o jsonpath="{.spec.tls[*].hosts[0]}"; echo
+    url: "k8s-registry.eccd.local"
+    # Docker registry username
+    username: "cnisadmin"
+    # Docker registry password
+    password: "01234567890123456789012345678901"
+  support:
+    ipv6:
+      enabled: false
+  timezone: CET
+  createClusterRoles: true
+
+system-user:
+  credentials:
+    username: "oss-day0"
+    password: "oss-day0"
+
+# Warning! If changing these application tags from true to false and that application
+# is already installed, then that application will be removed and data will be lost!
+tags:
+  eoEvnfm: true
+  eoVmvnfm: true
+  eoSo: false
+  eoPf: false
+  eoUds: false
+
+# This is the same as the global.iam hostname
+eric-sec-access-mgmt:
+  ingress:
+    hostname: "evnfm-iam.ingress.pod47-eccd1.seln.ete.ericsson.se"
+  replicaCount: 2
+
+# Fill only if deploying EO Container VNFM (EO EVNFM)
+eric-eo-evnfm:
+  eric-lcm-container-registry:
+    ingress:
+      hostname: "evnfm-docker-registry.ingress.pod47-eccd1.seln.ete.ericsson.se"
+    persistence:
+      persistentVolumeClaim:
+        size: "450Gi"
+  eric-lcm-helm-chart-registry:
+    ingress:
+      enabled: true
+      hostname: "evnfm-helm-registry.ingress.pod47-eccd1.seln.ete.ericsson.se"
+    env:
+      secret:
+        BASIC_AUTH_USER: "vnfm"
+        BASIC_AUTH_PASS: "vnfm"
+  eric-vnfm-orchestrator-service:
+    oss:
+      topology:
+        secretName: null
+    smallstack:
+      application: true
+
+# Fill only if deploying EO Container VNFM (EO VNFM) or EO VM VNFM
+eric-eo-evnfm-nbi:
+  eric-evnfm-rbac:
+    defaultUser:
+      username: "vnfm"
+      password: "vnfm"
+
+# Fill only if deploying EO VM VNFM
+eric-eo-evnfm-vm:
+  eric-vnflcm-service:
+    oss:
+      secretName: null
+    persistentVolumeClaim:
+      size: 20Gi
+
+# Fill only if deploying EO Service Orchestration (EO SO)
+eric-eo-so:
+  defaultUser:
+    username: ""
+    password: ""
+
+# Fill only if deploying EO PF Orchestration (EO PF)
+eric-oss-pf:
+  defaultUser:
+    username: ""
+    password: ""
+
+gas:
+  defaultUser:
+    username: "gas-day0"
+    password: "gas-day0"
+
+# Please refer to the EO dimensioning guide for the appropriate size of the BRO volume
+# The size will be dependent on which applications are being deployed
+eric-ctrl-bro:
+  persistence:
+    persistentVolumeClaim:
+      size: "20Gi"
+  sftp:
+    username: "vnfm"
+    password: "vnfm"
+
+eric-data-search-engine:
+  service:
+    network:
+      protocol:
+        IPv6: false
+
+# Fill in values in the following section only if deploying EO Georedundancy
+# Please refer to EO Installation Documentation for guidance on geo-redundant config
+geo-redundancy:
+  enabled: false
+eric-gr-bur-orchestrator:
+  credentials:
+    username: ""
+    password: ""
+  gr:
+    bro:
+      autoDelete:
+        backupsLimit: 10
+    sftp:
+      url: ""
+      username: ""
+      password: ""
+    cluster:
+      role: ""
+      # note that the secondary_hostnames variable should only be defined if the role is set to "PRIMARY".
+      # secondary_hostnames should be commented out if role is set to "SECONDARY".
+      secondary_hostnames:
+        - ""
+    registry:
+      secondarySiteContainerRegistryHostname:

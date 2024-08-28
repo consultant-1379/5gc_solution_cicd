@@ -1,0 +1,20 @@
+[
+ {"counter-name": "eric_ausf_nausf_auth_requests_recv"},
+ {"counter-name": "eric_ausf_nausf_auth_successful_responses_sent"},
+ {"counter-name": "eric_ausf_nausf_auth_unsuccessful_responses_sent"},
+ {"counter-name": "eric_udm_nudm_ueau_requests_recv"},
+ {"counter-name": "eric_udm_nudm_ueau_successful_responses_sent"},
+ {"counter-name": "eric_udm_nudm_ueau_unsuccessful_responses_sent"},
+ {"counter-name": "eric_udm_nudr_dr_requests_sent"},
+ {"counter-name": "eric_udm_nudr_dr_unsuccessful_responses_recv"},
+ {"counter-name": "eric_udm_nudr_dr_successful_responses_recv"},
+ {"counter-name": "eric_udm_nudm_uecm_requests_recv"},
+ {"counter-name": "eric_udm_nudm_uecm_successful_responses_sent"},
+ {"counter-name": "eric_udm_nudm_uecm_unsuccessful_responses_sent"},
+ {"counter-name": "eric_udm_nudm_sdm_requests_recv"},
+ {"counter-name": "eric_udm_nudm_sdm_successful_responses_sent"},
+ {"counter-name": "eric_udm_nudm_sdm_unsuccessful_responses_sent"},
+ {"counter-name": "eric_ausf_nausf_auth_requests_recv"},
+ {"counter-name": "eric_ausf_nausf_auth_requests_recv"},
+ {"counter-name": "eric_ausf_nausf_auth_requests_recv"}
+]

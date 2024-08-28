@@ -1,0 +1,1330 @@
+#External values file
+#Please set up the values regarding to deployment which you want to deploy
+#In some variable values there are small-telco and std-telco suggestion you can recognize it by comment {{small-telco value|std-telco value}}
+#The exact value for those variables is result of dimensioning exercise
+#Please remove curly brackets {{}} surrounding the final value to set it right
+
+global:
+  timezone: "CET"
+  #Possible deployments [small-telco(ex. 10k), std-telco(ex. 1m), clear-text(ex. non-mtls), mtls]. Enable only one dimensioning profile and one security profile
+  profiles:
+    small-telco:
+      enabled: true
+    std-telco:
+      enabled: false
+    cleartext:
+      enabled: false
+    mtls:
+      enabled: true
+
+  domainName: sero.gic.ericsson.se
+  clusterName: ccdm.n84-eccd3
+  enableCrashDumps: true
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: "CCDM"
+          customerId: "946060"
+          swltId: "STA-CCDM-12"
+  ipStackMode: "ipv4"
+  #for supporting new pull secret levels
+  pullSecret: regcred
+  # global registry
+  registry:
+    url: evnfm-docker-registry.ingress.n84-eccd3.sero.gic.ericsson.se
+    pullSecret: regcred
+  # global imagePullPolicy
+  imagePullPolicy: IfNotPresent
+
+#  FOR MTLS, REMOVE COMMENT
+  istio:
+    # UDM MESH WA: select IPv4 address or IPv6 address for IPv6 deployments
+    #  kubernetes_service_ipaddress: {{10.96.0.1|2001:14ba:9ea:8800::ffff:1}}
+    # Global configuration for INGRESS/EGRESS mTLS enabled
+    # - Global INGRESS configuration
+    ingress:
+      gateways:
+        # eric-udr-traffic gateway configuring eric-ingressgw-udr-traffic service mesh ingress gateway
+        # Ingress gateway for 5G Traffic (HTTP2) and 5G proxy multisite traffic HTTP2
+        eric-udr-traffic-gw: # Gateway resource name.
+          ports:
+            https-mtls:
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+        # Ingress gateway for 5G Provisioning (HTTP2)
+        eric-eda-provisioning-gw: # Gateway resource name.
+          ports:
+            https-mtls:
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+        # eric-ingress-udr-intersite
+        # Ingress gateway for Zookeeper multisite coordination,KV Apache Geode replication and 5G Provisioning Proxy
+        eric-udr-intersite-gw:
+          ports:
+            https-papi-provisioning:
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+            tls-eric-udr-kvdb-ag-locators:
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+            tls-eric-udr-kvdb-ag-gateway-receivers:
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+            tls-eric-udr-zookeeper:
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+            http-consistencychecker:
+              settings:
+                minProtocolVersion: TLSV1_2 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                maxProtocolVersion: TLSV1_3 # Values allowed [ TLSV1_1, TLSV1_2, TLSV1_3 ]
+                # - DHE-RSA-AES128-GCM-SHA256 not supported by istio
+                # Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy
+                cipherSuites:
+                  - ECDHE-ECDSA-AES128-GCM-SHA256
+                  - ECDHE-RSA-AES128-GCM-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA256
+                #  - ECDHE-RSA-AES128-SHA256
+                #  - ECDHE-ECDSA-AES128-SHA
+                #  - ECDHE-RSA-AES128-SHA
+                #  - AES128-GCM-SHA256
+                #  - AES128-SHA256
+                #  - AES128-SHA
+                  - ECDHE-ECDSA-AES256-GCM-SHA384
+                  - ECDHE-RSA-AES256-GCM-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA384
+                #  - ECDHE-RSA-AES256-SHA384
+                #  - ECDHE-ECDSA-AES256-SHA
+                #  - ECDHE-RSA-AES256-SHA
+                #  - AES256-GCM-SHA384
+                #  - AES256-SHA256
+                #  - AES256-SHA
+
+    egress:
+      # EGRESS configuration for destinations using mTLS
+      enabled: true
+      # - CCDM egress endpoints
+      endpoints:
+        # EGRESS CCDM ENDPOINTS TO BE DEFINED
+        # - Egress individual rules, one per CCDM peer.
+        # -- CCSM, Nudm interface notifications
+        eric-ccsm-sbi-traffic-mtls:
+          enabled: false
+          host: udm1.n84.5gc.mnc081.mcc240.3gppnetwork.org
+          addresses:
+            - 5.8.6.7
+          ports:
+            http2-port-for-mTLS-origination:
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+        # -- CCPC, Npcf interface notifications
+        eric-ccpc-sbi-traffic-mtls:
+          enabled: false
+          host: pcf1.n84.5gc.mnc081.mcc240.3gppnetwork.org
+          addresses:
+            - 5.8.6.10
+          ports:
+            http2-port-for-mTLS-origination:
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+        # -- CCRC, Nnr interface NRF registration/notifications
+        eric-ccrc-sbi-traffic-mtls:
+          enabled: false
+          host: nrf1.n84.5gc.mnc081.mcc240.3gppnetwork.org
+          addresses:
+            - 5.8.6.6
+          ports:
+            http2-port-for-mTLS-origination:
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+        # -- CCxx wildcard, if EGRESS-WILDCARD enabled EGRESS-CCSM-ENABLED, EGRESS-CCRC-ENABLED and EGRESS-CCPC must be disabled.
+        eric-wildcard-sbi-traffic-mtls:
+          enabled: true
+          host: "*.n84.5gc.mnc081.mcc240.3gppnetwork.org"
+          ports:
+            http2-port-for-mTLS-origination:
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+
+        # -- CCDM alternative site. This parameter is mandatory in case of the instantiation is due to an upgrade and the Upgrade Path is CCDM 1.3 to 1.5
+        eric-ccdm-sbi-remote-mtls:
+          enabled: true
+          host: udr2.n84.5gc.mnc081.mcc240.3gppnetwork.org
+          addresses:
+            - 5.8.6.49
+          ports:
+            https-port-for-mTLS-origination:
+              maxProtocolVersion: TLSv1_3 # Values allowed [ TLSv1_2, TLSv1_3 ]
+
+        # -- List of new remote endpoints where (m)TLS is enabled and it's not covered in the current list. Remove '# ' for enabling the element in the list. Repeat element format for more remote endpoints.
+        # Examples: New CCSM/CCPC/CCRC destinations where wildcard can not be used for identifying multiple destinations .
+        # <endpoint name>: # Free name but be careful that there has not been set previously.
+        #   enabled: true # Enable/Disable the service entry, values allowed [true, false].
+        #   host: "new.5gc.mnc310.mcc014.3gppnetwork.org" # FQDN or wildcard for new endpoint (it should not be defined before).
+        #   addresses: # Addresses is an optional field and it's only required for intersite, meaning communication among CCDM sites. Other destination should not define the address field.
+        #     - 127.0.0.1 # VIP resolution from host defined in the "host" parameter.
+        #   ports: # list of ports for the destination where mtls is required.
+        #   - port: 443 # Port number.
+        #     name: <protocol>-<port name> # For instance, https-newendpoint
+        #     protocol: TCP
+        #     mode: mTLS
+        #   resolution: NONE
+
+  # Prov Funct global parameters
+  activation:
+    # ip protocol stack mode ipv6: true or false
+    ipv6: false
+    nodeSelector: {}
+
+  # nodeSelector spec value
+  nodeSelector: {}
+
+eric-nrfagent:
+  global:
+    # ip protocol stack mode ipv6: ipv4 or ipv6
+    ipStackMode: "ipv4"
+
+# Provisioning Function
+eric-act-ccdm:
+  eric-pcf-pcfprovisioningvalidator:
+    pcfprovisioningvalidator:
+      replicaCount: 1
+
+  eric-udm-udmprovisioningvalidator:
+    replicaCount: 1
+
+  eric-udm-authprovvalidator:
+    replicaCount: 1
+
+  eric-act-proclog-cassandra-stasher:
+    misc:
+      proclog_stasher:
+        replicaCount: 1
+
+  eric-act-mapi-provisioning:
+    misc:
+      replicaCount: 2
+
+  eric-act-user-data-activator:
+    uda:
+      misc:
+        replicaCount: 2
+        synchronizerCount: 2
+
+  eric-act-oauth-token-validator:
+    misc:
+      replicaCount: 1
+
+  eric-data-wide-column-database-cd:
+    persistence:
+      dataVolume:
+        persistentVolumeClaim:
+          size: 32G #{{small-telco value|std-telco value}}
+          storageClassName: network-block
+    # ip protocol stack mode ipv6: true or false
+    resources:
+      cassandra:
+        network:
+          useIPv6: false
+    nodeSelector:
+      bra: {}
+      authJob: {}
+      cassandra: {}
+      tlsRestarter: {}
+    replicaCount: 3
+
+  eric-act-log-transformer:
+    replicaCount: 1
+    nodeSelector: {}
+
+  eric-act-mb-kf:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+        size: 20Gi # same value for both deployments
+    replicaCount: 3
+    nodeSelector: {}
+
+# ADP common components
+eric-adp:
+  eric-data-document-database-pg:
+    persistentVolumeClaim:
+      storageClassName: network-block
+    nodeSelector: {}
+    #postgresConfig:
+    #  huge_pages: "off" # possible values ["off","on","try"]
+
+  eric-data-coordinator-zk:
+    replicas: 3
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+    resources:
+      brAgent:
+        limits:
+          cpu: 1
+          memory: 2Gi
+        requests:
+          cpu: 10m
+          memory: 100M
+      datacoordinatorzk:
+        limits:
+          cpu: 2
+          ephemeral-storage: 5Gi
+          memory: 4Gi
+        requests:
+          cpu: 10m
+          memory: 100M
+      jmxExporter:
+        limits:
+          cpu: 50m
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 100M
+
+  eric-pm-bulk-reporter:
+    persistentVolumeClaim:
+      storageClassName: network-block
+      size: 10Gi
+    env:
+      # eccd_nodename: cluster name
+      # nf_node_type, one of: NRF,UDM-AUSF,UDR,NSSF,5G_UDM (All the NFs within the same cluster)
+      nodeName: ccdm
+      nodeType: UDR
+      supportedGps: fifteen-min thirty-min one-hour twelve-hour one-day one-min five-min
+    nodeSelector: {}
+    resources:
+      alarmreporter:
+        limits:
+          cpu: 1
+          ephemeral-storage: 500Mi
+          memory: 200Mi
+        requests:
+          cpu: 10m
+          ephemeral-storage: 50Mi
+          memory: 100M
+      bulkreporter:
+        limits:
+          cpu: 1
+          ephemeral-storage: 500Mi
+          memory: 200Mi
+        requests:
+          cpu: 10m
+          ephemeral-storage: 50Mi
+          memory: 100M
+      pmsftp:
+        limits:
+          cpu: 1
+          ephemeral-storage: 500Mi
+          memory: 200Mi
+        requests:
+          cpu: 10m
+          ephemeral-storage: 50Mi
+          memory: 100M
+
+  eric-data-search-engine:
+    persistence:
+      data:
+        persistentVolumeClaim:
+          storageClassName: network-block
+      master:
+        persistentVolumeClaim:
+          storageClassName: network-block
+    # ip protocol stack mode ipv6: true or false
+    service:
+      network:
+        protocol:
+          IPv6: false
+    nodeSelector:
+      data: {}
+      ingest: {}
+      master: {}
+      bragent: {}
+
+  eric-sec-ldap-server:
+    persistence:
+      storageClassName: network-block
+    nodeSelector:
+      ldap: {}
+      ldapAgent: {}
+
+  eric-cnom-server:
+    fqdn: cnom.ccdm.n84-eccd3.sero.gic.ericsson.se
+    legalNotice: "IF YOU ARE NOT AN AUTHORIZED USER, PLEASE EXIT IMMEDIATELY\n\nThis system processes personal information. Handle personal information with care. Misuse, including unauthorized access, is grounds for legal action. Version: 1.0, Date: October 27, 2020."
+
+    resources:
+      limits:
+        cpu: 100m
+        memory: 400Mi
+      requests:
+        cpu: 10m
+        memory: 100M
+
+  eric-cnom-document-database-mg:
+    persistence:
+      storageClass: network-block
+    nodeSelector: {}
+
+  eric-data-distributed-coordinator-ed:
+    brAgent:
+      enabled: true
+    persistence:
+      persistentVolumeClaim:
+        size: 250Mi #same value for both resources
+        storageClassName: network-block
+      brAgent:
+        backupVolume:
+          storageClassName: network-block
+    nodeSelector:
+      brAgent: {}
+      dced: {}
+
+  eric-cm-yang-provider:
+    ldap:
+      ipv6Enabled: false
+    persistentVolumeClaim:
+      storageClassName: network-block
+    nodeSelector: {}
+    externaldb:
+      dbuser: custom-user
+
+  eric-ctrl-bro:
+    persistence:
+      persistentVolumeClaim:
+        size: 96Gi #{{small-telco value|std-telco value}}
+        storageClassName: network-block
+    nodeSelector: {}
+
+  eric-fh-snmp-alarm-provider:
+    nodeSelector:
+      snmp-sender: eric-ccdm
+    oamVIP:
+      enabled: true
+      vip: "10.137.48.163"
+      #nodeName: "n84-eccd1-ccdm-10-137-48-163"
+      destIp: "10.36.242.99"
+
+  eric-pm-server:
+    server:
+      persistentVolume:
+        storageClass: network-block
+    nodeSelector: {}
+    resources:
+      pmExporter:
+        limits:
+          cpu: 500m
+          memory: 100Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      reverseProxy:
+        limits:
+          cpu: 2000m
+          memory: 400Mi
+        requests:
+          cpu: 20m
+          memory: 100Mi
+
+    # Configure values for application monitoring
+    rbac:
+      appMonitoring:
+        enabled: true
+        configFileCreate: false
+
+  eric-tm-ingress-controller-cr:
+    nodeSelector:
+      contour: {}
+      envoy: {}
+    service:
+      annotations:
+        sharedVIPLabel: "ccdm-oam"
+        addressPoolName: "ccdm-oam"
+    images:
+      contour:
+        resources:
+          limits:
+            cpu: 75m
+            memory: 300Mi
+          requests:
+            cpu: 10m
+            memory: 100M
+      envoy:
+        resources:
+          limits:
+            cpu: 1
+            memory: 300Mi
+          requests:
+            cpu: 10m
+            memory: 100M
+      shutdownmanager:
+        resources:
+          limits:
+            cpu: 75m
+            memory: 200Mi
+          requests:
+            cpu: 10m
+            memory: 100M
+
+  eric-odca-diagnostic-data-collector:
+    resources:
+      promReceiver:
+        limits:
+          cpu: 500m
+          memory: 800Mi
+        requests:
+          cpu: 10m
+          memory: 100M
+
+  eric-log-shipper:
+
+    nodeSelector: {}
+    resources:
+      logshipper:
+        limits:
+          cpu: 500m
+          memory: 2Gi
+        requests:
+          cpu: 10m
+          memory: 10M
+
+  eric-log-transformer:
+    nodeSelector: {}
+    resources:
+      logtransformer:
+        limits:
+          cpu: 1000m
+          memory: 3Gi
+        requests:
+          cpu: 20m
+          memory: 100M
+    egress:
+      syslog:
+        #FOR MTLS, REMOVE COMMENT
+        tls:
+          enabled: true
+          certificates:
+            asymmetricKeyCertificateName: eric-log-transformer-client-key/eric-log-transformer-client-certificate
+            trustedCertificateListName: eric-log-transformer-cacerts
+        enabled: false
+        remoteHosts:
+          - host: syslog.sero.gic.ericsson.se
+            port: 6514
+    # Remove # characters to enable inclusion rule.
+    # If this inclusion rule is enabled, only the log events with facility field set to "security/authorization messages" will be sent to syslog receiver.
+    #      inclusions:
+    #        - field: "[facility]"
+    #          value: "security/authorization messages"
+    # Enable json validation for avoiding mapper parser exemption
+    config:
+      adpJson:
+        validation:
+          enabled: true
+        transformation:
+          enabled: true
+
+  eric-data-search-engine-curator:
+    resources:
+      curator:
+        limits:
+          cpu: 100m
+          memory: 100Mi
+        requests:
+          cpu: 10m
+          memory: 10M
+
+  eric-fh-alarm-handler:
+    replicaCount: 1
+    backend:
+      dbuser: custom-user
+    nodeSelector: {}
+
+  eric-nrf-notify-agent:
+    replicaCount: 1
+
+
+  eric-cm-mediator:
+    replicaCount: 1
+    nodeSelector: {}
+    backend:
+      dbuser: custom-user
+    resources:
+      limits:
+        cpu: 2
+        memory: 512Mi
+      requests:
+        cpu: 10m
+        memory: 100M
+
+
+  eric-sec-access-mgmt:
+    tls:
+      client:
+        pg:
+          subject: custom-user
+    ingress:
+      hostname: iam.ccdm.n84-eccd3.sero.gic.ericsson.se
+      enabled: true
+      tls:
+        existingSecret: iccr-external-tls-secret
+      ingressClass: ccdm
+    service:
+      ipv6:
+        enabled: false
+    statefulset:
+      nodeSelector: {}
+
+  eric-sec-sip-tls:
+    nodeSelector: {}
+    resources:
+      sip:
+        limits:
+          cpu: 1500m
+          memory: 300Mi
+        requests:
+          cpu: 10m
+          memory: 150Mi
+
+
+  eric-sec-key-management:
+    nodeSelector: {}
+
+  eric-sw-inventory-manager:
+    nodeSelector: {}
+    resources:
+      eric-sw-inventory-manager:
+        limits:
+          cpu: 1000m
+          memory: 256Mi
+        requests:
+          cpu: 10m
+          memory: 100M
+
+  eric-lm-combined-server:
+    enabled: true
+    database:
+      userName: custom-user
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: "10.221.14.88"
+      nodeSelector: {}
+    licenseConsumerHandler:
+      nodeSelector: {}
+    #licenseServerIpAddresses:
+    #  ip1:
+    #  ip2:
+
+  eric-data-object-storage-mn:
+    persistentVolumeClaim:
+      storageClassName: network-block
+
+# eric-udr-release
+eric-udr:
+
+  eric-udr-cmagent:
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        memory: 50M
+
+  eric-udr-soap-notifchecker:
+    maxReplica: 1
+    minReplica: 1
+    resources:
+      limits:
+        cpu: 800m
+        memory: 700Mi
+      requests:
+        cpu: 50m
+        memory: 200M
+
+  eric-udr-soap-notifsender:
+    maxReplica: 1
+    minReplica: 1
+    resources:
+      limits:
+        cpu: 2000m
+        memory: 2048Mi
+      requests:
+        cpu: 50m
+        memory: 500Mi
+
+  eric-udr-rest-notifchecker:
+    maxReplica: 1
+    minReplica: 1
+    resources:
+      limits:
+        cpu: 2000m
+        memory: 2Gi
+      requests:
+        cpu: 50m
+        memory: 200M
+
+  eric-udr-rest-notifsender:
+    maxReplica: 1
+    minReplica: 1
+    resources:
+      limits:
+        cpu: 2000m
+        memory: 2Gi
+      requests:
+        cpu: 50m
+        memory: 500Mi
+
+  eric-pcf-pcfprovisioningvalidator:
+    replicaCount: 1
+
+
+  eric-udr-nrfproxy:
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+      requests:
+        cpu: 500m
+        memory: 512Mi
+
+  eric-udr-backuprestore:
+    persistence:
+      storageClass: network-block
+    requests:
+      orchestrator:
+        cpu: 100m
+        memory: 1Gi
+    limits:
+      orchestrator:
+        cpu: 100m
+        memory: 1Gi
+
+  eric-udr-ldap-balancer:
+    balancer:
+      tuning:
+        bindconns: 10
+        max_pending_cons: 20
+        max_pending_ops: 40
+        numconns: 2
+    deploy:
+      maxReplica: 2
+      minReplica: 2
+  eric_udr_ldap_balancer_monitor:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 100Mi
+      requests:
+        cpu: 50m
+        memory: 50M
+    ldapExporter:
+      resources:
+        limits:
+          cpu: 300m
+          memory: 400Mi
+        requests:
+          cpu: 10m
+          memory: 100M
+    syslog:
+      resources:
+        limits:
+          cpu: 500m
+          memory: 100Mi
+        requests:
+          cpu: 10m
+          memory: 50M
+
+  eric-udr-ldapfe:
+    conf:
+      resources:
+        limits:
+          cpu: 500m
+          memory: 50Mi
+        requests:
+          cpu: 10m
+          memory: 10M
+    ldapExporter:
+      resources:
+        limits:
+          cpu: 500m
+          memory: 300Mi
+        requests:
+          cpu: 10m
+          memory: 50M
+    queryRouter:
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 300Mi
+        requests:
+          cpu: 50m
+          memory: 100M
+    resources:
+      limits:
+        cpu: 1500m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 50M
+    service:
+      maxReplica: 2
+      minReplica: 2
+    syslog:
+      resources:
+        limits:
+          cpu: 500m
+          memory: 300Mi
+        requests:
+          cpu: 10m
+          memory: 50M
+
+  eric-udr-nudrsvc:
+    maxReplica: 2
+    minReplica: 2
+    resources:
+      httpProxy:
+        limits:
+          cpu: 1000m
+          memory: 400Mi
+        requests:
+          cpu: 50m
+          memory: 100M
+      httpProxyCfgProvider:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 10m
+          memory: 100M
+      jvm:
+        maxheapmemory: 1200m
+      nudrfe:
+        limits:
+          cpu: 2000m
+          memory: 1600Mi
+        requests:
+          cpu: 100m
+          memory: 500Mi
+      queryRouter:
+        limits:
+          cpu: 1000m
+          memory: 300Mi
+        requests:
+          cpu: 50m
+          memory: 100M
+      overloadMonitor:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 100M
+      statsDExporter:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 50M
+    probes:
+      httpProxy:
+        livenessProbe:
+          initialDelaySeconds: 25
+          timeoutSeconds: 6
+          periodSeconds: 20
+          successThreshold: 1
+          failureThreshold: 6
+        readinessProbe:
+          initialDelaySeconds: 25
+          timeoutSeconds: 6
+          periodSeconds: 20
+          successThreshold: 1
+          failureThreshold: 6
+  eric-udr-system-monitor:
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1024Mi
+      requests:
+        cpu: 50m
+        memory: 100M
+
+  eric-udr-system-status-provider:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1000Mi
+      requests:
+        cpu: 10m
+        memory: 100M
+
+  eric-udr-message-bus-monitor:
+    resources:
+      messageBusMonitor:
+        limits:
+          cpu: 500m
+          memory: 1024Mi
+        requests:
+          cpu: 50m
+          memory: 100M
+    replicaCount: 1
+
+  eric-udr-dbmonitor:
+    minReplica: 1
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+      requests:
+        cpu: 50m
+        memory: 100M
+
+  eric-udr-dbmanager:
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2048Mi
+      requests:
+        cpu: 50m
+        memory: 200M
+
+  eric-udr-data-model-controller:
+    jvm:
+      maxheapmemory: 1500m
+      startheapmemory: 256m
+    maxReplica: 1
+    minReplica: 1
+    resources:
+      limits:
+        cpu: 500m
+        memory: 2Gi
+      requests:
+        cpu: 10m
+        memory: 100M
+
+  eric-udr-provisioningfe:
+    maxReplica: 1
+    minReplica: 1
+    app:
+      loggingGeode: info
+      loggingProvisioningfe: INFO
+    istio:
+      gateway:
+        enabled: false
+        name: eric-udr-intersite-gw
+      virtualservice:
+        enabled: true
+    resources:
+      httpProxy:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 50m
+          memory: 100M
+      httpProxyCfgProvider:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 100M
+      overloadMonitor:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 100M
+      provisioningfe:
+        jvmMaxHeapPercentage: 75
+        limits:
+          cpu: 4
+          memory: 4Gi
+        requests:
+          cpu: 500m
+          memory: 2Gi
+      queryRouter:
+        limits:
+          cpu: 2
+          memory: 1Gi
+        requests:
+          cpu: 50m
+          memory: 100M
+      statsDExporter:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 50M
+    probes:
+      httpProxy:
+        livenessProbe:
+          initialDelaySeconds: 25
+          timeoutSeconds: 6
+          periodSeconds: 20
+          successThreshold: 1
+          failureThreshold: 6
+        readinessProbe:
+          initialDelaySeconds: 25
+          timeoutSeconds: 6
+          periodSeconds: 20
+          successThreshold: 1
+          failureThreshold: 6
+
+  eric-udr-notificationsubscription:
+    maxReplica: 1
+    minReplica: 1
+    resources:
+      httpProxy:
+        limits:
+          cpu: 2
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 100M
+      httpProxyCfgProvider:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 100M
+      notificationSubscription:
+        limits:
+          cpu: 4
+          memory: 2048Mi
+        requests:
+          cpu: 100m
+          memory: 200M
+      overloadMonitor:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 100M
+      queryRouter:
+        limits:
+          cpu: 3
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 100M
+      statsDExporter:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 10m
+          memory: 100M
+  eric-data-message-bus-kf:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+        storage: 15Gi
+    resources:
+      messagebuskf:
+        limits:
+          cpu: 2000m
+          memory: 6Gi
+        requests:
+          cpu: 1000m
+          memory: 1Gi
+
+  eric-data-kvdb-ag:
+    jvmHeap:
+      database:
+        locator: 600m
+        server: 3000m
+    jvmOptions:
+      database:
+        server:
+        - '"-XX:+UseG1GC"'
+        - '"-XX:MaxGCPauseMillis=8"'
+        - '"-XX:+UnlockExperimentalVMOptions"'
+        - '"-XX:G1NewSizePercent=1"'
+        - '"-XX:G1MixedGCCountTarget=64"'
+        - '"-XX:+ParallelRefProcEnabled"'
+        - '"-Xlog:gc:file=srvgc.log:utctime"'
+        - '"-Dgemfire.EXPIRY_THREADS=1"'
+        - '"-Dgemfire.disk.recoverValuesSync=true"'
+        - '"-Dgemfire.off-heap-memory-size=8000m"'
+        - '"-Dgemfire.critical-off-heap-percentage=95"'
+        - '"-Dgemfire.critical-heap-percentage=95"'
+        - '"-Dgemfire.max-wait-time-reconnect=900000"'
+    persistence:
+      backup:
+        persistentVolumeClaim:
+          storageClassName: network-block
+          adminMgr:
+            size: 64Gi
+          locator:
+            size: 8Gi
+          server:
+            size: 32Gi
+      data:
+        persistentVolumeClaim:
+          storageClassName: network-block
+          adminMgr:
+            size: 4Gi
+          locator:
+            size: 4Gi
+          server:
+            size: 16Gi
+      gwsender:
+        persistentVolumeClaim:
+          storageClassName: network-block
+          size: 4Gi
+    probing:
+      liveness:
+        database:
+          initialDelaySeconds: 240
+    replicaCount:
+      server: 3
+    resources:
+      adminMgr:
+        limits:
+          cpu: 200m
+          memory: 512Mi
+        requests:
+          cpu: 200m
+          memory: 512Mi
+      jmxExporter:
+        limits:
+          cpu: 1000m
+          memory: 512Mi
+        requests:
+          cpu: 200m
+          memory: 512Mi
+      locator:
+        limits:
+          cpu: 1200m
+          memory: 2000Mi
+        requests:
+          cpu: 1200m
+          memory: 2000Mi
+      monitor:
+        limits:
+          cpu: 400m
+          memory: 1Gi
+        requests:
+          cpu: 400m
+          memory: 1Gi
+      server:
+        limits:
+          cpu: 5000m
+          memory: 13000Mi
+        requests:
+          cpu: 3000m
+          memory: 13000Mi
+    multiSite:
+      locator:
+        localHost: udr1-intersite.n84.5gc.mnc081.mcc240.3gppnetwork.org
+
+################################################################################
+# eric-ccdm-service-mesh
+################################################################################
+eric-udm-mesh-integration:
+  eric-ingressgw-udr-traffic:
+    replicaCount: 1 #{{small-telco value|std-telco value}}
+    externalTrafficPolicy: "Cluster"
+    service:
+      annotations:
+        addressPoolName: udr-signaling
+        sharedVIPLabel: udr-signaling
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 2000m
+        memory: 256Mi
+  eric-ingressgw-eda-provisioning:
+    replicaCount: 1 #{{small-telco value|std-telco value}}
+    externalTrafficPolicy: "Cluster"
+    service:
+      annotations:
+        addressPoolName: ccdm-prov
+        sharedVIPLabel: ccdm-prov
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 2000m
+        memory: 256Mi
+  eric-ingressgw-udr-ldap-provisioning:
+    replicaCount: 1 #{{small-telco value|std-telco value}}
+    externalTrafficPolicy: "Cluster"
+    service:
+      annotations:
+        addressPoolName: ccdm-prov
+        sharedVIPLabel: ccdm-prov
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 2000m
+        memory: 256Mi
+  eric-ingressgw-udr-ldap-traffic:
+    replicaCount: 1 #{{small-telco value|std-telco value}}
+    externalTrafficPolicy: "Cluster"
+    service:
+      annotations:
+        addressPoolName: udr-ldap
+        sharedVIPLabel: udr-ldap
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 2000m
+        memory: 256Mi
+  eric-ingressgw-udr-intersite:
+    replicaCount: 1 #{{small-telco value|std-telco value}}
+    externalTrafficPolicy: "Cluster"
+    service:
+      annotations:
+        addressPoolName: ccdm-intersite
+        sharedVIPLabel: ccdm-intersite
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 2000m
+        memory: 256Mi

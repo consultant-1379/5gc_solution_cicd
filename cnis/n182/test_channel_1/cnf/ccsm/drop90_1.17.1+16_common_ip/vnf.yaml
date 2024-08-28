@@ -1,0 +1,214 @@
+vnflcm:
+  vnfInstanceName: eric-ccsm
+  vnfProductName: CCSM
+  vnfSoftwareVersion: 1.17.1+16
+  instantiate-file: day0/instantiate.json
+  values-file: day0/values.yaml
+  clusterName: n182-cluster
+  namespace: ccsm
+
+access-info:
+  oam: ccsm1-n182.seli.gic.ericsson.se
+  ldap-admin:
+    user: sysadmin
+    pass: UGEkJHcwcmQ0TERBUA==
+  users:
+  - user: ccsmoam
+    pass: V2Vha1BhcyN3b3JELTE=
+    pass-init: Q2hhbmdlbWUxc3Qh
+  - user: ccsmsec
+    pass: V2Vha1BhcyN3b3JELTE=
+    pass-init: Q2hhbmdlbWUxc3Qh
+pipeline:
+- module: create-namespace
+- module: create-k8s-secret
+  name: eric-sec-ldap-server-creds
+  sources:
+  - type: literal
+    key: adminuser
+    value: sysadmin
+  - type: literal
+    key: passwd
+    value: keycloak
+  - type: literal
+    key: adminpasswd
+    value: $6$Afe145T7$WodT.JfbVu27fW/c6IiuCU/BSCW.ytmkpr98GZYXqO8xMcGUuSem9N07qOA0WfZx3.tgcFnHfSq2zqe3mJJ.n0
+# fivegcsafe remove this after 1.11.0
+# - module: create-k8s-secret
+#   name: snmp-alarm-provider-config
+#   sources:
+#   - type: file
+#     key: config.json
+#     file: snmp-config.json
+- module: create-k8s-secret
+  name: eric-data-distributed-coordinator-creds
+  sources:
+  - type: literal
+    key: etcdpasswd
+    value: admin
+- module: create-k8s-secret
+  name: eric-data-object-storage-mn-creds
+  sources:
+  - type: literal
+    key: accesskey
+    value: adminaccess
+  - type: literal
+    key: secretkey
+    value: adminaccess
+- module: instantiate
+- module: verify-pod-running
+  ignore-not-running:
+  - eric-data-search-engine-curator
+  - eric-nrf-register-agent
+  - eric-nrf-discovery-agent
+  - eric-nrf-notify-agent
+  - eric-nrf-accesstoken-agent
+- module: run-k8s-command
+  name: Create networkpolicy to allow accessing eric-pm-server, eric-data-search-engine and eric-fh-alarm-handler
+  cmd: |
+    apply -f {file1}
+    apply -f {file2}
+    apply -f {file3}
+  inline-files:
+    file1: network-policy/eric-pm-server-allow.yaml
+    file2: network-policy/eric-data-search-engine-allow.yaml
+    file3: network-policy/eric-fh-alarm-handler-allow.yaml
+# Align the way to create ingress with fivegcsafe, or it can't be accessed in fivegcsafe test
+- module: run-k8s-command
+  name: Create ingresses eric-pm-server, eric-data-search-engine and eric-fh-alarm-handler
+  cmd: |
+    apply -f {file1}
+    apply -f {file2}
+    apply -f {file3}
+  inline-files:
+    file1: ingress/eric-pm-server-ingress.yaml
+    file2: ingress/eric-data-search-engine-ingress.yaml
+    file3: ingress/eric-fh-alarm-handler-ingress.yaml
+# - module: run-k8s-command
+#   name: Create pm server ingress
+#   cmd: create ingress eric-pm-server --rule="ccsm-eric-pm-server.ingress.node182-cluster1.seli.gic.ericsson.se/*=eric-pm-server:9089"
+# - module: run-k8s-command
+#   name: data-search-engine ingress
+#   cmd: create ingress eric-data-search-engine-tls --rule="ccsm-eric-data-search-engine-tls.ingress.node182-cluster1.seli.gic.ericsson.se/*=eric-data-search-engine-tls:9200"
+# - module: run-k8s-command
+#   name: fh-alarm-handler ingress
+#   cmd: create ingress eric-fh-alarm-handler --rule="ccsm-eric-fh-alarm-handler.ingress.node182-cluster1.seli.gic.ericsson.se/*=eric-fh-alarm-handler:5006"
+- module: verify-pod-ready
+  check-interval: 5
+  deployments:
+  - eric-cm-yang-provider
+- module: load-cmyp-user-config
+  file: day1/user-config.xml
+  proto: netconf
+  retry-interval: 30
+- module: sleep
+  duration: 300
+- module: change-initial-password
+- module: load-cmyp-app-config
+  file: day1/external-certificates.xml
+  user-id: 1
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/ausf-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/udm-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/nrfagent-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/ddc-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/snmp-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/hss-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/hssepc-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/diameter-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/ccsm-sctp-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/udm-remote-nf-profile.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/hss-remote-nf-profile.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/avg-config/1-seed-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/avg-config/2-customerkey-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/avg-config/3-arpf-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/avg-config/4-hnkey-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/avg-config/5-a4key-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15
+- module: load-cmyp-app-config
+  file: day1/avg-config/6-fset-config.xml
+  user-id: 0
+  proto: netconf
+- module: sleep
+  duration: 15

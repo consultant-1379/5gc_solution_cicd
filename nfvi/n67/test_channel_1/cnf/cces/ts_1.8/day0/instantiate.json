@@ -1,0 +1,11 @@
+{
+  "clusterName": "n67-eccd1",
+  "additionalParams": {
+    "namespace": "cces",
+    "skipVerification": true,
+    "applicationTimeOut": "2400",
+    "manoControlledScaling": false,
+    "global.ipStackMode":"ipv4"
+  }
+}
+

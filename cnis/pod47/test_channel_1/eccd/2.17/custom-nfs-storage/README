@@ -1,0 +1,4 @@
+1.NFS-storage can be only used for test enviroment.
+2.Before apply this storage you should load docker image on a specific node which is labeled with 'node=nfs-provision'.
+3.Docker image for nfs-provisioner is stored in /lab/pccc_builds/images/custom_nfs_storage
+

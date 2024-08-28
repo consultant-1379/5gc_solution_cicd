@@ -1,0 +1,169 @@
+##Version: 2.8.0-321
+global:
+  createClusterRoles: true
+  hosts:
+    gas: 'oss.evnfm.n67-eccd2.sero.gic.ericsson.se'
+    gr: ''
+    iam: 'iam.evnfm.n67-eccd2.sero.gic.ericsson.se'
+    pf: ''
+    so: ''
+    uds: ''
+    vnfm: 'eo-nbi.evnfm.n67-eccd2.sero.gic.ericsson.se'
+  ingressClass: oss_iccr
+  registry:
+    password: 'c0ntainerReg!stry'
+    url: 'container-registry.ingress.n67-eccd2.sero.gic.ericsson.se'
+    username: 'admin'
+  serviceMesh:
+    enabled: false
+  meshConfig:
+    enableTracing: false
+    defaultConfig:
+      tracing:
+        sampling: 10
+  proxy:
+    tracer: zipkin
+  tracer:
+    zipkin:
+      address: ''
+  support:
+    ipv6:
+      enabled: false
+  timezone: CET
+tags:
+  eoCm: false
+  eoEvnfm: true
+  eoPf: false
+  eoSo: false
+  eoUds: false
+  eoVmvnfm: true
+eric-cloud-native-base:
+  eric-ctrl-bro:
+    persistence:
+      persistentVolumeClaim:
+        size: 20Gi
+    sftp:
+      password: 'Qwerasdf1234!'
+      username: 'vnfm'
+  eric-data-search-engine:
+    autoSetRequiredWorkerNodeSysctl: false
+    service:
+      network:
+        protocol:
+          IPv6: false
+  eric-sec-access-mgmt:
+    replicaCount: 2
+    ingress:
+      hostname: "iam.evnfm.n67-eccd2.sero.gic.ericsson.se"
+  eric-tm-ingress-controller-cr:
+    enabled: true
+    service:
+      loadBalancerIP: '10.136.11.241'
+      annotations:
+        cloudProviderLB: {}
+      externalTrafficPolicy: Local
+    resources:
+      envoy:
+        limits:
+          memory: 2Gi
+      contour:
+        limits:
+          memory: 1Gi
+  eric-log-transformer:
+    egress:
+      syslog:
+        enabled: false
+        remoteHosts: []
+  eric-data-object-storage-mn:
+    persistentVolumeClaim:
+      size: 10Gi
+  eric-fh-snmp-alarm-provider:
+    sendAlarm: false
+geo-redundancy:
+  enabled: false
+eric-oss-common-base:
+  sessionTokens:
+    maxSessionDurationSecs: 36000
+    maxIdleTimeSecs: 1800
+  eric-eo-evnfm-nbi:
+    eric-evnfm-rbac:
+      defaultUser:
+        username: 'vnfm'
+        password: 'Qwerasdf1234!'
+  eric-gr-bur-orchestrator:
+    credentials:
+      username: ''
+      password: ''
+    gr:
+      bro:
+        autoDelete:
+          backupsLimit: 10
+      sftp:
+        url: ''
+        username: ''
+        password: ''
+      cluster:
+        role: ''
+        secondary_hostnames: ''
+      registry:
+        secondarySiteContainerRegistryHostname: ''
+  system-user:
+    credentials:
+      username: 'oss-day0'
+      password: 'Qwerasdf1234!'
+  gas:
+    defaultUser:
+      username: 'gas-day0'
+      password: 'Qwerasdf1234!'
+  eric-eo-usermgmt:
+    replicaCount: 2
+  eric-eo-usermgmt-ui:
+    replicaCount: 2
+eric-eo-evnfm:
+  eric-am-common-wfs:
+    userSecret: container-credentials
+  eric-lcm-container-registry:
+    ingress:
+      hostname: 'docker-registry.evnfm.n67-eccd2.sero.gic.ericsson.se'
+    persistence:
+      persistentVolumeClaim:
+        size: 450Gi
+    resources:
+      registry:
+        limits:
+          memory: 16Gi
+  eric-global-lcm-container-registry:
+    hostname: ''
+    username: ''
+    password: ''
+  eric-lcm-helm-chart-registry:
+    ingress:
+      enabled: true
+      hostname: 'helm-registry.evnfm.n67-eccd2.sero.gic.ericsson.se'
+    env:
+      secret:
+        BASIC_AUTH_USER: 'vnfm'
+        BASIC_AUTH_PASS: 'Qwerasdf1234!'
+  eric-vnfm-orchestrator-service:
+    oss:
+      topology:
+        secretName: null
+    smallstack:
+      application: true
+  eric-am-onboarding-service:
+    userSecret: container-credentials
+    onboarding:
+      skipCertificateValidation: true
+    resources:
+      limits:
+        memory: 32Gi
+eric-eo-evnfm-vm:
+  eric-vnflcm-service:
+    oss:
+      secretName: null
+    persistentVolumeClaim:
+      size: 20Gi
+    service:
+      enabled: false
+      loadBalancerIP: '::'
+      externalTrafficPolicy: Local

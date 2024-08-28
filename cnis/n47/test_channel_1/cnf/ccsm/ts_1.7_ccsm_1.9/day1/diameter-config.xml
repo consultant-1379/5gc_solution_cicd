@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  Notice that it is a configuration template in XML format
+  compliant with NF YANG model.  This XML template provides
+  a configuration skeleton that shall be modified before
+  loading into the yang service.  Some parts of the document
+  must be deleted or added depending on the network configuration
+  where the VNF will be deployed.
+-->
+  <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+  </capabilities>
+  </hello>]]>]]>
+  <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+  <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="0">
+  <edit-config>
+    <target><running/></target>
+    <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <!--Configuration for the adp diameter Function.-->
+        <diameter xmlns="urn:rdns:com:ericsson:oammodel:ericsson-diameter-adp">
+            <service>
+                <id>eric-hssepc-s6adiameter</id>
+               <!-- <enabled>true</enabled> -->
+                <local-endpoint-reference>
+                    <id>EpcS6aReference</id>
+                  <!--  <rank>1</rank> -->
+                    <application>eric-hssepc-s6a-diameter</application>
+                    <local-endpoint>EpcS6aEndpoint</local-endpoint>
+                </local-endpoint-reference>
+               <!-- <reroute-policy>EpcS6aRRPol</reroute-policy> -->
+               <!-- <request-stack-handler-selection>cluster</request-stack-handler-selection> -->
+             <!--   <answer-stack-handler-selection>cluster</answer-stack-handler-selection> -->
+            </service>
+            <peer-table>
+                <dynamic-peer-acceptor>
+                    <id>EpcS6aDynamicPeerAcceptor</id>
+                    <peer-origin-host>.*</peer-origin-host>
+                   <!-- <restrict-connections>false</restrict-connections> -->
+                   <!-- <congestion-handling-policy>EpcS6aCHPol</congestion-handling-policy> -->
+                </dynamic-peer-acceptor>
+            </peer-table>
+            <transport>
+                <node>
+                    <id>EpcS6aHost</id>
+                    <origin-realm>ericsson.se</origin-realm>
+                    <origin-host>esm.ericsson.se</origin-host>
+                    <product-name>HSS</product-name>
+                    <vendor-id>193</vendor-id>
+                    <firmware-revision>1</firmware-revision>
+                </node>
+                <host-address-resolver>
+                    <id>EpcS6aAddress</id>
+                    <linux-env-var>POD_IP</linux-env-var>
+                </host-address-resolver>
+                <local-endpoint>
+                    <id>EpcS6aEndpoint</id>
+                    <!--<dscp>16</dscp>-->
+                    <!--<watchdog-timer>20000</watchdog-timer>-->
+                    <!--<reconnect-timer>10000</reconnect-timer>-->
+                    <node>EpcS6aHost</node>
+                     <dscp>16</dscp>
+                    <terminate-connection-from-accepted-peers>EpcS6aDynamicPeerAcceptor</terminate-connection-from-accepted-peers>
+                    <transport-sctp>
+                        <port>3868</port>
+                        <!--nk>1</rank>-->
+                        <address>EpcS6aAddress</address>
+                    </transport-sctp>
+                  <!--  <disconnect-cause-handling-policy>EpcS6aDCHPol</disconnect-cause-handling-policy> -->
+                </local-endpoint>
+            </transport>
+            <routing-table>
+              <id>EpcS6aRoutingTable</id>
+                <service>eric-hssepc-s6adiameter</service>
+                <routing-entry>
+                    <id>20</id>
+                    <expression>msg.egress</expression>
+                    <action>forward-message</action>
+                </routing-entry>
+            </routing-table>
+           <!-- <policies>-->
+           <!--<reroute-policy>-->
+                   <!--<id>EpcS6aRRPol</id>-->
+                  <!--<reroute-error-id>3005</reroute-error-id>-->
+                <!--</reroute-policy>-->
+                <!--<disconnect-cause-handling-policy>-->
+                    <!--<id>EpcS6aDCHPol</id>-->
+                <!--</disconnect-cause-handling-policy>-->
+                <!--<congestion-handling-policy>-->
+                    <!--<id>EpcS6aCHPol</id>-->
+                <!--</congestion-handling-policy>-->
+            <!--</policies>-->
+        </diameter>
+    </config>
+  </edit-config>
+  </rpc>
+  <close-session/>

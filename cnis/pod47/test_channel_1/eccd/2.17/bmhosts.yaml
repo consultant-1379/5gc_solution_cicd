@@ -1,0 +1,459 @@
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: master1secret
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name:  cniscontroller1
+  namespace: metal3
+  labels:
+    nodeType: master
+    node-pool-name: control-plane
+spec:
+  bmc:
+    address: ipmi://10.130.49.100
+    credentialsName: master1secret
+  bootMACAddress: 90:38:09:46:B4:E0
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda   
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: master2secret
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: cniscontroller2
+  namespace: metal3
+  labels:
+    nodeType: master
+    node-pool-name: control-plane
+spec:
+  bmc:
+    address: ipmi://10.130.49.101
+    credentialsName: master2secret
+  bootMACAddress: 90:38:09:46:B4:5F
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: master3secret
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: cniscontroller3
+  namespace: metal3
+  labels:
+    nodeType: master
+    node-pool-name: control-plane
+spec:
+  bmc:
+    address: ipmi://10.130.49.102
+    credentialsName: master3secret
+  bootMACAddress: 90:38:09:46:B7:6B
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: stdworker1
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: stdworker1
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool1
+spec:
+  bmc:
+    address: ipmi://10.130.49.103
+    credentialsName: stdworker1
+  bootMACAddress: 90:38:09:46:B1:DA
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: stdworker2
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: stdworker2
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool1
+spec:
+  bmc:
+    address: ipmi://10.130.49.104
+    credentialsName: stdworker2
+  bootMACAddress: 90:38:09:46:B3:1B
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: stdworker3
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: stdworker3
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool1
+spec:
+  bmc:
+    address: ipmi://10.130.49.105
+    credentialsName: stdworker3
+  bootMACAddress: 90:38:09:46:B3:2A
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: stdworker4
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: stdworker4
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool1
+spec:
+  bmc:
+    address: ipmi://10.130.49.106
+    credentialsName: stdworker4
+  bootMACAddress: 90:38:09:46:B6:93
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: stdworker5
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: stdworker5
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool1
+spec:
+  bmc:
+    address: ipmi://10.130.49.107
+    credentialsName: stdworker5
+  bootMACAddress: 90:38:09:46:B5:10
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: stdworker6
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: stdworker6
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool1
+spec:
+  bmc:
+    address: ipmi://10.130.49.98
+    credentialsName: stdworker6
+  bootMACAddress: 90:38:09:46:B2:64
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: stdworker7
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: stdworker7
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool1
+spec:
+  bmc:
+    address: ipmi://10.130.49.99
+    credentialsName: stdworker7
+  bootMACAddress: 90:38:09:46:B2:37
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: stdworker8
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: stdworker8
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool1
+spec:
+  bmc:
+    address: ipmi://10.130.49.112
+    credentialsName: stdworker8
+  bootMACAddress: 90:38:09:46:B4:29
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: stdworker9
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: stdworker9
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool1
+spec:
+  bmc:
+    address: ipmi://10.130.49.113
+    credentialsName: stdworker9
+  bootMACAddress: 90:38:09:46:B5:2B
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: stdworker10
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: stdworker10
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool1
+spec:
+  bmc:
+    address: ipmi://10.130.49.114
+    credentialsName: stdworker10
+  bootMACAddress: 90:38:09:46:B5:6A
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: htworker1
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: htworker1
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool2
+spec:
+  bmc:
+    address: ipmi://10.130.49.108
+    credentialsName: htworker1
+  bootMACAddress: 90:38:09:46:B1:FB
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sda
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: ceph1
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: ceph1worker1
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool3
+spec:
+  bmc:
+    address: ipmi://10.130.49.109
+    credentialsName: ceph1
+  bootMACAddress: 90:38:09:46:B6:57
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sdd
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: ceph2
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: ceph2worker2
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool3
+spec:
+  bmc:
+    address: ipmi://10.130.49.110
+    credentialsName: ceph2
+  bootMACAddress: 90:38:09:46:B3:84
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sdd
+---
+apiVersion: v1
+data:
+  password: 'YWRtaW4='
+  username: 'YWRtaW4='
+kind: Secret
+metadata:
+  name: ceph3
+  namespace: metal3
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: ceph3worker3
+  namespace: metal3
+  labels:
+    nodeType: worker
+    node-pool-name: pool3
+spec:
+  bmc:
+    address: ipmi://10.130.49.111
+    credentialsName: ceph3
+  bootMACAddress: 90:38:09:46:B7:9E
+  online: false
+  rootDeviceHints:
+    deviceName: /dev/sdd

@@ -1,0 +1,99 @@
+ #############################################################################################
+### This script is for bgw configuration comparison.                                        ###
+### Manual steps to look up bgw config are:                                                 ###
+### ssh to node n84-bgw: conn n84-bgw                                                       ###
+### type command: show configuration |display set |no-more                                  ###
+### The comparison result will be written in file bgw_config_diff                           ###
+### The bgw configuration will also be saved under directory /lab/pccc_builds/5GC/5GC-CICD/ ###
+ #############################################################################################
+
+
+#!/usr/bin/env python
+import sys
+import difflib
+import pexpect
+import time
+import filecmp
+import subprocess
+
+logpath = '/lab/pccc_builds/5GC/5GC-CICD/BGW_config/'
+
+def readConf():        # Read the latest configuration file
+
+    PROMPT = ['# ', '>>> ', '> ', '\$ ']
+    cmd="show configuration |display set |no-more"
+    try:
+        ssh = pexpect.spawn("/lab/pccc_utils/scripts/l n84-bgw")
+        ssh.expect(PROMPT)
+        ssh.sendline(cmd)
+
+        fout = open("{0}{1}".format(logpath,'bgw_conf_script'),'wb')  # Save the latest config file to bgw_conf_script
+        ssh.logfile_read = fout
+        ssh.expect(PROMPT)
+        print(ssh.before.decode())      # Print configuration on screen as well, can be annotated.
+        ssh.sendline("exit")
+        time.sleep(1)
+        ssh.close(force=True)
+    except Exception as e:
+        print(e)
+        sys.exit()
+
+def writeconf():        # If configuration has changed, replace the old one with latest config.
+
+    try:
+        cmds = ("cd /\n"
+                'cd '+logpath+'\n'
+                "cat bgw_conf_script > bgw_conf\n"
+                )
+        outputs = subprocess.call(cmds, shell=True)
+        return outputs
+    except Exception as e:
+        print(e)
+        sys.exit()
+
+def compConf():
+
+    d = difflib.HtmlDiff()
+    with open("{0}{1}".format(logpath,'bgw_conf'), 'r') as f1:
+        content1 = f1.read().splitlines()
+    with open("{0}{1}".format(logpath,'bgw_conf_script'), 'r+') as f2:
+        content2 = f2.read().splitlines()
+    with open("{0}{1}".format(logpath,'bgw_conf_diff'), 'w+') as fo:
+        fo.write(d.make_file(content1,content2))
+        fo.close()
+
+    fcmp=filecmp.cmp("{0}{1}".format(logpath,'bgw_conf'), \
+    "{0}{1}".format(logpath,'bgw_conf_script'),shallow=False)
+    if not(fcmp):       # configs differ
+       writeconf()
+    cmds = ("cd /\n"
+            'cd '+logpath+'\n'
+            "rm -rf bgw_conf_script\n"
+            )
+    subprocess.call(cmds, shell=True)
+    return fcmp
+
+
+
+def main():
+    '''
+    # Count the total lines in old configuration
+    with open('/lab/pccc_builds/5GC/5GC-CICD/bgw_conf', 'r') as f:
+        conf = f.read().splitlines()
+        print(len(conf))
+    '''
+    readConf()
+    print('Read config completed.')
+    isChange=compConf()
+    if isChange:
+        print('BGW configuration keeps the same.')
+    else:
+        print('BGW configuration has changed.')
+    print('Compare config completed.')
+
+
+
+if __name__ == '__main__':
+    main()
+
+

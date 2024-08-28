@@ -1,0 +1,75 @@
+######################################
+## CNF general information
+######################################
+nodeName: n182-ccrc
+nodeType: CCRC
+vtap:
+  tapagent: false
+instance: 2
+vnflcm:
+  clusterName: n182
+  namespace: ccrc2
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+ericPmServer:
+  jobOverride: false
+
+users:
+  day1:
+  - username: ccrcoam
+    password: Changeme1st!
+    groups:
+    - nrf-admin
+    - nssf-admin
+    - nrfagent-admin
+    - system-admin
+  - username: ccrcsec
+    password: Changeme1st!
+    groups:
+    - nrf-security-admin
+    - nssf-security-admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+cnom:
+  fqdn: cnom.ccrc2.n182.seli.gic.ericsson.se
+
+snmp:
+  agentEngineId: 800000c10400000004
+license:
+  customerId: "946060"
+  swltId: STA-CCRC-16
+
+ccrc:
+  nrf:
+    instanceId: 0c765084-c182-49c6-9876-ae2f5fa2a63f
+    provisioning:
+      fqdn: nrf-prov.ccrc2.n182.seli.gic.ericsson.se
+  nssf:
+    instanceId: 13a1de33-c182-4cd6-a842-ce5bb3cba3d8
+    provisioning:
+      fqdn: nssf-prov.ccrc2.n182.seli.gic.ericsson.se
+      amf:
+        regionId: 255
+        setId: 1
+        instanceId:
+        - 543dc31c-6220-46c4-9c32-720bbdc2842d
+ddc:
+  remotePath: /lab/pccc_logs/5GC-CICD/ci/N182_DDC/n182-ccrc2-ddc
+
+kvdb:
+- siteId: 1
+
+######################################
+## CNF dimensioning specific
+######################################
+hpaReplica:
+  eric-nrf-discovery: {min: 2, max: 4}
+  eric-nrf-management: {min: 2, max: 4}
+  eric-nrf-management-notification: {min: 2, max: 6}
+  eric-nssf-slice-selection-control: {min: 2, max: 5}
+  eric-nssf-nssai-availability: {min: 2, max: 3}
+  eric-nssf-notification: {min: 2, max: 3}
+

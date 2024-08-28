@@ -1,0 +1,387 @@
+---
+
+## Set multiple parameter values at once ##
+
+definitions:
+  ## VIP_OAM: the virtual IP address for OAM traffic
+  VIP_OAM: &VIP_OAM ""
+  ## VIP_SIG_SCP: the virtual IP address for signaling traffic of SCP
+  VIP_SIG_SCP: &VIP_SIG_SCP "{% if indirectCommunication.enabled %}{{ sc.scpSigLbIp }}{% endif %}"
+  VIP_SIG2_SCP: &VIP_SIG2_SCP ""
+  ## VIP_SIG_SEPP: the virtual IP address for signaling traffic of SEPP
+  VIP_SIG_SEPP: &VIP_SIG_SEPP ""
+  VIP_SIG2_SEPP: &VIP_SIG2_SEPP ""
+  ## VIP_SIG_BSF: the virtual IP address for signaling traffic of BSF over the http interface
+  VIP_SIG_BSF: &VIP_SIG_BSF "{{ sc.bsf.bsfSigLbIp }}"
+  ## VIP_SIG_Diameter: the virtual IP address for signaling traffic of BSF over the diameter interface
+  VIP_SIG_Diameter: &VIP_SIG_Diameter "{{ sc.bsf.bsfDiameterLbIp }}"
+  ## storage class for all OAM state
+  oam_storage_class: &oam_storage_class {{ storageClassName|default("network-block") }}
+  ## shared VIP label for OAM
+  shared_vip_oam_label: &shared_vip_oam_label "sc{{ instance | default("") }}-oam"
+eric-bsf:
+  bsfdiameter:
+    enabled: {{ sc.bsf.enabled | string | lower }}
+  cassandra:
+    contact_point: eric-data-wide-column-database-cd:9042
+  manager:
+    leaderElection:
+      enabled: true
+  service:
+    worker:
+      allocateLoadBalancerNodePorts: true
+      annotations:
+        loadBalancerIPs: *VIP_SIG_BSF
+      ipFamilyPolicy: SingleStack
+  spec:
+    manager:
+      replicaCount: '2'
+  certificates:
+    traf:
+      key: bsf-sbi-server-key
+      certificate: bsf-sbi-server-cert
+    nrf:
+      key: bsf-sbi-client-key
+      certificate: bsf-sbi-client-cert
+  tapagent:
+    manager:
+      enabled: false
+    worker:
+      enabled: false
+  tapcollector:
+    worker:
+      enabled: false
+  vtap:
+    enabled: false
+eric-bsf-diameter:
+  cassandra:
+    contact_point: eric-data-wide-column-database-cd:9042
+  enabled: true
+eric-bsf-wcdb-cd:
+  persistence:
+    dataVolume:
+      persistentVolumeClaim:
+        storageClassName: *oam_storage_class
+eric-cm-mediator:
+  backend:
+    dbuser: scusr
+eric-cm-mediator-db-pg:
+  persistentVolumeClaim:
+    storageClassName: *oam_storage_class
+## Configuration Management Yang Provider
+eric-cm-yang-provider:
+  externaldb:
+    dbuser: scusr
+  service:
+    allocateLoadBalancerNodePorts: true
+    annotations:
+      sharedVIPLabel: *shared_vip_oam_label
+      addressPoolName: "sc{{ instance | default("") }}-oam"
+    loadBalancerIP: *VIP_OAM
+eric-cnom-server:
+  features:
+    signalingControllerScp: false
+eric-cnom-server-db-pg:
+  persistentVolumeClaim:
+    storageClassName: *oam_storage_class
+## Backup and Restore Orchestrator
+eric-ctrl-bro:
+  bro:
+    logging:
+      level: debug
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: *oam_storage_class
+## Distributed Coordinator ED
+eric-data-distributed-coordinator-ed:
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: *oam_storage_class
+## Distributed Coordinator ED used by SC's Service Producer Registry (SPR) optional functionality
+eric-data-distributed-coordinator-ed-sc:
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: *oam_storage_class
+## Document Database PG
+eric-data-document-database-pg:
+  persistentVolumeClaim:
+    storageClassName: *oam_storage_class
+  resources:
+    postgres:
+      limits:
+        hugepages-1Gi: 3Gi
+## Object Staorage MN
+eric-data-object-storage-mn:
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: *oam_storage_class
+## Search Engine
+eric-data-search-engine:
+  persistence:
+    data:
+      persistentVolumeClaim:
+        storageClassName: *oam_storage_class
+    master:
+      persistentVolumeClaim:
+        storageClassName: *oam_storage_class
+## SFTP Server
+eric-data-sftp-server:
+  service:
+    allocateLoadBalancerNodePorts: true
+    annotations:
+      sharedVIPLabel: *shared_vip_oam_label
+      addressPoolName: "sc{{ instance | default("") }}-oam"
+    loadBalancerIP: *VIP_OAM
+## Data Wide Column Database CD
+eric-data-wide-column-database-cd:
+  dataCenters:
+    - name: datacenter1
+      statefulSetNameOverride: eric-data-wide-column-database-cd
+  persistence:
+    dataVolume:
+      persistentVolumeClaim:
+        size: 100Gi
+  repairAgent:
+    enabled: false
+eric-fh-alarm-handler:
+  backend:
+    dbuser: scusr
+eric-fh-alarm-handler-db-pg:
+  persistentVolumeClaim:
+    storageClassName: *oam_storage_class
+## SNMP Alarm Provider
+eric-fh-snmp-alarm-provider:
+  service:
+    annotations:
+      sharedVIPLabel: *shared_vip_oam_label
+      addressPoolName: "sc{{ instance | default("") }}-oam"
+    loadBalancerIP: *VIP_OAM
+    secretName: snmp-alarm-provider-config
+## License Manager
+eric-lm-combined-server:
+  database:
+    userName: scusr
+  licenseServerClient:
+    licenseServer:
+      thrift:
+        host: "{{ nels.host }}"
+eric-lm-combined-server-db-pg:
+  persistentVolumeClaim:
+    storageClassName: *oam_storage_class
+eric-log-shipper:
+  logshipper:
+    harvester:
+      closeTimeout: 5m
+## PM Bulk Reporter
+eric-pm-bulk-reporter:
+  env:
+    iscompressed: true
+    logLevel: debug
+    nodeName: {{ nodeName }}
+    nodeType: {{ nodeType }}
+  persistentVolumeClaim:
+    storageClassName: *oam_storage_class
+  service:
+    annotations:
+      sharedVIPLabel: *shared_vip_oam_label
+      addressPoolName: "sc{{ instance | default("") }}-oam"
+    loadBalancerIP: *VIP_OAM
+## PM Server
+eric-pm-server:
+  server:
+    persistentVolume:
+      size: 200Gi
+      storageClass: *oam_storage_class
+    retention: "3d"
+eric-probe-virtual-tap-broker:
+  egress:
+    VirtualTapBroker:
+      dscp: '20'
+  enabled: false
+eric-sc-hcagent:
+  log:
+    hcagent:
+      level: debug
+eric-sc-monitor:
+  spec:
+    replicaCount: '1'
+eric-sc-nlf:
+  enabled: false
+eric-sc-rlf:
+  enabled: false
+eric-sc-slf:
+  enabled: false
+  tapagent:
+    enabled: false
+{% if sc.scp.enabled %}
+eric-scp:
+  enabled: {{ sc.scp.enabled | string | lower }}
+  globalRateLimit:
+    enabled: false
+  manager:
+    leaderElection:
+      enabled: false
+  nrfLookupFunction:
+    enabled: false
+  service:
+    worker:
+      allocateLoadBalancerNodePorts: false
+      annotations:
+        loadBalancerIPs: *VIP_SIG_SCP
+      ipFamilyPolicy: SingleStack
+      multiVpn:
+        annotations:
+          loadBalancerIPs: *VIP_SIG2_SCP
+      port: '1090'
+  spec:
+    manager:
+      replicaCount: '2'
+    worker:
+      replicaCount: '4'
+  subscriberLocationFunction:
+    enabled: false
+  tapagent:
+    manager:
+      enabled: false
+    worker:
+      enabled: false
+  tapcollector:
+    worker:
+      enabled: false
+  vtap:
+    enabled: false
+{% endif %}
+
+## LDAP Server
+eric-sec-ldap-server:
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: *oam_storage_class
+  replicaCount: '2'
+{% if sc.sepp.enabled %}
+eric-sepp:
+  enabled: {{ sc.sepp.enabled | string | lower }}
+  certificates:
+    traf:
+      trustedAuthority:
+        - caList: sc-traf-root-ca-list1
+        - caList: sc-traf-root-ca-list2
+        - caList: sc-traf-root-ca-rp1
+        - caList: sc-traf-root-ca-rp2
+        - caList: sc-traf-root-ca-rp3
+  globalRateLimit:
+    enabled: false
+  manager:
+    leaderElection:
+     enabled: false
+  service:
+    worker:
+      allocateLoadBalancerNodePorts: false
+      annotations:
+        loadBalancerIPs: *VIP_SIG_SEPP
+      ipFamilyPolicy: SingleStack
+      multiVpn:
+        annotations:
+          loadBalancerIPs: "''"
+        enabled: false
+        ipFamilyPolicy: SingleStack
+        loadBalancerIP: ""
+  spec:
+    manager:
+      replicaCount: '2'
+  tapagent:
+    manager:
+      enabled: false
+    worker:
+      enabled: false
+  tapcollector:
+    worker:
+      enabled: false
+  vtap:
+    enabled: false
+{% endif %}
+## Diameter
+eric-stm-diameter:
+  enabled: true
+  service:
+    loadBalancerIP: *VIP_SIG_Diameter
+## Ingress Controller CR
+eric-tm-ingress-controller-cr:
+  resources:
+    contour:
+      limits:
+        memory: 600Mi
+      requests:
+        memory: 300Mi
+  service:
+    allocateLoadBalancerNodePorts: true
+    annotations:
+      sharedVIPLabel: *shared_vip_oam_label
+      addressPoolName: "sc{{ instance | default("") }}-oam"
+    loadBalancerIP: *VIP_OAM
+eric-tm-senp-nvip:
+  persistence:
+    data:
+      persistentVolumeClaim:
+        storageClassName: *oam_storage_class
+features:
+  cnom:
+    functions:
+      bsf:
+        enabled: {{ sc.bsf.enabled | string | lower }}
+      nlf:
+        enabled: false
+      pvtb:
+        enabled: false
+      rlf:
+        enabled: false
+      scp:
+        enabled: {{ sc.scp.enabled | string | lower }}
+      sepp:
+        enabled: {{ sc.sepp.enabled | string | lower }}
+      slf:
+        enabled: false
+  prometheus:
+    functions:
+      bsf:
+        enabled: {{ sc.bsf.enabled | string | lower }}
+      bsfdiameter:
+        enabled: {{ sc.bsf.bsfDiameter.enabled | string | lower }}
+      nlf:
+        enabled: false
+      pvtb:
+        enabled: false
+      rlf:
+        enabled: false
+      scp:
+        enabled: {{ sc.scp.enabled | string | lower }}
+      sepp:
+        enabled: {{ sc.sepp.enabled | string | lower }}
+      slf:
+        enabled: false
+global:
+  timezone: {{ timezone }}
+  ericsson:
+    licensing:
+      licenseDomains:
+        - customerId: "{{ license.customerId }}"
+          productType: "SIGNALING_CONTROLLER" ## DO NOT CHANGE THIS VALUE
+          swltId: "{{ license.swltId }}"
+      ipFamilyPolicy: SingleStack
+      #  pullSecret: ""
+      #  registry:
+      #    url: "armdocker.rnd.ericsson.se"
+ingress:
+  nbi:
+    {# The following if/else block is to be compatible with old way to generate FQDN #}
+    {# The new way is to explicitly provide the FQDN, old way should be removed in the future #}
+    {% if cnom is defined %}
+    fqdn: {{ cnom.fqdn }}
+    {% else %}
+    fqdn: "cnom.{{ vnflcm.namespace }}.{{ vnflcm.clusterName }}.{{ oamDomain }}"
+    {% endif %}
+    tls:
+      verifyClientCertificate: false
+swim:
+  commercialVersion: {{ swim.commercialVersion}}
+  semanticVersion: {{ swim.semanticVersion }}

@@ -1,0 +1,11 @@
+{
+  "clusterName": "n84-eccd3",
+  "additionalParams": {
+    "namespace": "ccsm",
+    "skipVerification": true,
+    "applicationTimeOut": "2400",
+    "commandTimeOut": "300",
+    "disableOpenapiValidation": true
+  }
+}
+

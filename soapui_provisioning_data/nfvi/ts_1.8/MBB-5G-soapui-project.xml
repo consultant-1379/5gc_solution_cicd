@@ -1,0 +1,3460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="a61976cb-eb4e-4761-b1a0-46686355cf50" activeEnvironment="Default" name="MBB 5G" resourceRoot=""
+                    soapui-version="5.5.0" abortOnError="false" runType="SEQUENTIAL"
+                    xmlns:con="http://eviware.com/soapui/config">
+    <con:settings>
+        <con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestRunnerAction@values-local">
+            <![CDATA[
+			<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="Report Format(s)" value=""/>
+  <con:entry key="Host:Port" value=""/>
+  <con:entry key="Export JUnit Results" value="false"/>
+  <con:entry key="Export All" value="false"/>
+  <con:entry key="Save After" value="false"/>
+  <con:entry key="Add Settings" value="false"/>
+  <con:entry key="WSS Password Type" value=""/>
+  <con:entry key="TestSuite" value="&lt;all>"/>
+  <con:entry key="Endpoint" value=""/>
+  <con:entry key="Select Report Type" value=""/>
+  <con:entry key="System Properties" value=""/>
+  <con:entry key="Password" value=""/>
+  <con:entry key="Print Report" value="false"/>
+  <con:entry key="Open Report" value="false"/>
+  <con:entry key="Export JUnit Results with test properties" value="false"/>
+  <con:entry key="Global Properties" value=""/>
+  <con:entry key="Project Properties" value=""/>
+  <con:entry key="Project Password" value=""/>
+  <con:entry key="TestCase" value="&lt;all>"/>
+  <con:entry key="Username" value=""/>
+  <con:entry key="user-settings.xml Password" value=""/>
+  <con:entry key="TestRunner Path" value=""/>
+  <con:entry key="Environment" value="Default"/>
+  <con:entry key="Coverage Report" value="false"/>
+  <con:entry key="Enable UI" value="false"/>
+  <con:entry key="Root Folder" value=""/>
+  <con:entry key="Ignore Errors" value="false"/>
+  <con:entry key="Domain" value=""/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="Save Project" value="false"/>
+</xml-fragment>
+		]]></con:setting>
+    </con:settings>
+
+
+    <con:interface xsi:type="con:RestService" id="669a536a-680e-48e8-b7f2-bf5ea6a77285"
+                   wadlVersion="http://wadl.dev.java.net/2009/02"
+                   name="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1" type="rest" basePath="/aapi/v1"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <con:settings/>
+        <con:definitionCache type="TEXT" rootPart=""/>
+        <con:endpoints>
+            <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+        </con:endpoints>
+        <con:resource name="udm-slice-profile" path="eps-udm/udm-slice-profile"
+                      id="79e02b62-400e-492a-aeb1-c60373372738">
+            <con:settings/>
+            <con:parameters>
+                <con:parameter>
+                    <con:name>udmSliceProfileId</con:name>
+                    <con:value>${Properties#profileId}</con:value>
+                    <con:style>QUERY</con:style>
+                    <con:default>${Properties#profileId}</con:default>
+                </con:parameter>
+            </con:parameters>
+            <con:method name="create" id="206acb8e-379c-4734-a071-a5807b152c09" method="POST">
+                <con:settings/>
+                <con:parameters/>
+                <con:representation type="REQUEST">
+                    <con:mediaType>application/json</con:mediaType>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>0</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="FAULT">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>401 404 500 403 400 502</con:status>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:udm="https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/eps-udm/udm-slice-profile">
+                        udm:Response
+                    </con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>text/html;charset=utf-8</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                </con:representation>
+                <con:request name="create-profile" id="221b40b8-5688-405f-9b0b-c61b599144a7"
+                             mediaType="application/json" postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>https://prov.eda2.n84-eccd1.sero.gic.ericsson.se</con:endpoint>
+                    <con:request>{
+                        "udmSliceProfileId": "${Properties#profileId}",
+                        "plmnIdSets": [
+                        {
+                        "plmnIdSetIdentifier": "Default",
+                        "nssai": {
+                        "defaultSingleNssais": [
+                        {
+                        "nssai": {
+                        "sst": 2,
+                        "sd": "000002"
+                        },
+                        "dnnListId": "Default"
+                        }
+                        ],
+                        "singleNssais": [
+                        {
+                        "nssai": {
+                        "sst": 2,
+                        "sd": "000001"
+                        },
+                        "dnnListId": "Default"
+                        }
+                        ]
+                        },
+                        "dnnLists": [
+                        {
+                        "dnnListId": "Default",
+                        "dnnDataList": [
+                        {
+                        "dnn": "internet",
+                        "defaultDnnIndicator": true,
+                        "lboRoamingAllowed": false,
+                        "iwkEpsInd": true,
+                        "pduSessionTypes": {
+                        "defaultSessionType": "IPV4",
+                        "allowedSessionTypes": [
+                        "IPV6",
+                        "IPV4V6"
+                        ]
+                        },
+                        "sscModes": {
+                        "defaultSscMode": "SSC_MODE_1",
+                        "allowedSscModes": [
+                        "SSC_MODE_2",
+                        "SSC_MODE_3"
+                        ]
+                        },
+                        "qos5gProfile": {
+                        "qi5": 5,
+                        "arp": {
+                        "priorityLevel": 1,
+                        "preemptCap": "NOT_PREEMPT",
+                        "preemptVuln": "NOT_PREEMPTABLE"
+                        },
+                        "priorityLevel": 1
+                        },
+                        "sessionAmbr": {
+                        "uplink": "1000 Gbps",
+                        "downlink": "950 Gbps"
+                        },
+                        "charging3gppCharacteristics": "0000",
+                        "upSecurity": {
+                        "upIntegr": "PREFERRED",
+                        "upConfid": "PREFERRED"
+                        }
+                        },
+                        {
+                        "dnn": "Default",
+                        "defaultDnnIndicator": true,
+                        "lboRoamingAllowed": false,
+                        "iwkEpsInd": true,
+                        "pduSessionTypes": {
+                        "defaultSessionType": "IPV4",
+                        "allowedSessionTypes": [
+                        "IPV6",
+                        "IPV4V6"
+                        ]
+                        },
+                        "sscModes": {
+                        "defaultSscMode": "SSC_MODE_1",
+                        "allowedSscModes": [
+                        "SSC_MODE_2",
+                        "SSC_MODE_3"
+                        ]
+                        },
+                        "qos5gProfile": {
+                        "qi5": 5,
+                        "arp": {
+                        "priorityLevel": 1,
+                        "preemptCap": "NOT_PREEMPT",
+                        "preemptVuln": "NOT_PREEMPTABLE"
+                        },
+                        "priorityLevel": 1
+                        },
+                        "sessionAmbr": {
+                        "uplink": "1000 Gbps",
+                        "downlink": "950 Gbps"
+                        },
+                        "charging3gppCharacteristics": "0000",
+                        "upSecurity": {
+                        "upIntegr": "PREFERRED",
+                        "upConfid": "PREFERRED"
+                        }
+                        }
+                        ]
+                        }
+                        ]
+                        }
+                        ]
+                        }
+                    </con:request>
+                    <con:credentials>
+                        <con:selectedAuthProfile>Profile 2</con:selectedAuthProfile>
+                        <con:authType>OAuth 2.0</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters>
+                        <entry key="udmSliceProfileId" value="${Properties#profileId}"
+                               xmlns="http://eviware.com/soapui/config"/>
+                    </con:parameters>
+                    <con:parameterOrder>
+                        <con:entry>udmSliceProfileId</con:entry>
+                    </con:parameterOrder>
+                </con:request>
+                <con:request name="Copy of create-profile" id="221b40b8-5688-405f-9b0b-c61b599144a7"
+                             mediaType="application/json" postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>http://prov.eda2.n84-eccd1.sero.gic.ericsson.se</con:endpoint>
+                    <con:request>{
+                        "udmSliceProfileId": "eMBBSliceProfile_0011",
+                        "plmnIdSets": [
+                        {
+                        "plmnIdSetIdentifier": "Default",
+                        "nssai": {
+                        "defaultSingleNssais": [{
+                        "nssai": {
+                        "sst": 0,
+                        "sd": "AFaf09"
+                        },
+                        "dnnListId": "Default"
+                        }],
+                        "singleNssais": [{
+                        "nssai": {
+                        "sst": 255,
+                        "sd": "AFaf09"
+                        },
+                        "dnnListId": "Default"
+                        }]
+                        },
+                        "dnnLists": [
+                        {
+                        "dnnListId": "Default",
+                        "dnnDataList": [
+                        {
+                        "dnn": "Default",
+                        "defaultDnnIndicator": true,
+                        "lboRoamingAllowed": false,
+                        "iwkEpsInd": true,
+                        "ladnIndicator": false,
+                        "pduSessionTypes": {
+                        "defaultSessionType": "IPV4",
+                        "allowedSessionTypes": [
+                        "ETHERNET"
+                        ]
+                        },
+                        "sscModes": {
+                        "defaultSscMode": "SSC_MODE_1",
+                        "allowedSscModes": [
+                        "SSC_MODE_2"
+                        ]
+                        },
+                        "qos5gProfile": {
+                        "qi5": 0,
+                        "arp": {
+                        "priorityLevel": 1,
+                        "preemptCap": "MAY_PREEMPT",
+                        "preemptVuln": "PREEMPTABLE"
+                        },
+                        "priorityLevel": 1
+                        },
+                        "sessionAmbr": {
+                        "uplink": "12 Gbps",
+                        "downlink": "5 Mbps"
+                        },
+                        "charging3gppCharacteristics": "Charging3gpp",
+                        "upSecurity": {
+                        "upIntegr": "PREFERRED",
+                        "upConfid": "NOT_NEEDED"
+                        }
+                        }
+                        ]
+                        }
+                        ]
+                        }
+                        ]
+                        }
+                    </con:request>
+                    <con:originalUri>
+                        https://prov.eda2.n84-eccd1.sero.gic.ericsson.se/aapi/v1/eps-udm/udm-slice-profile
+                    </con:originalUri>
+                    <con:credentials>
+                        <con:selectedAuthProfile>Profile 2</con:selectedAuthProfile>
+                        <con:authType>OAuth 2.0</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters>
+                        <entry key="udmSliceProfileId" value="eMBBSliceProfile_0011"
+                               xmlns="http://eviware.com/soapui/config"/>
+                    </con:parameters>
+                    <con:parameterOrder>
+                        <con:entry>udmSliceProfileId</con:entry>
+                    </con:parameterOrder>
+                </con:request>
+            </con:method>
+        </con:resource>
+        <con:resource name="udm-roaming-area" path="eps-udm/udm-roaming-area" id="c6e2a887-1f13-45f4-94e2-65099dc673bf">
+            <con:settings/>
+            <con:parameters>
+                <con:parameter>
+                    <con:name>udmRoamingAreaId</con:name>
+                    <con:value/>
+                    <con:style>QUERY</con:style>
+                    <con:default/>
+                </con:parameter>
+            </con:parameters>
+            <con:method name="create" id="0abe5f6b-ea57-4725-b124-871028fd381c" method="POST">
+                <con:settings/>
+                <con:parameters/>
+                <con:representation type="REQUEST">
+                    <con:mediaType>application/json</con:mediaType>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>201 200</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:udm="https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/eps-udm/udm-roaming-area">
+                        udm:Response
+                    </con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>text/html;charset=utf-8</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="FAULT">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>403 502</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:udm="https://prov.eda2.n84-eccd1.sero.gic.ericsson.se/aapi/v1/eps-udm/udm-roaming-area">
+                        udm:Fault
+                    </con:element>
+                </con:representation>
+                <con:request name="create-area" id="4c40aaae-4b31-4dc2-bdea-9f779e5bd960" mediaType="application/json"
+                             postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                    <con:request>{
+                        "udmRoamingAreaId": "${Properties#roamingArea1}",
+                        "areaList": [
+                        {
+                        "tacs": ["A0F1"]
+                        }
+                        ]
+                        }
+                    </con:request>
+                    <con:credentials>
+                        <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                        <con:authType>OAuth 2.0</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters>
+                        <entry key="udmRoamingAreaId" value="" xmlns="http://eviware.com/soapui/config"/>
+                    </con:parameters>
+                    <con:parameterOrder>
+                        <con:entry>udmRoamingAreaId</con:entry>
+                    </con:parameterOrder>
+                </con:request>
+                <con:request name="Copy of create-area" id="4c40aaae-4b31-4dc2-bdea-9f779e5bd960"
+                             mediaType="application/json" postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>http://prov.eda2.n84-eccd1.sero.gic.ericsson.se</con:endpoint>
+                    <con:request>{
+                        "udmRoamingAreaId": "RoamingArea0",
+                        "areaList": [
+                        {
+                        "tacs": [
+                        "F0F2"
+                        ]
+                        }
+                        ]
+                        }
+                    </con:request>
+                    <con:originalUri>https://prov.eda2.n84-eccd1.sero.gic.ericsson.se/aapi/v1/eps-udm/udm-roaming-area
+                    </con:originalUri>
+                    <con:credentials>
+                        <con:selectedAuthProfile>Profile 2</con:selectedAuthProfile>
+                        <con:authType>OAuth 2.0</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters>
+                        <entry key="udmRoamingAreaId" value="RoamingArea0" xmlns="http://eviware.com/soapui/config"/>
+                    </con:parameters>
+                    <con:parameterOrder>
+                        <con:entry>udmRoamingAreaId</con:entry>
+                    </con:parameterOrder>
+                </con:request>
+            </con:method>
+        </con:resource>
+        <con:resource name="auth-subscription" path="auc-arpf/auth-subscription"
+                      id="7fd9cd7f-0c77-4727-906d-49aff1d4fb5c">
+            <con:settings/>
+            <con:parameters>
+                <con:parameter>
+                    <con:name>userId</con:name>
+                    <con:style>QUERY</con:style>
+                </con:parameter>
+            </con:parameters>
+            <con:method name="create" id="a7f05db0-56a2-4e1c-85c5-d9e01f941ce9" method="POST">
+                <con:settings/>
+                <con:parameters/>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:auth="https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/auc-arpf/auth-subscription">
+                        auth:Response
+                    </con:element>
+                </con:representation>
+                <con:representation type="REQUEST">
+                    <con:mediaType>application/json</con:mediaType>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>text/plain</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>0</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>0</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>0</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>0</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>0</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>0</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>text/html;charset=utf-8</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>0</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="FAULT">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>500</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:auth="https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/auc-arpf/auth-subscription">
+                        auth:Fault
+                    </con:element>
+                </con:representation>
+                <con:request name="create-auth" id="60dcc567-ebef-4443-a63b-46467a492304" mediaType="application/json"
+                             postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                    <con:request>{
+                        "arpf": {
+                        "ueIdList": [
+                        {
+                        "idType": "imsi",
+                        "idValue": "${Properties#imsi}"
+                        }
+                        ],
+                        "authenticationMethod": "5G_AKA"
+                        },
+                        "common": {
+                        "encPermanentKey": "${Properties#key}",
+                        "authenticationManagementField": "1f40",
+                        "algorithmId": "0",
+                        "a4KeyInd": "1",
+                        "a4Ind": "2"
+                        }
+                        }
+                    </con:request>
+                    <con:credentials>
+                        <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                        <con:authType>OAuth 2.0</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                    <con:parameterOrder>
+                        <con:entry>userId</con:entry>
+                    </con:parameterOrder>
+                </con:request>
+            </con:method>
+            <con:method name="delete" id="97a3bc56-e041-48f0-92cb-a8381fd6cd15" method="DELETE">
+                <con:settings/>
+                <con:parameters/>
+                <con:representation type="FAULT">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>401</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:auth="https://prov.eda2.n99-eccd1.sero.gic.ericsson.se/aapi/v1/auc-arpf/auth-subscription">
+                        auth:Fault
+                    </con:element>
+                </con:representation>
+                <con:representation type="REQUEST">
+                    <con:mediaType>application/json</con:mediaType>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:request name="delete-auth" id="f8431b6a-b911-46af-9589-5a4df84a4341" mediaType="application/json"
+                             postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                    <con:request/>
+                    <con:credentials>
+                        <con:authType>No Authorization</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:request>
+            </con:method>
+        </con:resource>
+        <con:resource name="data-subscription" path="eps-udm/data-subscription"
+                      id="10154316-7a7b-4b87-a1d7-f1ef24edb00f">
+            <con:settings/>
+            <con:parameters>
+                <con:parameter>
+                    <con:name>userId</con:name>
+                    <con:style>QUERY</con:style>
+                </con:parameter>
+            </con:parameters>
+            <con:method name="create" id="dc394589-e62a-4741-9f86-3649bbb18f62" method="POST">
+                <con:settings/>
+                <con:parameters/>
+                <con:representation type="REQUEST">
+                    <con:mediaType>application/json</con:mediaType>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:data="https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/eps-udm/data-subscription">
+                        data:Response
+                    </con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>text/plain</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="FAULT">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>403 500 502</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:data="https://prov.eda2.n84-eccd1.sero.gic.ericsson.se/aapi/v1/eps-udm/data-subscription">
+                        data:Fault
+                    </con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>text/html;charset=utf-8</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                </con:representation>
+                <con:request name="create-data" id="a365d63d-f3dc-4976-a6fd-0ace5545b19e" mediaType="application/json"
+                             postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                    <con:request>{
+                        "udm": {
+                        "ueIdList": [
+                        {
+                        "idType": "imsi",
+                        "idValue": "${Properties#imsi}"
+                        },
+                        {
+                        "idType": "msisdn",
+                        "idValue": "${Properties#msisdn}"
+                        },
+                        {
+                        "idType": "nai",
+                        "idValue": "${Properties#imsi}"
+                        }
+                        ],
+                        "subscribedUeAmbr": {
+                        "uplink": "1000 Gbps",
+                        "downlink": "950 Gbps"
+                        },
+                        "ratRestrictions": [
+                        "WLAN"
+                        ],
+                        "forbiddenAreas": [
+                        {
+                        "id": "${Properties#roamingArea2}"
+                        }
+                        ],
+                        "serviceAreaRestriction": {
+                        "restrictionType": "NOT_ALLOWED_AREAS",
+                        "areas": [
+                        {
+                        "id": "${Properties#roamingArea1}"
+                        }
+                        ]
+                        },
+                        "coreNetworkTypeRestrictions": [
+                        "EPC"
+                        ],
+                        "udmSliceProfileId": {
+                        "id": "${Properties#profileId}"
+                        }
+                        },
+                        "common": {
+                        "ueUsageType": 0,
+                        "rfspIndex": 1,
+                        "subsRegTimer": 36000
+                        }
+                        }
+                    </con:request>
+                    <con:credentials>
+                        <con:selectedAuthProfile>Profile 3</con:selectedAuthProfile>
+                        <con:authType>OAuth 2.0</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                    <con:parameterOrder>
+                        <con:entry>userId</con:entry>
+                    </con:parameterOrder>
+                </con:request>
+                <con:request name="Copy of create-data" id="a365d63d-f3dc-4976-a6fd-0ace5545b19e"
+                             mediaType="application/json" postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>http://prov.eda2.n84-eccd1.sero.gic.ericsson.se</con:endpoint>
+                    <con:request>{
+                        "udm": {
+                        "ueIdList": [
+                        {
+                        "idType": "imsi",
+                        "idValue": "240810000223804"
+                        },
+                        {
+                        "idType": "msisdn",
+                        "idValue": "491720000223804"
+                        },
+                        {
+                        "idType": "nai",
+                        "idValue": "240810000223804"
+                        }
+                        ],
+                        "subscribedUeAmbr": {
+                        "uplink": "1000 Gbps",
+                        "downlink": "950 Gbps"
+                        },
+                        "ratRestrictions": [
+                        "WLAN"
+                        ],
+                        "forbiddenAreas": [
+                        {
+                        "id": "RoamingArea2"
+                        }
+                        ],
+                        "serviceAreaRestriction": {
+                        "restrictionType": "NOT_ALLOWED_AREAS",
+                        "areas": [
+                        {
+                        "id": "RoamingArea1"
+                        }
+                        ]
+                        },
+                        "coreNetworkTypeRestrictions": [
+                        "EPC"
+                        ],
+                        "udmSliceProfileId": {
+                        "id": "eMBBSliceProfile_01"
+                        }
+                        },
+                        "common": {
+                        "ueUsageType": 0,
+                        "rfspIndex": 1,
+                        "subsRegTimer": 36000
+                        }
+                        }
+                    </con:request>
+                    <con:originalUri>
+                        https://prov.eda2.n84-eccd1.sero.gic.ericsson.se/aapi/v1/eps-udm/data-subscription
+                    </con:originalUri>
+                    <con:credentials>
+                        <con:selectedAuthProfile>Profile 3</con:selectedAuthProfile>
+                        <con:authType>OAuth 2.0</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters>
+                        <entry key="userId" value="imsi-240810000223804" xmlns="http://eviware.com/soapui/config"/>
+                    </con:parameters>
+                    <con:parameterOrder>
+                        <con:entry>userId</con:entry>
+                    </con:parameterOrder>
+                </con:request>
+            </con:method>
+            <con:method name="delete" id="946f8d81-4192-448e-b8c4-94831a850ee9" method="DELETE">
+                <con:settings/>
+                <con:parameters/>
+                <con:representation type="FAULT">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>401 404</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:data="https://prov.eda2.pod56-eccd1.seln.ete.ericsson.se/aapi/v1/eps-udm/data-subscription">
+                        data:Fault
+                    </con:element>
+                </con:representation>
+                <con:representation type="REQUEST">
+                    <con:mediaType>application/json</con:mediaType>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType xsi:nil="true"/>
+                    <con:status>204</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:request name="delete-data" id="b7c6849f-c82f-412b-b124-23fd81488ab5" mediaType="application/json"
+                             postQueryString="false">
+                    <con:settings/>
+                    <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                    <con:request/>
+                    <con:credentials>
+                        <con:authType>No Authorization</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:request>
+            </con:method>
+        </con:resource>
+        <con:resource name="policy-subscription" path="pcrf-pcf/policy-subscription"
+                      id="434bd97f-bb4e-4210-aba6-c1e1b8f9d852">
+            <con:settings/>
+            <con:parameters>
+                <con:parameter>
+                    <con:name>userId</con:name>
+                    <con:style>QUERY</con:style>
+                </con:parameter>
+                <con:parameter>
+                    <con:name>app</con:name>
+                    <con:value/>
+                    <con:style>QUERY</con:style>
+                    <con:default/>
+                    <con:description xsi:nil="true"/>
+                </con:parameter>
+            </con:parameters>
+            <con:method name="create" id="93ab4416-1f55-4154-89c1-8977b10eee0c" method="POST">
+                <con:settings/>
+                <con:parameters/>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>text/plain</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                    <con:element>data</con:element>
+                </con:representation>
+                <con:representation type="REQUEST">
+                    <con:mediaType>application/json</con:mediaType>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="FAULT">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>500 400 403</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:pol="https://prov.eda2.n84-eccd1.sero.gic.ericsson.se/aapi/v1/pcrf-pcf/policy-subscription">
+                        pol:Fault
+                    </con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:pol="https://prov.eda2.n84-eccd1.sero.gic.ericsson.se/aapi/v1/pcrf-pcf/policy-subscription">
+                        pol:Response
+                    </con:element>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>text/html;charset=utf-8</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                </con:representation>
+                <con:request name="create-policy" id="eaba2e8d-62f5-433b-bc4b-71a5177f1a57" mediaType="application/json"
+                             postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                    <con:request/>
+                    <con:credentials>
+                        <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                        <con:authType>OAuth 2.0</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                    <con:parameterOrder>
+                        <con:entry>userId</con:entry>
+                        <con:entry>app</con:entry>
+                    </con:parameterOrder>
+                </con:request>
+                <con:request name="Copy of create-policy" id="eaba2e8d-62f5-433b-bc4b-71a5177f1a57"
+                             mediaType="application/json" postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>http://prov.eda2.n84-eccd1.sero.gic.ericsson.se</con:endpoint>
+                    <con:request>{
+                        "ueIdList": [
+                        {
+                        "idType": "imsi",
+                        "idValue": "240810001223804"
+                        }
+                        ],
+                        "subscCats": {
+                        "subCatId": {
+                        "Bronze": {
+                        "subCatId": "Bronze",
+                        "priority": 1,
+                        "startDate": "01-01-2025T22:00:00",
+                        "endDate": "02-01-2025"
+                        }
+                        }
+                        }
+                        }
+                    </con:request>
+                    <con:originalUri>
+                        https://prov.eda2.n84-eccd1.sero.gic.ericsson.se/aapi/v1/pcrf-pcf/policy-subscription
+                    </con:originalUri>
+                    <con:credentials>
+                        <con:selectedAuthProfile>Profile 2</con:selectedAuthProfile>
+                        <con:authType>OAuth 2.0</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters>
+                        <con:entry key="app" value="PCF"/>
+                        <con:entry key="userId" value="imsi-240810001223804"/>
+                    </con:parameters>
+                    <con:parameterOrder>
+                        <con:entry>userId</con:entry>
+                        <con:entry>app</con:entry>
+                    </con:parameterOrder>
+                </con:request>
+            </con:method>
+            <con:method name="delete" id="3dad9c12-1ce4-4a2f-918c-4511e8df45da" method="DELETE">
+                <con:settings/>
+                <con:parameters/>
+                <con:request name="delete-policy" id="10377cd2-a15d-48e0-bff3-6f052a1e2c79" mediaType="application/json"
+                             postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                    <con:request/>
+                    <con:credentials>
+                        <con:authType>No Authorization</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:request>
+            </con:method>
+        </con:resource>
+        <con:resource name="policy-slice-profile" path="pcrf-pcf/policy-slice-profile"
+                      id="198352c2-e360-4d57-ba64-3e1e04d00370">
+            <con:settings/>
+            <con:parameters>
+                <con:parameter>
+                    <con:name>pcfSliceProfileId</con:name>
+                    <con:value>pcfProf0000001</con:value>
+                    <con:style>QUERY</con:style>
+                    <con:default>pcfProf0000001</con:default>
+                </con:parameter>
+            </con:parameters>
+            <con:method name="create" id="8a6ed745-25fc-437f-8b99-d8cd8cd9cad9" method="POST">
+                <con:settings/>
+                <con:parameters/>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:pol="https://prov.eda2.n28-eccd1.sero.gic.ericsson.se/aapi/v1/pcrf-pcf/policy-slice-profile">
+                        pol:Response
+                    </con:element>
+                </con:representation>
+                <con:representation type="REQUEST">
+                    <con:mediaType>application/json</con:mediaType>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>text/html;charset=utf-8</con:mediaType>
+                    <con:status>201</con:status>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="FAULT">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>403</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:pol="https://prov.eda2.n28-eccd1.sero.gic.ericsson.se/aapi/v1/pcrf-pcf/policy-slice-profile">
+                        pol:Fault
+                    </con:element>
+                </con:representation>
+                <con:request name="create-pcfprofile" id="6d86670b-a615-4a69-9ba3-4ef0a233b4a3"
+                             mediaType="application/json" postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                    <con:request>{
+                        "pcfSliceProfileId": "pcfProf0001",
+                        "snssaiDnnCombinations": [
+                        {
+                        "snssai": {
+                        "sst": 2,
+                        "sd": "000002"
+                        },
+                        "dnnList": [
+                        "Default",
+                        "internet"
+                        ]
+                        }
+                        ]
+                        }
+                    </con:request>
+                    <con:credentials>
+                        <con:authType>No Authorization</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters>
+                        <entry key="pcfSliceProfileId" value="pcfProf0001" xmlns="http://eviware.com/soapui/config"/>
+                    </con:parameters>
+                </con:request>
+            </con:method>
+            <con:method name="Method 2" id="5e01ddb7-265d-4c5d-b773-d5160bf14892" method="PATCH">
+                <con:settings/>
+                <con:parameters/>
+                <con:representation type="FAULT">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>500</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:pol="https://prov.eda2.n28-eccd1.sero.gic.ericsson.se/aapi/v1/pcrf-pcf/policy-slice-profile">
+                        pol:Fault
+                    </con:element>
+                </con:representation>
+                <con:representation type="REQUEST">
+                    <con:mediaType>application/json</con:mediaType>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>application/json;charset=utf-8</con:mediaType>
+                    <con:status>200</con:status>
+                    <con:params/>
+                    <con:element
+                            xmlns:pol="https://prov.eda2.n28-eccd1.sero.gic.ericsson.se/aapi/v1/pcrf-pcf/policy-slice-profile">
+                        pol:Response
+                    </con:element>
+                </con:representation>
+                <con:request name="Request 1" id="2a2749e5-48f4-4659-a02b-b995867ce36a" mediaType="application/json"
+                             postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                    <con:request>{
+                        "pcfSliceProfileId": "pcfProf0001",
+                        "snssaiDnnCombinations": [
+                        {
+                        "snssai": {
+                        "sst": 2,
+                        "sd": "000002"
+                        },
+                        "dnnList": [
+                        "Default",
+                        "internet"
+                        ]
+                        }
+                        ]
+                        }
+                    </con:request>
+                    <con:originalUri>
+                        https://prov.eda2.n28-eccd1.sero.gic.ericsson.se/aapi/v1/pcrf-pcf/policy-slice-profile
+                    </con:originalUri>
+                    <con:credentials>
+                        <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                        <con:authType>OAuth 2.0</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters>
+                        <entry key="pcfSliceProfileId" value="pcfProf0001" xmlns="http://eviware.com/soapui/config"/>
+                    </con:parameters>
+                </con:request>
+            </con:method>
+        </con:resource>
+    </con:interface>
+    <con:testSuite id="f48335ed-b0be-4d4a-bb35-5aba3c4858bf" name="5G-REST-batch">
+        <con:settings/>
+        <con:runType>SEQUENTIAL</con:runType>
+        <con:testCase id="6c6f219c-bd67-42f5-aab5-e159c98f6ca6" failOnError="false" failTestCaseOnErrors="true"
+                      keepSession="false" maxResults="0" name="create-simple" searchProperties="true"
+                      discardOkResults="true" timeout="0" wsrmEnabled="false" wsrmVersion="1.0" wsrmAckTo=""
+                      amfAuthorisation="false" amfEndpoint="" amfLogin="" amfPassword="">
+            <con:settings/>
+            <con:testStep type="properties" name="Properties" id="489d5ede-f8ad-418c-b164-f4507daf2416">
+                <con:settings/>
+                <con:config xsi:type="con:PropertiesStep" saveFirst="true"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:properties>
+                        <con:property>
+                            <con:name>userId</con:name>
+                            <con:value>imsi-240810002260100</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi</con:name>
+                            <con:value>240810002260100</con:value>
+                        </con:property>
+
+
+                        <con:property>
+                            <con:name>profileId</con:name>
+                            <con:value>eMBBSliceProfile_01</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId1</con:name>
+                            <con:value>RoamingArea1</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId2</con:name>
+                            <con:value>RoamingArea2</con:value>
+                        </con:property>
+
+
+                        <con:property>
+                            <con:name>msisdn</con:name>
+                            <con:value>491720002260100</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>key</con:name>
+                            <con:value>61ad31224e4f59935512854f9f4b8bef</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>data</con:name>
+                            <con:value>240810002260002;491720002260002;b143b4cf5812b1c5e7bf5463af771afa,
+                                240810002260003;491720002260003;ca9fb92188e5a13657d234edc21496f1,
+                                240810002260004;491720002260004;f57225a4438e2d3c45e63e484a7ad803,
+                                240810002260005;491720002260005;06a9a932c71ed5c86caf1a01457bcfb3,
+                                240810002260006;491720002260006;f782dbae6f884d1b253560196562b639,
+                                240810002260007;491720002260007;1b458b70d9a1a3a7b537b6ef89e9ae03,
+                                240810002260008;491720002260008;2f668ed6187b5d84f2428374f88f6f66,
+                                240810002260009;491720002260009;d083f6dca6e729c9908633249fe5b5b6,
+                                240810002260010;491720002260010;1cb223c82747119dafe43253567aef8e,
+                                240810002260011;491720002260011;5f62986a3900e72e7a722e4b6f73e44f,
+                                240810002260012;491720002260012;ab52aec9a201f7ff9103578871475437,
+                                240810002260013;491720002260013;81e6516fbd868aa0d923d64af484ac19,
+                                240810002260014;491720002260014;ffc4ee6820ba7c8aededec94ae8aa3fd,
+                                240810002260015;491720002260015;f8cfbc39c04c02c1269fc01a3a5e7a6c,
+                                240810002260016;491720002260016;9f42f797a2e05606536b63c827ed2170,
+                                240810002260017;491720002260017;bc84ae6fbef5491bed6bd89d2aa3573c,
+                                240810002260018;491720002260018;ced8ef2d9c471fd33e0ab42f7958fb5d,
+                                240810002260019;491720002260019;7cbf9c5c5c6a68e7f731731768d2b65c,
+                                240810002260020;491720002260020;9adcc5bed179a10b0afc4723357fa4df,
+                                240810002260021;491720002260021;8d35011ed78b284fd148368f692d9e69,
+                                240810002260022;491720002260022;8d59c70eff4c0df02a2f57b323a51672,
+                                240810002260023;491720002260023;c0fbe173616cf7893477c0105c98b4ab,
+                                240810002260024;491720002260024;cccfae88320e5b223bcd566d0bde3cea,
+                                240810002260025;491720002260025;9fdcddf76da1069bc4b56fde8c3a935b,
+                                240810002260026;491720002260026;61f243920098c5b403a24deb9ec0f648,
+                                240810002260027;491720002260027;d3fd45052e99269eba5fa9a568a1e273,
+                                240810002260028;491720002260028;feadc8a361d43508055313f00c5744bc,
+                                240810002260029;491720002260029;4c989515031ace9dd7f77ce19cc34d2e,
+                                240810002260030;491720002260030;2b7fe0a083962ee95cfabe42eaa96215,
+                                240810002260031;491720002260031;bb53e354357b07ff67afbd8a6a906150,
+                                240810002260032;491720002260032;d2278611cd3206e40bbbe7b8d92f443c,
+                                240810002260033;491720002260033;5f63529decea1c1c19a652a7f69f6d73,
+                                240810002260034;491720002260034;65946c9368686552a1870eb1a6ab7871,
+                                240810002260035;491720002260035;e0f62d999e95f828aebb8c01b4527a4b,
+                                240810002260036;491720002260036;c92a488e69bdd617e96c4f653efda01d,
+                                240810002260037;491720002260037;5c07a8161e9ea973137b84c06bbf6000,
+                                240810002260038;491720002260038;1aad7e98c5f47334b54c7c7754ccbaed,
+                                240810002260039;491720002260039;d478e2997cc0d46ec369539adba127b2,
+                                240810002260040;491720002260040;8c8f16abe1836d4f5ce56f4e38fa0dd9,
+                                240810002260041;491720002260041;c1894b73925f5971716bc1d07d872319,
+                                240810002260042;491720002260042;f4e0b397678ecd965eb4bfd314cbf5b6,
+                                240810002260043;491720002260043;be33d0a9e21af17de64b564cc719caaa,
+                                240810002260044;491720002260044;541bf20087e4ae7e097f577dfc4745a6,
+                                240810002260045;491720002260045;f74709bcab15a5d5e3effb0c24427fdb,
+                                240810002260046;491720002260046;0ff9f10b8e01a8264bc01ce1931203d4,
+                                240810002260047;491720002260047;24f89a2dbcb5b8ccb89adf067a40e854,
+                                240810002260048;491720002260048;c6371a5b11300b02581bebd9b6f0daf8,
+                                240810002260049;491720002260049;5c74ffe35e48527c5f7b75a9953675ad,
+                                240810002260050;491720002260050;54b4f8ee59fa7d33760ac8ac94cf836b,
+                                240810002260051;491720002260051;5d3876f87e46c4dd8b5f358d24874737,
+                                240810002260052;491720002260052;4cf32705bc14d59dccd30dc9df07fe0a,
+                                240810002260053;491720002260053;ac9a215fa11f6d449c79f4e72eba5eef,
+                                240810002260054;491720002260054;fc7aca443096222338ee3bef9fe153d5,
+                                240810002260055;491720002260055;f03828c599646337836a467084435398,
+                                240810002260056;491720002260056;e2063ec1015f66519154e9c03b519d75,
+                                240810002260057;491720002260057;2c0b21bfc03c4f952da4a8724ccbfcbe,
+                                240810002260058;491720002260058;118084edb9e7674abb8a974e10e34f40,
+                                240810002260059;491720002260059;d7c738262c064eb380468605f4ce0988,
+                                240810002260060;491720002260060;ad1b30407faa167c15249e3b82fec0b9,
+                                240810002260061;491720002260061;398080b9a03ac35cc4e9edcf1a6c610e,
+                                240810002260062;491720002260062;ec18416e04b4daeb5efb94db0f111713,
+                                240810002260063;491720002260063;56dfcfb05208c8ce5c8463898d373943,
+                                240810002260064;491720002260064;5f1fd6f1ba00e74464641623bf6e3e9d,
+                                240810002260065;491720002260065;eed8291904cb98ba195168fa0494cc9d,
+                                240810002260066;491720002260066;9d7c7f1e307bc29699f412fcfd9ec707,
+                                240810002260067;491720002260067;5acb4d7f38f9ff6d170cacd9d747805c,
+                                240810002260068;491720002260068;b06aaa33c546c38e0fb212548d2d153e,
+                                240810002260069;491720002260069;440500130905ff9a3fa29ad51e2de004,
+                                240810002260070;491720002260070;ae48834ba263c17763011484f4a3574d,
+                                240810002260071;491720002260071;4c641369df93284cdf67f814db442e78,
+                                240810002260072;491720002260072;4176014ed05f2021269d4142dbadb98f,
+                                240810002260073;491720002260073;2305c06860c4365017ac3aa4324e056b,
+                                240810002260074;491720002260074;322e33d94ccb1db056c412e27099b51f,
+                                240810002260075;491720002260075;c62798bf5368380f76fb90284ee4de63,
+                                240810002260076;491720002260076;12ac4b8ba0d4a468ce15a91b4fb81221,
+                                240810002260077;491720002260077;a954626464845c6e5e7acc4f3eb6a297,
+                                240810002260078;491720002260078;334b4249c0cb8dfd01a897e180d9920f,
+                                240810002260079;491720002260079;40386571ad78440689412e310457b738,
+                                240810002260080;491720002260080;c892300d37091f455dc54da509e816a6,
+                                240810002260081;491720002260081;7d4773b977ae557f9c1bbe176352e950,
+                                240810002260082;491720002260082;b6f1e94d45dba64553304f6c39745274,
+                                240810002260083;491720002260083;3b5e12452395bac11d047c4514561c8f,
+                                240810002260084;491720002260084;0d984b4d39ee838261fc7a7a85a8baa4,
+                                240810002260085;491720002260085;6c32e97d7dda3a6ae785e30fae128878,
+                                240810002260086;491720002260086;65efb090fb2ac0b4bb37fd0a4189cad4,
+                                240810002260087;491720002260087;8675ecd08d3cbcb450810dad59e30992,
+                                240810002260088;491720002260088;a8dea871c7e9674f2706fffd0989641f,
+                                240810002260089;491720002260089;4768e8c08afe938d7e1d5206ff35f495,
+                                240810002260090;491720002260090;fa47c9c3eff0f210a39d07ea0455de8e,
+                                240810002260091;491720002260091;ee4ef0fe4443c9ab561d463e62013dc0,
+                                240810002260092;491720002260092;3141dd963789667253f0365574598c1f,
+                                240810002260093;491720002260093;5dc8c810f5b5bdc2992c0bc09efd37ca,
+                                240810002260094;491720002260094;d4484ab7490eea5ac4e983bf687a59a3,
+                                240810002260095;491720002260095;20eb3215887f3862f0a925ab0da23211,
+                                240810002260096;491720002260096;40f3aed0b5789e256d265ad46c6d15e5,
+                                240810002260097;491720002260097;485d0154cf00f4dc671caa7e7a921675,
+                                240810002260098;491720002260098;a75abc9244552342c3ac798b63cf4a24,
+                                240810002260099;491720002260099;8c6f484822caf8ce051afa20263cee5f,
+                                240810002260100;491720002260100;61ad31224e4f59935512854f9f4b8bef
+                            </con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>maxline</con:name>
+                            <con:value>99</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>linenum</con:name>
+                            <con:value>99</con:value>
+                        </con:property>
+                    </con:properties>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="load" id="4c5b257a-1b7d-43cf-bd2d-d660a150a675">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+
+                        // read file
+                        def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+                        def csvFilePath = context.expand('${projectDir}/data/data.txt')
+                        context.fileReader = new BufferedReader(new FileReader(csvFilePath))
+                        lines =context.fileReader.readLines()
+
+                        //global variable
+                        props.setPropertyValue("linenum","0")
+                        props.setPropertyValue("data",lines.toString().replace('[','').replace(']',''))
+                        props.setPropertyValue("maxline",lines.size().toString())
+
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="next" id="e2bbb9e4-f69a-4e2e-b6bb-f8a797624139">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+
+                        // read line
+                        String result = props.getPropertyValue("data");
+                        rowsData = result.split(",")
+                        //log.info(rowsData[0])
+                        linenum = Integer.parseInt(props.getPropertyValue("linenum"));
+                        log.info(linenum)
+                        String[] line = rowsData[linenum].split(";")
+                        String imsi = line[0].replace(" ","")
+                        String msisdn = line[1].replace(" ","")
+                        String key = line[2].replace(" ","")
+                        log.info(imsi)
+
+                        //global variable
+                        props.setPropertyValue("userId","imsi-"+imsi)
+                        props.setPropertyValue("imsi",imsi)
+                        props.setPropertyValue("msisdn",msisdn)
+                        props.setPropertyValue("key",key)
+
+                        linenum++
+                        props.setPropertyValue("linenum",linenum.toString())
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="create-auth" id="7532128c-6419-4546-aede-d6ed6b7e7cfb">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/auc-arpf/auth-subscription" methodName="create"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="create-auth" id="60dcc567-ebef-4443-a63b-46467a492304"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request>{
+                            "arpf": {
+                            "ueIdList": [
+                            {
+                            "idType": "imsi",
+                            "idValue": "${Properties#imsi}"
+                            }
+                            ],
+                            "authenticationMethod": "5G_AKA"
+                            },
+                            "common": {
+                            "encPermanentKey": "${Properties#key}",
+                            "authenticationManagementField": "1f40",
+                            "algorithmId": "0",
+                            "a4KeyInd": "1",
+                            "a4Ind": "2"
+                            }
+                            }
+                        </con:request>
+                        <con:originalUri>
+                            https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/auc-arpf/auth-subscription
+                        </con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="ac865597-5079-4dff-a7a5-3c948d6d7566"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>201</codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="userId" value="${Properties#userId}" xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                        <con:parameterOrder>
+                            <con:entry>userId</con:entry>
+                        </con:parameterOrder>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="create-data" id="3c5d936e-e57d-4457-8b04-9a9834bea45c">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/eps-udm/data-subscription" methodName="create"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="create-data" id="a365d63d-f3dc-4976-a6fd-0ace5545b19e"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request>{
+                            "udm": {
+                            "ueIdList": [
+                            {
+                            "idType": "imsi",
+                            "idValue": "${Properties#imsi}"
+                            },
+                            {
+                            "idType": "msisdn",
+                            "idValue": "${Properties#msisdn}"
+                            }
+                            ],
+                            "subscribedUeAmbr": {
+                            "uplink": "1000 Gbps",
+                            "downlink": "950 Gbps"
+                            },
+                            "ratRestrictions": [
+                            "WLAN"
+                            ],
+                            "forbiddenAreas": [
+                            {
+                            "id": "${Properties#areaId2}"
+                            }
+                            ],
+                            "serviceAreaRestriction": {
+                            "restrictionType": "NOT_ALLOWED_AREAS",
+                            "areas": [
+                            {
+                            "id": "${Properties#areaId1}"
+                            }
+                            ]
+                            },
+                            "coreNetworkTypeRestrictions": [
+                            "EPC"
+                            ],
+                            "udmSliceProfileId": {
+                            "id": "${Properties#profileId}"
+                            }
+                            },
+                            "eps": {
+                            "imsi": "${Properties#imsi}",
+                            "msisdn": "${Properties#msisdn}",
+                            "profileId": "HSS-EsmProfile_Default",
+                            "odb": "NONE",
+                            "roamingAllowed": true,
+                            "extendedAccessRestriction": 0,
+                            "epc5gAutoProvisioningRestriction": true
+                            },
+                            "common": {
+                            "ueUsageType": 0,
+                            "rfspIndex": 1,
+                            "subsRegTimer": 36000
+                            }
+                            }
+                        </con:request>
+                        <con:originalUri>
+                            https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/eps-udm/data-subscription
+                        </con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="ca552108-c68b-43de-bdcf-295c949e20a2"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>201</codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="userId" value="${Properties#userId}" xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                        <con:parameterOrder>
+                            <con:entry>userId</con:entry>
+                        </con:parameterOrder>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="delete-data" id="ae27a399-47c5-4103-aec9-7f9de539e3f2"
+                          disabled="true">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/eps-udm/data-subscription" methodName="delete"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="delete-data" id="b7c6849f-c82f-412b-b124-23fd81488ab5"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request/>
+                        <con:originalUri>
+                            https://prov.eda2.n99-eccd1.sero.gic.ericsson.se/aapi/v1/eps-udm/data-subscription
+                        </con:originalUri>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="userId" value="${Properties#userId}" xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="create-policy" id="5e7148aa-54e9-4a5c-85ef-8e1a2bc036f2">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/pcrf-pcf/policy-subscription" methodName="create"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="create-policy" id="eaba2e8d-62f5-433b-bc4b-71a5177f1a57"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request>
+                            {
+                            "ueIdList": [
+                            {
+                            "idType": "imsi",
+                            "idValue": "${Properties#imsi}"
+                            }
+                            ],
+                            "subscCats": {
+                            "subCatId": {
+                            "Bronze": {
+                            "subCatId": "Bronze",
+                            "priority": 1,
+                            "startDate": "01-01-2020T22:00:00",
+                            "endDate": "01-01-2025T22:00:00"
+                            }
+                            }
+                            },
+                            "subscCatsDefault": {
+                            "subCatId": {
+                            "Bronze": {
+                            "subCatId": "Bronze",
+                            "priority": 1,
+                            "startDate": "01-01-2020T22:00:00",
+                            "endDate": "01-01-2025T22:00:00"
+                            }
+                            }
+                            }
+                            }
+                        </con:request>
+                        <con:originalUri>http://localhost/aapi/v1/pcrf-pcf/policy-subscription</con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="686dd5e3-8125-4a3a-8cb1-dd80830b208c"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>201</codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <con:entry key="app" value="PCF"/>
+                            <con:entry key="userId" value="${Properties#userId}"/>
+                        </con:parameters>
+                        <con:parameterOrder>
+                            <con:entry>userId</con:entry>
+                            <con:entry>app</con:entry>
+                        </con:parameterOrder>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="loop" id="fb54f5ea-ab93-4a64-bf7e-eac198d0607d">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+
+                        linenum = Integer.parseInt(props.getPropertyValue("linenum"));
+                        maxline = Integer.parseInt(props.getPropertyValue("maxline"));
+                        if(linenum &lt; maxline)
+                        {
+                        testRunner.gotoStepByName("next")
+                        }
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:properties/>
+        </con:testCase>
+        <con:testCase id="5e126e4f-8f3d-4d6f-be0d-86bf70d5134e" failOnError="false" failTestCaseOnErrors="true"
+                      keepSession="false" maxResults="0" name="create-multi" searchProperties="true"
+                      discardOkResults="true" timeout="0" wsrmEnabled="false" wsrmVersion="1.0" wsrmAckTo=""
+                      amfAuthorisation="false" amfEndpoint="" amfLogin="" amfPassword="">
+            <con:settings/>
+            <con:testStep type="properties" name="Properties" id="b2d1dd7d-7a21-45b3-9e76-3ae0ac24dedc">
+                <con:settings/>
+                <con:config xsi:type="con:PropertiesStep" saveFirst="true"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:properties>
+                        <con:property>
+                            <con:name>userId</con:name>
+                            <con:value>imsi-240810000000001</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi</con:name>
+                            <con:value>240810000000001</con:value>
+                        </con:property>
+
+
+                        <con:property>
+                            <con:name>profileId</con:name>
+                            <con:value>eMBBSliceProfile_01</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId1</con:name>
+                            <con:value>RoamingArea1</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId2</con:name>
+                            <con:value>RoamingArea1</con:value>
+                        </con:property>
+
+
+                        <con:property>
+                            <con:name>msisdn</con:name>
+                            <con:value>491720000000001</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>key</con:name>
+                            <con:value>6fe92cd9ef3855759b9eea44c384f536</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi0</con:name>
+                            <con:value>240810000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>lineNum0</con:name>
+                            <con:value>2</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>maxLine0</con:name>
+                            <con:value>2</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>userId0</con:name>
+                            <con:value>imsi-240810000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>msisdn0</con:name>
+                            <con:value>491720000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>key0</con:name>
+                            <con:value>e40a0a936bafec74ccd841ca634409d9</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>data0</con:name>
+                            <con:value>
+                                240810000000001;491720000000001;6fe92cd9ef3855759b9eea44c384f536,240810000000002;491720000000002;e40a0a936bafec74ccd841ca634409d9
+                            </con:value>
+                        </con:property>
+                    </con:properties>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="load" id="113a3e17-b838-4768-afa2-fa71085e145e">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        import java.util.*;
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+
+                        // read file
+                        def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+                        def flow = context.ThreadIndex;
+                        //log.info(flow)
+                        def csvName = '${projectDir}/data/data'+context.ThreadIndex+'.txt'
+                        def csvFilePath = context.expand(csvName)
+                        context.fileReader = new BufferedReader(new FileReader(csvFilePath))
+                        lines = context.fileReader.readLines()
+                        String rowsData = lines.toString()
+                        rowsData = rowsData.replace('[','').replace(']','').replace(' ','')
+
+                        // set properties
+
+                        props.setPropertyValue("lineNum"+context.ThreadIndex,"0")
+                        props.setPropertyValue("maxLine"+context.ThreadIndex,lines.size().toString())
+                        props.setPropertyValue("data"+context.ThreadIndex,rowsData)
+
+                        //log.info('loaded'+csvName +'data in '+context.ThreadIndex)
+
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="next" id="1020f7c6-efcb-4648-b833-a4bbc18740e9">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+
+                        // read line
+                        linenum = Integer.parseInt(props.getPropertyValue("lineNum"+context.ThreadIndex));
+                        //log.info(context.ThreadIndex + ":" + linenum)
+                        datasource = props.getPropertyValue("data"+context.ThreadIndex)
+                        //log.info(datasource)
+                        dataArray = datasource.split(",")
+                        //log.info(datasource)
+                        String row = dataArray[linenum]
+                        //log.info(context.ThreadIndex + ":" + row)
+                        String[] line = row.split(";")
+                        String imsi = line[0]
+                        String msisdn = line[1]
+                        String key = line[2]
+
+                        // set properties
+                        props.setPropertyValue("userId"+context.ThreadIndex,"imsi-"+imsi)
+                        props.setPropertyValue("imsi"+context.ThreadIndex,imsi)
+                        props.setPropertyValue("msisdn"+context.ThreadIndex,msisdn)
+                        props.setPropertyValue("key"+context.ThreadIndex,key)
+
+                        // next
+                        linenum++
+                        props.setPropertyValue("lineNum"+context.ThreadIndex,linenum.toString())
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="create-auth" id="dd23a49b-2d99-445d-a20f-84c0ae186110">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/auc-arpf/auth-subscription" methodName="create"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="create-auth" id="60dcc567-ebef-4443-a63b-46467a492304"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request>{
+                            "arpf": {
+                            "ueIdList": [
+                            {
+                            "idType": "imsi",
+                            "idValue": "${imsi${ThreadIndex}}"
+                            }
+                            ],
+                            "authenticationMethod": "5G_AKA"
+                            },
+                            "common": {
+                            "encPermanentKey": "${key${ThreadIndex}}",
+                            "authenticationManagementField": "1f40",
+                            "algorithmId": "0",
+                            "a4KeyInd": "1",
+                            "a4Ind": "2"
+                            }
+                            }
+                        </con:request>
+                        <con:originalUri>
+                            https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/auc-arpf/auth-subscription
+                        </con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="9624ff42-4692-4872-b3d5-ca8a65db38a9"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>201</codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="userId" value="${userId${ThreadIndex}}"
+                                   xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                        <con:parameterOrder>
+                            <con:entry>userId</con:entry>
+                        </con:parameterOrder>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="create-data" id="56de09a2-dba0-41bc-a57b-f5697040d0b0">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/eps-udm/data-subscription" methodName="create"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="create-data" id="a365d63d-f3dc-4976-a6fd-0ace5545b19e"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request>{
+                            "udm": {
+                            "ueIdList": [
+                            {
+                            "idType": "imsi",
+                            "idValue": "${imsi${ThreadIndex}}"
+                            },
+                            {
+                            "idType": "msisdn",
+                            "idValue": "${msisdn${ThreadIndex}}"
+                            }
+                            ],
+                            "subscribedUeAmbr": {
+                            "uplink": "1000 Gbps",
+                            "downlink": "950 Gbps"
+                            },
+                            "ratRestrictions": [
+                            "WLAN"
+                            ],
+                            "forbiddenAreas": [
+                            {
+                            "id": "${Properties#areaId2}"
+                            }
+                            ],
+                            "serviceAreaRestriction": {
+                            "restrictionType": "NOT_ALLOWED_AREAS",
+                            "areas": [
+                            {
+                            "id": "${Properties#areaId1}"
+                            }
+                            ]
+                            },
+                            "coreNetworkTypeRestrictions": [
+                            "EPC"
+                            ],
+                            "udmSliceProfileId": {
+                            "id": "${Properties#profileId}"
+                            }
+                            },
+                            "eps": {
+                            "imsi": "${imsi${ThreadIndex}}",
+                            "msisdn": "${msisdn${ThreadIndex}}",
+                            "profileId": "HSS-EsmProfile_Default",
+                            "odb": "NONE",
+                            "roamingAllowed": true,
+                            "extendedAccessRestriction": 0,
+                            "epc5gAutoProvisioningRestriction": true
+                            },
+                            "common": {
+                            "ueUsageType": 0,
+                            "rfspIndex": 1,
+                            "subsRegTimer": 36000
+                            }
+                            }
+                        </con:request>
+                        <con:originalUri>
+                            https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/eps-udm/data-subscription
+                        </con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="ca552108-c68b-43de-bdcf-295c949e20a2"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>201</codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="userId" value="${userId${ThreadIndex}}"
+                                   xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                        <con:parameterOrder>
+                            <con:entry>userId</con:entry>
+                        </con:parameterOrder>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="create-policy" id="e3747270-8481-4f21-8711-e7e562d524ec">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/pcrf-pcf/policy-subscription" methodName="create"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="create-policy" id="eaba2e8d-62f5-433b-bc4b-71a5177f1a57"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request>
+                            {
+                            "ueIdList": [
+                            {
+                            "idType": "imsi",
+                            "idValue": "${imsi${ThreadIndex}}"
+                            }
+                            ],
+                            "subscCats": {
+                            "subCatId": {
+                            "Bronze": {
+                            "subCatId": "Bronze",
+                            "priority": 1,
+                            "startDate": "01-01-2020T22:00:00",
+                            "endDate": "01-01-2025T22:00:00"
+                            }
+                            }
+                            },
+                            "subscCatsDefault": {
+                            "subCatId": {
+                            "Bronze": {
+                            "subCatId": "Bronze",
+                            "priority": 1,
+                            "startDate": "01-01-2020T22:00:00",
+                            "endDate": "01-01-2025T22:00:00"
+                            }
+                            }
+                            }
+                            }
+                        </con:request>
+                        <con:originalUri>http://localhost/aapi/v1/pcrf-pcf/policy-subscription</con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="686dd5e3-8125-4a3a-8cb1-dd80830b208c"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>201</codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <con:entry key="app" value="ALL"/>
+                            <con:entry key="userId" value="${userId${ThreadIndex}}"/>
+                        </con:parameters>
+                        <con:parameterOrder>
+                            <con:entry>userId</con:entry>
+                            <con:entry>app</con:entry>
+                        </con:parameterOrder>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="loop" id="0a9f8dfd-8dee-4cd0-8651-7a205b8beca7">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        def groovyUtils =new com.eviware.soapui.support.GroovyUtils(context)
+                        linenum=Integer.parseInt(props.getPropertyValue("lineNum"+context.ThreadIndex));
+                        maxLine=Integer.parseInt(props.getPropertyValue("maxLine"+context.ThreadIndex));
+
+                        // loop
+                        if(linenum&lt;maxLine)
+                        {
+                        testRunner.gotoStepByName("next")
+                        }
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="resultlogging" id="5c78ce12-23fd-410a-9e8d-2134f6c70e72">
+                <con:settings/>
+                <con:config>
+                    <script>import com.eviware.soapui.impl.wsdl.teststeps.RestRequestStepResult
+
+                        //def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        //datasource = props.getPropertyValue("data"+context.ThreadIndex)
+                        //dataArray = datasource.split(",")
+                        //int resultIndex = 0
+                        //int dataIndex = 0
+
+                        for( r in testRunner.results )
+                        {
+                        if( r instanceof RestRequestStepResult )
+                        {
+                        //dataIndex = resultIndex/3
+                        if( r.status.toString() == "FAILED" )
+                        {
+                        log.info r.getProperty("URL") + " --- " + r.status
+                        }
+                        //resultIndex++
+                        }
+                        }
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:loadTest id="077caa58-d117-4c55-88a7-947048406ddc" name="10-threads">
+                <con:settings>
+                    <con:setting id="HttpSettings@close-connections">false</con:setting>
+                </con:settings>
+                <con:threadCount>20</con:threadCount>
+                <con:startDelay>0</con:startDelay>
+                <con:sampleInterval>250</con:sampleInterval>
+                <con:calculateTPSOnTimePassed>true</con:calculateTPSOnTimePassed>
+                <con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange>
+                <con:historyLimit>0</con:historyLimit>
+                <con:testLimit>1</con:testLimit>
+                <con:limitType>COUNT_PER_THREAD</con:limitType>
+                <con:loadStrategy>
+                    <con:type>Thread</con:type>
+                    <con:config>
+                        <startThreadCount>20</startThreadCount>
+                        <endThreadCount>20</endThreadCount>
+                    </con:config>
+                </con:loadStrategy>
+                <con:assertion type="Step Status" name="Step Status"/>
+                <con:maxAssertionErrors>100</con:maxAssertionErrors>
+                <con:statisticsLogFolder/>
+                <con:statisticsLogInterval>0</con:statisticsLogInterval>
+                <con:logStatisticsOnThreadChange>false</con:logStatisticsOnThreadChange>
+                <con:cancelOnReachedLimit>false</con:cancelOnReachedLimit>
+                <con:cancelExcessiveThreads>true</con:cancelExcessiveThreads>
+                <con:strategyInterval>500</con:strategyInterval>
+                <con:updateStatisticsPerTestStep>false</con:updateStatisticsPerTestStep>
+            </con:loadTest>
+            <con:properties/>
+        </con:testCase>
+        <con:testCase id="b881120e-f47d-4ef4-99ab-c3493561c9db" failOnError="false" failTestCaseOnErrors="true"
+                      keepSession="false" maxResults="0" name="pre-batch" searchProperties="true" timeout="0"
+                      wsrmEnabled="false" wsrmVersion="1.0" wsrmAckTo="" amfAuthorisation="false" amfEndpoint=""
+                      amfLogin="" amfPassword="" discardOkResults="true">
+            <con:settings/>
+            <con:testStep type="properties" name="Properties" id="b7ddff9c-f258-4aa5-85f1-652adf0551f9">
+                <con:settings/>
+                <con:config xsi:type="con:PropertiesStep" saveFirst="true"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:properties>
+
+
+                        <con:property>
+                            <con:name>profileId</con:name>
+                            <con:value>eMBBSliceProfile_01</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId1</con:name>
+                            <con:value>RoamingArea1</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId2</con:name>
+                            <con:value>RoamingArea2</con:value>
+                        </con:property>
+
+
+                    </con:properties>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="create-profile" id="4ede210b-de50-4ad8-b051-faf0dbc27520">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/eps-udm/udm-slice-profile" methodName="create"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="create-profile" id="221b40b8-5688-405f-9b0b-c61b599144a7"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request>{ "udmSliceProfileId": "${Properties#profileId}", "plmnIdSets": [ {
+                            "plmnIdSetIdentifier": "Default", "nssai": { "defaultSingleNssais": [ { "nssai": { "sst": 2,
+                            "sd": "000002" }, "dnnListId": "Default" } ], "singleNssais": [ { "nssai": { "sst": 1, "sd":
+                            "000002" }, "dnnListId": "Default" } ] }, "dnnLists": [ { "dnnListId": "Default",
+                            "dnnDataList": [ { "dnn": "ims", "defaultDnnIndicator": true, "lboRoamingAllowed": false,
+                            "iwkEpsInd": true, "pduSessionTypes": { "defaultSessionType": "IPV4", "allowedSessionTypes":
+                            [ "IPV6", "IPV4V6" ] }, "sscModes": { "defaultSscMode": "SSC_MODE_1", "allowedSscModes": [
+                            "SSC_MODE_2", "SSC_MODE_3" ] }, "qos5gProfile": { "qi5": 5, "arp": { "priorityLevel": 1,
+                            "preemptCap": "NOT_PREEMPT", "preemptVuln": "NOT_PREEMPTABLE" }, "priorityLevel": 1 },
+                            "sessionAmbr": { "uplink": "1000 Gbps", "downlink": "950 Gbps" },
+                            "charging3gppCharacteristics": "0000", "upSecurity": { "upIntegr": "PREFERRED", "upConfid":
+                            "PREFERRED" } }, { "dnn": "internet", "defaultDnnIndicator": true, "lboRoamingAllowed":
+                            false, "iwkEpsInd": true, "pduSessionTypes": { "defaultSessionType": "IPV4",
+                            "allowedSessionTypes": [ "IPV6", "IPV4V6" ] }, "sscModes": { "defaultSscMode": "SSC_MODE_1",
+                            "allowedSscModes": [ "SSC_MODE_2", "SSC_MODE_3" ] }, "qos5gProfile": { "qi5": 5, "arp": {
+                            "priorityLevel": 1, "preemptCap": "NOT_PREEMPT", "preemptVuln": "NOT_PREEMPTABLE" },
+                            "priorityLevel": 1 }, "sessionAmbr": { "uplink": "1000 Gbps", "downlink": "950 Gbps" },
+                            "charging3gppCharacteristics": "0000", "upSecurity": { "upIntegr": "PREFERRED", "upConfid":
+                            "PREFERRED" } }, { "dnn": "mqf", "defaultDnnIndicator": true, "lboRoamingAllowed": false,
+                            "iwkEpsInd": true, "pduSessionTypes": { "defaultSessionType": "IPV4", "allowedSessionTypes":
+                            [ "IPV6", "IPV4V6" ] }, "sscModes": { "defaultSscMode": "SSC_MODE_1", "allowedSscModes": [
+                            "SSC_MODE_2", "SSC_MODE_3" ] }, "qos5gProfile": { "qi5": 5, "arp": { "priorityLevel": 1,
+                            "preemptCap": "NOT_PREEMPT", "preemptVuln": "NOT_PREEMPTABLE" }, "priorityLevel": 1 },
+                            "sessionAmbr": { "uplink": "1000 Gbps", "downlink": "950 Gbps" },
+                            "charging3gppCharacteristics": "0000", "upSecurity": { "upIntegr": "PREFERRED", "upConfid":
+                            "PREFERRED" } }, { "dnn": "Default", "defaultDnnIndicator": true, "lboRoamingAllowed":
+                            false, "iwkEpsInd": true, "pduSessionTypes": { "defaultSessionType": "IPV4",
+                            "allowedSessionTypes": [ "IPV6", "IPV4V6" ] }, "sscModes": { "defaultSscMode": "SSC_MODE_1",
+                            "allowedSscModes": [ "SSC_MODE_2", "SSC_MODE_3" ] }, "qos5gProfile": { "qi5": 5, "arp": {
+                            "priorityLevel": 1, "preemptCap": "NOT_PREEMPT", "preemptVuln": "NOT_PREEMPTABLE" },
+                            "priorityLevel": 1 }, "sessionAmbr": { "uplink": "1000 Gbps", "downlink": "950 Gbps" },
+                            "charging3gppCharacteristics": "0000", "upSecurity": { "upIntegr": "PREFERRED", "upConfid":
+                            "PREFERRED" } } ] } ] } ] }
+                        </con:request>
+                        <con:originalUri>
+                            https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/eps-udm/udm-slice-profile
+                        </con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="a3ceaa1e-958f-428c-9443-4eef70d9b093"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>201</codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters/>
+                        <con:parameterOrder>
+                            <con:entry>udmSliceProfileId</con:entry>
+                        </con:parameterOrder>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="create-area1" id="ea343a0a-e799-46ce-88fd-ce6b1ca19e30">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/eps-udm/udm-roaming-area" methodName="create"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="create-area1" id="4c40aaae-4b31-4dc2-bdea-9f779e5bd960"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request>{
+                            "udmRoamingAreaId": "${Properties#areaId1}",
+                            "areaList": [
+                            {
+                            "tacs": ["A0F1"]
+                            }
+                            ]
+                            }
+                        </con:request>
+                        <con:originalUri>
+                            https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/eps-udm/udm-roaming-area
+                        </con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="2d00f1ca-626a-4372-b2bd-6418ec085fb3"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>201</codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="udmRoamingAreaId" value="${Properties#areaId1}"
+                                   xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                        <con:parameterOrder>
+                            <con:entry>udmRoamingAreaId</con:entry>
+                        </con:parameterOrder>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="create-area2" id="e0cbf348-dbec-4e12-ad4a-d7c34b7384cf">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/eps-udm/udm-roaming-area" methodName="create"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="create-area2" id="4c40aaae-4b31-4dc2-bdea-9f779e5bd960"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request>{
+                            "udmRoamingAreaId": "${Properties#areaId2}",
+                            "areaList": [
+                            {
+                            "tacs": ["F0F2"]
+                            }
+                            ]
+                            }
+                        </con:request>
+                        <con:originalUri>
+                            https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/eps-udm/udm-roaming-area
+                        </con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="346b118c-5f14-4723-b888-7b5332e0b7d1"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>201</codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="udmRoamingAreaId" value="${Properties#areaId2}"
+                                   xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                        <con:parameterOrder>
+                            <con:entry>udmRoamingAreaId</con:entry>
+                        </con:parameterOrder>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="create-pcfprofile" id="bb803787-e29d-48d6-926c-36925c510f62">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/pcrf-pcf/policy-slice-profile" methodName="create"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="create-pcfprofile" id="6d86670b-a615-4a69-9ba3-4ef0a233b4a3"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request>{
+                            "pcfSliceProfileId": "pcfProf0001",
+                            "snssaiDnnCombinations": [
+                            {
+                            "snssai": {
+                            "sst": 1,
+                            "sd": "000002"
+                            },
+                            "dnnList": [
+                            "Default",
+                            "internet",
+                            "ims",
+                            "mqf"
+                            ]
+                            }
+                            ]
+                            }
+                        </con:request>
+                        <con:originalUri>
+                            https://prov.eda2.n28-eccd1.sero.gic.ericsson.se/aapi/v1/pcrf-pcf/policy-slice-profile
+                        </con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="e0288c48-d439-4745-94a3-f3bedac6e037"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>201</codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="pcfSliceProfileId" value="pcfProf0001"
+                                   xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:properties/>
+        </con:testCase>
+        <con:testCase id="5dc4462c-3240-412a-aa0b-7d159cea7f60" failOnError="false" failTestCaseOnErrors="true"
+                      keepSession="false" maxResults="0" name="geored-create" searchProperties="true"
+                      discardOkResults="true" timeout="0" wsrmEnabled="false" wsrmVersion="1.0" wsrmAckTo=""
+                      amfAuthorisation="false" amfEndpoint="" amfLogin="" amfPassword="">
+            <con:settings/>
+            <con:testStep type="properties" name="Properties" id="5e322b85-adf6-439b-bf91-7987639eb5ab">
+                <con:settings/>
+                <con:config xsi:type="con:PropertiesStep" saveFirst="true"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:properties>
+                        <con:property>
+                            <con:name>userId</con:name>
+                            <con:value>imsi-240810000000001</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi</con:name>
+                            <con:value>240810000000001</con:value>
+                        </con:property>
+
+
+                        <con:property>
+                            <con:name>profileId</con:name>
+                            <con:value>eMBBSliceProfile_01</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId1</con:name>
+                            <con:value>RoamingArea1</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId2</con:name>
+                            <con:value>RoamingArea1</con:value>
+                        </con:property>
+
+
+                        <con:property>
+                            <con:name>msisdn</con:name>
+                            <con:value>491720000000001</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>key</con:name>
+                            <con:value>6fe92cd9ef3855759b9eea44c384f536</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi0</con:name>
+                            <con:value>240810000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>lineNum0</con:name>
+                            <con:value>2</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>maxLine0</con:name>
+                            <con:value>2</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>userId0</con:name>
+                            <con:value>imsi-240810000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>msisdn0</con:name>
+                            <con:value>491720000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>key0</con:name>
+                            <con:value>e40a0a936bafec74ccd841ca634409d9</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>data0</con:name>
+                            <con:value>
+                                240810000000001;491720000000001;6fe92cd9ef3855759b9eea44c384f536,240810000000002;491720000000002;e40a0a936bafec74ccd841ca634409d9
+                            </con:value>
+                        </con:property>
+                    </con:properties>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="load" id="3c997320-d22f-4acc-8ea4-79d402bf823c">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        import java.util.*;
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+
+                        // read file
+                        def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+                        def flow = context.ThreadIndex;
+                        //log.info(flow)
+                        def csvName = '${projectDir}/data-ccdm-geored-test/create/data'+context.ThreadIndex+'.txt'
+                        def csvFilePath = context.expand(csvName)
+                        context.fileReader = new BufferedReader(new FileReader(csvFilePath))
+                        lines = context.fileReader.readLines()
+                        String rowsData = lines.toString()
+                        rowsData = rowsData.replace('[','').replace(']','').replace(' ','')
+
+                        // set properties
+
+                        props.setPropertyValue("lineNum"+context.ThreadIndex,"0")
+                        props.setPropertyValue("maxLine"+context.ThreadIndex,lines.size().toString())
+                        props.setPropertyValue("data"+context.ThreadIndex,rowsData)
+
+                        //log.info('loaded'+csvName +'data in '+context.ThreadIndex)
+
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="next" id="78380b17-d592-4dd8-978b-2370c95373fe">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+
+                        // read line
+                        linenum = Integer.parseInt(props.getPropertyValue("lineNum"+context.ThreadIndex));
+                        //log.info(context.ThreadIndex + ":" + linenum)
+                        datasource = props.getPropertyValue("data"+context.ThreadIndex)
+                        //log.info(datasource)
+                        dataArray = datasource.split(",")
+                        //log.info(datasource)
+                        String row = dataArray[linenum]
+                        //log.info(context.ThreadIndex + ":" + row)
+                        String[] line = row.split(";")
+                        String imsi = line[0]
+                        String msisdn = line[1]
+                        String key = line[2]
+
+                        // set properties
+                        props.setPropertyValue("userId"+context.ThreadIndex,"imsi-"+imsi)
+                        props.setPropertyValue("imsi"+context.ThreadIndex,imsi)
+                        props.setPropertyValue("msisdn"+context.ThreadIndex,msisdn)
+                        props.setPropertyValue("key"+context.ThreadIndex,key)
+
+                        // next
+                        linenum++
+                        props.setPropertyValue("lineNum"+context.ThreadIndex,linenum.toString())
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="create-data" id="6e77f313-0d41-401d-b492-5520842b3cee">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/eps-udm/data-subscription" methodName="create"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="create-data" id="a365d63d-f3dc-4976-a6fd-0ace5545b19e"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request>{
+                            "udm": {
+                            "ueIdList": [
+                            {
+                            "idType": "imsi",
+                            "idValue": "${imsi${ThreadIndex}}"
+                            },
+                            {
+                            "idType": "msisdn",
+                            "idValue": "${msisdn${ThreadIndex}}"
+                            }
+                            ],
+                            "subscribedUeAmbr": {
+                            "uplink": "1000 Gbps",
+                            "downlink": "950 Gbps"
+                            },
+                            "ratRestrictions": [
+                            "WLAN"
+                            ],
+                            "forbiddenAreas": [
+                            {
+                            "id": "${Properties#areaId2}"
+                            }
+                            ],
+                            "serviceAreaRestriction": {
+                            "restrictionType": "NOT_ALLOWED_AREAS",
+                            "areas": [
+                            {
+                            "id": "${Properties#areaId1}"
+                            }
+                            ]
+                            },
+                            "coreNetworkTypeRestrictions": [
+                            "EPC"
+                            ],
+                            "udmSliceProfileId": {
+                            "id": "${Properties#profileId}"
+                            }
+                            },
+                            "common": {
+                            "ueUsageType": 0,
+                            "rfspIndex": 1,
+                            "subsRegTimer": 36000
+                            }
+                            }
+                        </con:request>
+                        <con:originalUri>
+                            https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/eps-udm/data-subscription
+                        </con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="ca552108-c68b-43de-bdcf-295c949e20a2"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>201</codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="userId" value="${userId${ThreadIndex}}"
+                                   xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                        <con:parameterOrder>
+                            <con:entry>userId</con:entry>
+                        </con:parameterOrder>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="loop" id="cf408f82-f6c4-4e49-a8d4-0bd289002e35">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        def groovyUtils =new com.eviware.soapui.support.GroovyUtils(context)
+                        linenum=Integer.parseInt(props.getPropertyValue("lineNum"+context.ThreadIndex));
+                        maxLine=Integer.parseInt(props.getPropertyValue("maxLine"+context.ThreadIndex));
+
+                        // loop
+                        if(linenum&lt;maxLine)
+                        {
+                        testRunner.gotoStepByName("next")
+                        }
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="resultlogging" id="0218712d-0d3e-43e3-b0d8-f412b80aabef">
+                <con:settings/>
+                <con:config>
+                    <script>import com.eviware.soapui.impl.wsdl.teststeps.RestRequestStepResult
+
+                        //def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        //datasource = props.getPropertyValue("data"+context.ThreadIndex)
+                        //dataArray = datasource.split(",")
+                        //int resultIndex = 0
+                        //int dataIndex = 0
+
+                        for( r in testRunner.results )
+                        {
+                        if( r instanceof RestRequestStepResult )
+                        {
+                        //dataIndex = resultIndex/3
+                        if( r.status.toString() == "FAILED" )
+                        {
+                        log.info r.getProperty("URL") + " --- " + r.status
+                        }
+                        //resultIndex++
+                        }
+                        }
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:loadTest id="9c243922-3d53-40c3-9903-4a29a599ef20" name="10-threads">
+                <con:settings>
+                    <con:setting id="HttpSettings@close-connections">false</con:setting>
+                </con:settings>
+                <con:threadCount>2</con:threadCount>
+                <con:startDelay>0</con:startDelay>
+                <con:sampleInterval>250</con:sampleInterval>
+                <con:calculateTPSOnTimePassed>true</con:calculateTPSOnTimePassed>
+                <con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange>
+                <con:historyLimit>0</con:historyLimit>
+                <con:testLimit>1</con:testLimit>
+                <con:limitType>COUNT_PER_THREAD</con:limitType>
+                <con:loadStrategy>
+                    <con:type>Thread</con:type>
+                    <con:config>
+                        <startThreadCount>2</startThreadCount>
+                        <endThreadCount>2</endThreadCount>
+                    </con:config>
+                </con:loadStrategy>
+                <con:assertion type="Step Status" name="Step Status"/>
+                <con:maxAssertionErrors>100</con:maxAssertionErrors>
+                <con:statisticsLogFolder/>
+                <con:statisticsLogInterval>0</con:statisticsLogInterval>
+                <con:logStatisticsOnThreadChange>false</con:logStatisticsOnThreadChange>
+                <con:cancelOnReachedLimit>false</con:cancelOnReachedLimit>
+                <con:cancelExcessiveThreads>true</con:cancelExcessiveThreads>
+                <con:strategyInterval>500</con:strategyInterval>
+                <con:updateStatisticsPerTestStep>false</con:updateStatisticsPerTestStep>
+            </con:loadTest>
+            <con:properties/>
+        </con:testCase>
+        <con:testCase id="9d95aae6-e87a-4e1c-ad9c-af77a9582767" failOnError="false" failTestCaseOnErrors="true"
+                      keepSession="false" maxResults="0" name="geored-delete" searchProperties="true"
+                      discardOkResults="true" timeout="0" wsrmEnabled="false" wsrmVersion="1.0" wsrmAckTo=""
+                      amfAuthorisation="false" amfEndpoint="" amfLogin="" amfPassword="">
+            <con:settings/>
+            <con:testStep type="properties" name="Properties" id="936562bd-fe41-4442-adea-0f33a6d092bb">
+                <con:settings/>
+                <con:config xsi:type="con:PropertiesStep" saveFirst="true"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:properties>
+                        <con:property>
+                            <con:name>userId</con:name>
+                            <con:value>imsi-240810000000001</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi</con:name>
+                            <con:value>240810000000001</con:value>
+                        </con:property>
+
+
+                        <con:property>
+                            <con:name>profileId</con:name>
+                            <con:value>eMBBSliceProfile_01</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId1</con:name>
+                            <con:value>RoamingArea1</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId2</con:name>
+                            <con:value>RoamingArea1</con:value>
+                        </con:property>
+
+
+                        <con:property>
+                            <con:name>msisdn</con:name>
+                            <con:value>491720000000001</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>key</con:name>
+                            <con:value>6fe92cd9ef3855759b9eea44c384f536</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi0</con:name>
+                            <con:value>240810000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>lineNum0</con:name>
+                            <con:value>2</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>maxLine0</con:name>
+                            <con:value>2</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>userId0</con:name>
+                            <con:value>imsi-240810000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>msisdn0</con:name>
+                            <con:value>491720000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>key0</con:name>
+                            <con:value>e40a0a936bafec74ccd841ca634409d9</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>data0</con:name>
+                            <con:value>
+                                240810000000001;491720000000001;6fe92cd9ef3855759b9eea44c384f536,240810000000002;491720000000002;e40a0a936bafec74ccd841ca634409d9
+                            </con:value>
+                        </con:property>
+                    </con:properties>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="load" id="3f33e549-1661-49bd-a776-5f2c792e272a">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        import java.util.*;
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+
+                        // read file
+                        def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+                        def flow = context.ThreadIndex;
+                        //log.info(flow)
+                        def csvName = '${projectDir}/data-ccdm-geored-test/delete/data'+context.ThreadIndex+'.txt'
+                        def csvFilePath = context.expand(csvName)
+                        context.fileReader = new BufferedReader(new FileReader(csvFilePath))
+                        lines = context.fileReader.readLines()
+                        String rowsData = lines.toString()
+                        rowsData = rowsData.replace('[','').replace(']','').replace(' ','')
+
+                        // set properties
+
+                        props.setPropertyValue("lineNum"+context.ThreadIndex,"0")
+                        props.setPropertyValue("maxLine"+context.ThreadIndex,lines.size().toString())
+                        props.setPropertyValue("data"+context.ThreadIndex,rowsData)
+
+                        //log.info('loaded'+csvName +'data in '+context.ThreadIndex)
+
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="next" id="e3ff492b-b259-4506-89f0-fe5ea963e1ba">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+
+                        // read line
+                        linenum = Integer.parseInt(props.getPropertyValue("lineNum"+context.ThreadIndex));
+                        //log.info(context.ThreadIndex + ":" + linenum)
+                        datasource = props.getPropertyValue("data"+context.ThreadIndex)
+                        //log.info(datasource)
+                        dataArray = datasource.split(",")
+                        //log.info(datasource)
+                        String row = dataArray[linenum]
+                        //log.info(context.ThreadIndex + ":" + row)
+                        String[] line = row.split(";")
+                        String imsi = line[0]
+                        String msisdn = line[1]
+                        String key = line[2]
+
+                        // set properties
+                        props.setPropertyValue("userId"+context.ThreadIndex,"imsi-"+imsi)
+                        props.setPropertyValue("imsi"+context.ThreadIndex,imsi)
+                        props.setPropertyValue("msisdn"+context.ThreadIndex,msisdn)
+                        props.setPropertyValue("key"+context.ThreadIndex,key)
+
+                        // next
+                        linenum++
+                        props.setPropertyValue("lineNum"+context.ThreadIndex,linenum.toString())
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="delete-data" id="7667fd3e-35e8-4c64-8f8f-2d23906ae5e7">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/eps-udm/data-subscription" methodName="delete"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="delete-data" id="b7c6849f-c82f-412b-b124-23fd81488ab5"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request/>
+                        <con:originalUri>
+                            https://prov.eda2.n99-eccd1.sero.gic.ericsson.se/aapi/v1/eps-udm/data-subscription
+                        </con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="7e6d7092-cf51-4e48-bf57-a884928f4a78"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>204</codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="userId" value="${userId${ThreadIndex}}"
+                                   xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="loop" id="a95d5899-aa79-499b-ae8e-fe92e434d6a0">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        def groovyUtils =new com.eviware.soapui.support.GroovyUtils(context)
+                        linenum=Integer.parseInt(props.getPropertyValue("lineNum"+context.ThreadIndex));
+                        maxLine=Integer.parseInt(props.getPropertyValue("maxLine"+context.ThreadIndex));
+
+                        // loop
+                        if(linenum&lt;maxLine)
+                        {
+                        testRunner.gotoStepByName("next")
+                        }
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="resultlogging" id="b9fc809f-18bc-4d55-a066-26e2f47448be">
+                <con:settings/>
+                <con:config>
+                    <script>import com.eviware.soapui.impl.wsdl.teststeps.RestRequestStepResult
+
+                        //def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        //datasource = props.getPropertyValue("data"+context.ThreadIndex)
+                        //dataArray = datasource.split(",")
+                        //int resultIndex = 0
+                        //int dataIndex = 0
+
+                        for( r in testRunner.results )
+                        {
+                        if( r instanceof RestRequestStepResult )
+                        {
+                        //dataIndex = resultIndex/3
+                        if( r.status.toString() == "FAILED" )
+                        {
+                        log.info r.getProperty("URL") + " --- " + r.status
+                        }
+                        //resultIndex++
+                        }
+                        }
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:loadTest id="3bb45912-68d3-4121-8877-52b332832b64" name="10-threads">
+                <con:settings>
+                    <con:setting id="HttpSettings@close-connections">false</con:setting>
+                </con:settings>
+                <con:threadCount>1</con:threadCount>
+                <con:startDelay>0</con:startDelay>
+                <con:sampleInterval>250</con:sampleInterval>
+                <con:calculateTPSOnTimePassed>true</con:calculateTPSOnTimePassed>
+                <con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange>
+                <con:historyLimit>0</con:historyLimit>
+                <con:testLimit>1</con:testLimit>
+                <con:limitType>COUNT_PER_THREAD</con:limitType>
+                <con:loadStrategy>
+                    <con:type>Thread</con:type>
+                    <con:config>
+                        <startThreadCount>1</startThreadCount>
+                        <endThreadCount>1</endThreadCount>
+                    </con:config>
+                </con:loadStrategy>
+                <con:assertion type="Step Status" name="Step Status"/>
+                <con:maxAssertionErrors>100</con:maxAssertionErrors>
+                <con:statisticsLogFolder/>
+                <con:statisticsLogInterval>0</con:statisticsLogInterval>
+                <con:logStatisticsOnThreadChange>false</con:logStatisticsOnThreadChange>
+                <con:cancelOnReachedLimit>false</con:cancelOnReachedLimit>
+                <con:cancelExcessiveThreads>true</con:cancelExcessiveThreads>
+                <con:strategyInterval>500</con:strategyInterval>
+                <con:updateStatisticsPerTestStep>false</con:updateStatisticsPerTestStep>
+            </con:loadTest>
+            <con:properties/>
+        </con:testCase>
+        <con:testCase id="9244c377-381e-40be-b5b5-e9171e26171f" failOnError="false" failTestCaseOnErrors="true"
+                      keepSession="false" maxResults="0" name="stab-back-traffic" searchProperties="true"
+                      discardOkResults="true" timeout="0" wsrmEnabled="false" wsrmVersion="1.0" wsrmAckTo=""
+                      amfAuthorisation="false" amfEndpoint="" amfLogin="" amfPassword="">
+            <con:settings/>
+            <con:testStep type="properties" name="Properties" id="b9099b56-92b8-45c5-8a15-9de63d3dec27">
+                <con:settings/>
+                <con:config xsi:type="con:PropertiesStep" saveFirst="true"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:properties>
+                        <con:property>
+                            <con:name>userId</con:name>
+                            <con:value>imsi-240810000000001</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi</con:name>
+                            <con:value>240810000000001</con:value>
+                        </con:property>
+
+
+                        <con:property>
+                            <con:name>profileId</con:name>
+                            <con:value>eMBBSliceProfile_01</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId1</con:name>
+                            <con:value>RoamingArea1</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId2</con:name>
+                            <con:value>RoamingArea1</con:value>
+                        </con:property>
+
+
+                        <con:property>
+                            <con:name>msisdn</con:name>
+                            <con:value>491720000000001</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi0</con:name>
+                            <con:value>240811000000000</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>userId0</con:name>
+                            <con:value>imsi-240811000000000</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>msisdn0</con:name>
+                            <con:value>491721000000000</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi1</con:name>
+                            <con:value>240811000000001</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>userId1</con:name>
+                            <con:value>imsi-240811000000001</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>msisdn1</con:name>
+                            <con:value>491721000000001</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi2</con:name>
+                            <con:value>240811000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>userId2</con:name>
+                            <con:value>imsi-240811000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>msisdn2</con:name>
+                            <con:value>491721000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi3</con:name>
+                            <con:value>240811000000003</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>userId3</con:name>
+                            <con:value>imsi-240811000000003</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>msisdn3</con:name>
+                            <con:value>491721000000003</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi4</con:name>
+                            <con:value>240811000000004</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>userId4</con:name>
+                            <con:value>imsi-240811000000004</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>msisdn4</con:name>
+                            <con:value>491721000000004</con:value>
+                        </con:property>
+                    </con:properties>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="create-data" id="5e023f0c-e940-43a5-8c2d-b4ee49de3333">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/eps-udm/data-subscription" methodName="create"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="create-data" id="a365d63d-f3dc-4976-a6fd-0ace5545b19e"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request>{
+                            "udm": {
+                            "ueIdList": [
+                            {
+                            "idType": "imsi",
+                            "idValue": "${imsi${ThreadIndex}}"
+                            },
+                            {
+                            "idType": "msisdn",
+                            "idValue": "${msisdn${ThreadIndex}}"
+                            }
+                            ],
+                            "subscribedUeAmbr": {
+                            "uplink": "1000 Gbps",
+                            "downlink": "950 Gbps"
+                            },
+                            "ratRestrictions": [
+                            "WLAN"
+                            ],
+                            "forbiddenAreas": [
+                            {
+                            "id": "${Properties#areaId2}"
+                            }
+                            ],
+                            "serviceAreaRestriction": {
+                            "restrictionType": "NOT_ALLOWED_AREAS",
+                            "areas": [
+                            {
+                            "id": "${Properties#areaId1}"
+                            }
+                            ]
+                            },
+                            "coreNetworkTypeRestrictions": [
+                            "EPC"
+                            ],
+                            "udmSliceProfileId": {
+                            "id": "${Properties#profileId}"
+                            }
+                            },
+                            "eps": {
+                            "imsi": "${imsi${ThreadIndex}}",
+                            "msisdn": "${msisdn${ThreadIndex}}",
+                            "profileId": "HSS-EsmProfile_Default",
+                            "odb": "NONE",
+                            "roamingAllowed": true,
+                            "extendedAccessRestriction": 0,
+                            "epc5gAutoProvisioningRestriction": true
+                            },
+                            "common": {
+                            "ueUsageType": 0,
+                            "rfspIndex": 1,
+                            "subsRegTimer": 36000
+                            }
+                            }
+                        </con:request>
+                        <con:originalUri>
+                            https://prov.drop38.access-n103-oss4622-ipv4.seli.gic.ericsson.se/aapi/v1/eps-udm/data-subscription
+                        </con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="ca552108-c68b-43de-bdcf-295c949e20a2"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>201</codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="userId" value="${userId${ThreadIndex}}"
+                                   xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                        <con:parameterOrder>
+                            <con:entry>userId</con:entry>
+                        </con:parameterOrder>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="delete-data" id="1b7c4e7c-dbab-419f-88b1-b9abc47774cc">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/eps-udm/data-subscription" methodName="delete"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="delete-data" id="b7c6849f-c82f-412b-b124-23fd81488ab5"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request/>
+                        <con:originalUri>
+                            https://prov.eda2.pod56-eccd1.seln.ete.ericsson.se/aapi/v1/eps-udm/data-subscription
+                        </con:originalUri>
+                        <con:assertion type="Valid HTTP Status Codes" id="e4327595-5b19-4f54-86d7-8c71dcfe5fe1"
+                                       name="Valid HTTP Status Codes">
+                            <con:configuration>
+                                <codes>204
+                                </codes>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="userId" value="${userId${ThreadIndex}}"
+                                   xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:loadTest id="5a40db23-91ce-44c1-a6c1-72673060dac1" name="simple">
+                <con:settings>
+                    <con:setting id="HttpSettings@close-connections">false</con:setting>
+                </con:settings>
+                <con:threadCount>5</con:threadCount>
+                <con:startDelay>0</con:startDelay>
+                <con:sampleInterval>250</con:sampleInterval>
+                <con:calculateTPSOnTimePassed>true</con:calculateTPSOnTimePassed>
+                <con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange>
+                <con:historyLimit>0</con:historyLimit>
+                <con:testLimit>120</con:testLimit>
+                <con:limitType>TIME</con:limitType>
+                <con:loadStrategy>
+                    <con:type>Simple</con:type>
+                    <con:config>
+                        <testDelay>20</testDelay>
+                        <randomFactor>0.0</randomFactor>
+                    </con:config>
+                </con:loadStrategy>
+                <con:assertion type="Step Status" name="Step Status"/>
+                <con:maxAssertionErrors>100</con:maxAssertionErrors>
+                <con:statisticsLogFolder/>
+                <con:statisticsLogInterval>0</con:statisticsLogInterval>
+                <con:logStatisticsOnThreadChange>false</con:logStatisticsOnThreadChange>
+                <con:cancelOnReachedLimit>false</con:cancelOnReachedLimit>
+                <con:cancelExcessiveThreads>true</con:cancelExcessiveThreads>
+                <con:strategyInterval>500</con:strategyInterval>
+                <con:updateStatisticsPerTestStep>false</con:updateStatisticsPerTestStep>
+            </con:loadTest>
+            <con:properties/>
+        </con:testCase>
+        <con:testCase id="4d4384d7-2855-4f8d-99f9-9e10034ea102" failOnError="false" failTestCaseOnErrors="true"
+                      keepSession="false" maxResults="0" name="delete-multi" searchProperties="true"
+                      discardOkResults="true" timeout="0" wsrmEnabled="false" wsrmVersion="1.0" wsrmAckTo=""
+                      amfAuthorisation="false" amfEndpoint="" amfLogin="" amfPassword="">
+            <con:settings/>
+            <con:testStep type="properties" name="Properties" id="a162f855-0468-4c26-aacd-85e4aac374fc">
+                <con:settings/>
+                <con:config xsi:type="con:PropertiesStep" saveFirst="true"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:properties>
+                        <con:property>
+                            <con:name>userId</con:name>
+                            <con:value>imsi-240810000000001</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi</con:name>
+                            <con:value>240810000000001</con:value>
+                        </con:property>
+
+
+                        <con:property>
+                            <con:name>profileId</con:name>
+                            <con:value>eMBBSliceProfile_01</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId1</con:name>
+                            <con:value>RoamingArea1</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>areaId2</con:name>
+                            <con:value>RoamingArea1</con:value>
+                        </con:property>
+
+
+                        <con:property>
+                            <con:name>msisdn</con:name>
+                            <con:value>491720000000001</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>key</con:name>
+                            <con:value>6fe92cd9ef3855759b9eea44c384f536</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>imsi0</con:name>
+                            <con:value>240810000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>lineNum0</con:name>
+                            <con:value>2</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>maxLine0</con:name>
+                            <con:value>2</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>userId0</con:name>
+                            <con:value>imsi-240810000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>msisdn0</con:name>
+                            <con:value>491720000000002</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>key0</con:name>
+                            <con:value>e40a0a936bafec74ccd841ca634409d9</con:value>
+                        </con:property>
+                        <con:property>
+                            <con:name>data0</con:name>
+                            <con:value>
+                                240810000000001;491720000000001;6fe92cd9ef3855759b9eea44c384f536,240810000000002;491720000000002;e40a0a936bafec74ccd841ca634409d9
+                            </con:value>
+                        </con:property>
+                    </con:properties>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="load" id="2545aa10-37af-406b-b436-a846a5797660">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        import java.util.*;
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+
+                        // read file
+                        def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+                        def flow = context.ThreadIndex;
+                        //log.info(flow)
+                        def csvName = '${projectDir}/data/data'+context.ThreadIndex+'.txt'
+                        def csvFilePath = context.expand(csvName)
+                        context.fileReader = new BufferedReader(new FileReader(csvFilePath))
+                        lines = context.fileReader.readLines()
+                        String rowsData = lines.toString()
+                        rowsData = rowsData.replace('[','').replace(']','').replace(' ','')
+
+                        // set properties
+
+                        props.setPropertyValue("lineNum"+context.ThreadIndex,"0")
+                        props.setPropertyValue("maxLine"+context.ThreadIndex,lines.size().toString())
+                        props.setPropertyValue("data"+context.ThreadIndex,rowsData)
+
+                        //log.info('loaded'+csvName +'data in '+context.ThreadIndex)
+
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="next" id="f7f9d042-b9f5-4ee6-a3ba-b8f899aaf0de">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+
+                        // read line
+                        linenum = Integer.parseInt(props.getPropertyValue("lineNum"+context.ThreadIndex));
+                        //log.info(context.ThreadIndex + ":" + linenum)
+                        datasource = props.getPropertyValue("data"+context.ThreadIndex)
+                        //log.info(datasource)
+                        dataArray = datasource.split(",")
+                        //log.info(datasource)
+                        String row = dataArray[linenum]
+                        //log.info(context.ThreadIndex + ":" + row)
+                        String[] line = row.split(";")
+                        String imsi = line[0]
+                        String msisdn = line[1]
+                        String key = line[2]
+
+                        // set properties
+                        props.setPropertyValue("userId"+context.ThreadIndex,"imsi-"+imsi)
+                        props.setPropertyValue("imsi"+context.ThreadIndex,imsi)
+                        props.setPropertyValue("msisdn"+context.ThreadIndex,msisdn)
+                        props.setPropertyValue("key"+context.ThreadIndex,key)
+
+                        // next
+                        linenum++
+                        props.setPropertyValue("lineNum"+context.ThreadIndex,linenum.toString())
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="delete - delete-auth" id="de44ac72-f964-4f38-bee7-721d3a0f621f">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/auc-arpf/auth-subscription" methodName="delete"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="delete - delete-auth" id="f8431b6a-b911-46af-9589-5a4df84a4341"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request/>
+                        <con:originalUri>
+                            https://prov.eda2.n99-eccd1.sero.gic.ericsson.se/aapi/v1/auc-arpf/auth-subscription
+                        </con:originalUri>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="userId" value="${userId${ThreadIndex}}"
+                                   xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="delete - delete-data" id="9f4706f5-3a10-49c8-835e-30a304db22fe">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/eps-udm/data-subscription" methodName="delete"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="delete - delete-data" id="b7c6849f-c82f-412b-b124-23fd81488ab5"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request/>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="userId" value="${userId${ThreadIndex}}"
+                                   xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="delete - delete-policy" id="e79fff31-db8b-4cbf-8caa-93439a786889">
+                <con:settings/>
+                <con:config service="https://prov.eda2.5gc.seln.ete.ericsson.se/aapi/v1"
+                            resourcePath="/aapi/v1/pcrf-pcf/policy-subscription" methodName="delete"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="delete - delete-policy" id="10377cd2-a15d-48e0-bff3-6f052a1e2c79"
+                                     mediaType="application/json" postQueryString="false">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>https://${#Project#eda-prov-fqdn}</con:endpoint>
+                        <con:request/>
+                        <con:credentials>
+                            <con:selectedAuthProfile>aapi</con:selectedAuthProfile>
+                            <con:authType>OAuth 2.0</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <con:entry key="app" value="ALL"/>
+                            <con:entry key="userId" value="${userId${ThreadIndex}}"/>
+                        </con:parameters>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="loop" id="758dcfba-d673-4fde-b31c-d2b34dc36c92">
+                <con:settings/>
+                <con:config>
+                    <script>// get properties
+                        def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        def groovyUtils =new com.eviware.soapui.support.GroovyUtils(context)
+                        linenum=Integer.parseInt(props.getPropertyValue("lineNum"+context.ThreadIndex));
+                        maxLine=Integer.parseInt(props.getPropertyValue("maxLine"+context.ThreadIndex));
+
+                        // loop
+                        if(linenum&lt;maxLine)
+                        {
+                        testRunner.gotoStepByName("next")
+                        }
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="groovy" name="resultlogging" id="18afe756-5764-4b3c-85e0-1b65588b1ce6">
+                <con:settings/>
+                <con:config>
+                    <script>import com.eviware.soapui.impl.wsdl.teststeps.RestRequestStepResult
+
+                        //def props = testRunner.testCase.getTestStepByName( "Properties" )
+                        //datasource = props.getPropertyValue("data"+context.ThreadIndex)
+                        //dataArray = datasource.split(",")
+                        //int resultIndex = 0
+                        //int dataIndex = 0
+
+                        for( r in testRunner.results )
+                        {
+                        if( r instanceof RestRequestStepResult )
+                        {
+                        //dataIndex = resultIndex/3
+                        if( r.status.toString() == "FAILED" )
+                        {
+                        log.info r.getProperty("URL") + " --- " + r.status
+                        }
+                        //resultIndex++
+                        }
+                        }
+                    </script>
+                </con:config>
+            </con:testStep>
+            <con:loadTest id="d3440c8a-e82b-49a1-8141-9baa127126a7" name="10-threads">
+                <con:settings>
+                    <con:setting id="HttpSettings@close-connections">false</con:setting>
+                </con:settings>
+                <con:threadCount>20</con:threadCount>
+                <con:startDelay>0</con:startDelay>
+                <con:sampleInterval>250</con:sampleInterval>
+                <con:calculateTPSOnTimePassed>true</con:calculateTPSOnTimePassed>
+                <con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange>
+                <con:historyLimit>0</con:historyLimit>
+                <con:testLimit>1</con:testLimit>
+                <con:limitType>COUNT_PER_THREAD</con:limitType>
+                <con:loadStrategy>
+                    <con:type>Thread</con:type>
+                    <con:config>
+                        <startThreadCount>20</startThreadCount>
+                        <endThreadCount>20</endThreadCount>
+                    </con:config>
+                </con:loadStrategy>
+                <con:assertion type="Step Status" name="Step Status"/>
+                <con:maxAssertionErrors>100</con:maxAssertionErrors>
+                <con:statisticsLogFolder/>
+                <con:statisticsLogInterval>0</con:statisticsLogInterval>
+                <con:logStatisticsOnThreadChange>false</con:logStatisticsOnThreadChange>
+                <con:cancelOnReachedLimit>false</con:cancelOnReachedLimit>
+                <con:cancelExcessiveThreads>true</con:cancelExcessiveThreads>
+                <con:strategyInterval>500</con:strategyInterval>
+                <con:updateStatisticsPerTestStep>false</con:updateStatisticsPerTestStep>
+            </con:loadTest>
+            <con:properties/>
+        </con:testCase>
+        <con:properties/>
+    </con:testSuite>
+    <con:properties>
+        <con:property>
+            <con:name>eda-prov-fqdn</con:name>
+            <con:value>FQDN-for-test</con:value>
+        </con:property>
+        <con:property>
+            <con:name>eda-prov-username</con:name>
+            <con:value>name-for-test</con:value>
+        </con:property>
+        <con:property>
+            <con:name>eda-prov-password</con:name>
+            <con:value>password-for-test</con:value>
+        </con:property>
+        <con:property>
+            <con:name>eda-prov-client-id</con:name>
+            <con:value>client-id-for-test</con:value>
+        </con:property>
+        <con:property>
+            <con:name>eda-prov-client-secret</con:name>
+            <con:value>secret-for-test</con:value>
+        </con:property>
+    </con:properties>
+    <con:wssContainer/>
+    <con:oAuth2ProfileContainer>
+        <con:oAuth2Profile>
+            <con:name>aapi</con:name>
+            <con:clientID>${#Project#eda-prov-client-id}</con:clientID>
+            <con:clientSecret>${#Project#eda-prov-client-secret}</con:clientSecret>
+            <con:accessTokenURI>https://${#Project#eda-prov-fqdn}/oauth/v1/token</con:accessTokenURI>
+            <con:accessToken>6e892f59852eec6abb2744b0bf7cadd7cc12177a70fe4f1325dcef8bc3f3193e</con:accessToken>
+            <con:accessTokenPosition>HEADER</con:accessTokenPosition>
+            <con:oAuth2Flow>RESOURCE_OWNER_PASSWORD_CREDENTIALS</con:oAuth2Flow>
+            <con:refreshAccessTokenMethod>AUTOMATIC</con:refreshAccessTokenMethod>
+            <con:refreshToken>YzMxZTJhYzAtMzMzOS0xMWVkLTkzODUtMGZjM2NkNmJmZDRh</con:refreshToken>
+            <con:scope>scopes.ericsson.com/activation/aapi.read scopes.ericsson.com/activation/aapi.write</con:scope>
+            <con:accessTokenStatus>RETRIEVED_FROM_SERVER</con:accessTokenStatus>
+            <con:accessTokenStartingStatus>RETRIEVED_FROM_SERVER</con:accessTokenStartingStatus>
+            <con:accessTokenExpirationTime>3600</con:accessTokenExpirationTime>
+            <con:accessTokenIssuedTime>1663055869</con:accessTokenIssuedTime>
+            <con:manualAccessTokenExpirationTime>48</con:manualAccessTokenExpirationTime>
+            <con:useManualAccessTokenExpirationTime>false</con:useManualAccessTokenExpirationTime>
+            <con:manualAccessTokenExpirationTimeUnit>HOURS</con:manualAccessTokenExpirationTimeUnit>
+            <con:resourceOwnerName>${#Project#eda-prov-username}</con:resourceOwnerName>
+            <con:resourceOwnerPassword>${#Project#eda-prov-password}</con:resourceOwnerPassword>
+        </con:oAuth2Profile>
+        <con:oAuth2Profile>
+            <con:name>Profile 2</con:name>
+            <con:clientID>ba601460-0137-11eb-a75c-3de0ec952178</con:clientID>
+            <con:clientSecret>2f55364f-94e2-44ee-9ec7-74f2e529f3df</con:clientSecret>
+            <con:accessTokenURI>https://prov.eda2.n84-eccd1.sero.gic.ericsson.se/oauth/v1/token</con:accessTokenURI>
+            <con:accessToken>b7428787e527faa8b4ca0ffc1e4878093d90d8ad24cb1d8581d1ccfc93ccd0dd</con:accessToken>
+            <con:accessTokenPosition>HEADER</con:accessTokenPosition>
+            <con:oAuth2Flow>RESOURCE_OWNER_PASSWORD_CREDENTIALS</con:oAuth2Flow>
+            <con:refreshAccessTokenMethod>AUTOMATIC</con:refreshAccessTokenMethod>
+            <con:refreshToken>NzA2NmRlNDAtMDE4NS0xMWViLWE3NWMtM2RlMGVjOTUyMTc4</con:refreshToken>
+            <con:scope>scopes.ericsson.com/activation/aapi.write</con:scope>
+            <con:accessTokenStatus>UNKNOWN</con:accessTokenStatus>
+            <con:accessTokenStartingStatus>RETRIEVED_FROM_SERVER</con:accessTokenStartingStatus>
+            <con:accessTokenExpirationTime>3600</con:accessTokenExpirationTime>
+            <con:accessTokenIssuedTime>1601295800</con:accessTokenIssuedTime>
+            <con:manualAccessTokenExpirationTime/>
+            <con:manualAccessTokenExpirationTimeUnit>SECONDS</con:manualAccessTokenExpirationTimeUnit>
+            <con:resourceOwnerName>yogesh</con:resourceOwnerName>
+            <con:resourceOwnerPassword>Yogesh!1234</con:resourceOwnerPassword>
+        </con:oAuth2Profile>
+        <con:oAuth2Profile>
+            <con:name>Profile 3</con:name>
+            <con:clientID>07c8e310-f276-11ea-b46b-2f80c956d848</con:clientID>
+            <con:clientSecret>7b2e1155-b0f2-4060-ad63-a15a0c598d5b</con:clientSecret>
+            <con:accessTokenURI>https://prov.eda2.n84-eccd1.sero.gic.ericsson.se/oauth/v1/token</con:accessTokenURI>
+            <con:accessToken>b16c9c96058cbfcec7406664bf0495fcc5aa530dfb4dc14cac98ff6168b6c738</con:accessToken>
+            <con:accessTokenPosition>HEADER</con:accessTokenPosition>
+            <con:oAuth2Flow>RESOURCE_OWNER_PASSWORD_CREDENTIALS</con:oAuth2Flow>
+            <con:refreshAccessTokenMethod>AUTOMATIC</con:refreshAccessTokenMethod>
+            <con:refreshToken>OGQ4NmNmMTAtZjhkYi0xMWVhLWE3NWMtM2RlMGVjOTUyMTc4</con:refreshToken>
+            <con:scope>scopes.ericsson.com/activation/aapi.read</con:scope>
+            <con:accessTokenStatus>UNKNOWN</con:accessTokenStatus>
+            <con:accessTokenStartingStatus>RETRIEVED_FROM_SERVER</con:accessTokenStartingStatus>
+            <con:accessTokenExpirationTime>3600</con:accessTokenExpirationTime>
+            <con:accessTokenIssuedTime>1600343230</con:accessTokenIssuedTime>
+            <con:resourceOwnerName>yogesh</con:resourceOwnerName>
+            <con:resourceOwnerPassword>Yogesh!1234</con:resourceOwnerPassword>
+        </con:oAuth2Profile>
+    </con:oAuth2ProfileContainer>
+    <con:oAuth1ProfileContainer/>
+    <con:sensitiveInformation/>
+</con:soapui-project>

@@ -1,0 +1,8 @@
+package_dir="/lab/testtools/dallas/rhel764/Release/3R123B02"
+python="/lab/gw_test_framework/app/rhes7.x86_64/python3.5/bin/python3.5"
+python_lib_dir="/lab/testtools/rhel664/dallas/lib/python/rhel7.x86_64/lib/python3.5/site-packages/"
+otp_dir="/lab/testtools/app/rhes7.x86_64/erlang_otp/OTP19_2/lib/erlang/"
+erlport_dir="/lab/testtools/app/rhes6.x86_64/erlport/"
+max_otp_proc="5000000"
+log_server="10.130.46.40"
+central_host="selnpctool-1047-01-101.seln.ete.ericsson.se"

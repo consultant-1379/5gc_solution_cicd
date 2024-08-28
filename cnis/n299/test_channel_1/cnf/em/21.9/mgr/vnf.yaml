@@ -1,0 +1,24 @@
+vnflcm:
+  vnfInstanceName: node299-c1-em1-mgr
+  vnfProductName: Mediation.Manager
+  vnfSoftwareVersion: CXP9041443_R25N
+  instantiate-file: ../instantiate.json
+  values-file: values.yaml
+  namespace: em1
+  evnfmName: n299
+  csar-url: /proj/pccc_builds/images/EM/EM21_9/eric-bss-em-manager-22.7.0-418.csar
+pipeline:
+- module: onboard
+  check-interval: 10
+  print-interval: 60
+- module: instantiate
+- module: verify-pod-running
+  ignore-not-running:
+  - eric-bss-em-om-ss
+- module: run-k8s-command
+  name: Verify Pod eric-bss-em-manager-eric-em-mgr status
+  cmd: get ns
+- module: verify-pod-ready
+  check-interval: 30
+  deployments:
+  - eric-bss-em-manager-node299-c1-em1-mgr

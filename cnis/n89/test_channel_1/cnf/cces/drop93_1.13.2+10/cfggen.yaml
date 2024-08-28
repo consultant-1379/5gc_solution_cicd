@@ -1,0 +1,37 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global_common_ip.yaml
+# targetDir: .
+# jsonschema: cces/jsonschema.yaml
+# jsonschemaGlobal: common/global-jsonschema.yaml
+templateDir: ../../../../../../config_template/templates/
+#jsonschemaGlobal: ../../ts-config/jsonschemas/schema-global.yaml
+
+files:
+- template: cces/drop93_1.13.2+10/values.yaml.jinja2
+  target: day0/values.yaml
+- template: common/instantiate.json.jinja2
+  target: day0/instantiate.json
+- template: common/user-config.xml.jinja2
+  target: day1/user-config.xml
+- template: cces/drop93_1.13.2+10/nef-config.xml.jinja2
+  target: day1/nef-config.xml
+- template: cces/drop93_1.13.2+10/nef-diameter-config.xml.jinja2
+  target: day1/nef-diameter-config.xml
+- template: cces/drop93_1.13.2+10/nrfagent-config.xml.jinja2
+  target: day1/nrfagent-config.xml
+- template: cces/drop93_1.13.2+10/ddc-config.xml.jinja2
+  target: day1/ddc-config.xml
+- template: cces/drop93_1.13.2+10/nef-provisioning/1_ServiceProvider.xml.jinja2
+  target: day1/nef-provisioning/1_ServiceProvider.xml
+- template: cces/drop93_1.13.2+10/nef-provisioning/2_ServiceProviderServiceSubscription.xml.jinja2
+  target: day1/nef-provisioning/2_ServiceProviderServiceSubscription.xml
+- template: cces/drop93_1.13.2+10/nef-provisioning/3_Application.xml.jinja2
+  target: day1/nef-provisioning/3_Application.xml
+- template: cces/drop93_1.13.2+10/nef-provisioning/4_ApplicationServiceSubscription.xml.jinja2
+  target: day1/nef-provisioning/4_ApplicationServiceSubscription.xml
+- template: cces/drop93_1.13.2+10/nef-provisioning/5_QoS_information.json.jinja2
+  target: day1/nef-provisioning/5_QoS_information.json
+- template: cces/drop93_1.13.2+10/nef-provisioning/6_QoS_information.json.jinja2
+  target: day1/nef-provisioning/6_QoS_information.json
+- template: common/snmp-config.xml.jinja2
+  target: day1/snmp-config.xml

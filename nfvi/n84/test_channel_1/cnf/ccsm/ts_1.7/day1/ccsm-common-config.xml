@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  Notice that it is a configuration template in XML format
+  compliant with NF YANG model.  This XML template provides
+  a configuration skeleton that shall be modified before
+  loading into the yang service.  Some parts of the document
+  must be deleted or added depending on the network configuration
+  where the VNF will be deployed.
+-->
+  <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+  </capabilities>
+  </hello>]]>]]>
+  <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+  <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="0">
+  <edit-config>
+    <target><running/></target>
+    <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+      <!--
+        Configuration for the CCSM COMMON.
+      -->
+      <ccsm-common xmlns="urn:rdns:com:ericsson:oammodel:ericsson-ccsm-common">
+        <!--
+          Contains configuration parameters for map-application.
+        -->
+        <hss-handling>
+	   <max-connection-reattempts>3</max-connection-reattempts>
+	   <connection-timeout>500</connection-timeout>
+           <heartbeat-consecutive-errors>2</heartbeat-consecutive-errors>
+           <heartbeat-timer>2</heartbeat-timer>
+        </hss-handling>
+      </ccsm-common>
+    </config>
+  </edit-config>
+  </rpc>
+  <close-session/>

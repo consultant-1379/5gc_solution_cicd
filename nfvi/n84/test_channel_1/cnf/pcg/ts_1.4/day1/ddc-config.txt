@@ -1,0 +1,8 @@
+autowizard false
+config
+diagnostic-data-collection sftp-server Default
+ endpoints endpoint Default
+  client-identity username ubuntu
+  client-identity password dWJ1bnR1
+commit
+end

@@ -1,0 +1,77 @@
+######################################
+# N189
+######################################
+
+######################################
+## CaaS Variables
+######################################
+caas: CNIS
+kubernetes_service_ipaddress: 10.96.0.1
+
+###############################
+## Site Variables
+###############################
+timezone: CET
+mnc: '81'
+mcc: '240'
+oamDomain: sero.gic.ericsson.se
+locality: n189
+nels:
+  host: nelsaas-vnf1-thrift.sero.gic.ericsson.se
+  port: 9095
+snmpServer:
+  host: 172.30.32.50
+
+#storageClassName: network-block
+#####################################
+## Geography Redundancy Variables
+######################################
+geored:
+  udr:
+    enabled: true
+  amf:
+    enabled: false
+  smfGwc:
+    enabled: false
+  nrf:
+    enabled: false
+  nssf:
+    enabled: false
+  hss:
+    enabled: false
+  pcf:
+    enabled: false
+
+######################################
+## CNF Variables
+######################################
+
+###################
+## CCRC
+###################
+
+nrf:
+- host: ccrc1-nrf-sig.site1-cluster1
+  ipv4: 172.17.128.9
+  port: 443
+
+nssf:
+- host: ccrc1-nssf-sig.site1-cluster1
+  port: 443
+
+
+######################################
+## Miscellaneous Variables
+######################################
+dnsServer:
+- 172.30.32.50
+sftpServer:
+  host: 172.30.32.50
+  username: root
+  password: bG1jX3hkZw==   # base64
+  hostKey: c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFCQVFDdUhnR1ZRQkwrWkhsRyt4QklKUUJKeUJUOStoWjIycHRlZk00WnFtNkpSWWk5SmVpV3JIVm82emYrbkZtQTlXajhGS0hmcmsreDNDK2sxWmJ1bVhwZTk4bFlUTnlDdzlaTjlEQk85N2FackhxSVhvYzFkU013L1BYSEZBTDcyU3M1NkpOOFF5K2VzbFpwZGNHYUJBSGZFMFJLTjM3VmU3cjh6WjlzS3N6V1I2eEZMZDJraS9HQ0cxL1dFUFlyT2I0ak9xdlM2R1QyNGcwTWVqRjVFM3MxOWYrWWdqQVZlc0FSS3Bram93ckl0T1hILzROYWlyUDA1cEdKcHdjU0pvVWtUcUhNWjVLWE5KWVZINys3ekwzcWZSVXRPKzVDTzVmOTQ0Vzg2ek91d1poRjdBTjZhMUtSRnNzM3lSLzBIc09GY28ya3J6cjRpeFR1SUh6N3JtZkwgcm9vdEBwY2NjLW5vZGUxODktbWlzYy0wMS5zZWxuLmV0ZS5lcmljc3Nvbi5zZQo=
+######################################
+## RootCA Configuration
+######################################
+trustCAs:
+- ../../certs/root/RootCA.crt

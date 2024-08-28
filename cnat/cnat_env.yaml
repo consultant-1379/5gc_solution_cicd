@@ -1,0 +1,82 @@
+## CNAT Environment file for TS Dual Mode on CNIS
+## Use with --env-file argument or copy to /home/user/.cnat_env.yaml but make sure to
+## Upload any relevant changes for team to this location
+#
+# Generate evnfm trustca when evnfm has been reinstalled as
+#
+# openssl s_client -servername evnfm01.eoaas.n63.vpod1.sero.gic.ericsson.se -connect evnfm01.eoaas.n63.vpod1.sero.gic.ericsson.se:443 -showcerts < /dev/null | awk '/-----BEGIN/,/-----END CERTIFICATE-----/{print}' >$REPO_PATH/cloud-configs/n63_baremetal/eccd1/tls-conf/n63-evnfm.crt
+# openssl s_client -servername evnfm1.eoaas.node63-cluster1.sero.gic.ericsson.se -connect evnfm1.eoaas.node63-cluster1.sero.gic.ericsson.se:443 -showcerts < /dev/null | awk '/-----BEGIN/,/-----END CERTIFICATE-----/{print}' >$REPO_PATH/cloud-configs/n63_baremetal/eccd1/tls-conf/n63-evnfm.crt
+# openssl s_client -servername evnfm01.eoaas.n89.sero.gic.ericsson.se -connect evnfm01.eoaas.n89.sero.gic.ericsson.se:443 -showcerts < /dev/null | awk '/-----BEGIN/,/-----END CERTIFICATE-----/{print}' >$REPO_PATH/cloud-configs/n89_baremetal/eccd1/tls-conf/n89-evnfm.crt
+# openssl s_client -servername evnfm01.eoaas.n284.sc.sero.gic.ericsson.se -connect evnfm01.eoaas.n284.sc.sero.gic.ericsson.se:443 -showcerts < /dev/null | awk '/-----BEGIN/,/-----END CERTIFICATE-----/{print}' >$REPO_PATH/cloud-configs/n284_baremetal/eccd1/tls-conf/n284-evnfm.crt
+# openssl s_client -servername evnfm1.eoaas.node284-cluster1.sero.gic.ericsson.se -connect evnfm1.eoaas.node284-cluster1.sero.gic.ericsson.se:443 -showcerts < /dev/null | awk '/-----BEGIN/,/-----END CERTIFICATE-----/{print}' >$REPO_PATH/cloud-configs/n284_baremetal/eccd1/tls-conf/n284-evnfm.crt
+evnfm:
+  node284:
+    host: eo-nbi.evnfm1.node284-cluster1.sero.gic.ericsson.se
+    user: vnfm-user
+    pass: DefaultP12345!
+    default_clusterName: node284-cluster1
+  node284-cluster4:
+    host: evnfm1.eoaas.node284-cluster4.sero.gic.ericsson.se
+    user: vnfm-user
+    pass: DefaultP12345!
+    default_clusterName: node284-cluster4
+  node63:
+    host: eo-nbi.evnfm1.node63-cluster4.sero.gic.ericsson.se
+    user: vnfm-user
+    pass: DefaultP12345!
+    default_clusterName: node63-cluster4
+  node63-cluster1:
+    host: evnfm1.eoaas.node63-cluster1.sero.gic.ericsson.se
+    user: vnfm-user
+    pass: DefaultP12345!
+    default_clusterName: node63-cluster1
+  n47:
+    host: evnfm02.eoaas.n47.vpod1.sc.sero.gic.ericsson.se
+    user: vnfm-user
+    pass: DefaultP12345!
+    default_clusterName: n47-eccd1
+  n89:
+    host: eo-nbi.evnfm1.n89-eccd1.sero.gic.ericsson.se
+    user: vnfm
+    pass: Qwerasdf1234!
+    default_clusterName: n89
+  node189:
+    host: eo-nbi.evnfm1.node189-cluster1.sero.gic.ericsson.se
+    user: vnfm-user
+    pass: DefaultP12345!
+    default_clusterName: node189-cluster1
+  node189-cluster2:
+    host: evnfm1.eoaas.node189-cluster1.sero.gic.ericsson.se
+    user: vnfm-user
+    pass: DefaultP12345!
+    default_clusterName: node189-cluster2
+k8s_clusters:
+  node284-cluster1:
+    kubeconfig: /proj/pccc_utils/scripts/kubeconfig/node284-cluster1.config
+    caas: CCD-BM
+  node284-cluster4:
+    kubeconfig: /proj/pccc_utils/scripts/kubeconfig/node284-cluster4.config
+    caas: CCD-BM
+  node63-cluster1:
+    kubeconfig: /proj/pccc_utils/scripts/kubeconfig/node63-cluster1.config
+    caas: CCD-BM
+  node63-cluster4:
+    kubeconfig: /proj/pccc_utils/scripts/kubeconfig/node63-cluster4.config
+    caas: CCD-BM
+  n47-eccd1:
+    kubeconfig: /proj/pccc_utils/scripts/kubeconfig/n47.conf
+    caas: CCD-BM
+  n89:
+    kubeconfig: /proj/pccc_utils/scripts/kubeconfig/n89.conf
+    caas: CCD-BM
+  node189-cluster1:
+    kubeconfig: /proj/pccc_utils/scripts/kubeconfig/node189-cluster1.config
+    caas: CCD-BM
+  node189-cluster2:
+    kubeconfig: /proj/pccc_utils/scripts/kubeconfig/node189-cluster2.config
+    caas: CCD-BM
+TerminateVnfRequest:
+  TerminateVnfRequest: FORCEFUL
+  additionalParams:
+    cleanUpResources: true
+    skipVerification: true

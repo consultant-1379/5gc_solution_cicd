@@ -1,0 +1,11 @@
+{
+  "clusterName": "n89",
+  "additionalParams": {
+       "namespace": "pcg",
+       "applicationTimeOut": "1200",
+       "commandTimeOut": "1200",
+       "skipVerification": true
+
+    }
+}
+

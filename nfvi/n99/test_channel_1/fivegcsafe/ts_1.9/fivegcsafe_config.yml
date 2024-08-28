@@ -1,0 +1,1014 @@
+---
+# Customized Parameters for Simplifying Configuration
+5gc_solution_cicd-repo-path: ${global.test.config-files-directory}
+rootCA-certificates-directory: ${5gc_solution_cicd-repo-path}lab/certs/
+dallas:
+    version: 3R158A01
+    config-files-directory: ${5gc_solution_cicd-repo-path}lab/n99/dallas1/infra
+evnfm:
+    r-state: 2.23.1-789
+    deployment-configs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd2/evnfm/
+eda:
+    r-state: 1.34.134
+    certs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/eda/certs/
+    deployment-configs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/eda/
+ccdm:
+    r-state: 1.7.24
+    certs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/ccdm/certs/
+    deployment-configs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/ccdm/
+pcg:
+    r-state: R49B423
+    deployment-configs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/pcg/
+pcc:
+    r-state: R51C112
+    certs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/pcc/certs/
+    deployment-configs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/pcc/
+ccsm:
+    r-state: 1.9.4-10
+    certs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/ccsm/certs/
+    deployment-configs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/ccsm/
+ccrc:
+    r-state: 1.8.6-1
+    certs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/ccrc/certs/
+    deployment-configs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/ccrc/
+cces:
+    r-state: 1.7.3-5
+    certs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/cces/certs/
+    deployment-configs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/cces/
+sc:
+    r-state: 1.8.0+180
+    certs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/sc/certs/
+    deployment-configs-directory: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/sc/
+---
+# FIVEGCSAFE Parameters
+
+global:
+    test:
+        test-channel-name: n99-site1
+        channel-management-file: /lab/pccc_utils/5GC_CICD/test_channel_management/n99_testchannel1_management.yam1
+        fivegcsafe-log-directory: /home/${user.name}/n99-site1-test-log/
+        log-collection:
+            input-files-directory:
+                printouts: ${5gc_solution_cicd-repo-path}fivegcsafe/printouts/
+                nf-log: ${5gc_solution_cicd-repo-path}fivegcsafe/logs/nf_log/
+                pm-counter: ${5gc_solution_cicd-repo-path}fivegcsafe/logs/pm_counter/
+        test-report:
+            template-file: /proj/e-jcat-tools/5gc/testreport/5gc_TestReport_Template_v4.docx
+            case-evidence-config-file: ${5gc_solution_cicd-repo-path}formulas/nfvi/ts_1.9/prometheusFormulasCaseConfig.yml
+tools:
+    misc-server:
+        login-info:
+            host: 10.155.146.237
+            user: tsuser
+            password: dHNwYXNzCgo=
+    dallas:
+        version: ${dallas.version}
+        # release-package-path: /lab/testtools/dallas/rhel764/preRelease
+        central-host:
+            host: selnpctool-1248-01-101.seln.ete.ericsson.se
+            password: bG1jX3hkZw==
+            user: root
+        deployment-config-files-directory: ${dallas.config-files-directory}
+        blades:
+            - 101
+            - 102
+            - 204
+            - 205
+        traffic-model:
+            tm-ms-groups:
+                ipv4:
+                    five-g: 101
+                    four-g: 102,103,104
+            af-session:
+                max-subscribers: 253
+                registration-rate: 20
+                ms-group: 104
+            max-sau:
+                max-subscribers: 3000000
+                registration-rate: 50
+    af:
+        af-url: https://af1.n99.5gc.mnc081.mcc240.3gppnetwork.org
+        nef-nbi-host-fqdn: nef1-nbi-trust.n99.5gc.mnc081.mcc240.3gppnetwork.org
+        nef-nbi-host-ip-address: 5.108.6.2
+        test-mode: ordered
+        request-number-per-second: 28
+        af-certificate:
+            crt-file: ${5gc_solution_cicd-repo-path}lab/n99/outline/certs/outline-af-server.crt
+            key-file: ${5gc_solution_cicd-repo-path}lab/n99/outline/certs/outline-af-server.key
+5gc:
+    certificates:
+        rootCA:
+            crt-file: ${rootCA-certificates-directory}TeamBluesRootCA.crt
+            key-file: ${rootCA-certificates-directory}TeamBluesRootCA.key
+            srl-file: ${rootCA-certificates-directory}TeamBluesRootCA.srl
+    pcf:
+        login-info:
+            host: n99-pcf1.sero.gic.ericsson.se
+            user: root
+            password: Um9sZVJvQDQ4Mw==
+    infrastructure:
+        type: NFVI
+        ccd:
+            lcm:
+                ccd-package:
+                    release: 2.22.0
+                    r-state: R30A
+                images:
+                    director:
+                        min-disk: 10
+                        volume-size: 16
+                        properties: {hw_vif_mutliqueue_enabled: true}
+                    node:
+                        min-disk: 10
+                        volume-size: 16
+                        properties: {hw_vif_mutliqueue_enabled: true}
+            clusters-number: 2
+            clusters:
+                traffic:
+                    name: n99-eccd1
+                    kube-api-ingress: kubeapi.ingress.n99-eccd1.sero.gic.ericsson.se
+                    director:
+                        host: n99-eccd1.sero.gic.ericsson.se
+                        user: eccd
+                        password: ZWNjZA==
+                        vip: 10.117.61.22
+                    ingresses:
+                        victoria-metrics-alert-server:
+                            ingress-host: monitoring-eric-victoria-metrics-alert-server.ingress.n99-eccd1.sero.gic.ericsson.se
+                        victoria-metrics-cluster-vmselect:
+                            ingress-host: monitoring-eric-victoria-metrics-cluster-vmselect.ingress.n99-eccd1.sero.gic.ericsson.se
+                        pm-pushgateway:
+                            ingress-host: monitoring-eric-pm-pushgateway.ingress.n99-eccd1.sero.gic.ericsson.se
+                    lcm:
+                        aggregates: MGMT, HT, STD
+                        flavors:
+                            - MGMT_2vcpu_8192MBmem_0GBdisk
+                            - MGMT_8vcpu_16384MBmem_0GBdisk
+                            - HT_46vcpu_81920MBmem_0GBdisk
+                            - STD_72vcpu_327680MBmem_0GBdisk
+                        networks:
+                            - sriov-flat-left
+                            - sriov-flat-right
+                        stacks:
+                            ccd-stack:
+                                name: n99-eccd1
+                                env-file: ${5gc_solution_cicd-repo-path}nfvi/n99/test_channel_1/eccd/eccd1/ts_1.9/env-eccd.yaml
+                                timeout: 180
+                                parameters: {worker_max_batch_size: 2}
+                                subports-to-update:
+                                    - eccd1-pc-mm-oam
+                                    - eccd1-pc-mm-ran-1
+                                    - eccd1-pc-mm-ran-2
+                                    - eccd1-pc-mm-signaling-1
+                                    - eccd1-pc-mm-signaling-2
+                                    - eccd1-pc-mm-media
+                                    - eccd1-pc-sm-signaling
+                                    - eccd1-pc-sm-media
+                                    - eccd1-pc-sm-intra
+                                    - eccd1-pc-up-ran
+                                    - eccd1-pc-up-signaling
+                                    - eccd1-pc-up-media
+                                    - eccd1-pc-up-dn
+                                pool-name: pool1
+                            ccd-network-stack:
+                                name: n99-eccd1-net
+                                template-file: ${5gc_solution_cicd-repo-path}yaml/ts_1.9/5gc_sa_net.yaml
+                                env-file: ${5gc_solution_cicd-repo-path}nfvi/n99/test_channel_1/eccd/eccd1/ts_1.9/env-eccd-net.yaml
+                management:
+                    name: n99-eccd2
+                    kube-api-ingress: kubeapi.ingress.n99-eccd2.sero.gic.ericsson.se
+                    director:
+                        host: n99-eccd2.sero.gic.ericsson.se
+                        user: eccd
+                        password: ZWNjZA==
+                        vip: 10.117.60.14
+                    ingresses:
+                        victoria-metrics-alert-server:
+                            ingress-host: monitoring-eric-victoria-metrics-alert-server.ingress.n99-eccd2.sero.gic.ericsson.se
+                        victoria-metrics-cluster-vmselect:
+                            ingress-host: monitoring-eric-victoria-metrics-cluster-vmselect.ingress.n99-eccd1.sero.gic.ericsson.se
+                        pm-pushgateway:
+                            ingress-host: monitoring-eric-pm-pushgateway.ingress.n99-eccd1.sero.gic.ericsson.se
+                    lcm:
+                        aggregates: MGMT
+                        flavors:
+                            - MGMT_2vcpu_8192MBmem_0GBdisk
+                            - MGMT_8vcpu_16384MBmem_0GBdisk
+                            - HT_46vcpu_82944MBmem_0GBdisk
+                            - STD_72vcpu_327680MBmem_0GBdisk
+                        stacks:
+                            ccd-stack:
+                                name: n99-eccd2
+                                timeout: 90
+                                env-file: ${5gc_solution_cicd-repo-path}lab/n99/eccd2/eccd/env-eccd.yaml
+                                parameters: {worker_max_batch_size: 4}
+                            ccd-network-stack:
+                                name: n99-eccd2-net
+                                template-file: ${5gc_solution_cicd-repo-path}5gc_sa_net_hot/5gc_sa_net.yaml
+                                env-file: ${5gc_solution_cicd-repo-path}lab/n99/eccd2/eccd/env-eccd-net.yaml
+        cee:
+            cic:
+                login-info:
+                    host: 10.86.88.36
+                    user: ceeinfra
+                    password: cjAwdG1l
+            openstack:
+                keystone-auth:
+                    host-ip: 10.86.88.43
+                    host-name: os-ext-vip.n99vpod1cee.sc.sero.gic.ericsson.se
+                domain:
+                    id: default
+                    name: Default
+                    user-domain: default
+                    project:
+                        id: 04dad3298b4d4b59b2a92d86a3e9a9ff
+                        name: admin
+                        user: admin
+                        password: RU5GOXhtRDZ4NTRMZmx2Uzh1SmI3QkdYWnZLZ21ZdFAxM3RQVGtJaQ==
+                aggregates:
+                    - name: HT
+                      hosts: compute-1-128.cee.tld, compute-1-129.cee.tld, compute-1-5927.cee.tld
+                      properties: {type: high-throughput}
+                    - name: MGMT
+                      hosts: compute-vxsds-1-105.cee.tld, compute-vxsds-1-106.cee.tld, compute-vxsds-1-107.cee.tld, compute-vxsds-1-108.cee.tld
+                      properties: {type: management}
+                    - name: STD
+                      hosts: compute-1-110.cee.tld, compute-1-111.cee.tld, compute-1-112.cee.tld, compute-1-113.cee.tld, compute-1-114.cee.tld, compute-1-115.cee.tld, compute-1-116.cee.tld, compute-1-117.cee.tld, compute-1-118.cee.tld, compute-1-119.cee.tld, compute-1-120.cee.tld, compute-1-121.cee.tld, compute-1-130.cee.tld, compute-1-5740.cee.tld, compute-1-699.cee.tld, compute-1-700.cee.tld, compute-1-928.cee.tld, compute-1-934.cee.tld, compute-1-935.cee.tld
+                      properties: {type: standard}
+                flavors:
+                    - name: MGMT_2vcpu_4096MBmem_0GBdisk
+                      disk: 0
+                      vcpus: 2
+                      ram: 4096
+                      properties:
+                          "[hw:cpu_policy]": dedicated
+                          "[hw:mem_page_size]": "1048576"
+                          "[hw:watchdog_action]": reset
+                          "[aggregate_instance_extra_specs:type]": management
+                    - name: MGMT_4vcpu_6144MBmem_0GBdisk
+                      disk: 0
+                      vcpus: 4
+                      ram: 6144
+                      properties:
+                          "[hw:cpu_policy]": dedicated
+                          "[hw:mem_page_size]": "1048576"
+                          "[hw:watchdog_action]": reset
+                          "[aggregate_instance_extra_specs:type]": management
+                    - name: MGMT_12vcpu_49152MBmem_0GBdisk
+                      disk: 0
+                      vcpus: 12
+                      ram: 49152
+                      properties:
+                          "[hw:cpu_policy]": dedicated
+                          "[hw:mem_page_size]": "1048576"
+                          "[hw:watchdog_action]": reset
+                          "[aggregate_instance_extra_specs:type]": management
+                    - name: MGMT_2vcpu_8192MBmem_0GBdisk
+                      disk: 0
+                      vcpus: 2
+                      ram: 8192
+                      properties:
+                          "[hw:cpu_policy]": dedicated
+                          "[hw:mem_page_size]": "1048576"
+                          "[hw:watchdog_action]": reset
+                          "[aggregate_instance_extra_specs:type]": management
+                    - name: MGMT_8vcpu_16384MBmem_0GBdisk
+                      disk: 0
+                      vcpus: 8
+                      ram: 16384
+                      properties:
+                          "[hw:cpu_policy]": dedicated
+                          "[hw:mem_page_size]": "1048576"
+                          "[hw:watchdog_action]": reset
+                          "[aggregate_instance_extra_specs:type]": management
+                    - name: HT_46vcpu_81920MBmem_0GBdisk
+                      disk: 0
+                      vcpus: 46
+                      ram: 81920
+                      properties:
+                          "[hw:cpu_policy]": dedicated
+                          "[hw:mem_page_size]": "1048576"
+                          "[hw:watchdog_action]": reset
+                          "[aggregate_instance_extra_specs:type]": high-throughput
+                          "[hw:emulator_threads_policy]": isolate
+                    - name: STD_72vcpu_327680MBmem_0GBdisk
+                      disk: 0
+                      vcpus: 72
+                      ram: 327680
+                      properties:
+                          "[hw:cpu_policy]": dedicated
+                          "[hw:mem_page_size]": "1048576"
+                          "[hw:numa_nodes]": "2"
+                          "[hw:watchdog_action]": reset
+                          "[aggregate_instance_extra_specs:type]": standard
+                networks:
+                    - name: sriov-flat-left
+                      type: FLAT
+                      physical-network: n99_CEE1_PFPT_VLAG_L
+                      subnet:
+                          name: sriov-flat-left_subnet
+                          cidr: 172.16.111.0/24
+                    - name: sriov-flat-right
+                      type: FLAT
+                      physical-network: n99_CEE1_PFPT_VLAG_R
+                      subnet:
+                          name: sriov-flat-right_subnet
+                          cidr: 172.16.112.0/24
+
+        compute-hosts:
+            user: ceeinfra
+            password: cjAwdG1l
+        bgw:
+            login-info:
+                host: serointrt00021.sc.sero.gic.ericsson.se
+                user: pdu-pc-admin
+                password: c2VybyFkY045OVFmeA==
+        sdim:
+            access-info:
+                url: https://10.86.88.4/5dce7b39-0e23-465b-917f-2909dd040da6
+                user: n99vpod1user
+                password: dlAwZEl1czNyQG45OQ==
+        rte:
+            login-info:
+                host: n99-rte2.sc.sero.gic.ericsson.se
+                user: operator
+                password: QWRtaW5pc3RyYXRvckAxMjM=
+
+        switches:
+            leaf:
+                ports-to-check-stats: 61,62,67,68,69,75
+                switches:
+                    - id: data-leaf-1a
+                      name: N99-NRU-Leaf1a
+                      ip: 10.243.0.12
+                      user: network-admin
+                      password: UFNTdzByZDRucnVAbjk5
+                      admin: network-admin
+                      admin-password: UFNTdzByZDRucnVAbjk5
+                      type: NRU
+                      ports-to-restart:
+                          ovs-dpdk: 22
+                          sr-iov: 0
+                    - id: data-leaf-1b
+                      name: N99-NRU-Leaf1b
+                      ip: 10.243.0.13
+                      user: network-admin
+                      password: UFNTdzByZDRucnVAbjk5
+                      admin: network-admin
+                      admin-password: UFNTdzByZDRucnVAbjk5
+                      type: NRU
+                      ports-to-restart:
+                          ovs-dpdk: 22
+                          sr-iov: 0
+                    - id: data-leaf-2a
+                      name: N99-NRU-Leaf2a
+                      ip: 10.243.0.14
+                      user: network-admin
+                      password: UFNTdzByZDRucnVAbjk5
+                      admin: network-admin
+                      admin-password: UFNTdzByZDRucnVAbjk5
+                      type: NRU
+                      ports-to-restart:
+                          ovs-dpdk: 22
+                          sr-iov: 0
+                    - id: data-leaf-2b
+                      name: N99-NRU-Leaf2b
+                      ip: 10.243.0.15
+                      user: network-admin
+                      password: UFNTdzByZDRucnVAbjk5
+                      admin: network-admin
+                      admin-password: UFNTdzByZDRucnVAbjk5
+                      type: NRU
+                      ports-to-restart:
+                          ovs-dpdk: 22
+                          sr-iov: 0
+                    - id: data-leaf-3a
+                      name: N99-NRU-Leaf3a
+                      ip: 10.243.0.16
+                      user: network-admin
+                      password: UFNTdzByZDRucnVAbjk5
+                      admin: network-admin
+                      admin-password: UFNTdzByZDRucnVAbjk5
+                      type: NRU
+                      ports-to-restart:
+                          ovs-dpdk: 22
+                          sr-iov: 0
+                    - id: data-leaf-3b
+                      name: N99-NRU-Leaf3b
+                      ip: 10.243.0.17
+                      user: network-admin
+                      password: UFNTdzByZDRucnVAbjk5
+                      admin: network-admin
+                      admin-password: UFNTdzByZDRucnVAbjk5
+                      type: NRU
+                      ports-to-restart:
+                          ovs-dpdk: 22
+                          sr-iov: 0
+            spine:
+                switches:
+                    - id: data-spine-1
+                      name: N99-NRU-Spine1a
+                      ip: 10.243.0.10
+                      user: network-admin
+                      password: UFNTdzByZDRucnVAbjk5
+                      admin: adminuser
+                      admin-password: UFNTdzByZDRucnVAbjk5
+                      type: NRU
+                    - id: data-spine-2
+                      name: N99-NRU-Spine1b
+                      ip: 10.243.0.11
+                      user: network-admin
+                      password: UFNTdzByZDRucnVAbjk5
+                      admin: network-admin
+                      admin-password: UFNTdzByZDRucnVAbjk5
+                      type: NRU
+    crd:
+        namespace: eric-crd-ns
+        pull-secret: regcred
+    evnfm:
+        default-user:
+            user-name: vnfm
+            password: VHNAZG01Z2NAYjF1ZXM=
+        operator-user:
+            user-name: tsadm
+            password: VHNAZG01Z2NAYjF1ZXM=
+        ingress-host: eo-nbi.evnfm.n99-eccd2.sero.gic.ericsson.se
+        namespace: evnfm
+        healthcheck:
+            k8s-exception-prefixes:
+                - eric-eo-evnfm-vm-wfscleanup
+                - eric-data-search-engine-curator
+        deployment:
+            r-state: ${evnfm.r-state}
+            component-packages:
+                deployment-manager:
+                    r-state: 1.42.0-358
+                eric-cloud-native-base:
+                    r-state: 57.8.0-EP1
+                eric-cncs-oss-config:
+                    r-state: 0.0.0-32
+                eric-eo-evnfm:
+                    r-state: ${evnfm.r-state}
+                eric-eo-evnfm-vm:
+                    r-state: 2.40.4-4
+                eric-eo-helmfile:
+                    r-state: 2.2.0-313
+                eric-oss-common-base:
+                    r-state: 0.1.0-694
+            server-certificate:
+                crt-file: ${5gc_solution_cicd-repo-path}lab/n99/eccd2/evnfm/certs/evnfm-server.crt
+                key-file: ${5gc_solution_cicd-repo-path}lab/n99/eccd2/evnfm/certs/evnfm-server.key
+            site-values-file: ${evnfm.deployment-configs-directory}site_values_${evnfm.r-state}.yaml
+            docker-registry-host: docker-registry.evnfm.n99-eccd2.sero.gic.ericsson.se
+            users:
+                kcadmin-user:
+                    user: admin
+                    password: VHNAZG01Z2NAYjF1ZXM=
+                pg-user:
+                    user: admin
+                    password: VHNAZG01Z2NAYjF1ZXM=
+                custom-user:
+                    user: eo_user
+                    password: VHNAZG01Z2NAYjF1ZXM=
+                super-user:
+                    user: postgres
+                    password: VHNAZG01Z2NAYjF1ZXM=
+                metrics-user:
+                    user: exporter
+                    password: VHNAZG01Z2NAYjF1ZXM=
+                replica-user:
+                    user: replica
+                    password: VHNAZG01Z2NAYjF1ZXM=
+                ht-user:
+                    user: vnfm
+                    password: VHNAZG01Z2NAYjF1ZXM=
+                container-user:
+                    user: vnfm
+                    password: VHNAZG01Z2NAYjF1ZXM=
+    cnfs:
+        eda:
+            namespace: eda
+            lcm:
+                r-state: ${eda.r-state}
+                instance-name: n99-eda1
+                pre-config:
+                    hss-validator:
+                        eda2-sdk-ca-file-path: /lab/pccc_utils/5GC_CICD/package/EDA2_SDK_CA-7.14.1.tar.gz
+                        eric-act-hss-validator-image-name: hss-validator-image
+                        eric-act-hss-validator-tag: 1.29.102
+                instantiate:
+                    instantiate-file: ${eda.deployment-configs-directory}instantiate.json
+                    values-file: ${eda.deployment-configs-directory}values.yaml
+                post-config:
+                    day0:
+                        user-account:
+                            user-name:
+                            password:
+                        service-account:
+                            user-name:
+                            password:
+                        client-name:
+                    app-configs:
+                        routings-directory:
+                        network-element-groups-directory:
+                        network-elements-directory:
+            day1:
+                user-account:
+                    user-name:
+                service-account:
+                    user-name: cai3guser
+                    password: UGFzc3dvcmQhMTIzNA==
+            user-data-provision:
+                mbb-project-file: ${5gc_solution_cicd-repo-path}/lab/soapui/MBB-5G-soapui-project.xml
+                loadtestrunner-file: /home/tsuser/SoapUI-5.5.0/bin/loadtestrunner.sh
+            ingresses:
+                fh-alarm-handler:
+                    ingress-host: eda-eric-fh-alarm-handler.ingress.n99-eccd1.sero.gic.ericsson.se
+        ccdm:
+            namespace: ccdm
+            log-collection-user: ccdmoam
+            day1-users:
+                - user: ccdmoam
+                  initial-password: Q2hhbmdlbWVAMXN0
+                  password: VHNAZG01Z2NAYjF1ZXM=
+                - user: ccdmsec
+                  initial-password: Q2hhbmdlbWVAMXN0
+                  password: VHNAZG01Z2NAYjF1ZXM=
+            backup:
+                user: ccdmoam
+                sftp-server:
+                    login-info:
+                        host: 11.0.18.2
+                        user: tsuser
+                        password: dHNwYXNz
+                    backup-file-path: /home/tsuser/ccdm-backup/ccdm-data/ccdm-data-backup-300W-20221031-2022-10-31T08:28:37.467042+01:00.tar.gz
+            lcm:
+                r-state: ${ccdm.r-state}
+                instance-name: eric-ccdm-eccd1
+                day0-user: sysadmin
+                day0-password: UGEkJHcwcmQ0TERBUA==
+                pre-config:
+                    access-management-password: YWRtaW4=
+                    access-management-user: admin
+                    etcd-password: YWRtaW4=
+                    ldap-secret-password: a2V5Y2xvYWs=
+                    minio-access-key: YWRtaW5hY2Nlc3M=
+                    minio-secret-key: YWRtaW5zZWNyZXQ=
+                    snmp-client-ip: 11.0.18.3
+                instantiate:
+                    instantiate-file: ${ccdm.deployment-configs-directory}instantiate.json
+                    values-file: ${ccdm.deployment-configs-directory}values.yaml
+                post-config:
+                    user-configs:
+                        - ${ccdm.deployment-configs-directory}user-config.xml
+                    app-configs:
+                        - file-path: ${ccdm.deployment-configs-directory}external-certificates.xml
+                          upload-type: NETCONF
+                          user: ccdmsec
+                          wait: 0
+                        - file-path: ${ccdm.deployment-configs-directory}udr-config.xml
+                          upload-type: NETCONF
+                          user: ccdmoam
+                          wait: 0
+                        - file-path: ${ccdm.deployment-configs-directory}nrfagent-config.xml
+                          upload-type: NETCONF
+                          user: ccdmoam
+                          wait: 0
+                        - file-path: ${ccdm.deployment-configs-directory}ddc-config.xml
+                          upload-type: NETCONF
+                          user: ccdmoam
+                          wait: 1200
+                        - file-path: ${ccdm.deployment-configs-directory}hss-application-counters.xml
+                          upload-type: NETCONF
+                          user: ccdmoam
+                          wait: 0
+                    fiveg-eir:
+                        enable: true
+                        eir-application-counters:
+                            file-path: ${ccdm.deployment-configs-directory}eir-application-counters.xml
+                            upload-type: NETCONF
+                            user: ccdmoam
+                            wait: 0
+                        eir-main-branches-setting-file: ${ccdm.deployment-configs-directory}eir-main-branches-setting.ldif
+                        eir-search-order-setting-file: ${ccdm.deployment-configs-directory}eir-search-order-setting.ldif
+                    ldap:
+                        password: bm9ybWFs
+            ingresses:
+                data-search-engine:
+                    ingress-host: ccdm-eric-data-search-engine-tls.ingress.n99-eccd1.sero.gic.ericsson.se
+                fh-alarm-handler:
+                    ingress-host: ccdm-eric-fh-alarm-handler.ingress.n99-eccd1.sero.gic.ericsson.se
+                pm-server:
+                    ingress-host: ccdm-eric-pm-server.ingress.n99-eccd1.sero.gic.ericsson.se
+        pcg:
+            namespace: pcg
+            log-collection-user: tsadm
+            day1-users:
+                - user: tsadm
+                  initial-password: c3lzYWRtaW4=
+                  password: VHNAZG01Z2NAYjF1ZXM=
+            lcm:
+                r-state: ${pcg.r-state}
+                instance-name: eric-pcg
+                day0-user: sysadmin
+                day0-password: c3lzYWRtaW4=
+                pre-config:
+                    snmp-client-ip: 10.36.242.99
+                instantiate:
+                    instantiate-file: ${pcg.deployment-configs-directory}instantiate.json
+                    values-file: ${pcg.deployment-configs-directory}values.yaml
+                post-config:
+                    user-configs:
+                        - ${pcg.deployment-configs-directory}user-config.txt
+                    app-configs:
+                        - file-path: ${pcg.deployment-configs-directory}pcg-config.txt
+                          upload-type: CLICMD
+                          user: tsadm
+                          wait: 0
+                        - file-path: ${pcg.deployment-configs-directory}ddc-config.txt
+                          upload-type: CLICMD
+                          user: tsadm
+                          wait: 0
+            ingresses:
+                data-search-engine:
+                    ingress-host: pcg-eric-data-search-engine-tls.ingress.n99-eccd1.sero.gic.ericsson.se
+                fh-alarm-handler:
+                    ingress-host: pcg-eric-fh-alarm-handler.ingress.n99-eccd1.sero.gic.ericsson.se
+                pm-server:
+                    ingress-host: pcg-eric-pm-server.ingress.n99-eccd1.sero.gic.ericsson.se
+        sc:
+            namespace: sc
+            log-collection-user: tsadm
+            bind-database-user: tsadm
+            day1-users:
+                - user: tsadm
+                  initial-password: dHNhZG0=
+                  password: V2Vha1BhcyN3b3JELTE=
+            lcm:
+                r-state: ${sc.r-state}
+                instance-name: n99-sc1
+                day0-user: admin
+                day0-password: cm9vdHJvb3Q=
+                pre-config:
+                    app-secrets:
+                        - secret-name: eric-sc-bragent-secret
+                          secret-path: ${sc.deployment-configs-directory}day0_secrets/eric-sc-bragent-secret.yaml
+                        - secret-name: eric-sec-ldap-server-creds
+                          secret-path: ${sc.deployment-configs-directory}day0_secrets/ldap-secret.yaml
+                        - secret-name: eric-data-distributed-coordinator-creds
+                          secret-path: ${sc.deployment-configs-directory}day0_secrets/distributed_coordinator_ed_secret.yaml
+                        - secret-name: eric-data-distributed-coordinator-creds-sc
+                          secret-path: ${sc.deployment-configs-directory}day0_secrets/distributed_coordinator_ed_sc_secret.yaml
+                        - secret-name: eric-data-wide-column-database-cd-admin-creds
+                          secret-path: ${sc.deployment-configs-directory}day0_secrets/wcdbcd-admin-secret.yaml
+                        - secret-name: eric-data-wide-column-database-cd-day0-creds
+                          secret-path: ${sc.deployment-configs-directory}day0_secrets/wcdbcd-day0-secret.yaml
+                        - secret-name: eric-bsf-db-creds
+                          secret-path: ${sc.deployment-configs-directory}day0_secrets/bsf-db-secret.yaml
+                    snmp-client-ip: 11.0.18.3
+                instantiate:
+                    instantiate-file: ${sc.deployment-configs-directory}instantiate.json
+                    values-file: ${sc.deployment-configs-directory}values-bsf-scp.yaml
+                post-config:
+                    user-configs:
+                        - ${sc.deployment-configs-directory}user-config.txt
+                    app-configs:
+                        - file-path: ${sc.deployment-configs-directory}external-certificates.txt
+                          upload-type: CLICMD
+                          user: tsadm
+                          wait: 0
+                        - file-path: ${sc.deployment-configs-directory}external-certificates-bsf.txt
+                          upload-type: CLICMD
+                          user: tsadm
+                          wait: 0
+                        - file-path: ${sc.deployment-configs-directory}bsf-config.txt
+                          upload-type: CLICMD
+                          user: tsadm
+                          wait: 0
+                        - file-path: ${sc.deployment-configs-directory}external-certificates-scp.txt
+                          upload-type: CLICMD
+                          user: tsadm
+                          wait: 0
+                        - file-path: ${sc.deployment-configs-directory}scp-config.txt
+                          upload-type: CLICMD
+                          user: tsadm
+                          wait: 0
+                        - file-path: ${sc.deployment-configs-directory}ddc-config.txt
+                          upload-type: CLICMD
+                          user: tsadm
+                          wait: 0
+            ingresses:
+                data-search-engine:
+                    ingress-host: sc-eric-data-search-engine-tls.ingress.n99-eccd1.sero.gic.ericsson.se
+                fh-alarm-handler:
+                    ingress-host: sc-eric-fh-alarm-handler.ingress.n99-eccd1.sero.gic.ericsson.se
+                pm-server:
+                    ingress-host: sc-eric-pm-server.ingress.n99-eccd1.sero.gic.ericsson.se
+        ccsm:
+            namespace: ccsm
+            log-collection-user: ccsmoam
+            day1-users:
+                - user: ccsmoam
+                  initial-password: Q2hhbmdlbWVAMXN0
+                  password: VHNAZG01Z2NAYjF1ZXM=
+                - user: ccsmsec
+                  initial-password: Q2hhbmdlbWVAMXN0
+                  password: VHNAZG01Z2NAYjF1ZXM=
+            lcm:
+                r-state: ${ccsm.r-state}
+                instance-name: eric-ccsm
+                day0-user: sysadmin
+                day0-password: UGEkJHcwcmQ0TERBUA==
+                pre-config:
+                    etcd-password: YWRtaW4=
+                    ldap-secret-password: a2V5Y2xvYWs=
+                    minio-access-key: YWRtaW5hY2Nlc3M=
+                    minio-secret-key: YWRtaW5zZWNyZXQ=
+                    snmp-client-ip: 11.0.18.3
+                instantiate:
+                    instantiate-file: ${ccsm.deployment-configs-directory}instantiate.json
+                    values-file: ${ccsm.deployment-configs-directory}values.yaml
+                post-config:
+                    user-configs:
+                        - ${ccsm.deployment-configs-directory}user-config.xml
+                    app-configs:
+                        - file-path: ${ccsm.deployment-configs-directory}external-certificates.xml
+                          upload-type: NETCONF
+                          user: ccsmsec
+                          wait: 0
+                        - file-path: ${ccsm.deployment-configs-directory}ausf-config.xml
+                          upload-type: NETCONF
+                          user: ccsmoam
+                          wait: 10
+                        - file-path: ${ccsm.deployment-configs-directory}udm-config.xml
+                          upload-type: NETCONF
+                          user: ccsmoam
+                          wait: 0
+                        - file-path: ${ccsm.deployment-configs-directory}nrfagent-config.xml
+                          upload-type: NETCONF
+                          user: ccsmoam
+                          wait: 0
+                        - file-path: ${ccsm.deployment-configs-directory}ddc-config.xml
+                          upload-type: NETCONF
+                          user: ccsmoam
+                          wait: 0
+                        - file-path: ${ccsm.deployment-configs-directory}hss-config.xml
+                          upload-type: NETCONF
+                          user: ccsmoam
+                          wait: 0
+                        - file-path: ${ccsm.deployment-configs-directory}hssepc-config.xml
+                          upload-type: NETCONF
+                          user: ccsmoam
+                          wait: 0
+                        - file-path: ${ccsm.deployment-configs-directory}diameter-config.xml
+                          upload-type: NETCONF
+                          user: ccsmoam
+                          wait: 0
+                        - file-path: ${ccsm.deployment-configs-directory}ccsm-sctp-config.xml
+                          upload-type: NETCONF
+                          user: ccsmoam
+                          wait: 0
+                        - file-path: ${ccsm.deployment-configs-directory}eir-config.xml
+                          upload-type: NETCONF
+                          user: ccsmoam
+                          wait: 0
+                        - file-path: ${ccsm.deployment-configs-directory}udm-remote-nf-profile.xml
+                          upload-type: NETCONF
+                          user: ccsmoam
+                          wait: 0
+                        - file-path: ${ccsm.deployment-configs-directory}hss-remote-nf-profile.xml
+                          upload-type: NETCONF
+                          user: ccsmoam
+                          wait: 0
+            ingresses:
+                data-search-engine:
+                    ingress-host: ccsm-eric-data-search-engine-tls.ingress.n99-eccd1.sero.gic.ericsson.se
+                fh-alarm-handler:
+                    ingress-host: ccsm-eric-fh-alarm-handler.ingress.n99-eccd1.sero.gic.ericsson.se
+                pm-server:
+                    ingress-host: ccsm-eric-pm-server.ingress.n99-eccd1.sero.gic.ericsson.se
+        ccrc:
+            namespace: ccrc
+            log-collection-user: ccrcoam
+            nrf:
+                host: nrf1.n99.5gc.mnc081.mcc240.3gppnetwork.org
+                sbi-client:
+                    crt-file: ${rootCA-certificates-directory}TeamBluesRootCA.crt
+                    key-file: ${rootCA-certificates-directory}TeamBluesRootCA.key
+            day1-users:
+                - user: ccrcoam
+                  initial-password: Q2hhbmdlbWVAMXN0
+                  password: VHNAZG01Z2NAYjF1ZXM=
+                - user: ccrcsec
+                  initial-password: Q2hhbmdlbWVAMXN0
+                  password: VHNAZG01Z2NAYjF1ZXM=
+            lcm:
+                r-state: ${ccrc.r-state}
+                instance-name: eric-ccrc
+                day0-user: sysadmin
+                day0-password: UGEkJHcwcmQ0TERBUA==
+                pre-config:
+                    access-management-password: YWRtaW4=
+                    access-management-user: admin
+                    etcd-password: YWRtaW4=
+                    ldap-secret-password: a2V5Y2xvYWs=
+                    minio-access-key: YWRtaW5hY2Nlc3M=
+                    minio-secret-key: YWRtaW5zZWNyZXQ=
+                    snmp-client-ip: 11.0.18.3
+                instantiate:
+                    instantiate-file: ${ccrc.deployment-configs-directory}instantiate.json
+                    values-file: ${ccrc.deployment-configs-directory}values.yaml
+                post-config:
+                    user-configs:
+                        - ${ccrc.deployment-configs-directory}user-config.xml
+                    app-configs:
+                        - file-path: ${ccrc.deployment-configs-directory}external-certificates.xml
+                          upload-type: NETCONF
+                          user: ccrcsec
+                          wait: 0
+                        - file-path: ${ccrc.deployment-configs-directory}nrf-config.xml
+                          upload-type: NETCONF
+                          user: ccrcoam
+                          wait: 0
+                        - file-path: ${ccrc.deployment-configs-directory}nrfagent-config.xml
+                          upload-type: NETCONF
+                          user: ccrcoam
+                          wait: 0
+                        - file-path: ${ccrc.deployment-configs-directory}nssf-config.xml
+                          upload-type: NETCONF
+                          user: ccrcoam
+                          wait: 0
+                        - file-path: ${ccrc.deployment-configs-directory}ddc-config.xml
+                          upload-type: NETCONF
+                          user: ccrcoam
+                          wait: 0
+                        - file-path: ${ccrc.deployment-configs-directory}auto-sni-amf.yaml
+                          upload-type: KUBEAPPLY
+                          wait: 0
+                        - file-path: ${ccrc.deployment-configs-directory}auto-sni-pcf.yaml
+                          upload-type: KUBEAPPLY
+                          wait: 0
+                        - file-path: ${ccrc.deployment-configs-directory}auto-sni-smf.yaml
+                          upload-type: KUBEAPPLY
+                          wait: 0
+                        - file-path: ${ccrc.deployment-configs-directory}tcp-options-for-tls-amf.yaml
+                          upload-type: KUBEAPPLY
+                          wait: 0
+                        - file-path: ${ccrc.deployment-configs-directory}tcp-options-for-tls-pcf.yaml
+                          upload-type: KUBEAPPLY
+                          wait: 0
+                        - file-path: ${ccrc.deployment-configs-directory}tcp-options-for-tls-smf.yaml
+                          upload-type: KUBEAPPLY
+                          wait: 0
+                        - file-path: ${ccrc.deployment-configs-directory}destination-rules.yaml
+                          upload-type: KUBEAPPLY
+                          wait: 0
+                        - file-path: ${ccrc.deployment-configs-directory}service-entries.yaml
+                          upload-type: KUBEAPPLY
+                          wait: 0
+                nssf-provision:
+                    p12crt-file: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/ccrc/certs/nssf-sbi-client.p12
+                    p12crt-password: ZXJpY3Nzb24=
+                    host: nssf-prov.ccrc.n99-eccd1.sero.gic.ericsson.se:443
+                    amf-set-profile-file: ${ccrc.deployment-configs-directory}amf-set-profile.json
+                    nrf-instance-profile-file: ${ccrc.deployment-configs-directory}nrf-instance-profile.json
+                    slice-instance-profile-file: ${ccrc.deployment-configs-directory}slice-instance-profile.json
+                    tai-group-profile-file: ${ccrc.deployment-configs-directory}tai-group-profile.json
+            ingresses:
+                data-search-engine:
+                    ingress-host: ccrc-eric-data-search-engine-tls.ingress.n99-eccd1.sero.gic.ericsson.se
+                fh-alarm-handler:
+                    ingress-host: ccrc-eric-fh-alarm-handler.ingress.n99-eccd1.sero.gic.ericsson.se
+                pm-server:
+                    ingress-host: ccrc-eric-pm-server.ingress.n99-eccd1.sero.gic.ericsson.se
+        pcc:
+            namespace: pcc
+            log-collection-user: tsadm
+            day1-users:
+                - user: tsadm
+                  initial-password: dHNhZG0=
+                  password: VHNAZG01Z2NAYjF1ZXM=
+            lcm:
+                r-state: ${pcc.r-state}
+                instance-name: eric-pcc
+                day0-user: sysadmin
+                day0-password: c3lzYWRtaW4=
+                pre-config:
+                    snmp-client-ip: 10.36.242.99
+                instantiate:
+                    instantiate-file: ${pcc.deployment-configs-directory}instantiate.json
+                    values-file: ${pcc.deployment-configs-directory}values.yaml
+                post-config:
+                    ext-cnf-file: ${pcc.deployment-configs-directory}ext.cnf
+                    user-configs:
+                        - ${pcc.deployment-configs-directory}user-config.txt
+                    tls-config:
+                        amf:
+                            host: n99-amf1.sero.gic.ericsson.se
+                            user: tsadm
+                            sbi-client:
+                                crt-file: ${pcc.certs-directory}amf-sbi-client.crt
+                                key-file: ${pcc.certs-directory}amf-sbi-client.key
+                            sbi-server:
+                                crt-file: ${pcc.certs-directory}amf-sbi-server.crt
+                                key-file: ${pcc.certs-directory}amf-sbi-server.key
+                            config-file: ${pcc.deployment-configs-directory}amf-post-config.txt
+                        smf:
+                            host: n99-smf1.sero.gic.ericsson.se
+                            user: tsadm
+                            enable-tls-file: ${pcc.deployment-configs-directory}smf-enable-tls.txt
+                            gen-csr-file: ${pcc.deployment-configs-directory}smf-gen-csr.txt
+                    app-configs:
+                        - file-path: ${pcc.deployment-configs-directory}day1/pc-sm-config.txt
+                          upload-type: CLICMD
+                          user: tsadm
+                          wait: 0
+                        - file-path: ${pcc.deployment-configs-directory}day1/pc-sm-config-scp.txt
+                          upload-type: CLICMD
+                          user: tsadm
+                          wait: 0
+                        - file-path: ${pcc.deployment-configs-directory}day1/pc-sm-config-nef.txt
+                          upload-type: CLICMD
+                          user: tsadm
+                          wait: 0
+                        - file-path: ${pcc.deployment-configs-directory}day1/ddc-config.txt
+                          upload-type: CLICMD
+                          user: tsadm
+                          wait: 0
+                        - file-path: ${pcc.deployment-configs-directory}vpngw-config.txt
+                          upload-type: CLICMD
+                          user: tsadm
+                          wait: 0
+            ingresses:
+                data-search-engine:
+                    ingress-host: pcc-eric-data-search-engine-tls.ingress.n99-eccd1.sero.gic.ericsson.se
+                fh-alarm-handler:
+                    ingress-host: pcc-eric-fh-alarm-handler.ingress.n99-eccd1.sero.gic.ericsson.se
+                pm-server:
+                    ingress-host: pcc-eric-pm-server.ingress.n99-eccd1.sero.gic.ericsson.se
+        cces:
+            namespace: cces
+            log-collection-user: ccesoam
+            day1-users:
+                - user: ccesoam
+                  initial-password: Q2hhbmdlbWVAMXN0
+                  password: VHNAZG01Z2NAYjF1ZXM=
+                - user: ccessec
+                  initial-password: Q2hhbmdlbWVAMXN0
+                  password: VHNAZG01Z2NAYjF1ZXM=
+            lcm:
+                r-state: ${cces.r-state}
+                instance-name: eric-cces
+                day0-user: sysadmin
+                day0-password: UGEkJHcwcmQ0TERBUA==
+                pre-config:
+                    access-management-password: YWRtaW4=
+                    access-management-user: admin
+                    etcd-password: YWRtaW4=
+                    ldap-secret-password: a2V5Y2xvYWs=
+                    minio-access-key: YWRtaW5hY2Nlc3M=
+                    minio-secret-key: YWRtaW5zZWNyZXQ=
+                    snmp-client-ip: 11.0.18.3
+                instantiate:
+                    instantiate-file: ${cces.deployment-configs-directory}instantiate.json
+                    values-file: ${cces.deployment-configs-directory}values.yaml
+                post-config:
+                    user-configs:
+                        - ${cces.deployment-configs-directory}user-config.xml
+                    app-configs:
+                        - file-path: ${cces.deployment-configs-directory}external-certificates.xml
+                          upload-type: NETCONF
+                          user: ccessec
+                          wait: 0
+                        - file-path: ${cces.deployment-configs-directory}nef-config.xml
+                          upload-type: NETCONF
+                          user: ccesoam
+                          wait: 0
+                        - file-path: ${cces.deployment-configs-directory}nef-diameter-config.xml
+                          upload-type: NETCONF
+                          user: ccesoam
+                          wait: 0
+                        - file-path: ${cces.deployment-configs-directory}nrfagent-config.xml
+                          upload-type: NETCONF
+                          user: ccesoam
+                          wait: 0
+                        - file-path: ${cces.deployment-configs-directory}ddc-config.xml
+                          upload-type: NETCONF
+                          user: ccesoam
+                          wait: 0
+                nef-provision:
+                    p12crt-file: ${5gc_solution_cicd-repo-path}lab/n99/eccd1/cces/certs/cces-prov-client.crt.p12
+                    p12crt-password: ZXJpY3Nzb24=
+                    host: prov.cces.n99-eccd1.sero.gic.ericsson.se:443
+                    service-provider-file: ${cces.deployment-configs-directory}nef-provisioning/1_ServiceProvider.xml
+                    service-provider-service-subscription-file: ${cces.deployment-configs-directory}nef-provisioning/2_ServiceProviderServiceSubscription.xml
+                    application-file: ${cces.deployment-configs-directory}nef-provisioning/3_Application.xml
+                    application-service-subscription-file: ${cces.deployment-configs-directory}nef-provisioning/4_ApplicationServiceSubscription.xml
+                    qos-information-file: ${cces.deployment-configs-directory}nef-provisioning/5_QoS_information.json
+            ingresses:
+                data-search-engine:
+                    ingress-host: cces-eric-data-search-engine-tls.ingress.n99-eccd1.sero.gic.ericsson.se
+                fh-alarm-handler:
+                    ingress-host: cces-eric-fh-alarm-handler.ingress.n99-eccd1.sero.gic.ericsson.se
+                pm-server:
+                    ingress-host: cces-eric-pm-server.ingress.n99-eccd1.sero.gic.ericsson.se

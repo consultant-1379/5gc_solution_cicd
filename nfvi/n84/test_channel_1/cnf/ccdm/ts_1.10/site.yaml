@@ -1,0 +1,104 @@
+# CCDM single instance is only supported for the small-system profile.
+smallSystem: 'false'
+
+nodeName: n84-ccdm1
+nodeType: ERIC-CCDM
+
+vnflcm:
+  clusterName: n84-eccd1
+  namespace: ccdm
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day0:
+    username: sysadmin
+    password: Pa$$w0rd4LDAP
+  day1:
+  - username: ccdmoam
+    password: Changeme@1st
+    groups:
+    - udr-admin
+    - pf-admin
+    - pf-operator
+    - nrfagent-admin
+    - system-admin
+  - username: ccdmsec
+    password: Changeme@1st
+    groups:
+    - udr-security-admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+
+license:
+  customerId: "946060"
+  swltId: STA-CCDM-12
+
+oamVip: 214.14.170.98
+
+udrInstanceId: f8b5865c-49e8-463e-8f16-99eccd1d3f41
+
+soapNotifyHost: udm1.n84
+
+multiSite:
+- host: udr1-intersite.n84
+  siteId: 1
+
+ddc:
+  remotePath: /home/admin/ddc/eccd1/n84-ccdm1
+
+udr:
+  host: udr1.n84
+  port: 443
+
+clients:
+- client: mapi-client
+  secret: mapi-secret
+  groups:
+  - scopes.ericsson.com/activation/mapi.read
+  - scopes.ericsson.com/activation/mapi.write
+- client: replay-client
+  secret: replay-secret
+  groups:
+  - scopes.ericsson.com/activation/mapi.write
+  - scopes.ericsson.com/activation/replay.callback
+
+replicaCount:
+  eric-ingressgw-eda-provisioning: 6
+  eric-udr-kvdb-ag-server: 4
+#  eric-udr-message-bus-kf: 3
+  eric-ingressgw-udr-ldap-traffic: 6
+  eric-ingressgw-udr-ldap-provisioning: 6
+  eric-ingressgw-udr-traffic: 12
+  eric-ingressgw-udr-intersite: 5
+#  eric-pm-server: 1
+#  eric-ctrl-bro: 1
+
+minReplica:
+  eric-udr-nudrfe: 3
+  eric-udr-notificationsubscription: 2
+  eric-udr-gudrestfe: 2
+  eric-udr-provisioningfe: 2
+  eric-udr-ldapfe: 2
+  eric-udr-ldap-balancer: 8
+  eric-udr-rest-notifchecker: 2
+  eric-udr-rest-notifsender: 2
+  eric-udr-soap-notifchecker: 2
+  eric-udr-soap-notifsender: 2
+
+maxReplica:
+  eric-udr-nudrfe: 9
+  eric-udr-notificationsubscription: 4
+  eric-udr-gudrestfe: 4
+  eric-udr-provisioningfe: 6
+  eric-udr-ldapfe: 5
+  eric-udr-ldap-balancer: 8
+  eric-udr-rest-notifchecker: 4
+  eric-udr-rest-notifsender: 4
+  eric-udr-soap-notifchecker: 4
+  eric-udr-soap-notifsender: 4
+
+storage:
+  eric-ctrl-bro: 128Gi

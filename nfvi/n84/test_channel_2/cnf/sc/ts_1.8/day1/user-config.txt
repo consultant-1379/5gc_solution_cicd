@@ -1,0 +1,17 @@
+config
+system authentication user expert
+password rootroot
+groups [ system-admin system-security-admin ]
+system authentication user sys-admin
+password syssys
+groups [ system-admin ]
+system authentication user sec-admin
+password secsec
+groups [ system-security-admin ]
+system authentication user sys-read
+password readread
+groups [ system-read-only ]
+system authentication user tsadm
+password tsadm
+groups [ system-admin system-security-admin ]
+commit

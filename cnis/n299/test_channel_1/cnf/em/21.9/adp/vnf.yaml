@@ -1,0 +1,136 @@
+vnflcm:
+  vnfInstanceName: node279-c1-em1-adp
+  vnfProductName: Common ADP Services
+  vnfSoftwareVersion: CXP9041443_R25N
+  instantiate-file: ../instantiate.json
+  values-file: values.yaml
+  namespace: em1
+  evnfmName: n299
+  csar-url: /proj/pccc_builds/images/EM/EM21_9/eric-bss-em-adp-integration-22.7.0-568.csar
+pipeline:
+- module: onboard
+  check-interval: 10
+  print-interval: 60
+- module: create-namespace
+- module: create-k8s-secret
+  name: eric-cm-database-pg-credentials
+  sources:
+  - type: literal
+    key: custom-user
+    value: cm
+  - type: literal
+    key: custom-pwd
+    value: custom_pwd
+  - type: literal
+    key: super-pwd
+    value: super_pwd
+  - type: literal
+    key: metrics-pwd
+    value: metrics_pwd
+  - type: literal
+    key: replica-user
+    value: replica_user
+  - type: literal
+    key: replica-pwd
+    value: replica_pwd
+- module: create-k8s-secret
+  name: eric-lm-database-pg-credentials
+  sources:
+  - type: literal
+    key: custom-user
+    value: lmuser
+  - type: literal
+    key: custom-pwd
+    value: custom_pwd
+  - type: literal
+    key: super-pwd
+    value: super_pwd
+  - type: literal
+    key: metrics-pwd
+    value: metrics_pwd
+  - type: literal
+    key: replica-user
+    value: replica_user
+  - type: literal
+    key: replica-pwd
+    value: replica_pwd
+- module: create-k8s-secret
+  name: eric-ah-database-pg-credentials
+  sources:
+  - type: literal
+    key: custom-user
+    value: ah
+  - type: literal
+    key: custom-pwd
+    value: custom_pwd
+  - type: literal
+    key: super-pwd
+    value: super_pwd
+  - type: literal
+    key: metrics-pwd
+    value: metrics_pwd
+  - type: literal
+    key: replica-user
+    value: replica_user
+  - type: literal
+    key: replica-pwd
+    value: replica_pwd
+- module: create-k8s-secret
+  name: eric-idam-database-pg-credentials
+  sources:
+  - type: literal
+    key: custom-user
+    value: iamuser
+  - type: literal
+    key: custom-pwd
+    value: custom_pwd
+  - type: literal
+    key: super-pwd
+    value: super_pwd
+  - type: literal
+    key: metrics-pwd
+    value: metrics_pwd
+  - type: literal
+    key: replica-user
+    value: replica_user
+  - type: literal
+    key: replica-pwd
+    value: replica_pwd
+- module: create-k8s-secret
+  name: eric-sec-access-mgmt-creds
+  sources:
+  - type: literal
+    key: kcadminid
+    value: admin
+  - type: literal
+    key: kcpasswd
+    value: sysAdm1n@Day0
+- module: create-k8s-secret
+  name: pm-br-sftp-users-secret
+  sources:
+  - type: file
+    key: user-config.yaml
+    file: user-config.yaml
+- module: create-k8s-secret
+  name: etcdsecret
+  sources:
+  - type: literal
+    key: etcdpasswd
+    value: cGFzc3dvcmQ=
+- module: create-k8s-secret
+  name: snmp-alarm-provider-config
+  sources:
+  - type: file
+    key: snmp-config.json
+    file: snmp-config.json
+- module: instantiate
+- module: verify-pod-running
+  ignore-not-running:
+  - eric-bss-em-om-ss
+- module: run-k8s-command
+  name: Verify eric-sec-access-mgmt pod status
+  cmd: get ns
+- module: verify-pod-ready
+  check-interval: 30
+  statefulsets:
+  - eric-sec-access-mgmt

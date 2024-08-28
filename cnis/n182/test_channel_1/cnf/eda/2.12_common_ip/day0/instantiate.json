@@ -1,0 +1,9 @@
+{
+  "clusterName": "n182",
+  "additionalParams": {
+       "namespace": "eda2",
+       "applicationTimeOut": "1800",
+       "skipJobVerification": "false",
+       "skipVerification": "true"
+      }
+}

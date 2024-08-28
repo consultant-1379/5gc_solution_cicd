@@ -1,0 +1,135 @@
+nodeName: n47-ccsm
+nodeType: CCSM
+#set by default value empty
+#instance: ""
+
+vnflcm:
+  clusterName: n47-eccd1
+  namespace: ccsm
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day0:
+    username: sysadmin
+    password: Pa$$w0rd4LDAP
+  day1:
+  - username: ccsmoam
+#changed
+    password: Changeme1st!
+    groups:
+    - ausf_admin
+    - udm_sensitive_key_admin
+    - udm_admin
+    - system-admin
+    - nrfagent-admin
+    - hssepc_admin
+    - udm_security_admin
+    - ausf_security_admin
+    - system-security-admin
+    - ccsm-admin
+    - eir_admin
+  - username: ccsmsec
+    password: Changeme1st!
+    groups:
+    - udm_security_admin
+    - nrfagent-security-admin
+    - system-security-admin
+    - ccsm-admin
+
+license:
+  customerId: "946060"
+  swltId: STA-CCSM-22
+cnom:
+  fqdn: cnom.ccsm.n47-eccd1.sero.gic.ericsson.se
+
+snmp:
+  agentEngineId: 800000c10400000002
+  heartbeatInterval: 600
+
+ddc:
+  remotePath: /lab/pccc_logs/5GC-CICD/ci/N47_DDC/n47-ccsm-ddc
+vtap:
+  tapagent: true
+
+######################################
+## CNF specific information
+######################################
+ccsm:
+  ausf:
+    instanceId: 0c765084-9cc5-49c6-9876-ae2f5fa2a63f
+    host: ausf1.n47
+    port: 443
+  udm:
+    instanceId: 841d1b7c-5103-11e9-8c09-47eccd107e28
+    host: udm1.n47
+    port: 443
+  eir:
+    instanceId: 77fba27d-6a44-4074-8d9a-67eccd1fc6ef
+    host: eir1.n47
+    port: 443
+  hss:
+    instanceId: 9448c0d3-6590-4e54-b90f-5f7ca0dfc48d
+    host: hss1.n47
+    port: 80
+#diameter-config.xml <origin-host>not align
+    diameter:
+      host: esm
+
+#new cnis hpaReplica
+hpaReplica:
+  eric-udm-cancelepclocation: {min: 2, max: 40}
+  eric-udm-capacity: {min: 1, max: 20}
+  eric-udm-eapauth: {min: 2, max: 30}
+  eric-udm-eapprimeauth: {min: 2, max: 30}
+  eric-udm-epsauth: {min: 2, max: 90}
+  eric-udm-gbaauth: {min: 2, max: 20}
+  eric-udm-imsauth: {min: 2, max: 30}
+  eric-udm-iratamfdereg: {min: 2, max: 40}
+  eric-udm-iratamflocation: {min: 2, max: 40}
+  eric-udm-iratsndereg: {min: 2, max: 40}
+  eric-udm-iwk5g2g: {min: 2, max: 40}
+  eric-udm-sdmamdata: {min: 2, max: 40}
+  eric-udm-sdmimplicitunsub: {min: 2, max: 40}
+  eric-udm-sdmmultipledataset: {min: 2, max: 40}
+  eric-udm-sdmnotif: {min: 2, max: 10}
+  eric-udm-sdmnssai: {min: 2, max: 40}
+  eric-udm-sdmsmdata: {min: 2, max: 60}
+  eric-udm-sdmsmfselect: {min: 2, max: 40}
+  eric-udm-sdmsubscriptions: {min: 2, max: 80}
+  eric-udm-sdmuectxtsmf: {min: 2, max: 40}
+  eric-udm-ueauth: {min: 2, max: 44}
+  eric-udm-uecmamfget: {min: 2, max: 20}
+  eric-udm-uecmamfderegnotifier: {min: 1, max: 80}
+  eric-udm-uecmamfregupdate: {min: 2, max: 40}
+  eric-udm-uecmreg: {min: 2, max: 80}
+  eric-udm-uecmsmfderegistration: {min: 2, max: 30}
+  eric-udm-uecmsmfregistration: {min: 2, max: 60}
+  eric-ausf-capacity: {min: 1, max: 20}
+  eric-ausf-engine: {min: 2, max: 20}
+  eric-eir-eireic: {min: 2, max: 50}
+  eric-hssepc-capacity: {min: 1, max: 20}
+  eric-hssepc-s6adiameter: {min: 2, max: 80}
+  eric-hssepc-iratsndereg: {min: 2, max: 110}
+  eric-hssepc-s6aauthentication: {min: 2, max: 120}
+  eric-hssepc-s6acancellocation: {min: 2, max: 80}
+  eric-hssepc-s6adeletesubscriber: {min: 2, max: 20}
+  eric-hssepc-s6ainsertsubscriber: {min: 2, max: 20}
+  eric-hssepc-s6anotify: {min: 2, max: 20}
+  eric-hssepc-s6apurge: {min: 2, max: 20}
+  eric-hssepc-s6aupdatelocation: {min: 2, max: 65}
+  eric-hssepc-soap: {min: 2, max: 20}
+  eric-hssepc-subscriptionupdate: {min: 2, max: 20}
+  eric-ccsm-smsengine: {min: 2, max: 94}
+  eric-udm-mtueinfo: {min: 2, max: 20}
+  eric-udm-mtlocation: {min: 2, max: 20}
+  eric-udm-pcscfrestnotif: {min: 2, max: 20}
+  eric-udm-pcscfrestoration: {min: 2, max: 20}
+  eric-udm-sidf: {min: 2, max: 20}
+  eric-udm-ueshcm: {min: 2, max: 20}
+
+###################################### 
+### Parameters for CNIS                 
+####################################### 
+ericEirEnabled: "false"

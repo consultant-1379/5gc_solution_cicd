@@ -1,0 +1,119 @@
+vnflcm:
+  vnfInstanceName: node299-cluster1-eda1
+  vnfProductName: Dynamic Activation  #EDA
+  namespace: eda1
+  evnfmName: n299
+  vnfSoftwareVersion: 1.57.127-4
+  instantiate-file: instantiate.json
+  values-file: values.yaml
+  csar-url: https://arm.seli.gic.ericsson.se/artifactory/proj-activation-poc-helm-local/activation/eric-act-cna-1.57.127.csar
+access-info:
+  oam: oam.eda1-oam.node299-cluster1.sero.gic.ericsson.se
+  # Service account. Used for provision-eda-account-management. Mandatory.
+  ldap-admin:
+    user: eda-service@ericsson.com
+    # The password must be base64 encoded.
+    pass: RG01R0NAUzBsdXQhb24=
+  # Service account. Used for provision-eda-config. Mandatory.
+  users:
+  - user: cai3guser@ericsson.com
+    pass: Q2FpM2d1c2VyQA==
+  oauth2-client:
+    # OAuth2 client name. It will be created. Mandatory.
+    name: oauth
+    # The client id in UUIDv4 format. Mandatory.
+    id: a198e160-5782-11ee-baa4-53595488aa45
+    # The client secret in UUIDv4 format. Mandatory.
+    secret: 0098d4ba-63a0-4bd1-a09d-c9b488d2e9bf
+    # The necessary scopes for authorization when requesting resources from the REST APIs.
+    auth-scopes:
+    - scopes.ericsson.com/activation/account_management.roles.write
+    - scopes.ericsson.com/activation/account_management.users.write
+    - scopes.ericsson.com/activation/account_management.service_accounts.write
+    - scopes.ericsson.com/activation/network_element_management.write
+    - scopes.ericsson.com/activation/activation_logic_properties.write
+pipeline:
+- module: instantiate
+- module: verify-pod-running
+- module: run-k8s-command
+  name: Create networkpolicy to allow accessing eric-pm-server and eric-data-search-engine
+  cmd: |
+    apply -f {file1}
+    apply -f {file2}
+  inline-files:
+    file1: network-policy/eric-pm-server-allow.yaml
+    file2: network-policy/eric-data-search-engine-allow.yaml
+- module: run-k8s-command
+  name: Create pm server ingress
+  cmd: |-
+    create ingress eric-pm-server --rule="eric-pm-server-eda1.ingress.n299-cluster1.sero.gic.ericsson.se/*=eric-pm-server:9090"
+    patch svc eric-pm-server --type=json -p='[{"op": "add", "path": "/spec/ports/1", "value": { "name": "http", "port": 9090, "protocol": "TCP", "targetPort": 9090 }}]'
+- module: run-k8s-command
+  name: Patch CCDM certificates
+  cmd: |
+    patch secret eric-act-client-certificate --patch '{{"data":{{"server-certificate.pem": "'$(base64 -w 0 < "{file1}")'"}}}}'
+    patch secret eric-act-client-certificate --patch '{{"data":{{"ccdmkeystore.p12": "'$(base64 -w 0 < "{file2}")'"}}}}'
+  inline-files:
+    file1: ../../../../certs/cnf/eda/server-certificate.pem
+    file2: ../../../../certs/cnf/eda/ccdmkeystore.p12
+- module: sleep
+  duration: 60
+- module: provision-eda-onboarding
+  # A first admin user which is an onboarding GUI user but not used for CNAT automation.
+  first-admin-user:
+    user: sysadmin@ericsson.com
+    pass: c3lzQWRtMW5ARGF5MA==
+# Module 'provision-eda-account-management' is to provision account management.
+- module: provision-eda-account-management
+  prov-info:
+  - api-path: am-rest/v1/roles
+    data-file: provisioning/account-management/role.json
+    method: POST
+    headers:
+      Content-Type: application/json
+  - api-path: am-rest/v1/service-accounts
+    data-file: provisioning/account-management/day1-service-account.json
+    method: POST
+    headers:
+      Content-Type: application/json
+  - api-path: am-rest/v1/users
+    data-file: provisioning/account-management/day1-user.json
+    method: POST
+    headers:
+      Content-Type: application/json
+- module: sleep
+  duration: 120
+# Module 'provision-eda-config' is to provision EDA. Including network element management and activation logic properties management, etc.
+- module: provision-eda-config
+  prov-info:
+  - api-path: cm-rest/v1/network-elements
+    data-files:
+    - provisioning/network-elements/ccdm-pf-mapi-1.json
+    - provisioning/network-elements/ccdm-udr-ldap-1.json
+    method: POST
+    headers:
+      Content-Type: application/json
+#  - api-path: cm-rest/v1/network-element-groups
+#    data-files:
+#    - provisioning/network-element-groups/ccdm-pf-mapi.json
+#    - provisioning/network-element-groups/ccdm-udr-ldap.json
+#    method: POST
+#    headers:
+#      Content-Type: application/json
+  - api-path: cm-rest/v1/routings
+    data-files:
+    - provisioning/routings/arpf.json
+    - provisioning/routings/pcf.json
+    - provisioning/routings/udm.json
+    - provisioning/routings/udr.json
+    - provisioning/routings/udr-auc.json
+    - provisioning/routings/udr-sapc.json
+    method: POST
+    headers:
+      Content-Type: application/json
+  - api-path: cm-rest/v1/activation-logic/global-actions/routing-preference
+    data-value:
+      value: UDR
+    method: POST
+    headers:
+      Content-Type: application/json

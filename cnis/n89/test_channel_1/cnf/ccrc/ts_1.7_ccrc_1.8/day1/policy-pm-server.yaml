@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    meta.helm.sh/release-name: eric-ccrc-2
+    meta.helm.sh/release-namespace: ccrc
+  generation: 1
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: eric-pm-server-allow
+  namespace: ccrc
+  selfLink: /apis/networking.k8s.io/v1/namespaces/ccrc/networkpolicies/eric-pm-server-allow
+spec:
+  egress:
+  - {}
+  ingress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: eric-pm-server
+  policyTypes:
+  - Ingress

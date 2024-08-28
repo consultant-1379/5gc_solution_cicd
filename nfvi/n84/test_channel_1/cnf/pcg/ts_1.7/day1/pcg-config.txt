@@ -1,0 +1,463 @@
+autowizard false
+config
+interfaces interface cre:net0
+ description cre:net0
+ type        ethernetCsmacd
+ enabled     true
+ l2-mtu      1968
+!
+interfaces interface up:eth0
+ description up:eth0
+ type        ethernetCsmacd
+ enabled     true
+!
+interfaces interface up:eth1
+ description up:eth1
+ type        ethernetCsmacd
+ enabled     true
+!
+interfaces interface up:group1
+ type      activeBackupBonding
+ enabled   true
+ member-if [ up:eth0 up:eth1 ]
+!
+
+network-instances network-instance intraForward
+ enabled true
+!
+interfaces interface up:intra_forward
+ description      intraForward
+ type             intraForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3500
+ parent-interface up:group1
+ bind-ni-name     intraForward
+ ipv4 enabled true
+ ipv4 address 172.31.100.1
+  prefix-length 24
+ !
+!  
+interfaces interface up:intra_forward
+ address-type ip-range 30
+ !
+!
+
+
+
+
+network-instances network-instance signaling
+ enabled                  true
+ description              signaling
+ default-tgpp-cp-function true
+ routing bgp 7002
+  neighbor 11.1.27.254
+   peer-type                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              8002
+   address-family ipv4 unicast
+  !
+ !
+ ip static-route up 0.0.0.0/0 11.1.27.254
+ !
+!
+
+interfaces interface cre:link_signaling
+ description      cre:link_signaling
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3827
+ parent-interface cre:net0
+ bind-ni-name     signaling
+ ipv4 enabled true
+ ipv4 address 11.1.27.100
+  prefix-length 24
+ !
+!  
+interfaces interface cre:link_signaling
+ address-type ip-range 2
+ !
+!
+interfaces interface up:link_signaling
+ description      up:link_signaling
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3827
+ parent-interface up:group1
+ bind-ni-name     signaling
+ ipv4 enabled true
+ ipv4 address 11.1.27.1
+  prefix-length 24
+ !
+!  
+interfaces interface up:link_signaling
+ address-type ip-range 30
+ !
+!
+interfaces interface up:dploop_signaling
+ description  up:dploop_signaling
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name signaling
+ ipv4 enabled true
+ ipv4 address 5.8.3.1
+  prefix-length 27
+ !
+!  
+interfaces interface up:dploop_signaling
+ address-type ip-range 30
+ !
+!
+interfaces interface up:vnfloop_signaling
+ description  up:vnfloop_signaling
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name signaling
+ ipv4 enabled true
+ ipv4 address 5.8.2.1
+  prefix-length 32
+ !
+! 
+interfaces interface up:vnfloop_signaling
+ address-type single
+ !
+!
+interfaces interface up:pc_signaling
+ type                       tgppCpFunction
+ enabled                    true
+ bind-ni-name               signaling
+ ipv4 enabled true
+ ipv4 address 5.8.1.10
+  prefix-length 32
+ !
+!
+interfaces interface up:pc_signaling
+ address-type single
+ !
+!
+
+
+
+
+
+network-instances network-instance internet
+ enabled           true
+ description       internet
+ default-tgpp-core true
+ routing bgp 7005
+  neighbor 11.1.30.254
+   peer-type                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              8005
+   address-family ipv4 unicast
+  !
+  neighbor 2a00:11:1:30::254
+   peer-type                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              8005
+   address-family ipv6 unicast
+  !
+ !
+ ip static-route up 0.0.0.0/0 11.1.30.254
+ !
+ ipv6 static-route up ::/0 2a00:11:1:5::254
+ !
+!
+interfaces interface cre:link_internet
+ description      cre:link_internet
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3830
+ parent-interface cre:net0
+ bind-ni-name     internet
+ ipv4 enabled true
+ ipv4 address 11.1.30.100
+  prefix-length 24
+ ipv6 enabled true
+ ipv6 address 2a00:11:21:30::100
+  prefix-length 64
+ !
+!  
+interfaces interface cre:link_internet
+ address-type ip-range 2
+ !
+!
+interfaces interface up:link_internet
+ description      up:link_internet
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3830
+ parent-interface up:group1
+ bind-ni-name     internet
+ ipv4 enabled true
+ ipv4 address 11.1.30.1
+  prefix-length 24
+ ipv6 enabled true
+ ipv6 address 2a00:11:1:30::1
+  prefix-length 64
+
+ !
+!
+interfaces interface up:link_internet
+ address-type ip-range 30
+ !
+!
+interfaces interface up:dploop_internet
+ description  up:dploop_internet
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name internet
+ ipv4 enabled true
+ ipv4 address 5.25.3.1
+  prefix-length 27
+ ipv6 enabled true
+ ipv6 address 2a02:5:19:3::1
+  prefix-length 123
+ !
+!
+interfaces interface up:dploop_internet
+ address-type ip-range 30
+ !
+! 
+interfaces interface up:vnfloop_internet
+ description  up:vnfloop_internet
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name internet
+ ipv4 enabled true
+ ipv4 address 5.25.2.1
+  prefix-length 32
+ ipv6 enabled true
+ ipv6 address 2a02:5:19:2::1
+  prefix-length 128
+ !
+!  
+interfaces interface up:vnfloop_internet
+ address-type single
+ !
+!
+interfaces interface up:pc_internet
+ type                 tgppCore
+ enabled              true
+ bind-ni-name         internet
+ hosted-address-range [ 39.0.0.0/8 2a01:1::/44 ]
+ non-ip local-port 49152
+!
+
+
+
+
+
+
+network-instances network-instance ran
+ enabled             true
+ description         ran
+ default-tgpp-access true
+ routing bgp 7004
+  neighbor 11.2.54.254
+   peer-type                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              8004
+   address-family ipv4 unicast
+  !
+ !
+ ip static-route up 0.0.0.0/0 11.2.54.254
+ !
+!
+interfaces interface cre:link_ran
+ description      cre:link_ran
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3954
+ parent-interface cre:net0
+ bind-ni-name     ran
+ ipv4 enabled true
+ ipv4 address 11.2.54.100
+  prefix-length 24
+ !
+!  
+interfaces interface cre:link_ran
+ address-type ip-range 2
+ !
+!
+interfaces interface up:link_ran
+ description      up:link_ran
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3954
+ parent-interface up:group1
+ bind-ni-name     ran
+ ipv4 enabled true
+ ipv4 address 11.2.54.1
+  prefix-length 24
+ !
+!  
+interfaces interface up:link_ran
+ address-type ip-range 30
+ !
+!
+interfaces interface up:dploop_ran
+ description  up:dploop_ran
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name ran
+ ipv4 enabled true
+ ipv4 address 5.24.3.1
+  prefix-length 27
+interfaces interface up:dploop_ran
+ address-type ip-range 30
+ !
+!
+interfaces interface up:vnfloop_ran
+ description  up:vnfloop_ran
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name ran
+ ipv4 enabled true
+ ipv4 address 5.24.2.1
+  prefix-length 32
+ !
+!  
+interfaces interface up:vnfloop_ran
+ address-type single
+ !
+!
+interfaces interface up:pc_ran
+ type             tgppAccess
+ enabled          true
+ bind-ni-name     ran
+ ipv4 enabled true
+ ipv4 address 5.24.0.1
+  prefix-length 27
+ !
+!  
+interfaces interface up:pc_ran
+ address-type ip-range 30
+ !
+!
+
+
+
+
+
+
+network-instances network-instance media
+ enabled     true
+ description media
+ routing bgp 7001
+  neighbor 11.1.21.254
+   peer-type                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              8001
+   address-family ipv4 unicast
+  !
+ !
+ ip static-route up 0.0.0.0/0 11.1.21.254
+ !
+!
+interfaces interface cre:link_media
+ description      cre:link_media
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3701
+ parent-interface cre:net0
+ bind-ni-name     media
+ ipv4 enabled true
+ ipv4 address 11.1.21.100
+  prefix-length 24
+ !
+!  
+interfaces interface cre:link_media
+ address-type ip-range 2
+ !
+!
+interfaces interface up:link_media
+ description      up:link_media
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3701
+ parent-interface up:group1
+ bind-ni-name     media
+ ipv4 enabled true
+ ipv4 address 11.1.21.1
+  prefix-length 24
+ !
+!  
+interfaces interface up:link_media
+ address-type ip-range 30
+ !
+!
+interfaces interface up:dploop_media
+ description  up:dploop_media
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name media
+ ipv4 enabled true
+ ipv4 address 5.109.3.1
+  prefix-length 27
+ !
+!
+interfaces interface up:dploop_media
+ address-type ip-range 30
+ !
+!
+interfaces interface up:vnfloop_media
+ description  up:vnfloop_media
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name media
+ ipv4 enabled true
+ ipv4 address 5.109.2.1
+  prefix-length 32
+ !
+!  
+interfaces interface up:vnfloop_media
+ address-type single
+ !
+!
+interfaces interface up:media_pgw
+ type             tgppAccess
+ enabled          true
+ bind-ni-name     media
+ ipv4 enabled true
+ ipv4 address 5.5.0.1
+  prefix-length 27
+ !
+!  
+interfaces interface up:media_pgw
+ address-type ip-range 30
+ !
+!
+interfaces interface up:media_sgw
+ type             tgppCore
+ enabled          true
+ bind-ni-name     media
+ non-ip local-port 49152
+ ipv4 enabled true
+ ipv4 address 5.1.0.1
+  prefix-length 27
+ !
+!  
+interfaces interface up:media_sgw
+ address-type ip-range 30
+ !
+!
+user-plane packet-detection applications application app100
+ enabled true
+ default
+!
+commit
+end

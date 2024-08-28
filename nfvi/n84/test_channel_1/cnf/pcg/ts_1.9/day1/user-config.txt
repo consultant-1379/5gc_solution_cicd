@@ -1,0 +1,8 @@
+config
+system authentication user user1
+ password             user1
+ administrative-state unlocked
+ groups               [ system-admin system-troubleshooter ]
+!
+commit
+end

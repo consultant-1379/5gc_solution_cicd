@@ -1,0 +1,349 @@
+parameters:
+  ################################### Network variables #######################
+  timezone: CET
+  ntp_server_ips: [10.221.17.6]
+  dns_server_ips: [10.221.16.10]
+  os_endpoint_ips: [10.221.12.201, 10.155.142.68, 10.221.12.203]
+  director_external_network: eccd4-ccd-oam
+  director_external_subnet: eccd4-ccd-oam_subnet
+  security_groups_enabled: false
+  # The list of remote CIDRs allowed to SSH to directors when SG are enabled
+  #director_ssh_allowed_cidrs: [<fill>]
+  # VRRP traffic might need to be specifically enabled when security groups are
+  # enabled on deployments running Openstack older than Pike release
+  # allow_vrrp_address_by_mac: true
+  #receive_packet_steering: false
+
+  ### Ingress/egress via LB ###################################################
+  lb_enabled: False
+  lb_external_network: <fill>
+  lb_external_subnet: <fill>
+  # lb_external_security_groups: [<fill>]
+
+  ##################################### L4LB variables ########################
+
+  lb_image: node-image
+  lb_flavor: m1.medium
+
+  lb_root_volume_size: 20
+
+  ################################### Master variables ########################
+  master_image: eccd-2.24.0-001462-f952778e-node-image
+  master_flavor: CICD_MGMT_4vcpu_6144MBmem_0GBdisk
+  masters_count: 3
+
+  master_root_volume_size: 50
+  master_config_volume_size: 15
+  
+  # managed-on-host, ha-offline, unmanaged
+  master_metadata:
+    ha-policy: ha-offline
+
+  ################################### Director variables ######################
+  director_image: eccd-2.24.0-001462-f952778e-director-image
+  director_flavor: CICD_MGMT_2vcpu_4096MBmem_0GBdisk
+  directors_count: 2
+
+  director_root_volume_size: 150
+  director_config_volume_size: 24
+
+  director_virtual_router_id: 50
+  director_external_vip: 10.117.60.30
+  director_ssh_allowed_cidrs: [0.0.0.0/0]
+
+  # managed-on-host, ha-offline, unmanaged
+  director_metadata:
+    ha-policy: ha-offline
+
+  ################################## Licensing variables ######################
+  ccd_licensing_domains:
+  - productType: ECCD
+    swltId: STA-CCD-1
+    customerId: 946060
+  ccd_licensing_nels_host: nelsaas-vnf1-thrift.sero.gic.ericsson.se
+  ################################## Ansible variables ######################
+  ansible_variables:
+    openstack_auth_url: https://os-ext-vip-n84vpod1-cee.sc.sero.gic.ericsson.se:5000
+    infra_node_pool_name: pool1
+    kube_manager_kube_api_burst: 100
+    kube_manager_kube_api_qps: 100
+    kube_manager_attach_detach_reconcile_sync_period: 5m0s
+    kube_manager_disable_attach_detach_reconcile_sync: True
+    openstack_username: admin
+    openstack_user_password: 8NS73nraQC9CILffCQlPsrLjSHmA8XQi4GVR9TXM
+    openstack_project_name: admin
+    openstack_domain_name: Default
+    openstack_region: CEERegion
+    ecfe_enabled: true
+    ingressctrl_service_annotations: 'metallb.universe.tf/address-pool: system-pool'
+    ecfe_config_map_raw:
+      bgp-bfd-peers:
+      - peer-address: 11.1.95.254
+        peer-asn: 8010
+        my-asn: 7010
+        hold-time: 180s
+        min-rx: 300ms
+        min-tx: 300ms
+        multiplier: 3
+      address-pools:
+      - addresses:
+        - 214.12.117.202/32
+        auto-assign: false
+        name: system-pool
+        protocol: bgp
+      - addresses:
+        - 214.12.117.200/32
+        auto-assign: false
+        name: evnfm-iccr
+        protocol: bgp
+    ipv4pool_ipip_mode: "Off"
+    openstack_node_volume_attach_limit: 23
+    kube_api_ingress_host: kubeapi.ingress.n84-eccd4.sero.gic.ericsson.se
+    container_registry_hostname: container-registry.ingress.n84-eccd4.sero.gic.ericsson.se
+    container_registry_custom_pw: c0ntainerReg!stry
+    container_registry_storage_size: 50Gi
+    prometheus_webhook_snmp_enabled: True
+    snmp_trap_receiver_host: 214.13.134.139
+    # Victoria resources parameters
+    pm_vmstorage_retention_time: 30d
+    pm_vmstorage_volume_size: 84Gi
+    # Other monitor component parameters
+    pm_server_nodeExporter_default_collectors_disabled: false
+    # The following ansible variables can be used to configure the licensing application
+    ccd_app_sys_info_nels_host_ip: 10.155.142.68 #The IP address of Application Info Collection Service in the NeLS
+    ccd_app_sys_info_nels_host_name: nelsaasvnf1.nels.ericsson.com #valid hostname of Application Info Collection Service
+  ################################### Worker variables ########################
+
+  node_pools:
+  - name: pool1
+    image: eccd-2.24.0-001462-f952778e-node-image
+    flavor: CICD_MGMT_12vcpu_49152MBmem_0GBdisk
+    count: 4
+    root_volume_size: 100
+    # managed-on-host, ha-offline, unmanaged
+    metadata:
+      ha-policy: ha-offline
+
+    external_networks:
+    
+    - network: eccd4-ecfe-oam
+      subnet: eccd4-ecfe-oam_subnet
+      port_extra_properties:
+        port_security_enabled: false
+
+    labels: ""
+    node_role: "worker"
+    server_group_policies: ['anti-affinity']
+    nova_availability_zone: nova
+    cinder_availability_zone: nova
+    cpu_manager_policy: "none"
+    reserved_cpus: ""
+    isolate_interrupts: false
+    pre_join_user_script: |
+      #!/usr/bin/env bash
+
+      set -ue
+
+      # adjust kernel parameters for DM 5GC CNFs
+      cat << EOF >> /etc/sysctl.conf
+      ## update to kernel parameters required by Search Engine
+      vm.max_map_count = 262144
+      EOF
+      sysctl -p
+
+
+  ################################### Logger variables ########################
+  logger_enabled: False
+
+  ################################### Other variables #########################
+  nova_availability_zone: nova
+  master_server_group_policies: ['anti-affinity']
+  director_server_group_policies: ['anti-affinity']
+  cinder_availability_zone: nova
+  # Modify the default range used by Kubernetes services
+  #service_node_port_min: 30000
+  #service_node_port_max: 32767
+
+  os_cacert: |
+    -----BEGIN CERTIFICATE-----
+    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
+    tRq4ImVO9Ddg1VngqJRZvro+zlH3pQ==
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    MIIGhTCCBG2gAwIBAgITJAAAAAgZo51IZLn3FgAAAAAACDANBgkqhkiG9w0BAQsF
+    ADAVMRMwEQYDVQQDEwpFR0FEUm9vdENBMB4XDTE5MDUwMjEwNTgzNVoXDTI5MDUw
+    MjExMDgzNVowRzESMBAGCgmSJomT8ixkARkWAnNlMRgwFgYKCZImiZPyLGQBGRYI
+    ZXJpY3Nzb24xFzAVBgNVBAMTDkVHQURJc3N1aW5nQ0EzMIICIjANBgkqhkiG9w0B
+    AQEFAAOCAg8AMIICCgKCAgEAorS/FxfmNVug9Q963xTydgf5JD/XHEQ0HAypY0Mw
+    omgZA1Sj1cRFjFzqVbZlQB/d0RUeN8K9+wzpXl2sDiDTYFKc4v3sesmVrT+VHOtf
+    2G1Wuw+7OjMURFhoGNz56vDEL10KH86ViPF0Rx3R5/myKYgn/AX6rdVPSsBPyhAe
+    YDdsNX3yWrvxr6x3P5Ze8L5cfgDmw1NR3sR3j9mJSKxEpJHo/6z+wh1xOgV7z8Kj
+    Tzdl0+103ZvPw8wpnX3JGwOy5O/lIXMFctMEvZoD/eIerPtYEdjk8HrGbWWu66VK
+    EoXopl0/3MbPypVdizPcRBq7ldaCDDdLMi2LjFvZbD0UwHHjR/piIE/YsdPLxi1o
+    KSO2vPJHSPjpQ0JtP0gcAGR1wSFQCiOzklupMzZ1PMSySbT04woRnUDdTu9BMzIi
+    OV5scI+KtJ1JmPqHq3nCS2nkA0grSNbsbB0bz/mrJLX+wH3CXNj0r0gBIDKlaPQb
+    8UzrahG3uuIGk4/x8gnU/wh5WYeU89o+3neIgXySK5chnjfevWBwYVF1vddYltpf
+    DFZYuFwT+zefeMEiPnseW6JSnRvNljz1XsBlPC++UydVJDGkp+WzeCR46J6iCVeK
+    kWKoLv+BtNIbue7SJw0GdGWBJ0DzKdPBmp+Ya5YPDE1g8SqrfdlO61ykJQ1L6EGf
+    Sb0CAwEAAaOCAZowggGWMBAGCSsGAQQBgjcVAQQDAgEAMB0GA1UdDgQWBBSBekIQ
+    iZ64URB+VptBwt+veMU9JDB5BgNVHSAEcjBwMG4GBFUdIAAwZjBkBggrBgEFBQcC
+    AjBYHlYAVABoAGkAcwAgAFAASwBJACAAaQBzACAAaQBuAHQAZQBuAGQAZQBkACAA
+    ZgBvAHIAIABpAG4AdABlAHIAbgBhAGwAIAB1AHMAZQAgAG8AbgBsAHkALjAZBgkr
+    BgEEAYI3FAIEDB4KAFMAdQBiAEMAQTALBgNVHQ8EBAMCAYYwEgYDVR0TAQH/BAgw
+    BgEB/wIBADAfBgNVHSMEGDAWgBRWRUJaFKi5LET+mzXE2+4vOYJN0DA/BgNVHR8E
+    ODA2MDSgMqAwhi5odHRwOi8vcGtpLmVyaWNzc29uLnNlL0NlcnREYXRhL0VHQURS
+    b290Q0EuY3JsMEoGCCsGAQUFBwEBBD4wPDA6BggrBgEFBQcwAoYuaHR0cDovL3Br
+    aS5lcmljc3Nvbi5zZS9DZXJ0RGF0YS9FR0FEUm9vdENBLmNydDANBgkqhkiG9w0B
+    AQsFAAOCAgEAk6hklv9NPua9UImj08ILq43l9SgFhg5+y1pRsrUwdTmFANkL0dxi
+    TOF93QwFTfwOs1xJr2nzvCsoJ2Rvc04VQlONwiTqn1kMs9vJr2fuQg9hf2O9l0ss
+    AftlHq+UxbeIhloGTyJgleJUc2/+pm4UJn8fhZvNZywL8ok4xr5HQRH5xQz21X4i
+    VF9RJlvZbsdWLX1iJMs8+oZJQmhRxoHsPylg+24xLuKFuva7BevDub4HpF6utXeE
+    qRMN8Yd1HPg55abf8wEqt1VqNp2erZfLETdf59aXdznqeI+ZJl8gQZwBsOlSANct
+    n0nj306BlYm6jthXb7T/Bgau48qyrH/vEnwawZ+RH2q1UvGiAMY1/L5PAP4LGubP
+    q5VHsibvoQz+jld2bWM4X8y7Z93s33/elZo26pNuYWiE67IVmZntoHJZmq0RfI7V
+    cG27eExeNXYc7T0HheK32CguyDsDUURHOMfMzUJBzDnZ8zQWWeOsKCut9xcpxpPW
+    7XQB+iH59lFgRF0WW3H4Z3jh7Kvfbr6XsbzEx/onzLaEVrXBf1xKlXgV5rZW69w1
+    It5HdRmqOsfW32Bdz9JehI+Z/Iql9UFDsM1lS9dWfMj4Kv3ALpmG5uS3SjU5y1+e
+    7EaQhOp85z15UYt9yoS7KqaNZ07bZb2uzBs32lN/Bn1vwPoLA60kI48=
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    MIIDfTCCAmWgAwIBAgIJAMxZMgsm5U6kMA0GCSqGSIb3DQEBCwUAMFUxCzAJBgNV
+    BAYTAlNFMQswCQYDVQQIDAJTVDELMAkGA1UEBwwCU1QxETAPBgNVBAoMCEVyaWNz
+    c29uMRkwFwYDVQQDDBBDRUUgVGVzdCBSb290IENBMB4XDTIwMTAwMjAzMzgyOFoX
+    DTMwMDkzMDAzMzgyOFowVTELMAkGA1UEBhMCU0UxCzAJBgNVBAgMAlNUMQswCQYD
+    VQQHDAJTVDERMA8GA1UECgwIRXJpY3Nzb24xGTAXBgNVBAMMEENFRSBUZXN0IFJv
+    b3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC1uxOXgIUZn65P
+    ilGVm4s5FvIQMylXf3+UH0dseaYD+/cbb8GalypA08t071N7fAx/gra8V+WZ4oF6
+    H6PQoFry4axPi7qNI2NrHfaLOqjTwGF1qAjWgSkKaTc5efIL/4daAS3S3O0qzHU+
+    bon88nvjL4LytHfHr20Vv//0bBxTQ/QbPWSYVHSwdk0uiQ5GHCjxgy6ykIKLEQ5m
+    YrGaroHzv+wJxIb3PfPaOMv1jpWcn7sABVdqFuiKB7CKcnpPxrB5RBbJZoZrUOIZ
+    KRW+PQniwFOPEvTZ/rJPHcwPg3qR/xTPXx7wQKnSZindsV2ecYwqz9DzppW43YH2
+    oTbTgAWNAgMBAAGjUDBOMB0GA1UdDgQWBBQE3xlNdp+CS7XzvEWD9Zi6sxmW8zAf
+    BgNVHSMEGDAWgBQE3xlNdp+CS7XzvEWD9Zi6sxmW8zAMBgNVHRMEBTADAQH/MA0G
+    CSqGSIb3DQEBCwUAA4IBAQBfP5L/qVTG+SrJGpTEYPmebkXM3KW6pj9oAvpWu7y9
+    QikA5gB/IQa7f1bHzqqHurVHqbJGmAxcFK1iIkbxjmeW/avDwdYz7Zs61XU42SDb
+    qHji6LPMfwFpJg0Yxi2XPgHBrRwgQIN5ZExweANu+GSiMVd6RbYr7L+wrDUxCrLc
+    jUV4sLy7On10soLwKk+yHzleAUDWU7t+9CCQC1Sp9HF7sDnMgl7DSUkv4JF1jkc8
+    o8kXZhYMybI03T5HGklESGIz4h2ppCVsUX7BXZkQL8iSGGz1sXodnkmI4QncGao9
+    phfRLN8/VU1LPbJptn3HGU6P1yZPdeTGWibDIIFgu2ot
+    -----END CERTIFICATE-----
+    # evnfm self-singed CA certificate
+    -----BEGIN CERTIFICATE-----
+    MIIGCTCCA/GgAwIBAgIBADANBgkqhkiG9w0BAQsFADCBnjELMAkGA1UEBhMCU0Ux
+    EjAQBgNVBAgMCVN0b2NraG9sbTESMBAGA1UEBwwJU3RvY2tob2xtMREwDwYDVQQK
+    DAhFcmljc3NvbjEVMBMGA1UECwwMUEMgU29sdXRpb25zMRgwFgYDVQQDDA9UZWFt
+    Qmx1ZXNSb290Q0ExIzAhBgkqhkiG9w0BCQEWFGtlbi5zaGlAZXJpY3Nzb24uY29t
+    MB4XDTIwMTEwMjA5MzMxNloXDTQwMTAyODA5MzMxNlowgZ4xCzAJBgNVBAYTAlNF
+    MRIwEAYDVQQIDAlTdG9ja2hvbG0xEjAQBgNVBAcMCVN0b2NraG9sbTERMA8GA1UE
+    CgwIRXJpY3Nzb24xFTATBgNVBAsMDFBDIFNvbHV0aW9uczEYMBYGA1UEAwwPVGVh
+    bUJsdWVzUm9vdENBMSMwIQYJKoZIhvcNAQkBFhRrZW4uc2hpQGVyaWNzc29uLmNv
+    bTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALpFSt2RPftYwPHaaX0O
+    li/g52VnHmyACmG1egnPA4efRptfFqsm9lHH2byigSech+zfLXCarVErdu1/yvRG
+    zYaLgH/76XtOVXpGYa3aXBksBbkTnIRmgtq11iIdOKXUrVbVt4HZ20EJxrFrMs9n
+    mxy7dvhWM1KrSVSUqN840DSWJxeFWWgEZ7vTgRhnuAD2FUqsZ6CRvt2iL31ZNIco
+    dqOUQF9chZLWgprEDgRmJD4oLjVoWe0kS/zRR2G3GB9J28xs9ZjSp38CtTgqBzyv
+    gWua4Im5KyFIJUeH4a9NRYZWry6I9sxAzIYVt7ki3TAP+K2YsGg9dD1GwKDR+5Zy
+    7EVuri9hqR5YFrvvdNAjWrJvymQXaDdmXUGa7Og8p9IzM+lNL86dDf3BsyeqHJrq
+    m31OMHM3MCVfc0zUu96LnLj2wqTdKa7MaWyfA7KO38wIACBvO/SNCCzCXpADJRED
+    A3n219y6QxmM+DH35XVBTvJkM5UxPHoa8rhZsuLhobIyNU/Kuk6JAm/lueYzOG9k
+    lLmaaSasdlNJ/Pqf4MBOB1UKPVsJsravFaQ7BmOLp3R0XyhoNrnmd/OOxU6r1TH1
+    wh5vx2CAOO4tujvnihgeADU8yQdwDKBkOtjjV0TdY0MFxecLowtmEnrKfIO9kSS3
+    tpnAgdBgfq7eOYvsrKw31AqxAgMBAAGjUDBOMB0GA1UdDgQWBBTqkIEarX28jATB
+    MBsv/Vse5jCebDAfBgNVHSMEGDAWgBTqkIEarX28jATBMBsv/Vse5jCebDAMBgNV
+    HRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4ICAQB73tG3G1mZt93j5MoRXimsB6sO
+    q47A/lZiyJKqJiLIeSq1V8GOPwqfQyNAe40inhLWHYky5rPfhhXw+FlyW4zotv7W
+    ZygTjtCwa7EbawUMOoG9YcMhK9NZx/EoPT0cs4BK6UvajpH28Kl5+fyvSLN5ZY7K
+    arBIMUWNVs7m3O9e5doLx6e98soj2U5PkGq1AB2xgwX7F0spIj3Yg3WS4C5z5KkF
+    b1cviVgHuFnxJNGu5nY+h08+i5cZNu/Uc1M9pkYthlfnhpyPlONxD9rTpDm5LEkU
+    3af9zyqwJuuunWDJMfKKZGPB5BCgfM6hBw4D3iLWTWxrHfjNghNVqCh6K+L+GdfD
+    hzT/LVSHW/bOjHh+wAVGFcFxxXedXxq/prj1ZwflPI7XvxuCwj1EVA630FIBSC6/
+    xWq8mHoECXXp839Gccd3tmeauELrchkty6OaBpwHg/dB44GEByJz/T+lbLIOZLXd
+    K+kpgaN4TmA5wtlQPMq0HQLvEax+cCUYtE78QSe+86mV/2Q1EeJNEesT7p5C2U4c
+    aQZbPQ6YgvRZtvPD/3CrQS9CD0DJwaCrj2dEISb4lEj/fz5wlLETyS7X/0KYUMKR
+    UmqyKwz2Zs9jM7By0HxM1i+0f/ovMDuKuQ6IQTROEu0TZZVH6KRsDuujv+/VJ2Nb
+    szlrRw3la1H71eU9UQ==
+    -----END CERTIFICATE-----
+  ca_cert: |
+    -----BEGIN CERTIFICATE-----
+    MIIDAzCCAeugAwIBAgIJANuk9E6W3N1rMA0GCSqGSIb3DQEBCwUAMBgxFjAUBgNV
+    BAMMDUt1YmVybmV0ZXMtY2EwHhcNMjAwNzI3MDI0NTU0WhcNNDcxMjEzMDI0NTU0
+    WjAYMRYwFAYDVQQDDA1LdWJlcm5ldGVzLWNhMIIBIjANBgkqhkiG9w0BAQEFAAOC
+    AQ8AMIIBCgKCAQEAtO8G9voaIDsnAkMhe9zmeu1duQ98YrJncwvJh432ahcYzmMm
+    YgWvLnabbVhRz7enukoGA5jniwxJY/EpUHg/RFPAhv8Le7cDJ0p35+JiSuWFxm5e
+    /qvum7XFiLLiiqLCeSHR2axzRts8knn1esNtMWOl0vTnPbjuxK6fjV1fAWz8QY/o
+    SLj4zFtYE6YbFs6i0kPtXtjOsw2DJc4egmXWf8/k16wLi5mTDw+DTuOb/Iw1WClU
+    HI7JuW04YDJsua5f1MJnG1BBGOIVY0yAsmD20ZRUrGSSQM1upAqYDI9rZJHOosJF
+    HEX4Y6p3nsMhyGIttCTNjFPOpLqtPZ0qWwyJDwIDAQABo1AwTjAdBgNVHQ4EFgQU
+    zjMrhZ/fDAsCE65plhDRsKy49e8wHwYDVR0jBBgwFoAUzjMrhZ/fDAsCE65plhDR
+    sKy49e8wDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAiYCE4gpqdj+z
+    gzeQcMbgxUhQFFgU30NG0LXTsDnyaBr7yvGkqIIUc/LHYPmVeXO1g72kOUofaJEK
+    7jj0lfu1cQYPQeRMYrqWxpb1B3158UUUdNcq8xNaLuBYGBIhnnmnKn43HL3EPj6O
+    VVGNjKL3TBTVFbYz4iMjAyR8iY7B/xBRZuHHcnLcxoUZWEXyoYXXzWprjMWf0Qtp
+    1laGxsZm3VpvWFUZcAEikXGDwhq2fiGNyeCk5U3Yc2ftzwrbFsyW/I1jC526ESfT
+    Rg3o6mu8rhHfcVDVZTU88ks1DMVExPbHR1EY/yls8cLtY0za1bLRYHJ1J1CPwO2z
+    cZRTxjOang==
+    -----END CERTIFICATE-----
+  ca_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpAIBAAKCAQEAtO8G9voaIDsnAkMhe9zmeu1duQ98YrJncwvJh432ahcYzmMm
+    YgWvLnabbVhRz7enukoGA5jniwxJY/EpUHg/RFPAhv8Le7cDJ0p35+JiSuWFxm5e
+    /qvum7XFiLLiiqLCeSHR2axzRts8knn1esNtMWOl0vTnPbjuxK6fjV1fAWz8QY/o
+    SLj4zFtYE6YbFs6i0kPtXtjOsw2DJc4egmXWf8/k16wLi5mTDw+DTuOb/Iw1WClU
+    HI7JuW04YDJsua5f1MJnG1BBGOIVY0yAsmD20ZRUrGSSQM1upAqYDI9rZJHOosJF
+    HEX4Y6p3nsMhyGIttCTNjFPOpLqtPZ0qWwyJDwIDAQABAoIBAQCgQWI62NTRHXN0
+    pn7+1W5zDNDJe/Tg+kF0fck3Pj82QlTfYKR7h6tdDQKne+WihHmUH8Jp50GWQAC0
+    +8JrGsZ2v3O0XiwOnM+3Olcv1KzYx6iQU+vhx+kkk4Btjnvm7Tgw0AqtsPe9l6tz
+    1X/fBz8s0qTqT66NVcJuBHkfXccrW5zjNtEsCDixdZ0DRooSXZIMUsUr4jLAaPRV
+    rndd3ujeEeKOECPHwVVQkzWhv2ssks5c0wcwz+dz1pssqGO8zO4FX/4w3mPLU3m5
+    Lcax5Yl9Fh6bPPi+rG0LCyQ1hs88JTSPU8cS0BtdV3abTPw+BpWTOyW4Kvj8Kn00
+    Mvjl+yXRAoGBAOtD84JYajmHPfqa+tpdrHsuTLT480jkO9z4i2OKICq3lyZ8cTPG
+    B9gDkrpKb5dGqP983GnxiN9W6gj+VP2x0kNRcpsamsjfZ/qwxuieL+1yMnqQpEnF
+    pZpNN2n0eO3pSLeKRq9yeWzvaFe05gVP5qR1xBEMyB5FtrJi3qNpYmyXAoGBAMTh
+    PuZcTIVtTJ03l/8L7rUzPubeKoEpRzsqGFJL0pHiqXmPxAcf7ySoI/nJKXfo7VYm
+    X7clnaJ/1xODUGJj4omw5Cm5lky4DbEqr1U67y539k0jeaqxndtjl3kwOHILzDGw
+    +lLgcNnhC8KXBQDwBbbmKVb7fwkNHZ1oX414qT5JAoGAPs6tO6cO9Ly+NyEYxyMq
+    4NfDcqzjhhooQR25WKGPZNgOah/euMutXGXXzhQBJomepFZZIY9x0u4JHM2JMxE9
+    6Ordhbrch7PctnhrIb7ZXLKX91CWC3vQchkbKhYyEpGs8BLiPAR7ljFz0bZhkhl6
+    oX0vEr4uzqYd2BG9DjMcK5ECgYEAiVqD4X7fO+8HFmAkwKD4hp4b8kFo8fd0ZIh3
+    s2KGo5S4m8B7CGV1F+PeRXPcZHWyrvnSqRmrIiWCTXC9cgcxktJAPAPoIdn+Y23e
+    KN4W5Bp5UVPAnB+Se+69TKUhnB8y9C/+VDeVQ8xHwhhOO1s5AWMN0EthU1U9JgYd
+    M7vMh1ECgYBYYYiOiuPRx9L8+V6kYptlmHJgiJLbahJrEVvLWrRCRbWH2mx06J1W
+    WsUQxkXw8MvUeDI15UCWiRzacUjbXIKwhwvpiuWL9zL1IOylVjysTrARqBuah9fx
+    tMtIPeaPeaV/PNxSBPr3EIL7MdNh6x/Had82fqYUyg7hNnsDRZxsmA==
+    -----END RSA PRIVATE KEY-----
+  public_key: >
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDB+iokdoFkfbZL4x4qxOnCzTPhVrYgFGGp7u1tNthrTupSD3jDv3G1wdNY+LYDhWFVo5d3cCiCOSrNY7ycFU3k5t3g04ODgmYuoPKwg3fD9ienWohbrtd1oRZh5pxPBwn3SixSEWeah5eIRbRn1myjpGOa8H5VYF4+yih2gWmDBnXjX1H0yuNIkQVutTEMb2HxPYaDtXM1G0f5PPFUBSOyeFuoanmBW/7F6MKyPwC4wZMWYhb//vr5UmjAT8ZzHYGvX888vFPukN5da9GUgHinENg4HuIzgd/NFk6la9U13fmyrdmcRZGUStAKweQZ3v+SM0nSNXXh0X8X/41jnLhZUFtN7/cn9H4NPKYU621z/cjCFXIit36Hg7Kf/6r1iSXhUHq0v8G8a0mg6AbBETCv47y/EY8VMByY1/mh4G/HsnVf7uvuLWCv0FMXHmGcgcqGaesDr73o++HI1SSf5vXt2tM8hb5C8Q9FHFNugoW/+feMnehec27FciC3q/Y30fE= ceeinfra@controlhost2.cee.tld
+
+  ################################### Optional variables #########################
+  # Custom root password for console access
+  # must be sha-256 or sha-512 password hash type
+  # update the below value to set the root password
+  console_password_hash: '$6$hOsTsRex8Tperl39$OxxzVtpng37ykOP0W48kGDlbfHe8t/V1oB5CsceVPOTaRzQFOc6qbdhDYykwXVih7iMRfuomYd/c4ZaFHBmnd/'

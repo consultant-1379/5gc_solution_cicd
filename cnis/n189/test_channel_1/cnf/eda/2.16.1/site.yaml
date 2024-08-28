@@ -1,0 +1,66 @@
+######################################
+## CNF general information
+######################################
+nodeName: n189-eda1
+nodeType: EDA
+
+vnflcm:
+  clusterName: eda1-oam.n189-eccd1
+  namespace: eda1
+  InstantiateVnfRequest:
+    applicationTimeOut: 1800
+    skipVerification: "true"
+
+snmp:
+  agentEngineId: 800000c10400000001
+  heartbeatInterval: 600
+
+hssValidatorTag: 1.29.102
+#users:
+#  day0:
+#    username: sysadmin
+#    password: Pa$$w0rd4LDAP
+#
+#  day1:
+#  - username: ccesoam
+#    password: Changeme1st!
+#    groups:
+#    - nef-admin
+#    - apigm-admin
+#    - sragent-admin
+#    - nrfagent-admin
+#    - system-admin
+#  - username: ccessec
+#    password: Changeme1st!
+#    groups:
+#    - nef-security-admin
+#    - apigm-security-admin
+#    - sragent-security-admin
+#    - nrfagent-security-admin
+#    - system-security-admin
+
+license:
+  customerId: "946060"
+  swltId: STA-EDA-29
+
+hssValidatorTag: 1.29.102
+persistentVolumeClaim:
+  eric-data-wide-column-database-cd: 103G
+  eric-data-message-bus-kf: 2G
+replicaCount:
+  eric-act-aaa: 2
+  eric-act-inbound-async: 2
+  eric-act-inbound-interfaces: 2
+  eric-act-inbound-mml: 2
+  eric-act-rest-provisioning: 2
+  eric-act-tomcat: 2
+
+ne:
+  ccdm:
+    ldap:
+      host: 214.6.199.139
+    mapi:
+      host: 214.6.199.132
+      oauthTokenHost: prov-ccdm1-n189.sero.gic.ericsson.se
+  ccsm:
+      host: 214.6.199.133

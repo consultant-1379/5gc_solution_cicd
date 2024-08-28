@@ -1,0 +1,25 @@
+nodeInfo: site.yaml
+siteGlobal: ../site_global.yaml
+# targetDir: .
+# jsonschema: pcc/jsonschema.yaml
+#jsonschemaGlobal: common/global-jsonschema.yaml
+templateDir: ../../ts-config/templates/
+jsonschemaGlobal: ../../ts-config/jsonschemas/schema-global.yaml
+
+files:
+- template: pcg/1.17/values.yaml.jinja2
+  target: values.yaml
+- template: common/instantiate.json.jinja2
+  target: instantiate.json
+- template: common/snmp-config.json.jinja2
+  target: snmp-config.json
+- template: common/user-config.txt.jinja2
+  target: user-config.txt
+- template: pcg/1.17/pcg-config.txt.jinja2
+  target: pcg-config.txt
+- template: common/ddc-config.txt.jinja2
+  target: ddc-config.txt
+- template: common/network-policy/eric-pm-server-allow.yaml.jinja2
+  target: network-policy/eric-pm-server-allow.yaml
+- template: common/network-policy/eric-data-search-engine-allow.yaml.jinja2
+  target: network-policy/eric-data-search-engine-allow.yaml

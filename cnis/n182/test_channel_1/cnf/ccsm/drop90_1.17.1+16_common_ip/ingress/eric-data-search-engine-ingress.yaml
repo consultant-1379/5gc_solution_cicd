@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+  name: eric-data-search-engine-tls
+  namespace: ccsm
+spec:
+  rules:
+  - host: "ccsm-eric-data-search-engine-tls.ingress.node182-cluster1.seli.gic.ericsson.se"
+    http:
+      paths:
+      - path: /
+        backend:
+          service:
+            name: eric-data-search-engine-tls
+            port:
+              number: 9200
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - "ccsm-eric-data-search-engine-tls.ingress.node182-cluster1.seli.gic.ericsson.se"

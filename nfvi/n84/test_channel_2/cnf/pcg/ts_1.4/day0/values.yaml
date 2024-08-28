@@ -1,0 +1,175 @@
+global:
+  timezone: CET
+  applicationId: eric-n84-pcg001
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: 'PACKET_CORE_GATEWAY'
+          customerId: '946060'
+          swltId: 'STA-SC-3'
+
+
+eric-pc-kvdb-rd-server:
+  numberOfMaster: 5
+  server:
+    maxMemory: 5120mb
+
+eric-cm-yang-provider:
+  service:
+    annotations:
+      addressPoolName: pcg-oam
+      sharedVIPLabel: pcg-oam
+
+eric-data-search-engine:
+  replicaCount:
+     data: 3
+  persistence: 
+    data: 
+      persistentVolumeClaim: 
+        size: "50Gi" 
+  resources:
+    data:
+      limits:
+        memory: "10Gi"
+
+
+eric-fh-snmp-alarm-provider:
+  nodeSelector:
+    snmp-sender: eric-pcg
+  service:
+    annotations:
+     addressPoolName: pcg-oam
+     sharedVIPLabel: pcg-oam
+    secretName: snmp-alarm-provider-config
+  oamVIP:
+    enabled: true
+    vip: 10.137.48.162
+    destIp: 10.36.242.99
+
+eric-odca-diagnostic-data-collector:
+  resources:
+    diagnostic-data-collector:
+      limits:
+        memory: 32Gi
+        cpu: 2000m
+        ephemeral-storage: 30Gi
+      requests:
+        memory: 800Mi
+        cpu: 1600m
+        ephemeral-storage: 24Gi
+  env:
+    sftpFileLocation: pcg-1-ddc
+    sftphost: 10.36.242.1:22
+
+eric-pc-routing-engine:
+  interfaces:
+    type: macvlan
+    macvlan:
+      - master: eth1
+
+eric-pc-up-data-plane:
+#  allowNetworkConfigChanges: true
+  replicaCount: 18
+  acceleratedIo:
+    enabled: true
+  applications:
+  - name: app100
+  cm_source_env: false
+  deployment:
+    pinThreads: true
+  global:
+    serviceNames:
+      cm:
+        mediator: ""
+  nodeSelector:
+    type: high-throughput
+  resources:
+    dataPlane:
+      limits:
+        cpu: 11
+        hugepages-1Gi: 1Gi
+        intel.com/intel_sriov_dpdk_left: "1"
+        intel.com/intel_sriov_dpdk_right: "1"
+        memory: 24Gi
+      requests:
+        cpu: 11
+        hugepages-1Gi: 1Gi
+        intel.com/intel_sriov_dpdk_left: "1"
+        intel.com/intel_sriov_dpdk_right: "1"
+        memory: 24Gi
+  tolerations:
+  - effect: NoSchedule
+    key: high-throughput
+    operator: Equal
+    value: "true"
+
+eric-pc-up-pfcp-endpoint:
+  cm_source_env: false
+  replicaCount: 4
+  podDisruptionBudget:
+    minAvailable: 75%
+  global:
+    serviceNames:
+      cm:
+        mediator: ""
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 30
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 30
+
+eric-pm-server:
+  rbac:
+    appMonitoring:
+      configFileCreate: false
+      enabled: true
+  server:
+    persistentVolume:
+      enabled: true
+      size: 64Gi
+  resources:
+    server:
+      limits:
+        memory: 8192Mi
+
+
+eric-cnom-server:
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 500m
+  service:
+    type: LoadBalancer
+  annotations:
+    metallb.universe.tf/address-pool: pcg-oam
+    metallb.universe.tf/allow-shared-ip: pcg-oam
+
+eric-data-sftp-server:
+  service:
+    annotations:
+      sharedVIPLabel: "pcg-oam"
+      addressPoolName: "pcg-oam"
+
+eric-sec-ldap-server:
+  adminCredentials:
+    adminuser: day0
+    adminpasswd: "$6$<0>$AcnhaMbmO6zVPekh7UpnvZbfwMKm7dALF2hvlWG3/ZI2S8onY.c3UD3CBjbiqidN4.Luz8biX1qneoCD.JTm90"
+
+
+eric-log-transformer:
+  replicaCount: 3
+  resources:
+    logtransformer:
+      limits:
+        cpu: 2000m
+        memory: 6Gi
+eric-lm-combined-server:
+  licenseServerClient:
+    licenseServer:
+      thrift:
+        host: 10.221.14.88
+        port: 9095

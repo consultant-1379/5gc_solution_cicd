@@ -1,0 +1,25 @@
+parameters:
+
+  prefix: eccd4
+  phynet_virtio: n84vpod1-dcgw
+  l2gw_dcgw_id: cf314a22-643a-45e3-bd9c-6b65ea57b967
+
+  virtio_networks:
+  - name: ccd-oam
+    vlan: 223
+    vxlan: 4223
+    cidr: 10.117.60.24/29
+    enable_dhcp: false
+    gateway: 10.117.60.25
+    allocation_pools: { start: 10.117.60.28, end: 10.117.60.30 }
+    routes: []
+
+  - name: ecfe-oam
+    vlan: 3895
+    vxlan: 7895
+    cidr: 11.1.95.0/24
+    enable_dhcp: false
+    gateway: 11.1.95.254
+    allocation_pools: { start: 11.1.95.1, end: 11.1.95.10 }
+    routes: []
+    

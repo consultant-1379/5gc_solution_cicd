@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <capabilities>
+      <capability>urn:ietf:params:netconf:base:1.0</capability>
+      <capability>urn:ietf:params:netconf:capability:writable-running:1.0</capability>
+      <capability>urn:ietf:params:netconf:capability:rollback-on-error:1.0</capability>
+   </capabilities>
+</hello>
+]]>]]>
+
+<rpc message-id="1"
+   xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <action xmlns="urn:ietf:params:xml:ns:yang:1"
+       xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+       <keystore xmlns="urn:ietf:params:xml:ns:yang:ietf-keystore">
+           <asymmetric-keys>
+               <install-asymmetric-key-pkcs12 xmlns="urn:rdns:com:ericsson:oammodel:ericsson-keystore-ext">
+                   <name>iccr-external-tls-key</name>
+                   <certificate-name>iccr-external-tls-certificate</certificate-name>
+                   <p12>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</p12>
+                   <p12-password>ericsson</p12-password>
+               </install-asymmetric-key-pkcs12>
+           </asymmetric-keys>
+       </keystore>
+   </action>
+</rpc>
+]]>]]>
+
+<rpc message-id="2"
+   xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <edit-config>
+       <target>
+           <running/>
+       </target>
+       <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+           <truststore xmlns="urn:ietf:params:xml:ns:yang:ietf-truststore"
+           xmlns:ts="urn:ietf:params:xml:ns:yang:ietf-truststore">
+               <certificates>
+                   <name>eric-ccdm-sbi-client-certs-cacert</name>
+                   <description>trusted certs description</description>
+               </certificates>
+           </truststore>
+       </config>
+   </edit-config>
+</rpc>
+]]>]]>
+
+<rpc message-id="3"
+   xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <action xmlns="urn:ietf:params:xml:ns:yang:1"
+       xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+       <truststore xmlns="urn:ietf:params:xml:ns:yang:ietf-truststore">
+           <certificates>
+               <name>eric-ccdm-sbi-client-certs-cacert</name>
+               <install-certificate-pem xmlns="urn:rdns:com:ericsson:oammodel:ericsson-truststore-ext">
+                   <name>eric-ccdm-sbi-client-certificate</name>
+                   <pem>LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUdDVENDQS9HZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBRENCbmpFTE1Ba0dBMVVFQmhNQ1UwVXgKRWpBUUJnTlZCQWdNQ1ZOMGIyTnJhRzlzYlRFU01CQUdBMVVFQnd3SlUzUnZZMnRvYjJ4dE1SRXdEd1lEVlFRSwpEQWhGY21samMzTnZiakVWTUJNR0ExVUVDd3dNVUVNZ1UyOXNkWFJwYjI1ek1SZ3dGZ1lEVlFRRERBOVVaV0Z0ClFteDFaWE5TYjI5MFEwRXhJekFoQmdrcWhraUc5dzBCQ1FFV0ZHdGxiaTV6YUdsQVpYSnBZM056YjI0dVkyOXQKTUI0WERUSXdNVEV3TWpBNU16TXhObG9YRFRRd01UQXlPREE1TXpNeE5sb3dnWjR4Q3pBSkJnTlZCQVlUQWxORgpNUkl3RUFZRFZRUUlEQWxUZEc5amEyaHZiRzB4RWpBUUJnTlZCQWNNQ1ZOMGIyTnJhRzlzYlRFUk1BOEdBMVVFCkNnd0lSWEpwWTNOemIyNHhGVEFUQmdOVkJBc01ERkJESUZOdmJIVjBhVzl1Y3pFWU1CWUdBMVVFQXd3UFZHVmgKYlVKc2RXVnpVbTl2ZEVOQk1TTXdJUVlKS29aSWh2Y05BUWtCRmhSclpXNHVjMmhwUUdWeWFXTnpjMjl1TG1OdgpiVENDQWlJd0RRWUpLb1pJaHZjTkFRRUJCUUFEZ2dJUEFEQ0NBZ29DZ2dJQkFMcEZTdDJSUGZ0WXdQSGFhWDBPCmxpL2c1MlZuSG15QUNtRzFlZ25QQTRlZlJwdGZGcXNtOWxISDJieWlnU2VjaCt6ZkxYQ2FyVkVyZHUxL3l2UkcKellhTGdILzc2WHRPVlhwR1lhM2FYQmtzQmJrVG5JUm1ndHExMWlJZE9LWFVyVmJWdDRIWjIwRUp4ckZyTXM5bgpteHk3ZHZoV00xS3JTVlNVcU44NDBEU1dKeGVGV1dnRVo3dlRnUmhudUFEMkZVcXNaNkNSdnQyaUwzMVpOSWNvCmRxT1VRRjljaFpMV2dwckVEZ1JtSkQ0b0xqVm9XZTBrUy96UlIyRzNHQjlKMjh4czlaalNwMzhDdFRncUJ6eXYKZ1d1YTRJbTVLeUZJSlVlSDRhOU5SWVpXcnk2STlzeEF6SVlWdDdraTNUQVArSzJZc0dnOWREMUd3S0RSKzVaeQo3RVZ1cmk5aHFSNVlGcnZ2ZE5BaldySnZ5bVFYYURkbVhVR2E3T2c4cDlJek0rbE5MODZkRGYzQnN5ZXFISnJxCm0zMU9NSE0zTUNWZmMwelV1OTZMbkxqMndxVGRLYTdNYVd5ZkE3S08zOHdJQUNCdk8vU05DQ3pDWHBBREpSRUQKQTNuMjE5eTZReG1NK0RIMzVYVkJUdkprTTVVeFBIb2E4cmhac3VMaG9iSXlOVS9LdWs2SkFtL2x1ZVl6T0c5awpsTG1hYVNhc2RsTkovUHFmNE1CT0IxVUtQVnNKc3JhdkZhUTdCbU9McDNSMFh5aG9Ocm5tZC9PT3hVNnIxVEgxCndoNXZ4MkNBT080dHVqdm5paGdlQURVOHlRZHdES0JrT3RqalYwVGRZME1GeGVjTG93dG1FbnJLZklPOWtTUzMKdHBuQWdkQmdmcTdlT1l2c3JLdzMxQXF4QWdNQkFBR2pVREJPTUIwR0ExVWREZ1FXQkJUcWtJRWFyWDI4akFUQgpNQnN2L1ZzZTVqQ2ViREFmQmdOVkhTTUVHREFXZ0JUcWtJRWFyWDI4akFUQk1Cc3YvVnNlNWpDZWJEQU1CZ05WCkhSTUVCVEFEQVFIL01BMEdDU3FHU0liM0RRRUJDd1VBQTRJQ0FRQjczdEczRzFtWnQ5M2o1TW9SWGltc0I2c08KcTQ3QS9sWml5SktxSmlMSWVTcTFWOEdPUHdxZlF5TkFlNDBpbmhMV0hZa3k1clBmaGhYdytGbHlXNHpvdHY3VwpaeWdUanRDd2E3RWJhd1VNT29HOVljTWhLOU5aeC9Fb1BUMGNzNEJLNlV2YWpwSDI4S2w1K2Z5dlNMTjVaWTdLCmFyQklNVVdOVnM3bTNPOWU1ZG9MeDZlOThzb2oyVTVQa0dxMUFCMnhnd1g3RjBzcElqM1lnM1dTNEM1ejVLa0YKYjFjdmlWZ0h1Rm54Sk5HdTVuWStoMDgraTVjWk51L1VjMU05cGtZdGhsZm5ocHlQbE9OeEQ5clRwRG01TEVrVQozYWY5enlxd0p1dXVuV0RKTWZLS1pHUEI1QkNnZk02aEJ3NEQzaUxXVFd4ckhmak5naE5WcUNoNksrTCtHZGZECmh6VC9MVlNIVy9iT2pIaCt3QVZHRmNGeHhYZWRYeHEvcHJqMVp3ZmxQSTdYdnh1Q3dqMUVWQTYzMEZJQlNDNi8KeFdxOG1Ib0VDWFhwODM5R2NjZDN0bWVhdUVMcmNoa3R5Nk9hQnB3SGcvZEI0NEdFQnlKei9UK2xiTElPWkxYZApLK2twZ2FONFRtQTV3dGxRUE1xMEhRTHZFYXgrY0NVWXRFNzhRU2UrODZtVi8yUTFFZUpORWVzVDdwNUMyVTRjCmFRWmJQUTZZZ3ZSWnR2UEQvM0NyUVM5Q0QwREp3YUNyajJkRUlTYjRsRWovZno1d2xMRVR5UzdYLzBLWVVNS1IKVW1xeUt3ejJaczlqTTdCeTBIeE0xaSswZi9vdk1EdUt1UTZJUVRST0V1MFRaWlZINktSc0R1dWp2Ky9WSjJOYgpzemxyUnczbGExSDcxZVU5VVE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==</pem>
+               </install-certificate-pem>
+           </certificates>
+       </truststore>
+   </action>
+</rpc>
+]]>]]>
+
+<rpc message-id="4"
+   xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <action xmlns="urn:ietf:params:xml:ns:yang:1"
+       xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+       <keystore xmlns="urn:ietf:params:xml:ns:yang:ietf-keystore">
+           <asymmetric-keys>
+               <install-asymmetric-key-pkcs12 xmlns="urn:rdns:com:ericsson:oammodel:ericsson-keystore-ext">
+                   <name>eric-ccdm-sbi-client-key</name>
+                   <certificate-name>eric-ccdm-sbi-client-certificate</certificate-name>
+                   <p12>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</p12>
+                   <p12-password>ericsson</p12-password>
+               </install-asymmetric-key-pkcs12>
+           </asymmetric-keys>
+       </keystore>
+   </action>
+</rpc>
+]]>]]>
+
+<rpc message-id="5"
+   xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <edit-config>
+       <target>
+           <running/>
+       </target>
+       <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+           <truststore xmlns="urn:ietf:params:xml:ns:yang:ietf-truststore"
+           xmlns:ts="urn:ietf:params:xml:ns:yang:ietf-truststore">
+               <certificates>
+                   <name>eric-ccdm-sbi-server-certs-cacert</name>
+                   <description>trusted certs description</description>
+               </certificates>
+           </truststore>
+       </config>
+   </edit-config>
+</rpc>
+]]>]]>
+
+<rpc message-id="6"
+   xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <action xmlns="urn:ietf:params:xml:ns:yang:1"
+       xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+       <truststore xmlns="urn:ietf:params:xml:ns:yang:ietf-truststore">
+           <certificates>
+               <name>eric-ccdm-sbi-server-certs-cacert</name>
+               <install-certificate-pem xmlns="urn:rdns:com:ericsson:oammodel:ericsson-truststore-ext">
+                   <name>eric-ccdm-sbi-server-certificate</name>
+                   <pem>LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUdDVENDQS9HZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBRENCbmpFTE1Ba0dBMVVFQmhNQ1UwVXgKRWpBUUJnTlZCQWdNQ1ZOMGIyTnJhRzlzYlRFU01CQUdBMVVFQnd3SlUzUnZZMnRvYjJ4dE1SRXdEd1lEVlFRSwpEQWhGY21samMzTnZiakVWTUJNR0ExVUVDd3dNVUVNZ1UyOXNkWFJwYjI1ek1SZ3dGZ1lEVlFRRERBOVVaV0Z0ClFteDFaWE5TYjI5MFEwRXhJekFoQmdrcWhraUc5dzBCQ1FFV0ZHdGxiaTV6YUdsQVpYSnBZM056YjI0dVkyOXQKTUI0WERUSXdNVEV3TWpBNU16TXhObG9YRFRRd01UQXlPREE1TXpNeE5sb3dnWjR4Q3pBSkJnTlZCQVlUQWxORgpNUkl3RUFZRFZRUUlEQWxUZEc5amEyaHZiRzB4RWpBUUJnTlZCQWNNQ1ZOMGIyTnJhRzlzYlRFUk1BOEdBMVVFCkNnd0lSWEpwWTNOemIyNHhGVEFUQmdOVkJBc01ERkJESUZOdmJIVjBhVzl1Y3pFWU1CWUdBMVVFQXd3UFZHVmgKYlVKc2RXVnpVbTl2ZEVOQk1TTXdJUVlKS29aSWh2Y05BUWtCRmhSclpXNHVjMmhwUUdWeWFXTnpjMjl1TG1OdgpiVENDQWlJd0RRWUpLb1pJaHZjTkFRRUJCUUFEZ2dJUEFEQ0NBZ29DZ2dJQkFMcEZTdDJSUGZ0WXdQSGFhWDBPCmxpL2c1MlZuSG15QUNtRzFlZ25QQTRlZlJwdGZGcXNtOWxISDJieWlnU2VjaCt6ZkxYQ2FyVkVyZHUxL3l2UkcKellhTGdILzc2WHRPVlhwR1lhM2FYQmtzQmJrVG5JUm1ndHExMWlJZE9LWFVyVmJWdDRIWjIwRUp4ckZyTXM5bgpteHk3ZHZoV00xS3JTVlNVcU44NDBEU1dKeGVGV1dnRVo3dlRnUmhudUFEMkZVcXNaNkNSdnQyaUwzMVpOSWNvCmRxT1VRRjljaFpMV2dwckVEZ1JtSkQ0b0xqVm9XZTBrUy96UlIyRzNHQjlKMjh4czlaalNwMzhDdFRncUJ6eXYKZ1d1YTRJbTVLeUZJSlVlSDRhOU5SWVpXcnk2STlzeEF6SVlWdDdraTNUQVArSzJZc0dnOWREMUd3S0RSKzVaeQo3RVZ1cmk5aHFSNVlGcnZ2ZE5BaldySnZ5bVFYYURkbVhVR2E3T2c4cDlJek0rbE5MODZkRGYzQnN5ZXFISnJxCm0zMU9NSE0zTUNWZmMwelV1OTZMbkxqMndxVGRLYTdNYVd5ZkE3S08zOHdJQUNCdk8vU05DQ3pDWHBBREpSRUQKQTNuMjE5eTZReG1NK0RIMzVYVkJUdkprTTVVeFBIb2E4cmhac3VMaG9iSXlOVS9LdWs2SkFtL2x1ZVl6T0c5awpsTG1hYVNhc2RsTkovUHFmNE1CT0IxVUtQVnNKc3JhdkZhUTdCbU9McDNSMFh5aG9Ocm5tZC9PT3hVNnIxVEgxCndoNXZ4MkNBT080dHVqdm5paGdlQURVOHlRZHdES0JrT3RqalYwVGRZME1GeGVjTG93dG1FbnJLZklPOWtTUzMKdHBuQWdkQmdmcTdlT1l2c3JLdzMxQXF4QWdNQkFBR2pVREJPTUIwR0ExVWREZ1FXQkJUcWtJRWFyWDI4akFUQgpNQnN2L1ZzZTVqQ2ViREFmQmdOVkhTTUVHREFXZ0JUcWtJRWFyWDI4akFUQk1Cc3YvVnNlNWpDZWJEQU1CZ05WCkhSTUVCVEFEQVFIL01BMEdDU3FHU0liM0RRRUJDd1VBQTRJQ0FRQjczdEczRzFtWnQ5M2o1TW9SWGltc0I2c08KcTQ3QS9sWml5SktxSmlMSWVTcTFWOEdPUHdxZlF5TkFlNDBpbmhMV0hZa3k1clBmaGhYdytGbHlXNHpvdHY3VwpaeWdUanRDd2E3RWJhd1VNT29HOVljTWhLOU5aeC9Fb1BUMGNzNEJLNlV2YWpwSDI4S2w1K2Z5dlNMTjVaWTdLCmFyQklNVVdOVnM3bTNPOWU1ZG9MeDZlOThzb2oyVTVQa0dxMUFCMnhnd1g3RjBzcElqM1lnM1dTNEM1ejVLa0YKYjFjdmlWZ0h1Rm54Sk5HdTVuWStoMDgraTVjWk51L1VjMU05cGtZdGhsZm5ocHlQbE9OeEQ5clRwRG01TEVrVQozYWY5enlxd0p1dXVuV0RKTWZLS1pHUEI1QkNnZk02aEJ3NEQzaUxXVFd4ckhmak5naE5WcUNoNksrTCtHZGZECmh6VC9MVlNIVy9iT2pIaCt3QVZHRmNGeHhYZWRYeHEvcHJqMVp3ZmxQSTdYdnh1Q3dqMUVWQTYzMEZJQlNDNi8KeFdxOG1Ib0VDWFhwODM5R2NjZDN0bWVhdUVMcmNoa3R5Nk9hQnB3SGcvZEI0NEdFQnlKei9UK2xiTElPWkxYZApLK2twZ2FONFRtQTV3dGxRUE1xMEhRTHZFYXgrY0NVWXRFNzhRU2UrODZtVi8yUTFFZUpORWVzVDdwNUMyVTRjCmFRWmJQUTZZZ3ZSWnR2UEQvM0NyUVM5Q0QwREp3YUNyajJkRUlTYjRsRWovZno1d2xMRVR5UzdYLzBLWVVNS1IKVW1xeUt3ejJaczlqTTdCeTBIeE0xaSswZi9vdk1EdUt1UTZJUVRST0V1MFRaWlZINktSc0R1dWp2Ky9WSjJOYgpzemxyUnczbGExSDcxZVU5VVE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==</pem>
+               </install-certificate-pem>
+           </certificates>
+       </truststore>
+   </action>
+</rpc>
+]]>]]>
+
+<rpc message-id="7"
+   xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <action xmlns="urn:ietf:params:xml:ns:yang:1"
+       xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+       <keystore xmlns="urn:ietf:params:xml:ns:yang:ietf-keystore">
+           <asymmetric-keys>
+               <install-asymmetric-key-pkcs12 xmlns="urn:rdns:com:ericsson:oammodel:ericsson-keystore-ext">
+                   <name>eric-ccdm-sbi-server-key</name>
+                   <certificate-name>eric-ccdm-sbi-server-certificate</certificate-name>
+                   <p12>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</p12>
+                   <p12-password>ericsson</p12-password>
+               </install-asymmetric-key-pkcs12>
+           </asymmetric-keys>
+       </keystore>
+   </action>
+</rpc>
+]]>]]>
+
+<rpc message-id="8"
+   xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <edit-config>
+       <target>
+           <running/>
+       </target>
+       <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+           <truststore xmlns="urn:ietf:params:xml:ns:yang:ietf-truststore"
+           xmlns:ts="urn:ietf:params:xml:ns:yang:ietf-truststore">
+               <certificates>
+                   <name>eric-ccdm-prov-server-certs-cacert</name>
+                   <description>trusted certs description</description>
+               </certificates>
+           </truststore>
+       </config>
+   </edit-config>
+</rpc>
+]]>]]>
+
+<rpc message-id="9"
+   xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <action xmlns="urn:ietf:params:xml:ns:yang:1"
+       xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+       <truststore xmlns="urn:ietf:params:xml:ns:yang:ietf-truststore">
+           <certificates>
+               <name>eric-ccdm-prov-server-certs-cacert</name>
+               <install-certificate-pem xmlns="urn:rdns:com:ericsson:oammodel:ericsson-truststore-ext">
+                   <name>eric-ccdm-prov-server-certificate</name>
+                   <pem>LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUdDVENDQS9HZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBRENCbmpFTE1Ba0dBMVVFQmhNQ1UwVXgKRWpBUUJnTlZCQWdNQ1ZOMGIyTnJhRzlzYlRFU01CQUdBMVVFQnd3SlUzUnZZMnRvYjJ4dE1SRXdEd1lEVlFRSwpEQWhGY21samMzTnZiakVWTUJNR0ExVUVDd3dNVUVNZ1UyOXNkWFJwYjI1ek1SZ3dGZ1lEVlFRRERBOVVaV0Z0ClFteDFaWE5TYjI5MFEwRXhJekFoQmdrcWhraUc5dzBCQ1FFV0ZHdGxiaTV6YUdsQVpYSnBZM056YjI0dVkyOXQKTUI0WERUSXdNVEV3TWpBNU16TXhObG9YRFRRd01UQXlPREE1TXpNeE5sb3dnWjR4Q3pBSkJnTlZCQVlUQWxORgpNUkl3RUFZRFZRUUlEQWxUZEc5amEyaHZiRzB4RWpBUUJnTlZCQWNNQ1ZOMGIyTnJhRzlzYlRFUk1BOEdBMVVFCkNnd0lSWEpwWTNOemIyNHhGVEFUQmdOVkJBc01ERkJESUZOdmJIVjBhVzl1Y3pFWU1CWUdBMVVFQXd3UFZHVmgKYlVKc2RXVnpVbTl2ZEVOQk1TTXdJUVlKS29aSWh2Y05BUWtCRmhSclpXNHVjMmhwUUdWeWFXTnpjMjl1TG1OdgpiVENDQWlJd0RRWUpLb1pJaHZjTkFRRUJCUUFEZ2dJUEFEQ0NBZ29DZ2dJQkFMcEZTdDJSUGZ0WXdQSGFhWDBPCmxpL2c1MlZuSG15QUNtRzFlZ25QQTRlZlJwdGZGcXNtOWxISDJieWlnU2VjaCt6ZkxYQ2FyVkVyZHUxL3l2UkcKellhTGdILzc2WHRPVlhwR1lhM2FYQmtzQmJrVG5JUm1ndHExMWlJZE9LWFVyVmJWdDRIWjIwRUp4ckZyTXM5bgpteHk3ZHZoV00xS3JTVlNVcU44NDBEU1dKeGVGV1dnRVo3dlRnUmhudUFEMkZVcXNaNkNSdnQyaUwzMVpOSWNvCmRxT1VRRjljaFpMV2dwckVEZ1JtSkQ0b0xqVm9XZTBrUy96UlIyRzNHQjlKMjh4czlaalNwMzhDdFRncUJ6eXYKZ1d1YTRJbTVLeUZJSlVlSDRhOU5SWVpXcnk2STlzeEF6SVlWdDdraTNUQVArSzJZc0dnOWREMUd3S0RSKzVaeQo3RVZ1cmk5aHFSNVlGcnZ2ZE5BaldySnZ5bVFYYURkbVhVR2E3T2c4cDlJek0rbE5MODZkRGYzQnN5ZXFISnJxCm0zMU9NSE0zTUNWZmMwelV1OTZMbkxqMndxVGRLYTdNYVd5ZkE3S08zOHdJQUNCdk8vU05DQ3pDWHBBREpSRUQKQTNuMjE5eTZReG1NK0RIMzVYVkJUdkprTTVVeFBIb2E4cmhac3VMaG9iSXlOVS9LdWs2SkFtL2x1ZVl6T0c5awpsTG1hYVNhc2RsTkovUHFmNE1CT0IxVUtQVnNKc3JhdkZhUTdCbU9McDNSMFh5aG9Ocm5tZC9PT3hVNnIxVEgxCndoNXZ4MkNBT080dHVqdm5paGdlQURVOHlRZHdES0JrT3RqalYwVGRZME1GeGVjTG93dG1FbnJLZklPOWtTUzMKdHBuQWdkQmdmcTdlT1l2c3JLdzMxQXF4QWdNQkFBR2pVREJPTUIwR0ExVWREZ1FXQkJUcWtJRWFyWDI4akFUQgpNQnN2L1ZzZTVqQ2ViREFmQmdOVkhTTUVHREFXZ0JUcWtJRWFyWDI4akFUQk1Cc3YvVnNlNWpDZWJEQU1CZ05WCkhSTUVCVEFEQVFIL01BMEdDU3FHU0liM0RRRUJDd1VBQTRJQ0FRQjczdEczRzFtWnQ5M2o1TW9SWGltc0I2c08KcTQ3QS9sWml5SktxSmlMSWVTcTFWOEdPUHdxZlF5TkFlNDBpbmhMV0hZa3k1clBmaGhYdytGbHlXNHpvdHY3VwpaeWdUanRDd2E3RWJhd1VNT29HOVljTWhLOU5aeC9Fb1BUMGNzNEJLNlV2YWpwSDI4S2w1K2Z5dlNMTjVaWTdLCmFyQklNVVdOVnM3bTNPOWU1ZG9MeDZlOThzb2oyVTVQa0dxMUFCMnhnd1g3RjBzcElqM1lnM1dTNEM1ejVLa0YKYjFjdmlWZ0h1Rm54Sk5HdTVuWStoMDgraTVjWk51L1VjMU05cGtZdGhsZm5ocHlQbE9OeEQ5clRwRG01TEVrVQozYWY5enlxd0p1dXVuV0RKTWZLS1pHUEI1QkNnZk02aEJ3NEQzaUxXVFd4ckhmak5naE5WcUNoNksrTCtHZGZECmh6VC9MVlNIVy9iT2pIaCt3QVZHRmNGeHhYZWRYeHEvcHJqMVp3ZmxQSTdYdnh1Q3dqMUVWQTYzMEZJQlNDNi8KeFdxOG1Ib0VDWFhwODM5R2NjZDN0bWVhdUVMcmNoa3R5Nk9hQnB3SGcvZEI0NEdFQnlKei9UK2xiTElPWkxYZApLK2twZ2FONFRtQTV3dGxRUE1xMEhRTHZFYXgrY0NVWXRFNzhRU2UrODZtVi8yUTFFZUpORWVzVDdwNUMyVTRjCmFRWmJQUTZZZ3ZSWnR2UEQvM0NyUVM5Q0QwREp3YUNyajJkRUlTYjRsRWovZno1d2xMRVR5UzdYLzBLWVVNS1IKVW1xeUt3ejJaczlqTTdCeTBIeE0xaSswZi9vdk1EdUt1UTZJUVRST0V1MFRaWlZINktSc0R1dWp2Ky9WSjJOYgpzemxyUnczbGExSDcxZVU5VVE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==</pem>
+               </install-certificate-pem>
+           </certificates>
+       </truststore>
+   </action>
+</rpc>
+]]>]]>
+
+<rpc message-id="10"
+   xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+   <action xmlns="urn:ietf:params:xml:ns:yang:1"
+       xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+       <keystore xmlns="urn:ietf:params:xml:ns:yang:ietf-keystore">
+           <asymmetric-keys>
+               <install-asymmetric-key-pkcs12 xmlns="urn:rdns:com:ericsson:oammodel:ericsson-keystore-ext">
+                   <name>eric-ccdm-prov-server-key</name>
+                   <certificate-name>eric-ccdm-prov-server-certificate</certificate-name>
+                   <p12>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</p12>
+                   <p12-password>ericsson</p12-password>
+               </install-asymmetric-key-pkcs12>
+           </asymmetric-keys>
+       </keystore>
+   </action>
+</rpc>
+]]>]]>
+

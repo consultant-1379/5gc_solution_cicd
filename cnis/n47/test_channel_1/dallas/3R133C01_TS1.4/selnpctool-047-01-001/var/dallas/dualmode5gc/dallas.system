@@ -1,0 +1,52 @@
+%% ============================================================
+%% ============== SYSTEM CONFIGURATION  =======================
+%% ============================================================
+%% {debug_startup, DBG logging}.
+{debug_startup, off}.
+
+%% {tc_history_length, Nbr of TC saved in TC history}.
+{tc_history_length, 50}.
+
+%% {nbr_of_dps_gi_nws, Number of DPs Gi Networks}.
+{nbr_of_dps_gi_nws,32}.
+
+%% {t3502_block_timer, T3502 Block Timer for 5G subscriber}.
+{t3502_block_timer, 30}.
+
+%% {link_group_num, Nbr of link group of node}.
+{link_group_num, 2}.
+
+%% {monitor_log_interval, Logging interval (seconds) for CPU/Memory monitor}.
+{monitor_log_interval, 10}.
+
+%% {log_interval, Logging interval (seconds) for PM}.
+{log_interval, 60}.
+
+%% {subsystem, Subsystem-Index, Hostname, Load Weight, Option}.
+{subsystem, 1, 'tool-01-101', 10, []}.
+{subsystem, 2, 'tool-01-102', 10, []}.
+
+{dp, 1, 'tool-01-201', []}.
+
+{enb_s1mme_ip_addresses, [{'8.140.0.0', 19, undefined, 0}], 1, []}.
+{enb_s1u_ip_addresses, [{ '8.144.0.0', 19, undefined , 0}], 1, []}.
+{gnb_n3_ip_addresses, [{ '8.152.0.0', 19, undefined, 0 }], 1, []}.
+{gnb_n2_ip_addresses, [{ '8.148.0.0', 19, undefined, 0 }], 1, []}.
+
+{gi_ip_addresses, [{'222.0.0.0', 13, '2A00:219:0:0::', 37}], 1, []}.
+{hss_udm_s6a_ip_addresses, [{network_v4, {'8.34.0.0', 27}}, {dp_index, 1}]}.
+{aggregator, 1, [{ipv4, '191.0.0.4', 30, '191.0.1.4'}], 1, []}.
+
+
+{dp, 2, 'tool-01-202', []}.
+{enb_s1mme_ip_addresses, [{'8.140.32.0', 19, undefined, 0 }], 2, []}.
+
+{enb_s1u_ip_addresses, [{ '8.144.32.0', 19, undefined, 0 }], 2, []}.
+{gnb_n3_ip_addresses, [{ '8.152.32.0', 19, undefined, 0 }], 2, []}.
+{gnb_n2_ip_addresses, [{ '8.148.32.0', 19, undefined, 0 }], 2, []}.
+
+{gi_ip_addresses, [{'222.8.0.0', 13, '2A00:219:1000:0::', 37}], 2, []}.
+
+{hss_udm_s6a_ip_addresses, [{network_v4, {'8.34.0.32', 27}}, {dp_index, 2}]}.
+{aggregator, 1, [{ipv4, '191.0.0.8', 30, '191.0.1.8'}], 2, []}.
+

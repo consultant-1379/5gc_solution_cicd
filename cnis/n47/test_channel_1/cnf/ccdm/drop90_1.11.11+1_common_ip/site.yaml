@@ -1,0 +1,136 @@
+# CCDM single instance is only supported for the small-system profile.
+systemProfile: 'standard'
+
+nodeName: n47-ccdm1
+nodeType: ERIC-CCDM
+clusterName: ccdm1-oam.n47-eccd1
+instance: 1
+vnflcm:
+  clusterName: n47-eccd1
+  namespace: ccdm
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day0:
+    username: sysadmin
+    password: Pa$$w0rd4LDAP
+  day1:
+  - username: ccdmoam
+    password: Changeme1st!
+    groups:
+    - udr-admin
+    - pf-admin
+    - pf-operator
+    - nrfagent-admin
+    - system-admin
+  - username: ccdmsec
+    password: Changeme1st!
+    groups:
+    - udr-security-admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+
+license:
+  customerId: "946060"
+  swltId: STA-CCDM-20
+
+oamVip: 214.13.224.131
+
+soapNotifyHost: ccsm1-udm-5g-sig.site1-cluster1
+
+#Remove multiSite but reserve siteId: 1
+siteId: 1
+
+ddc:
+  remotePath: /lab/pccc_logs/5GC-CICD/ci/N47_DDC/n47-ccdm-ddc
+
+#Add ccdm outer udr and geored
+ccdm:
+  udr:
+    host: ccdm1-5g-traffic.site1-cluster1
+    port: 443
+    instanceId: f8b5865c-49e8-463e-8f16-63eccd1d3f41
+    geored:
+      local: 
+        provisioning-priority: 3
+        host: ccdm1-intersite.site1-cluster1
+
+cnom:
+  fqdn: cnom.ccdm1-oam.n47-eccd1.sero.gic.ericsson.se
+
+clients:
+- client: mapi-client
+  secret: mapi-secret
+  groups:
+  - scopes.ericsson.com/activation/mapi.read
+  - scopes.ericsson.com/activation/mapi.write
+- client: replay-client
+  secret: replay-secret
+  groups:
+  - scopes.ericsson.com/activation/mapi.write
+  - scopes.ericsson.com/activation/replay.callback
+
+replicaCount:
+  eric-ingressgw-eda-provisioning: 6
+  eric-udr-kvdb-ag-server: 4
+  eric-ingressgw-udr-ldap-traffic: 12
+  eric-ingressgw-udr-ldap-provisioning: 8
+  eric-ingressgw-udr-traffic: 12
+  eric-ingressgw-udr-intersite: 10
+
+#Remove parameter 'minReplica' and 'maxReplica', using hpaReplica[max, min] to replace
+hpaReplica:
+  eric-udr-prov-sync-fe:
+    max: 100
+    min: 2
+  eric-udr-nudrfe:
+    max: 100
+    min: 2
+  eric-udr-notificationsubscription:
+    max: 100
+    min: 2
+  eric-udr-gudrestfe:
+    max: 100
+    min: 2
+  eric-udr-provisioningfe:
+    max: 100
+    min: 2
+  eric-udr-ldapfe:
+    max: 100
+    min: 2
+  eric-udr-ldap-balancer:
+    max: 6
+    min: 2
+  eric-udr-rest-notifchecker:
+    max: 100
+    min: 2
+  eric-udr-rest-notifsender:
+    max: 100
+    min: 2
+  eric-udr-soap-notifchecker:
+    max: 100
+    min: 2
+  eric-udr-soap-notifsender:
+    max: 100
+    min: 2
+
+#Storage['eric-ctrl-bro'] change to pvcSize ['eric-ctrl-bro']
+pvcSize:
+  eric-ctrl-bro: 128Gi
+
+#Add new parameter vtap[tapagent: true]
+vtap:
+  tapagent: true
+
+#Add new parameter snmp[sourceIdentifier: "10.63.71.226"]
+snmp:
+  sourceIdentifier: "10.63.71.226"
+
+
+#Add new parameter consistency
+consistency:
+  remotePath: ccdm/consistencyreport
+

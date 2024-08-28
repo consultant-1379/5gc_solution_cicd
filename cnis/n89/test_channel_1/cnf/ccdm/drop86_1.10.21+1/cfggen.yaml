@@ -1,0 +1,29 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global.yaml
+# targetDir: .
+# jsonschema: pcc/jsonschema.yaml
+# jsonschemaGlobal: common/global-jsonschema.yaml
+templateDir: ../../../../../../config_template/templates/
+# jsonschemaGlobal: ../jsonschemas/schema-global.yaml
+
+files:
+- template: ccdm/1.10.21+1/values.yaml.jinja2
+  target: day0/values.yaml
+- template: common/instantiate.json.jinja2
+  target: day0/instantiate.json
+#- template: common/snmp-config.json.jinja2
+#  target: snmp-config.json
+- template: common/user-config.xml.jinja2
+  target: day1/user-config.xml
+- template: ccdm/1.10.21+1/nrfagent-config.xml.jinja2
+  target: day1/nrfagent-config.xml
+- template: ccdm/1.10.21+1/udr-config.xml.jinja2
+  target: day1/udr-config.xml
+- template: ccsm/1.13.1+1/hss-application-counters.xml.jinja2
+  target: day1/hss-application-counters.xml
+#- template: ccsm/1.11/eir-application-counters.xml.jinja2
+#  target: eir-application-counters.xml
+- template: ccdm/1.10.21+1/consistency-config.xml.jinja2
+  target: day1/consistency_check_conf.xml
+- template: ccdm/1.10.21+1/ddc-config.xml.jinja2
+  target: day1/ddc-config.xml

@@ -1,0 +1,17 @@
+vnflcm:
+  vnfInstanceName: node299-c1-em1-ha
+  vnfProductName: Mediation.HAMonitor-Encryption
+  vnfSoftwareVersion: CXP9041443_R25N
+  instantiate-file: ../instantiate.json
+  values-file: values.yaml
+  namespace: em1
+  evnfmName: n299
+  csar-url: /proj/pccc_builds/images/EM/EM21_9/eric-bss-em-hamon-encrypt-22.7.0-415.csar
+pipeline:
+- module: onboard
+  check-interval: 10
+  print-interval: 60
+- module: instantiate
+- module: verify-pod-running
+  ignore-not-running:
+  - eric-bss-em-om-ss

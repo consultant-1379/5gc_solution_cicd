@@ -1,0 +1,26 @@
+pre_install:
+    - name: bind_dpdk
+      executable: "/root/dallas_sw/dallas_cxp9033923_3r192c01/3pp/ltt/dpdk/lts_bind_dpdk -d /local/dallas/3pp/RHEL-7.9/dpdk/18.11-2"
+      arg: "/var/dallas/tap.conf"
+      host: [tool-01-101,tool-01-102]
+      debug: on
+    - name: start bird
+      executable: "/var/dallas/bird/bird_manager.sh --start && sleep 60"
+      host: [tool-01-101]
+      debug: on
+ 
+post_install:
+    - name: configure_ip_address_on_tap
+      executable: "/bin/bash"
+      arg: "/var/dallas/configure_ip_address_on_tap.sh"
+      host: [tool-01-101, tool-01-102]
+      debug: on
+ 
+post_uninstall:
+    - name: unbind_dpdk
+      executable: "/root/dallas_sw/dallas_cxp9033923_3r192c01/3pp/ltt/dpdk/lts_unbind_dpdk -d /local/dallas/3pp/RHEL-7.9/dpdk/18.11-2"
+      host: [tool-01-101,tool-01-102]
+    - name: stop bird
+      executable: "/var/dallas/bird/bird_manager.sh --stop"
+      host: [tool-01-101]
+      debug: on

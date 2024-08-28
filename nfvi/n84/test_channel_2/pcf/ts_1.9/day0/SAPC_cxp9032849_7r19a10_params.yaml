@@ -1,0 +1,51 @@
+﻿# HOT environment for Ericsson SAPC.
+# VDP version: SAPC_cxp9032849_7r19a10
+
+parameters:
+
+  # ---------------------------------------------------------------------------
+  # Flavor
+  # ---------------------------------------------------------------------------
+
+  scs_flavor: 2vcpu_6144MBmem_40GBdisk
+  pls_flavor: 8vcpu_32768MBmem_0GBdisk
+
+  # ---------------------------------------------------------------------------
+  # Image
+  # ---------------------------------------------------------------------------
+
+  sc_image: sapc_sc_cxp9032849_7r19a10
+  pl_image: sapc_pxe_cxp9032849_7r19a10
+
+  # ---------------------------------------------------------------------------
+  # Availability Zone
+  # ---------------------------------------------------------------------------
+
+  # nova - Group1
+  # Reference to an existing Availability Zone in OpenStack. Set no value to use
+  # the OpenStack default availability zone.
+  nova: "nova"
+
+  # ---------------------------------------------------------------------------
+  # Network - ExtOAM0
+  # ---------------------------------------------------------------------------
+
+  # ExtOAM0 network ID/name
+  # Reference by ID or name to an existing network in OpenStack.
+  ExtOAM0: pcf2-oam
+
+  # ---------------------------------------------------------------------------
+  # Network - ExtTraffic0
+  # ---------------------------------------------------------------------------
+
+  # ExtTraffic0 network ID/name
+  # Reference by ID or name to an existing network in OpenStack.
+  ExtTraffic0: pcf2-traffic
+
+  # ---------------------------------------------------------------------------
+  # Network - ExtTraffic1
+  # ---------------------------------------------------------------------------
+
+  # ExtTraffic1 network ID/name
+  # Reference by ID or name to an existing network in OpenStack.
+  ExtTraffic1: pcf2-traffic1

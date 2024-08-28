@@ -1,0 +1,35 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global_common_ip.yaml
+# targetDir: .
+# jsonschema: ccrc/jsonschema.yaml
+# jsonschemaGlobal: common/global-jsonschema.yaml
+templateDir: ../../../../../../config_template/templates/
+#jsonschemaGlobal: ../jsonschemas/schema-global.yaml
+
+files:
+# - template: pcc/1.29_PCC_CXP9037447_1-R58A1618/values.yaml.jinja2
+#   target: day0/values.yaml
+- template: common/instantiate.json.jinja2
+  target: day0/instantiate.json
+- template: common/snmp-config.json.jinja2
+  target: day0/snmp-config.json
+# - template: common/user-config.txt.jinja2
+#   target: day1/user-config.txt
+- template: pcc/1.29_PCC_CXP9037447_1-R58A1618/pc-sm-config.txt.jinja2
+  target: day1/pc-sm-config.txt
+- template: pcc/1.29_PCC_CXP9037447_1-R58A1618/vpngw-config.txt.jinja2
+  target: day1/vpngw-config.txt
+# 1.29 doesn't have the templates for pc-sm-config-nef.txt, pc-mm-config.txt, smf-enable-tls.txt, smf-gen-csr.txt
+# so these files are prepared manually
+- template: common/network-policy/eric-pm-server-allow.yaml.jinja2
+  target: network-policy/eric-pm-server-allow.yaml
+- template: common/network-policy/eric-data-search-engine-allow.yaml.jinja2 
+  target: network-policy/eric-data-search-engine-allow.yaml
+- template: common/network-policy/eric-fh-alarm-handler-allow.yaml.jinja2
+  target: network-policy/eric-fh-alarm-handler-allow.yaml
+- template: common/ingress/eric-fh-alarm-handler-ingress.yaml.jinja2
+  target: ingress/eric-fh-alarm-handler-ingress.yaml
+- template: common/ingress/eric-data-search-engine-tls-ingress.yaml.jinja2
+  target: ingress/eric-data-search-engine-ingress.yaml
+- template: common/ingress/eric-pm-server-ingress.yaml.jinja2
+  target: ingress/eric-pm-server-ingress.yaml

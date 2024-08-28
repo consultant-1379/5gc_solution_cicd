@@ -1,0 +1,42 @@
+configmap:
+  data: |
+    {
+       "resourceList": [{
+                "resourceName": "intel_sriov_netdevice",
+                "selectors": {
+                    "vendors": ["8086"],
+                    "devices": ["154c", "10ed"],
+                    "drivers": ["i40evf", "ixgbevf", "iavf"]
+                }
+            },
+            {
+                "resourceName": "intel_sriov_dpdk_left",
+                "selectors": {
+                    "pciAddresses": ["0000:83:10.0", "0000:83:10.1", "0000:83:10.2", "0000:83:10.3", "0000:83:10.4", "0000:83:10.5", "0000:83:10.6", "0000:83:10.7"],
+                    "drivers": ["vfio-pci", "igb_uio"]
+                }
+            },
+            {
+                "resourceName": "intel_sriov_dpdk_right",
+                "selectors": {
+                    "pciAddresses": ["0000:83:11.0", "0000:83:11.1", "0000:83:11.2", "0000:83:11.3", "0000:83:11.4", "0000:83:11.5", "0000:83:11.6", "0000:83:11.7"],
+                    "drivers": ["vfio-pci", "igb_uio"]
+                }
+            }
+        ]
+    }
+  name: sriov-dp-configmap
+container:
+  name: kube-sriovdp
+image:
+  name: sriov-network-device-plugin
+  repo: registry.eccd.local:5000
+  tag: v3.3.1-6-e10972a4
+kube_namespace: kube-system
+nodeSelector:
+  node-role.kubernetes.io/worker: worker
+  type: high-throughput
+tolerations:
+- key: high-throughput
+  effect: "NoSchedule"
+  value: "true"

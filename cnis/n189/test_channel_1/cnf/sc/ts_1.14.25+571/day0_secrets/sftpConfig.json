@@ -1,0 +1,7 @@
+[
+  {"host": "172.30.32.50",
+   "sftpPort": 22,
+   "username": "root",
+   "password": "lmc_xdg",
+   "uploadDir": "vtap"  }
+]

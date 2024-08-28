@@ -1,0 +1,9 @@
+{
+  "clusterName": "n84-eccd1",
+  "additionalParams": {
+       "namespace": "ccdm",
+       "applicationTimeOut": "3600",
+       "skipJobVerification": "false",
+       "skipVerification": "true"
+      }
+}

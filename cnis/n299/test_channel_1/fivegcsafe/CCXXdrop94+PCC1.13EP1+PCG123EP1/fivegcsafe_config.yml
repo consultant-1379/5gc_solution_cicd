@@ -1,0 +1,256 @@
+---
+# Customized Parameters for Simplifying Configuration
+5gc_solution_cicd-repo-path: ${global.test.config-files-directory}
+rootCA-certificates-directory: ${5gc_solution_cicd-repo-path}cnis/n299/certs/root/RootCA/
+dallas:
+  version: 3R209B02
+  config-files-directory: ${5gc_solution_cicd-repo-path}cnis/n299/test_channel_1/dallas/3R209B02/
+
+# FIVEGCSAFE Parameters
+
+global:
+  test:
+    test-channel-name: n299-testchannel1
+    fivegcsafe-log-directory: /home/${user.name}/n299/
+    log-collection:
+      input-files-directory:
+        printouts: ${5gc_solution_cicd-repo-path}logs/printouts/
+        nf-log: ${5gc_solution_cicd-repo-path}/logs/nf_log/
+        pm-counter: ${5gc_solution_cicd-repo-path}/logs/pm_counter/
+    test-report:
+      template-file: /proj/e-jcat-tools/5gc/testreport/CNIS_Test_Report_Template.docx
+tools:
+  misc-server:
+    login-info:
+      host: 10.9.80.185
+      user: root
+      password: bG1jX3hkZw==
+  dallas:
+    version: ${dallas.version}
+    central-host:
+      host: 214.15.138.14
+      user: root
+      password: bG1jX3hkZw==
+    deployment-config-files-directory: ${dallas.config-files-directory}
+    traffic-model-config-files-directory: ${dallas.config-files-directory}
+    blades:
+      - pccc-node299-dallas-01
+      - pccc-node299-dallas-02
+    traffic-model:
+      tm-ms-groups:
+        ipv4:
+          five-g: 1,2
+          four-g: 3,4,5
+      max-sau:
+        max-subscribers: 3000000
+        registration-rate: 50
+5gc:
+  certificates:
+    rootCA:
+      crt-file: ${rootCA-certificates-directory}ca.crt
+      key-file: ${rootCA-certificates-directory}ca.key
+  infrastructure:
+    type: CNIS
+    ccd:
+      cluster-namespace: n299-cluster-capi
+      lcm:
+        ccd-package:
+          release: 2.29.0
+      clusters-number: 1
+      clusters:
+        traffic:
+          name: n299
+          kube-api-ingress: kubeapi.node299vpod1.sero.gic.ericsson.se
+          director:
+            host: 214.13.236.132
+            port: 22
+            user: eccd
+            password: ZWNjZA==
+          ingresses:
+            victoria-metrics-alert-server:
+              ingress-host: monitoring-eric-victoria-metrics-alert-server.ingress.node299-cluster1.sero.gic.ericsson.se
+            victoria-metrics-cluster-vmselect:
+              ingress-host: victoria-metrics.node299-cluster1.sero.gic.ericsson.se
+            pm-pushgateway:
+              ingress-host: monitoring-eric-pm-pushgateway.ingress.node299-cluster1.sero.gic.ericsson.se
+#For bgw added leaf info temporarily, otherwise we need to provide our own credentials
+    bgw:
+      login-info:
+        host: 10.86.93.228
+        user: admin
+        password: UEBzc3cwcmQ0c0x4QE4yOTk=
+    tpvm:
+      login-info:
+        host: 10.86.93.229
+        user: extreme
+        password: UEBzc3cwcmQ0c0x4QE4yOTk=
+    sdim:
+      login-info:
+        host: 10.86.93.228
+        user: advanced
+        password: ZXR0LDMw
+        port: 2024
+    switches:
+      leaf:
+        ports-to-check-stats:
+        switches:
+          - id: data-leaf-1a
+            name: N299-SLXA-serointsw01100
+            ip: 10.86.93.228
+            user: admin
+            password: UEBzc3cwcmQ0c0x4QE4yOTk=
+            admin: admin
+            admin-password: UEBzc3cwcmQ0c0x4QE4yOTk=
+            type: SLX
+          - id: data-leaf-1b
+            name: N299-SLXB-serointsw01101
+            ip: 10.86.93.228
+            user: admin
+            password: UEBzc3cwcmQ0c0x4QE4yOTk=
+            admin: admin
+            admin-password: UEBzc3cwcmQ0c0x4QE4yOTk=
+            type: SLX
+
+  evnfm:
+    operator-user:
+      user-name: vnfm-user
+      password: RGVmYXVsdFAxMjM0NSE=
+    ingress-host: eo-nbi.evnfm1.node299-cluster1.sero.gic.ericsson.se
+    namespace: evnfm
+  cnfs:
+    eda:
+      namespace: eda1
+      lcm:
+        instance-name: node299-cluster1-eda1
+#      day1:
+#        user-account:
+#          user-name: tester@ericsson.com
+#        service-account:
+#          user-name: cai3guser
+#          password: Q2FpM2d1c2VyQA==
+      ingresses:
+        fh-alarm-handler:
+          ingress-host: eda1-eric-fh-alarm-handler.ingress.node299-cluster1.sero.gic.ericsson.se
+        pm-server:
+          ingress-host: eda1-eric-pm-server.ingress.node299-cluster1.sero.gic.ericsson.se
+    ccdm:
+      namespace: ccdm1
+      log-collection-user: ccdm-admin
+      day1-users:
+        - user: ccdm-admin
+          password: V2Vha1BhcyN3b3JELTE=
+      lcm:
+        instance-name: node299-cluster1-ccdm1
+      ingresses:
+        data-search-engine:
+          ingress-host: ccdm1-eric-data-search-engine-tls.ingress.node299-cluster1.sero.gic.ericsson.se
+        fh-alarm-handler:
+          ingress-host: ccdm1-eric-fh-alarm-handler.ingress.node299-cluster1.sero.gic.ericsson.se
+        pm-server:
+          ingress-host: ccdm1-eric-pm-server.ingress.node299-cluster1.sero.gic.ericsson.se
+    pcg:
+      namespace: pcg1
+      log-collection-user: pcg-admin
+      day1-users:
+        - user: pcg-admin
+          password: RG01R0NAUzBsdXQhb24=
+      lcm:
+        instance-name: node299-cluster1-pcg1
+      ingresses:
+        data-search-engine:
+          ingress-host: pcg1-eric-data-search-engine-tls.ingress.node299-cluster1.sero.gic.ericsson.se
+        fh-alarm-handler:
+          ingress-host: pcg1-eric-fh-alarm-handler.ingress.node299-cluster1.sero.gic.ericsson.se
+        pm-server:
+          ingress-host: pcg1-eric-pm-server.ingress.node299-cluster1.sero.gic.ericsson.se
+    ccsm:
+      namespace: ccsm1
+      log-collection-user: ccsm-admin
+      day1-users:
+        - user: ccsm-admin
+          password: RG01R0NAUzBsdXQhb24=
+      lcm:
+        instance-name: node299-cluster1-ccsm1
+      ingresses:
+        data-search-engine:
+          ingress-host: ccsm1-eric-data-search-engine-tls.ingress.node299-cluster1.sero.gic.ericsson.se
+        fh-alarm-handler:
+          ingress-host: ccsm1-eric-fh-alarm-handler.ingress.node299-cluster1.sero.gic.ericsson.se
+        pm-server:
+          ingress-host: ccsm1-eric-pm-server.ingress.node299-cluster1.sero.gic.ericsson.se
+    ccrc:
+      namespace: ccrc1
+      log-collection-user: ccrc-admin
+      nrf:
+        host: ccrc1-nrf-sig.site1-cluster1.5gc.mnc081.mcc240.3gppnetwork.org
+        sbi-client:
+          crt-file: ${rootCA-certificates-directory}ccrc1-nrf-sbi-client.crt
+          key-file: ${rootCA-certificates-directory}ccrc1-nrf-sbi-client.key
+      day1-users:
+        - user: ccrc-admin
+          password: RG01R0NAUzBsdXQhb24=
+      lcm:
+        instance-name: node299-cluster1-ccrc1
+      ingresses:
+        data-search-engine:
+          ingress-host: ccrc1-eric-data-search-engine-tls.ingress.node299-cluster1.sero.gic.ericsson.se
+        fh-alarm-handler:
+          ingress-host: ccrc1-eric-fh-alarm-handler.ingress.node299-cluster1.sero.gic.ericsson.se
+        pm-server:
+          ingress-host: ccrc1-eric-pm-server.ingress.node299-cluster1.sero.gic.ericsson.se
+    pcc:
+      namespace: pcc1
+      log-collection-user: pcc-admin
+      day1-users:
+        - user: pcc-admin
+          password: RG01R0NAUzBsdXQhb24=
+      lcm:
+        instance-name: node299-cluster1-pcc1
+        post-config:
+          tls-config:
+            amf:
+              host: 10.221.124.3
+              user: pcc-admin
+            smf:
+              host: pcc1-oam-node299-cluster1.sero.gic.ericsson.se
+              user: pcc-admin
+      ingresses:
+        data-search-engine:
+          ingress-host: pcc1-eric-data-search-engine-tls.ingress.node299-cluster1.sero.gic.ericsson.se
+        fh-alarm-handler:
+          ingress-host: pcc1-eric-fh-alarm-handler.ingress.node299-cluster1.sero.gic.ericsson.se
+        pm-server:
+          ingress-host: pcc1-eric-pm-server.ingress.node299-cluster1.sero.gic.ericsson.se
+    ccpc:
+      namespace: ccpc1
+      log-collection-user: ccpc-admin
+      client-secret: c3lzQWRtMW5ARGF5MA==
+      client-id: ccpc-oam-client
+      day1-users:
+        - user: ccpc-admin
+          password: RG01R0NAUzBsdXQhb24=
+      lcm:
+        instance-name: node299-cluster1-ccpc1
+      ingresses:
+        data-search-engine:
+          ingress-host: ccpc1-eric-data-search-engine-tls.ingress.node299-cluster1.sero.gic.ericsson.se
+        fh-alarm-handler:
+          ingress-host: ccpc1-eric-fh-alarm-handler.ingress.node299-cluster1.sero.gic.ericsson.se
+        pm-server:
+          ingress-host: ccpc1-eric-pm-server.ingress.node299-cluster1.sero.gic.ericsson.se
+
+    cces:
+      namespace: cces1
+      log-collection-user: cces-admin
+      day1-users:
+        - user: cces-admin
+          password: RG01R0NAUzBsdXQhb24=
+      lcm:
+        instance-name: node299-cluster1-cces1
+      ingresses:
+        data-search-engine:
+          ingress-host: cces1-eric-data-search-engine-tls.ingress.node299-cluster1.sero.gic.ericsson.se
+        fh-alarm-handler:
+          ingress-host: cces1-eric-fh-alarm-handler.ingress.node299-cluster1.sero.gic.ericsson.se
+        pm-server:
+          ingress-host: cces1-eric-pm-server.ingress.node299-cluster1.sero.gic.ericsson.se

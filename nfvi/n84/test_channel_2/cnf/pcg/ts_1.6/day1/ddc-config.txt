@@ -1,0 +1,10 @@
+config
+diagnostic-data-collection sftp-server Default
+ endpoints endpoint Default
+  remote-address 10.36.242.1
+  remote-port    22
+  remote-path    ddc/n84-pcg3
+  client-identity username tsuser
+  client-identity password dHNwYXNz
+commit
+end

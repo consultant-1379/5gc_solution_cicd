@@ -1,0 +1,134 @@
+nodeName: n84-pcg2
+nodeType: PCG
+
+vnflcm:
+  clusterName: n84-eccd3
+  namespace: pcg
+  InstantiateVnfRequest:
+    applicationTimeOut: 1200
+    skipVerification: "true"
+
+users:
+  day0:
+    username: sysadmin
+    password: sysadmin
+  day1:
+  - username: tsadm
+    password: tsadm
+    groups: [ system-admin system-troubleshooter ]
+
+ddc:
+  remotePath: ddc/eccd3/n84-pcg2
+
+license:
+  customerId: '946060'
+  swltId: STA-PCG-8
+snmp:
+  agentEngineId: 8000137001C0A8CC42A60FC00E
+  heartbeatInterval: 600
+replicaCount:
+  eric-pc-up-data-plane: 1
+  eric-pc-up-pfcp-endpoint: 1
+  eric-pc-kvdb-rd-server: 1
+
+interfaceType: macvlan
+
+pcg:
+  routingEngine:
+    predefine: false
+  nicVendor: mellanox
+  dpMaxNum: 30
+  dpCpu: 14
+  nicResrName:
+  - intel.com/dp_sriov_mlx5_left
+  - intel.com/dp_sriov_mlx5_right
+  ipRule:
+    ipv4:
+      defaultGw: [-2]
+      bgpNeighbors: [-2]
+      creIpFrom: 100
+      dpIpFrom: 1
+    ipv6:
+      defaultGw: [596]
+      bgpNeighbors: [596]
+      creIpFrom: 256
+      dpIpFrom: 1
+  intraForward:
+    vlan: 3600
+    ipv4: 172.31.101.0/24
+  networkInstances:
+  - name: signaling
+    localAs: 7002
+    remoteAs: 8002
+    ipForward:
+      vlan: 3977
+      ipv4: 11.2.77.0/24
+    vnfLoop:
+      ipv4: 5.108.2.33
+    upLoop:
+    - name: cp
+      ipv4: 5.108.1.25
+      interfaces:
+      - type: cp-function
+        name: sxn4u
+      - type: pfcp
+        name: sxn4
+  - name: internet
+    localAs: 7005
+    remoteAs: 8005
+    ipForward:
+      vlan: 3855
+      ipv4: 11.1.55.0/24
+#      ipv6: 2a00:11:21:30::/64
+    dpLoop:
+      ipv4: 5.125.3.32/27
+#      ipv6: 2a02:5:7d:3::/123
+    vnfLoop:
+      ipv4: 5.125.2.33
+#      ipv6: 2a02:5:7d:2::1
+    ipPools:
+    - 39.0.0.0/10
+    - 39.64.0.0/10
+    - 2a01:1::/44
+    - 2a01:1:10::/44
+    - 39.128.0.0/24
+  - name: ran
+    localAs: 7004
+    remoteAs: 8004
+    ipForward:
+      vlan: 3854
+      ipv4: 11.1.54.0/24
+    dpLoop:
+      ipv4: 5.124.3.32/27
+    vnfLoop:
+      ipv4: 5.124.2.33
+    upLoop:
+    - name: access
+      ipv4: 5.124.0.32/27
+      interfaces:
+      - type: access
+        name: s1n3
+  - name: media
+    localAs: 7001
+    remoteAs: 8001
+    ipForward:
+      vlan: 3714
+      ipv4: 11.2.21.0/24
+    dpLoop:
+      ipv4: 5.109.3.32/27
+    vnfLoop:
+      ipv4: 5.109.2.21
+    upLoop:
+    - name: pgw
+      ipv4: 5.101.0.32/27
+      interfaces:
+      - type: access
+        name: s5s8u
+        default: false
+    - name: sgw
+      ipv4: 5.105.0.32/27
+      interfaces:
+      - type: core
+        name: s5s8u
+
+

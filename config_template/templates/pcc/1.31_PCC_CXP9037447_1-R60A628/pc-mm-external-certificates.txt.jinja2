@@ -1,0 +1,16 @@
+autowizard false
+config
+certm node-credential CLIENT
+!
+certm node-credential SERVER
+!
+commit no-confirm
+certm node-credential SERVER install-credential-from-uri credential-password ericsson uri /Core/log/server-certificate-pkcs12.p12
+!
+certm node-credential CLIENT  install-credential-from-uri credential-password ericsson uri /Core/log/client-certificate-pkcs12.p12
+!
+certm install-trusted-cert-from-uri uri /Core/log/RootCA.crt
+!
+commit no-confirm
+end
+

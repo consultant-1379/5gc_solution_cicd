@@ -1,0 +1,1034 @@
+global:
+  timezone: CET
+  applicationId: n67-pcc1
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: PACKET_CORE_CONTROLLER
+          customerId: 946060
+          swltId: STA-PCC-9
+  sm:
+    pgw:
+      enabled: true
+    sgw:
+      enabled: true
+    smf:
+      enabled: true
+
+snmp-alarm-provider-secret-creation:
+  enabled: false
+
+eric-pc-routing-engine:
+  interfaces:
+    type: macvlan
+    macvlan:
+      - master: eth4
+
+eric-pc-mm:
+  eric-pc-mm-controller:
+    service:
+      useK8sNwSBI: true
+      sbi:
+        loadBalancerIP: 5.8.6.137
+    nodeSelector:
+      pcc-mm-pod: controller
+    securityContext:
+      appArmorProfile: docker-pcc
+    configMap: |-
+      #!/bin/sh -f
+      #set -x
+      gsh create_eth_port -eqp 1.1 -ep 1
+      gsh create_eth_port -eqp 1.2 -ep 1
+      gsh create_eth_port -eqp 1.3 -ep 1
+      gsh create_eth_port -eqp 1.4 -ep 1
+      gsh create_eth_port -eqp 1.5 -ep 1
+      gsh create_eth_port -eqp 1.6 -ep 1
+      gsh create_eth_port -eqp 1.7 -ep 1
+      gsh create_eth_port -eqp 1.8 -ep 1
+
+      ##### IP Network: OM_EXTERNAL configuration Start ####
+      gsh create_ip_network -nw OM_EXTERNAL
+
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 352
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_352_OM_EXTERNAL
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_352_OM_EXTERNAL -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_1_1_352_OM_EXTERNAL -ip 11.106.3.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 352 -ifp ETH_1_1_1_352_OM_EXTERNAL -nw OM_EXTERNAL
+      gsh create_router_instance -eqp 1.1 -nw OM_EXTERNAL -ip 11.106.3.1
+      gsh create_static_route -eqp 1.1 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.254
+
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 352
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_352_OM_EXTERNAL
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_352_OM_EXTERNAL -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_2_1_352_OM_EXTERNAL -ip 11.106.3.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 352 -ifp ETH_1_2_1_352_OM_EXTERNAL -nw OM_EXTERNAL
+      gsh create_router_instance -eqp 1.2 -nw OM_EXTERNAL -ip 11.106.3.2
+      gsh create_static_route -eqp 1.2 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.254
+
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 352
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_352_OM_EXTERNAL
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_352_OM_EXTERNAL -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_3_1_352_OM_EXTERNAL -ip 11.106.3.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 352 -ifp ETH_1_3_1_352_OM_EXTERNAL -nw OM_EXTERNAL
+      gsh create_router_instance -eqp 1.3 -nw OM_EXTERNAL -ip 11.106.3.3
+      gsh create_static_route -eqp 1.3 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.254
+
+      gsh create_eth_vlan -eqp 1.4 -ep 1 -vid 352
+      gsh create_inbound_pf_policy -ifp ETH_1_4_1_352_OM_EXTERNAL
+      gsh create_inbound_pf_rule -ifp ETH_1_4_1_352_OM_EXTERNAL -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_4_1_352_OM_EXTERNAL -ip 11.106.3.4 -mask 255.255.255.0 -eqp 1.4 -ep 1 -vid 352 -ifp ETH_1_4_1_352_OM_EXTERNAL -nw OM_EXTERNAL
+      gsh create_router_instance -eqp 1.4 -nw OM_EXTERNAL -ip 11.106.3.4
+      gsh create_static_route -eqp 1.4 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.254
+
+      gsh create_eth_vlan -eqp 1.5 -ep 1 -vid 352
+      gsh create_inbound_pf_policy -ifp ETH_1_5_1_352_OM_EXTERNAL
+      gsh create_inbound_pf_rule -ifp ETH_1_5_1_352_OM_EXTERNAL -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_5_1_352_OM_EXTERNAL -ip 11.106.3.5 -mask 255.255.255.0 -eqp 1.5 -ep 1 -vid 352 -ifp ETH_1_5_1_352_OM_EXTERNAL -nw OM_EXTERNAL
+      gsh create_router_instance -eqp 1.5 -nw OM_EXTERNAL -ip 11.106.3.5
+      gsh create_static_route -eqp 1.5 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.254
+
+      gsh create_eth_vlan -eqp 1.6 -ep 1 -vid 352
+      gsh create_inbound_pf_policy -ifp ETH_1_6_1_352_OM_EXTERNAL
+      gsh create_inbound_pf_rule -ifp ETH_1_6_1_352_OM_EXTERNAL -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_6_1_352_OM_EXTERNAL -ip 11.106.3.6 -mask 255.255.255.0 -eqp 1.6 -ep 1 -vid 352 -ifp ETH_1_6_1_352_OM_EXTERNAL -nw OM_EXTERNAL
+      gsh create_router_instance -eqp 1.6 -nw OM_EXTERNAL -ip 11.106.3.6
+      gsh create_static_route -eqp 1.6 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.254
+
+      gsh create_eth_vlan -eqp 1.7 -ep 1 -vid 352
+      gsh create_inbound_pf_policy -ifp ETH_1_7_1_352_OM_EXTERNAL
+      gsh create_inbound_pf_rule -ifp ETH_1_7_1_352_OM_EXTERNAL -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_7_1_352_OM_EXTERNAL -ip 11.106.3.7 -mask 255.255.255.0 -eqp 1.7 -ep 1 -vid 352 -ifp ETH_1_7_1_352_OM_EXTERNAL -nw OM_EXTERNAL
+      gsh create_router_instance -eqp 1.7 -nw OM_EXTERNAL -ip 11.106.3.7
+      gsh create_static_route -eqp 1.7 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.254
+
+      gsh create_eth_vlan -eqp 1.8 -ep 1 -vid 352
+      gsh create_inbound_pf_policy -ifp ETH_1_8_1_352_OM_EXTERNAL
+      gsh create_inbound_pf_rule -ifp ETH_1_8_1_352_OM_EXTERNAL -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_8_1_352_OM_EXTERNAL -ip 11.106.3.8 -mask 255.255.255.0 -eqp 1.8 -ep 1 -vid 352 -ifp ETH_1_8_1_352_OM_EXTERNAL -nw OM_EXTERNAL
+      gsh create_router_instance -eqp 1.8 -nw OM_EXTERNAL -ip 11.106.3.8
+      gsh create_static_route -eqp 1.8 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.254
+
+      gsh create_bfd -nw OM_EXTERNAL -dtx 300 -mrx 300 -mult 3
+      gsh create_bfd_neighbor -nw OM_EXTERNAL -ip 11.106.3.254
+
+      gsh create_ip_service -sn OAM -nw OM_EXTERNAL
+      gsh create_ip_service_address -sn OAM -ip 10.136.11.238
+      ##### IP Network: OM_EXTERNAL configuration End ####
+
+      ##### IP Network: PRAN_SCTP_1 configuration Start ####
+      gsh create_ip_network -nw PRAN_SCTP_1
+
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 601
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_601_PRAN_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_601_PRAN_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_1_1_601_PRAN_SCTP_1 -ip 11.106.4.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 601 -ifp ETH_1_1_1_601_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_router_instance -eqp 1.1 -nw PRAN_SCTP_1 -ip 11.106.4.1
+      gsh create_static_route -eqp 1.1 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.254
+
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 601
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_601_PRAN_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_601_PRAN_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_2_1_601_PRAN_SCTP_1 -ip 11.106.4.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 601 -ifp ETH_1_2_1_601_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_router_instance -eqp 1.2 -nw PRAN_SCTP_1 -ip 11.106.4.2
+      gsh create_static_route -eqp 1.2 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.254
+
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 601
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_601_PRAN_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_601_PRAN_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_3_1_601_PRAN_SCTP_1 -ip 11.106.4.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 601 -ifp ETH_1_3_1_601_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_router_instance -eqp 1.3 -nw PRAN_SCTP_1 -ip 11.106.4.3
+      gsh create_static_route -eqp 1.3 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.254
+
+      gsh create_eth_vlan -eqp 1.4 -ep 1 -vid 601
+      gsh create_inbound_pf_policy -ifp ETH_1_4_1_601_PRAN_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_4_1_601_PRAN_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_4_1_601_PRAN_SCTP_1 -ip 11.106.4.4 -mask 255.255.255.0 -eqp 1.4 -ep 1 -vid 601 -ifp ETH_1_4_1_601_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_router_instance -eqp 1.4 -nw PRAN_SCTP_1 -ip 11.106.4.4
+      gsh create_static_route -eqp 1.4 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.254
+
+      gsh create_eth_vlan -eqp 1.5 -ep 1 -vid 601
+      gsh create_inbound_pf_policy -ifp ETH_1_5_1_601_PRAN_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_5_1_601_PRAN_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_5_1_601_PRAN_SCTP_1 -ip 11.106.4.5 -mask 255.255.255.0 -eqp 1.5 -ep 1 -vid 601 -ifp ETH_1_5_1_601_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_router_instance -eqp 1.5 -nw PRAN_SCTP_1 -ip 11.106.4.5
+      gsh create_static_route -eqp 1.5 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.254
+
+      gsh create_eth_vlan -eqp 1.6 -ep 1 -vid 601
+      gsh create_inbound_pf_policy -ifp ETH_1_6_1_601_PRAN_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_6_1_601_PRAN_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_6_1_601_PRAN_SCTP_1 -ip 11.106.4.6 -mask 255.255.255.0 -eqp 1.6 -ep 1 -vid 601 -ifp ETH_1_6_1_601_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_router_instance -eqp 1.6 -nw PRAN_SCTP_1 -ip 11.106.4.6
+      gsh create_static_route -eqp 1.6 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.254
+
+      gsh create_eth_vlan -eqp 1.7 -ep 1 -vid 601
+      gsh create_inbound_pf_policy -ifp ETH_1_7_1_601_PRAN_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_7_1_601_PRAN_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_7_1_601_PRAN_SCTP_1 -ip 11.106.4.7 -mask 255.255.255.0 -eqp 1.7 -ep 1 -vid 601 -ifp ETH_1_7_1_601_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_router_instance -eqp 1.7 -nw PRAN_SCTP_1 -ip 11.106.4.7
+      gsh create_static_route -eqp 1.7 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.254
+
+      gsh create_eth_vlan -eqp 1.8 -ep 1 -vid 601
+      gsh create_inbound_pf_policy -ifp ETH_1_8_1_601_PRAN_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_8_1_601_PRAN_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_8_1_601_PRAN_SCTP_1 -ip 11.106.4.8 -mask 255.255.255.0 -eqp 1.8 -ep 1 -vid 601 -ifp ETH_1_8_1_601_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_router_instance -eqp 1.8 -nw PRAN_SCTP_1 -ip 11.106.4.8
+      gsh create_static_route -eqp 1.8 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.254
+
+      gsh create_bfd -nw PRAN_SCTP_1 -dtx 300 -mrx 300 -mult 3
+      gsh create_bfd_neighbor -nw PRAN_SCTP_1 -ip 11.106.4.254
+
+      gsh create_ip_service -sn N2-1 -nw PRAN_SCTP_1
+      gsh create_ip_service_address -sn N2-1 -ip 10.132.128.97
+      gsh create_ip_service -sn S1-MME-1 -nw PRAN_SCTP_1
+      gsh create_ip_service_address -sn S1-MME-1 -ip 10.132.128.136
+      ##### IP Network: PRAN_SCTP_1 configuration End ####
+
+      ##### IP Network: PRAN_SCTP_2 configuration Start ####
+      gsh create_ip_network -nw PRAN_SCTP_2
+
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 602
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_602_PRAN_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_602_PRAN_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_1_1_602_PRAN_SCTP_2 -ip 11.21.79.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 602 -ifp ETH_1_1_1_602_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_router_instance -eqp 1.1 -nw PRAN_SCTP_2 -ip 11.21.79.1
+      gsh create_static_route -eqp 1.1 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.79.254
+
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 602
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_602_PRAN_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_602_PRAN_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_2_1_602_PRAN_SCTP_2 -ip 11.21.79.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 602 -ifp ETH_1_2_1_602_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_router_instance -eqp 1.2 -nw PRAN_SCTP_2 -ip 11.21.79.2
+      gsh create_static_route -eqp 1.2 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.79.254
+
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 602
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_602_PRAN_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_602_PRAN_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_3_1_602_PRAN_SCTP_2 -ip 11.21.79.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 602 -ifp ETH_1_3_1_602_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_router_instance -eqp 1.3 -nw PRAN_SCTP_2 -ip 11.21.79.3
+      gsh create_static_route -eqp 1.3 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.79.254
+
+      gsh create_eth_vlan -eqp 1.4 -ep 1 -vid 602
+      gsh create_inbound_pf_policy -ifp ETH_1_4_1_602_PRAN_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_4_1_602_PRAN_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_4_1_602_PRAN_SCTP_2 -ip 11.21.79.4 -mask 255.255.255.0 -eqp 1.4 -ep 1 -vid 602 -ifp ETH_1_4_1_602_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_router_instance -eqp 1.4 -nw PRAN_SCTP_2 -ip 11.21.79.4
+      gsh create_static_route -eqp 1.4 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.79.254
+
+      gsh create_eth_vlan -eqp 1.5 -ep 1 -vid 602
+      gsh create_inbound_pf_policy -ifp ETH_1_5_1_602_PRAN_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_5_1_602_PRAN_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_5_1_602_PRAN_SCTP_2 -ip 11.21.79.5 -mask 255.255.255.0 -eqp 1.5 -ep 1 -vid 602 -ifp ETH_1_5_1_602_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_router_instance -eqp 1.5 -nw PRAN_SCTP_2 -ip 11.21.79.5
+      gsh create_static_route -eqp 1.5 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.79.254
+
+      gsh create_eth_vlan -eqp 1.6 -ep 1 -vid 602
+      gsh create_inbound_pf_policy -ifp ETH_1_6_1_602_PRAN_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_6_1_602_PRAN_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_6_1_602_PRAN_SCTP_2 -ip 11.21.79.6 -mask 255.255.255.0 -eqp 1.6 -ep 1 -vid 602 -ifp ETH_1_6_1_602_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_router_instance -eqp 1.6 -nw PRAN_SCTP_2 -ip 11.21.79.6
+      gsh create_static_route -eqp 1.6 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.79.254
+
+      gsh create_eth_vlan -eqp 1.7 -ep 1 -vid 602
+      gsh create_inbound_pf_policy -ifp ETH_1_7_1_602_PRAN_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_7_1_602_PRAN_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_7_1_602_PRAN_SCTP_2 -ip 11.21.79.7 -mask 255.255.255.0 -eqp 1.7 -ep 1 -vid 602 -ifp ETH_1_7_1_602_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_router_instance -eqp 1.7 -nw PRAN_SCTP_2 -ip 11.21.79.7
+      gsh create_static_route -eqp 1.7 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.79.254
+
+      gsh create_eth_vlan -eqp 1.8 -ep 1 -vid 602
+      gsh create_inbound_pf_policy -ifp ETH_1_8_1_602_PRAN_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_8_1_602_PRAN_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_8_1_602_PRAN_SCTP_2 -ip 11.21.79.8 -mask 255.255.255.0 -eqp 1.8 -ep 1 -vid 602 -ifp ETH_1_8_1_602_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_router_instance -eqp 1.8 -nw PRAN_SCTP_2 -ip 11.21.79.8
+      gsh create_static_route -eqp 1.8 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.79.254
+
+      gsh create_bfd -nw PRAN_SCTP_2 -dtx 300 -mrx 300 -mult 3
+      gsh create_bfd_neighbor -nw PRAN_SCTP_2 -ip 11.21.79.254
+
+      gsh create_ip_service -sn N2-2 -nw PRAN_SCTP_2
+      gsh create_ip_service_address -sn N2-2 -ip 10.132.144.97
+      gsh create_ip_service -sn S1-MME-2 -nw PRAN_SCTP_2
+      gsh create_ip_service_address -sn S1-MME-2 -ip 10.132.144.136
+      ##### IP Network: PRAN_SCTP_2 configuration End ####
+
+      ##### IP Network: SIG_SCTP_1 configuration Start ####
+      gsh create_ip_network -nw SIG_SCTP_1
+
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 452
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_452_SIG_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_452_SIG_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_1_1_452_SIG_SCTP_1 -ip 11.106.2.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 452 -ifp ETH_1_1_1_452_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_router_instance -eqp 1.1 -nw SIG_SCTP_1 -ip 11.106.2.1
+      gsh create_static_route -eqp 1.1 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.254
+
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 452
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_452_SIG_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_452_SIG_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_2_1_452_SIG_SCTP_1 -ip 11.106.2.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 452 -ifp ETH_1_2_1_452_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_router_instance -eqp 1.2 -nw SIG_SCTP_1 -ip 11.106.2.2
+      gsh create_static_route -eqp 1.2 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.254
+
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 452
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_452_SIG_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_452_SIG_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_3_1_452_SIG_SCTP_1 -ip 11.106.2.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 452 -ifp ETH_1_3_1_452_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_router_instance -eqp 1.3 -nw SIG_SCTP_1 -ip 11.106.2.3
+      gsh create_static_route -eqp 1.3 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.254
+
+      gsh create_eth_vlan -eqp 1.4 -ep 1 -vid 452
+      gsh create_inbound_pf_policy -ifp ETH_1_4_1_452_SIG_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_4_1_452_SIG_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_4_1_452_SIG_SCTP_1 -ip 11.106.2.4 -mask 255.255.255.0 -eqp 1.4 -ep 1 -vid 452 -ifp ETH_1_4_1_452_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_router_instance -eqp 1.4 -nw SIG_SCTP_1 -ip 11.106.2.4
+      gsh create_static_route -eqp 1.4 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.254
+
+      gsh create_eth_vlan -eqp 1.5 -ep 1 -vid 452
+      gsh create_inbound_pf_policy -ifp ETH_1_5_1_452_SIG_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_5_1_452_SIG_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_5_1_452_SIG_SCTP_1 -ip 11.106.2.5 -mask 255.255.255.0 -eqp 1.5 -ep 1 -vid 452 -ifp ETH_1_5_1_452_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_router_instance -eqp 1.5 -nw SIG_SCTP_1 -ip 11.106.2.5
+      gsh create_static_route -eqp 1.5 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.254
+
+      gsh create_eth_vlan -eqp 1.6 -ep 1 -vid 452
+      gsh create_inbound_pf_policy -ifp ETH_1_6_1_452_SIG_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_6_1_452_SIG_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_6_1_452_SIG_SCTP_1 -ip 11.106.2.6 -mask 255.255.255.0 -eqp 1.6 -ep 1 -vid 452 -ifp ETH_1_6_1_452_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_router_instance -eqp 1.6 -nw SIG_SCTP_1 -ip 11.106.2.6
+      gsh create_static_route -eqp 1.6 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.254
+
+      gsh create_eth_vlan -eqp 1.7 -ep 1 -vid 452
+      gsh create_inbound_pf_policy -ifp ETH_1_7_1_452_SIG_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_7_1_452_SIG_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_7_1_452_SIG_SCTP_1 -ip 11.106.2.7 -mask 255.255.255.0 -eqp 1.7 -ep 1 -vid 452 -ifp ETH_1_7_1_452_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_router_instance -eqp 1.7 -nw SIG_SCTP_1 -ip 11.106.2.7
+      gsh create_static_route -eqp 1.7 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.254
+
+      gsh create_eth_vlan -eqp 1.8 -ep 1 -vid 452
+      gsh create_inbound_pf_policy -ifp ETH_1_8_1_452_SIG_SCTP_1
+      gsh create_inbound_pf_rule -ifp ETH_1_8_1_452_SIG_SCTP_1 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_8_1_452_SIG_SCTP_1 -ip 11.106.2.8 -mask 255.255.255.0 -eqp 1.8 -ep 1 -vid 452 -ifp ETH_1_8_1_452_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_router_instance -eqp 1.8 -nw SIG_SCTP_1 -ip 11.106.2.8
+      gsh create_static_route -eqp 1.8 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.254
+
+      gsh create_bfd -nw SIG_SCTP_1 -dtx 300 -mrx 300 -mult 3
+      gsh create_bfd_neighbor -nw SIG_SCTP_1 -ip 11.106.2.254
+
+      gsh create_ip_service -sn S6a-1 -nw SIG_SCTP_1
+      gsh create_ip_service_address -sn S6a-1 -ip 106.102.0.65
+      gsh create_ip_service -sn SBI-Server -nw SIG_SCTP_1
+      gsh create_ip_service_address -sn SBI-Server -ip 5.8.6.137
+      gsh create_ip_service -sn SBI-Client -nw SIG_SCTP_1
+      gsh create_ip_service_address -sn SBI-Client -ip 29.1.64.121
+      ##### IP Network: SIG_SCTP_1 configuration End ####
+
+      ##### IP Network: SIG_SCTP_2 configuration Start ####
+      gsh create_ip_network -nw SIG_SCTP_2
+
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 453
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_453_SIG_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_453_SIG_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_1_1_453_SIG_SCTP_2 -ip 11.21.2.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 453 -ifp ETH_1_1_1_453_SIG_SCTP_2 -nw SIG_SCTP_2
+      gsh create_router_instance -eqp 1.1 -nw SIG_SCTP_2 -ip 11.21.2.1
+      gsh create_static_route -eqp 1.1 -nw SIG_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.2.254
+
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 453
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_453_SIG_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_453_SIG_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_2_1_453_SIG_SCTP_2 -ip 11.21.2.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 453 -ifp ETH_1_2_1_453_SIG_SCTP_2 -nw SIG_SCTP_2
+      gsh create_router_instance -eqp 1.2 -nw SIG_SCTP_2 -ip 11.21.2.2
+      gsh create_static_route -eqp 1.2 -nw SIG_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.2.254
+
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 453
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_453_SIG_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_453_SIG_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_3_1_453_SIG_SCTP_2 -ip 11.21.2.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 453 -ifp ETH_1_3_1_453_SIG_SCTP_2 -nw SIG_SCTP_2
+      gsh create_router_instance -eqp 1.3 -nw SIG_SCTP_2 -ip 11.21.2.3
+      gsh create_static_route -eqp 1.3 -nw SIG_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.2.254
+
+      gsh create_eth_vlan -eqp 1.4 -ep 1 -vid 453
+      gsh create_inbound_pf_policy -ifp ETH_1_4_1_453_SIG_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_4_1_453_SIG_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_4_1_453_SIG_SCTP_2 -ip 11.21.2.4 -mask 255.255.255.0 -eqp 1.4 -ep 1 -vid 453 -ifp ETH_1_4_1_453_SIG_SCTP_2 -nw SIG_SCTP_2
+      gsh create_router_instance -eqp 1.4 -nw SIG_SCTP_2 -ip 11.21.2.4
+      gsh create_static_route -eqp 1.4 -nw SIG_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.2.254
+
+      gsh create_eth_vlan -eqp 1.5 -ep 1 -vid 453
+      gsh create_inbound_pf_policy -ifp ETH_1_5_1_453_SIG_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_5_1_453_SIG_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_5_1_453_SIG_SCTP_2 -ip 11.21.2.5 -mask 255.255.255.0 -eqp 1.5 -ep 1 -vid 453 -ifp ETH_1_5_1_453_SIG_SCTP_2 -nw SIG_SCTP_2
+      gsh create_router_instance -eqp 1.5 -nw SIG_SCTP_2 -ip 11.21.2.5
+      gsh create_static_route -eqp 1.5 -nw SIG_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.2.254
+
+      gsh create_eth_vlan -eqp 1.6 -ep 1 -vid 453
+      gsh create_inbound_pf_policy -ifp ETH_1_6_1_453_SIG_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_6_1_453_SIG_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_6_1_453_SIG_SCTP_2 -ip 11.21.2.6 -mask 255.255.255.0 -eqp 1.6 -ep 1 -vid 453 -ifp ETH_1_6_1_453_SIG_SCTP_2 -nw SIG_SCTP_2
+      gsh create_router_instance -eqp 1.6 -nw SIG_SCTP_2 -ip 11.21.2.6
+      gsh create_static_route -eqp 1.6 -nw SIG_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.2.254
+
+      gsh create_eth_vlan -eqp 1.7 -ep 1 -vid 453
+      gsh create_inbound_pf_policy -ifp ETH_1_7_1_453_SIG_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_7_1_453_SIG_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_7_1_453_SIG_SCTP_2 -ip 11.21.2.7 -mask 255.255.255.0 -eqp 1.7 -ep 1 -vid 453 -ifp ETH_1_7_1_453_SIG_SCTP_2 -nw SIG_SCTP_2
+      gsh create_router_instance -eqp 1.7 -nw SIG_SCTP_2 -ip 11.21.2.7
+      gsh create_static_route -eqp 1.7 -nw SIG_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.2.254
+
+      gsh create_eth_vlan -eqp 1.8 -ep 1 -vid 453
+      gsh create_inbound_pf_policy -ifp ETH_1_8_1_453_SIG_SCTP_2
+      gsh create_inbound_pf_rule -ifp ETH_1_8_1_453_SIG_SCTP_2 -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_8_1_453_SIG_SCTP_2 -ip 11.21.2.8 -mask 255.255.255.0 -eqp 1.8 -ep 1 -vid 453 -ifp ETH_1_8_1_453_SIG_SCTP_2 -nw SIG_SCTP_2
+      gsh create_router_instance -eqp 1.8 -nw SIG_SCTP_2 -ip 11.21.2.8
+      gsh create_static_route -eqp 1.8 -nw SIG_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.21.2.254
+
+      gsh create_bfd -nw SIG_SCTP_2 -dtx 300 -mrx 300 -mult 3
+      gsh create_bfd_neighbor -nw SIG_SCTP_2 -ip 11.21.2.254
+
+      gsh create_ip_service -sn S6a-2 -nw SIG_SCTP_2
+      gsh create_ip_service_address -sn S6a-2 -ip 106.102.0.97
+      ##### IP Network: SIG_SCTP_2 configuration End ####
+
+      ##### IP Network: MEDIA configuration Start ####
+      gsh create_ip_network -nw MEDIA
+
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 401
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_401_MEDIA
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_401_MEDIA -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_1_1_401_MEDIA -ip 11.106.1.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 401 -ifp ETH_1_1_1_401_MEDIA -nw MEDIA
+      gsh create_router_instance -eqp 1.1 -nw MEDIA -ip 11.106.1.1
+      gsh create_static_route -eqp 1.1 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.254
+
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 401
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_401_MEDIA
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_401_MEDIA -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_2_1_401_MEDIA -ip 11.106.1.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 401 -ifp ETH_1_2_1_401_MEDIA -nw MEDIA
+      gsh create_router_instance -eqp 1.2 -nw MEDIA -ip 11.106.1.2
+      gsh create_static_route -eqp 1.2 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.254
+
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 401
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_401_MEDIA
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_401_MEDIA -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_3_1_401_MEDIA -ip 11.106.1.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 401 -ifp ETH_1_3_1_401_MEDIA -nw MEDIA
+      gsh create_router_instance -eqp 1.3 -nw MEDIA -ip 11.106.1.3
+      gsh create_static_route -eqp 1.3 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.254
+
+      gsh create_eth_vlan -eqp 1.4 -ep 1 -vid 401
+      gsh create_inbound_pf_policy -ifp ETH_1_4_1_401_MEDIA
+      gsh create_inbound_pf_rule -ifp ETH_1_4_1_401_MEDIA -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_4_1_401_MEDIA -ip 11.106.1.4 -mask 255.255.255.0 -eqp 1.4 -ep 1 -vid 401 -ifp ETH_1_4_1_401_MEDIA -nw MEDIA
+      gsh create_router_instance -eqp 1.4 -nw MEDIA -ip 11.106.1.4
+      gsh create_static_route -eqp 1.4 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.254
+
+      gsh create_eth_vlan -eqp 1.5 -ep 1 -vid 401
+      gsh create_inbound_pf_policy -ifp ETH_1_5_1_401_MEDIA
+      gsh create_inbound_pf_rule -ifp ETH_1_5_1_401_MEDIA -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_5_1_401_MEDIA -ip 11.106.1.5 -mask 255.255.255.0 -eqp 1.5 -ep 1 -vid 401 -ifp ETH_1_5_1_401_MEDIA -nw MEDIA
+      gsh create_router_instance -eqp 1.5 -nw MEDIA -ip 11.106.1.5
+      gsh create_static_route -eqp 1.5 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.254
+
+      gsh create_eth_vlan -eqp 1.6 -ep 1 -vid 401
+      gsh create_inbound_pf_policy -ifp ETH_1_6_1_401_MEDIA
+      gsh create_inbound_pf_rule -ifp ETH_1_6_1_401_MEDIA -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_6_1_401_MEDIA -ip 11.106.1.6 -mask 255.255.255.0 -eqp 1.6 -ep 1 -vid 401 -ifp ETH_1_6_1_401_MEDIA -nw MEDIA
+      gsh create_router_instance -eqp 1.6 -nw MEDIA -ip 11.106.1.6
+      gsh create_static_route -eqp 1.6 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.254
+
+      gsh create_eth_vlan -eqp 1.7 -ep 1 -vid 401
+      gsh create_inbound_pf_policy -ifp ETH_1_7_1_401_MEDIA
+      gsh create_inbound_pf_rule -ifp ETH_1_7_1_401_MEDIA -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_7_1_401_MEDIA -ip 11.106.1.7 -mask 255.255.255.0 -eqp 1.7 -ep 1 -vid 401 -ifp ETH_1_7_1_401_MEDIA -nw MEDIA
+      gsh create_router_instance -eqp 1.7 -nw MEDIA -ip 11.106.1.7
+      gsh create_static_route -eqp 1.7 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.254
+
+      gsh create_eth_vlan -eqp 1.8 -ep 1 -vid 401
+      gsh create_inbound_pf_policy -ifp ETH_1_8_1_401_MEDIA
+      gsh create_inbound_pf_rule -ifp ETH_1_8_1_401_MEDIA -fr 1 -r permit
+      gsh create_ip_interface -ifn ETH_1_8_1_401_MEDIA -ip 11.106.1.8 -mask 255.255.255.0 -eqp 1.8 -ep 1 -vid 401 -ifp ETH_1_8_1_401_MEDIA -nw MEDIA
+      gsh create_router_instance -eqp 1.8 -nw MEDIA -ip 11.106.1.8
+      gsh create_static_route -eqp 1.8 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.254
+
+      gsh create_bfd -nw MEDIA -dtx 300 -mrx 300 -mult 3
+      gsh create_bfd_neighbor -nw MEDIA -ip 11.106.1.254
+
+      gsh create_ip_service -sn Gn-GTP-C -nw MEDIA
+      gsh create_ip_service_address -sn Gn-GTP-C -ip 106.101.0.1
+      gsh create_ip_service -sn S10-GTP-C -nw MEDIA
+      gsh create_ip_service_address -sn S10-GTP-C -ip 106.101.0.33
+      gsh create_ip_service -sn S11-GTP-C -nw MEDIA
+      gsh create_ip_service_address -sn S11-GTP-C -ip 106.101.0.65
+      ##### IP Network: MEDIA configuration End ####
+
+      gsh modify_ne -ni n67-amf1 -mgi 65281 -mc 141 -ari 255 -asi 2 -ap 13 -daf 1 -uuid 3fb31bb6-99ee-4a34-b714-67eccd16c3cf -lclt LN1
+      gsh create_plmn -mcc 240 -mnc 81 -pn 24081 -sl true -sn true
+
+      gsh modify_eea_algorithm -name eea0 -prio 3
+      gsh modify_eea_algorithm -name eea1 -prio 2
+      gsh modify_eea_algorithm -name eea2 -prio 1
+      gsh modify_eea_algorithm -name eea3 -prio 0
+      gsh modify_eia_algorithm -name eia1 -prio 2
+      gsh modify_eia_algorithm -name eia2 -prio 1
+      gsh modify_eia_algorithm -name eia3 -prio 0
+      gsh modify_nia_algorithm -name nia1 -prio 2
+      gsh modify_nia_algorithm -name nia2 -prio 1
+      gsh modify_nia_algorithm -name nia3 -prio 0
+      gsh modify_nea_algorithm -name nea0 -prio 1
+      gsh modify_nea_algorithm -name nea1 -prio 2
+      gsh modify_nea_algorithm -name nea2 -prio 3
+      gsh modify_nea_algorithm -name nea3 -prio 0
+
+      gsh modify_nrf_option -cache on -nftl SMF,UDM,AMF,AUSF,5G-EIR -nsi 50 -anpap fqdn
+      gsh modify_sbi -uhf fqdn
+      gsh modify_sbi_client_profile -scpl default_sbi_client_profile_list -prid 1 -rto 2000 -mrn 1
+      gsh modify_sbi_client_profile -scpl default_sbi_client_profile_list -prid 2 -sn nnrf_nfdiscovery -rto 2000 -mrn 1
+      gsh modify_sbi_client_profile -scpl default_sbi_client_profile_list -prid 3 -sn nnrf_nfmanagement -rto 2000 -mrn 1
+      gsh modify_sbi_client_profile -scpl default_sbi_client_profile_list -prid 4 -sn nnrf_accesstoken -rto 2000 -mrn 1
+      gsh modify_sbi_client_profile -scpl default_sbi_client_profile_list -prid 5 -sn nnssf_nssaiavailability -rto 2000 -mrn 1
+      gsh modify_sbi_client_profile -scpl default_sbi_client_profile_list -prid 6 -sn nnssf_nsselection -rto 2000 -mrn 1
+      gsh modify_sbi_client_profile -scpl default_sbi_client_profile_list -prid 7 -sn nsmf_pdusession -rto 4000 -mrn 1
+      gsh modify_sbi_client_profile -scpl default_sbi_client_profile_list -prid 8 -sn nsmsf_smservice -rto 2000 -mrn 1
+      gsh modify_sbi_client_profile -scpl default_sbi_client_profile_list -prid 9 -sn n5g-eir_equipmentidentitycheck -rto 2000 -mrn 1
+      gsh create_sbi_client_profile -scpl default_sbi_client_profile_list -prid 10 -sn namf_communication -rto 2000 -mrn 1
+      gsh create_sbi_client_profile -scpl default_sbi_client_profile_list -prid 11 -sn nausf_authentication -rto 2000 -mrn 1
+      gsh create_sbi_client_profile -scpl default_sbi_client_profile_list -prid 12 -sn nudm_subscriberdatamanagement -rto 2000 -mrn 1
+      gsh create_sbi_client_profile -scpl default_sbi_client_profile_list -prid 13 -sn nudm_uecontextmanagement -rto 2000 -mrn 1
+
+      gsh create_nf_discovery_profile -ndpl default_nf_disc_profile_list -id 2 -snl namf_communication -dp preferred-locality
+      gsh create_nf_discovery_profile -ndpl default_nf_disc_profile_list -id 3 -snl nausf_authentication -dp preferred-locality
+      gsh create_nf_discovery_profile -ndpl default_nf_disc_profile_list -id 4 -snl nudm_subscriberdatamanagement -dp preferred-locality
+      gsh create_nf_discovery_profile -ndpl default_nf_disc_profile_list -id 5 -snl nudm_uecontextmanagement -dp preferred-locality
+      gsh create_nf_discovery_profile -ndpl default_nf_disc_profile_list -id 6 -snl n5g-eir_equipmentidentitycheck -dp preferred-locality
+      gsh create_nf_discovery_profile -ndpl default_nf_disc_profile_list -id 7 -snl nsmf_pdusession -dp preferred-locality
+
+      gsh create_local_diameter_host -dh s6a-pccc -rn ericsson.se -no 2
+      gsh create_diameter_realm -da s6a -rn ericsson.se -dpl 1
+      gsh create_diameter_application -da s6a -dh s6a-pccc -rn ericsson.se
+      gsh create_diameter_peer -ip 5.8.6.141 -dh s6a-pccc -rn ericsson.se -spn default
+      gsh create_dns -dn epc.mnc081.mcc240.3gppnetwork.org. -qt recursive
+      gsh create_supported_slice -sn 2 -sst 1 -sd 2
+
+      gsh modify_feature_state -fsi amf_multiple_network_slices_support -fs ACTIVATED
+      gsh modify_feature_state -fsi imei_check -fs ACTIVATED
+      gsh create_pei_check -pcn Pei_Check -aup false
+      gsh create_ga -gan MSTZ
+      gsh create_ga_ta_range -gan MSTZ -tan TaLteZone1 -mcc 240 -mnc 81 -first 1 -last 2304
+      gsh create_ga_time_zone -gan MSTZ -tz Hongkong
+
+      gsh create_supi_range -imsi 24081 -vops 3gpp -rs home -doie false -ddoi mnc081.mcc240.gprs
+      gsh create_imsins -imsi 24081 -rs home -dn mnc081.mcc240.gprs -np e214 -na international -rd 5 -ad 86582 -rn ericsson.se -hn esm -mavr 5 -earplr 0
+
+      gsh create_n2 -n2 n2 -pt 3 -no 3
+      gsh create_s11 -s11 S11 -s11sg off
+      gsh create_s1_mme -s1 S1 -no 1  -sar false
+
+      gsh create_nels_configuration -nci 1 -h 10.155.142.68 -p 9095
+      gsh create_node_credential -nci CLIENT
+      gsh create_node_credential -nci SERVER
+
+      gsh create_nrf_service_instance -nsin nnrf_nfm_1 -nsn nnrf_nfmanagement -fqdn nrf1.n67.5gc.mnc081.mcc240.3gppnetwork.org -fpn 443
+      gsh create_nrf_service_instance -nsin nnrf_nfd_1 -nsn nnrf_nfdiscovery -fqdn nrf1.n67.5gc.mnc081.mcc240.3gppnetwork.org -fpn 443
+      gsh create_nssf_service_instance -nsin nnssf_sel_1 -nsn nnssf_nsselection -fqdn nssf1.n67.5gc.mnc081.mcc240.3gppnetwork.org -fpn 443
+      gsh create_nssf_service_instance -nsin nnssf_ava_1 -nsn nnssf_nssaiavailability -fqdn nssf1.n67.5gc.mnc081.mcc240.3gppnetwork.org -fpn 443
+
+      gsh create_sctp_end_point -no 1 -primsn S1-MME-1 -secsn S1-MME-2 -portno 36412 -pn 4gsctpS1
+      gsh create_sctp_end_point -no 2 -primsn S6a-1 -portno 3868 -pn default
+      gsh create_sctp_end_point -no 3 -portno 38412 -pn 5gsctpN2 -primsn N2-1 -secsn N2-2
+      gsh create_sctp_profile -pn 4gsctpS1 -assrtx 20 -initrt 16 -irto 200 -minrto 100 -maxrto 400 -pathrtx 10 -bunt 0 -pmtu 1500
+      gsh create_sctp_profile -pn 5gsctpN2 -assrtx 20 -initrt 16 -irto 200 -minrto 100 -maxrto 400 -pathrtx 10 -bunt 0 -pmtu 1500
+      gsh create_sctp_profile -pn default -pmtu 1500
+      gsh modify_ue_trace_log -rp 5
+
+
+
+  eric-pc-mm-forwarder:
+    nodeSelector:
+      pcc-mm-pod: non-controller
+    replicaCount: 8
+    ipv6: false
+    networks:
+    - ipam: {}
+      master: eth4
+      mtu: 2090
+      name: ext1
+      type: macvlan
+    securityContext:
+      appArmorProfile: docker-pcc
+
+  eric-pc-mm-mobility:
+    service:
+      useK8sNwSBI: true
+      sbi:
+        loadBalancerIP: 5.8.6.137
+    nodeSelector:
+      pcc-mm-pod: non-controller
+    replicaCount: 19
+    securityContext:
+      appArmorProfile: docker-pcc
+
+  eric-pc-mm-sctp:
+    nodeSelector:
+      pcc-mm-pod: non-controller
+    replicaCount: 8
+    securityContext:
+      appArmorProfile: docker-pcc
+
+  eric-pc-mm-br-agent:
+    nodeSelector:
+      pcc-mm-pod: non-controller
+
+
+
+eric-pc-sm:
+  eric-pc-sm-diameter:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+  eric-pc-sm-http-client:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    replicaCount: 3
+  eric-pc-sm-ip-allocator:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+  eric-pc-sm-controller:
+    nodeSelector:
+      pcc-sm-pod: controller
+
+  eric-pc-sm-notification-forwarder:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    annotations:
+      metallb.universe.tf/address-pool: pcc-smf-notification
+      metallb.universe.tf/allow-shared-ip: pcc-smf-notification
+  eric-pc-sm-nsmf-forwarder:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    services:
+      nsmf:
+        loadBalancerIP: 5.8.6.129
+    replicaCount: 3
+
+  eric-pc-sm-smf-pgw-session:
+    replicaCount: 8
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+  eric-pc-sm-sgw-session:
+    replicaCount: 4
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+  eric-pc-sm-br-agent:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+  eric-pc-sm-target-database-master-rd:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+  eric-pc-sm-target-database-replica-rd:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+  eric-pc-sm-udp-forwarder:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    replicaCount: 3
+
+eric-pc-vpn-gateway-forwarder:
+  replicaCount: 4
+  interfaces:
+    - name: net0
+      type: macvlan
+      hostInterface: eth4
+
+eric-pc-kvdb-rd-server:
+  numberOfMaster: 11
+
+eric-pc-controller-ldap-admin-creds:
+  adminCredentials:
+    adminuser: sysadmin
+    adminpasswd: "$6$6bLWAuknShBuMouq$SzGBbD4IvG7TNuNZ1UjQ0.tEkvSQ4TK4B3AuVlpP.WlmV6h8bSmboTWvolx45EH58vYpRBDRuxXJAGD1FTt3L/"
+
+cnom-loadBalancer-service:
+  enabled: true
+  annotations:
+    metallb.universe.tf/address-pool: pcc-oam
+    metallb.universe.tf/allow-shared-ip: pcc-oam
+
+eric-pc-pm-init:
+  resources:
+    pmInit:
+      limits:
+        cpu: 50m
+
+eric-pm-resource-monitor:
+  resources:
+    pmrm:
+      requests:
+        memory: 128Mi
+
+eric-cloud-native-base:
+  eric-si-application-sys-info-handler:
+    resources:
+      eric-si-application-sys-info-handler:
+        requests:
+          memory: 100Mi
+    asih:
+      applicationId: n67-pcc1
+
+  eric-log-transformer:
+    jvmHeap: 4096m
+    replicaCount: 5
+    resources:
+      logtransformer:
+        limits:
+          cpu: '2'
+          memory: 6Gi
+        requests:
+          memory: 6Gi
+      metrics:
+        requests:
+          memory: 128Mi
+      tlsproxy:
+        requests:
+          memory: 128Mi
+
+  eric-odca-diagnostic-data-collector:
+    resources:
+      diagnostic-data-collector:
+        requests:
+          memory: 1Gi
+          cpu: 1000m
+          ephemeral-storage: 5Gi
+        limits:
+          memory: 4Gi
+          cpu: 1500m
+          ephemeral-storage: 20Gi
+
+  eric-pm-server:
+    persistentVolume:
+      size: 32Gi
+    resources:
+      eric-pm-exporter:
+        requests:
+          memory: 64Mi
+      eric-pm-server:
+        limits:
+          memory: 12000Mi
+        requests:
+          memory: 8000Mi
+    rbac:
+      appMonitoring:
+        enabled: true
+        configFileCreate: false
+
+  eric-sec-key-management:
+    resources:
+      metrics:
+        requests:
+          memory: 50Mi
+
+  eric-cm-mediator:
+    resources:
+      eric-cm-mediator:
+        limits:
+          memory: 1Gi
+        requests:
+          memory: 512Mi
+
+  eric-data-message-bus-kf:
+    resources:
+      messagebuskf:
+        requests:
+          cpu: '2'
+          memory: 2Gi
+
+  eric-data-object-storage-mn:
+    server:
+      resources:
+        limits:
+          cpu: 1100m
+          memory: 8Gi
+        requests:
+          cpu: 1100m
+          memory: 2Gi
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+  eric-fh-snmp-alarm-provider:
+    resources:
+      alarmprovider:
+        limits:
+          memory: 1024Mi
+    service:
+      annotations:
+        sharedVIPLabel: pcc1-oam
+        addressPoolName: pcc1-oam
+      secretName: snmp-alarm-provider-config
+    oamVIP:
+      enabled: false
+
+  eric-lm-combined-server:
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: 10.155.142.68
+          port: 9095
+
+  # This is a YAML-formatted file used for dimensioning Search Engine.
+  # Declare variables to be passed into your templates at deploy time using
+  # "--values <path>/search-engine.medium.yaml" during helm install.
+  # Configuration of Search Engine
+  # Note that the storage size and numbers of replicas for Search Engine affect the retention mechanism provided by Search Engine Curator
+  # Use the deployment variants for Search Engine to guarantee intact functionality
+  eric-data-search-engine:
+  #
+  # Custom parameter to disable modification of sysctl by CNFs
+    autoSetRequiredWorkerNodeSysctl: false
+  #
+    replicaCount:
+      data: 3
+    persistence:
+      data:
+        persistentVolumeClaim:
+          size: "48Gi"
+    jvmHeap:
+      data: "2048m"
+    resources:
+      data:
+        limits:
+          cpu: "1000m"
+          memory: "4Gi"
+        requests:
+          cpu: "1000m"
+          memory: "4Gi"
+
+  # Configuration of Search Engine Curator
+  # Contains the retention mechanism for different log planes in numbered actions
+  # Use the deployment variants for Search Engine to guarantee intact functionality
+  eric-data-search-engine-curator:
+    actions: |
+      1:
+        action: delete_indices
+        description: >-
+          Delete indices older than 7 days (based on index name), for pc-sm and
+          pc-mm prefixed indices. (Exclude pc-mm-worker-report-log, pc-mm-list-subscriber-result-log
+          and pc-mm-gf-imeicheck-log). Ignore the error if the filter does not result in an
+          actionable list of indices (ignore_empty_list) and exit cleanly.
+        options:
+          ignore_empty_list: True
+        filters:
+        - filtertype: pattern
+          kind: regex
+          value: '^(pc-mm-.*|pc-sm-app|pc-routing-app|vpn-gw-app)-log-.*$'
+        - filtertype: pattern
+          kind: regex
+          value: '^pc-mm-(worker-report|list-subscriber-result|gf-imeicheck)-log.*$'
+          exclude: True
+        - filtertype: age
+          source: field_stats
+          direction: older
+          field: '@timestamp'
+          stats_result: max_value
+          unit: days
+          unit_count: 7
+      2:
+        action: delete_indices
+        description: >-
+          Delete indices older than 1000 days (based on index name), for isp log
+          prefixed indices. Ignore the error if the filter does not result in
+          an actionable list of indices (ignore_empty_list) and exit cleanly.
+        options:
+          ignore_empty_list: True
+        filters:
+        - filtertype: pattern
+          kind: regex
+          value: '^(pcc-isp-log).*$'
+        - filtertype: age
+          source: field_stats
+          direction: older
+          field: '@timestamp'
+          stats_result: max_value
+          unit: days
+          unit_count: 1000
+      3:
+        action: delete_indices
+        description: >-
+          Delete indices older than 24 hours (based on index name), for indices
+          that might contain sensitive information.
+          Ignore the error if the filter does not result in an actionable list
+          of indices(ignore_empty_list) and exit cleanly.
+        options:
+          ignore_empty_list: True
+        filters:
+        - filtertype: pattern
+          kind: regex
+          value: '^pc-mm-(worker-report|list-subscriber-result|gf-imeicheck)-log.*$'
+        - filtertype: age
+          source: field_stats
+          direction: older
+          field: '@timestamp'
+          stats_result: max_value
+          unit: days
+          unit_count: 1
+      4:
+        action: delete_indices
+        description: >-
+          Delete indices older than 30 days (based on index name), for audit log
+          and alarm log prefixed indices. Ignore the error if the filter does
+          not result in an actionable list of indices (ignore_empty_list) and exit cleanly.
+        options:
+          ignore_empty_list: True
+        filters:
+        - filtertype: pattern
+          kind: regex
+          value: '^(adp-app-audit-logs|adp-app-alarm-log).*$'
+        - filtertype: age
+          source: field_stats
+          direction: older
+          field: '@timestamp'
+          stats_result: max_value
+          unit: days
+          unit_count: 30
+      5:
+        action: delete_indices
+        description: >-
+          Delete indices older than 7 days (based on index name), for common service.
+          Ignore the error if the filter does not result in an actionable list of
+          indices (ignore_empty_list) and exit cleanly.
+        options:
+          ignore_empty_list: True
+        filters:
+        - filtertype: pattern
+          kind: regex
+          value: '^(adp-app-logs|pcc-kvdbrd-app-log).*$'
+        - filtertype: age
+          source: field_stats
+          direction: older
+          field: '@timestamp'
+          stats_result: max_value
+          unit: days
+          unit_count: 7
+      6:
+        action: delete_indices
+        description: >-
+          Delete older indices when the total space is greater than upper limit, for pc-mm and
+          pc-sm prefixed indices. Ignore the error if the filter does not result in an
+          actionable list of indices (ignore_empty_list) and exit cleanly.
+        options:
+          ignore_empty_list: True
+        filters:
+        - filtertype: pattern
+          kind: regex
+          value: '^(pc-mm-.*|pc-sm-app)-log.*$'
+        - filtertype: space
+          disk_space: 25
+          use_age: true
+          source: creation_date
+      7:
+        action: delete_indices
+        description: >-
+          Delete older indices when the total space is greater than upper limit, for
+          pc-routing-app-log prefixed indices. Ignore the error if the filter does not result
+          in an actionable list of indices (ignore_empty_list) and exit cleanly.
+        options:
+          ignore_empty_list: True
+        filters:
+        - filtertype: pattern
+          kind: regex
+          value: '^(pc-routing-app-log).*$'
+        - filtertype: space
+          disk_space: 2
+          use_age: true
+          source: creation_date
+      8:
+        action: delete_indices
+        description: >-
+          Delete older indices when the total space is greater than upper limit, for isp log
+          prefixed indices. Ignore the error if the filter does not result in an
+          actionable list of indices (ignore_empty_list) and exit cleanly.
+        options:
+          ignore_empty_list: True
+        filters:
+        - filtertype: pattern
+          kind: regex
+          value: '^(pcc-isp-log).*$'
+        - filtertype: space
+          disk_space: 2
+          use_age: true
+          source: creation_date
+      9:
+        action: delete_indices
+        description: >-
+          Delete older indices when the total space is greater than upper limit, for audit log
+          and alarm log prefixed indices. Ignore the error if the filter does not result in an
+          actionable list of indices (ignore_empty_list) and exit cleanly.
+        options:
+          ignore_empty_list: True
+        filters:
+        - filtertype: pattern
+          kind: regex
+          value: '^(adp-app-audit-logs|adp-app-alarm-log).*$'
+        - filtertype: space
+          disk_space: 2
+          use_age: true
+          source: creation_date
+      10:
+        action: delete_indices
+        description: >-
+          Delete older indices when the total space is greater than upper limit, for isp log
+          and vpn gw app log prefixed indices. Ignore the error if the filter does not result
+          in an actionable list of indices (ignore_empty_list) and exit cleanly.
+        options:
+          ignore_empty_list: True
+        filters:
+        - filtertype: pattern
+          kind: regex
+          value: '^(vpn-gw-app-log).*$'
+        - filtertype: space
+          disk_space: 2
+          use_age: true
+          source: creation_date
+      11:
+        action: delete_indices
+        description: >-
+          Delete older indices when the total space is greater than upper limit, for common service
+          prefixed indices. Ignore the error if the filter does not result in an
+          actionable list of indices (ignore_empty_list) and exit cleanly.
+        options:
+          ignore_empty_list: True
+        filters:
+        - filtertype: pattern
+          kind: regex
+          value: '^(adp-app-logs|pcc-kvdbrd-app-log).*$'
+        - filtertype: space
+          disk_space: 28
+          use_age: true
+          source: creation_date
+
+eric-cloud-native-nf-additions:
+  eric-pm-bulk-reporter:
+    resources:
+      bulkreporter:
+        requests:
+          memory: 200Mi
+    env:
+      iscompressed: 'true'
+      nodeName: n67-pcc1
+
+  eric-cm-yang-provider:
+    resources:
+      schemaSynchronizer:
+        requests:
+          memory: 128Mi
+      sshd:
+        requests:
+          memory: 256Mi
+      yangDbAdapter:
+        requests:
+          memory: 256Mi
+    service:
+      annotations:
+        sharedVIPLabel: pcc-oam
+        addressPoolName: pcc-oam
+
+  eric-data-sftp-server:
+    service:
+      annotations:
+        sharedVIPLabel: pcc-oam
+        addressPoolName: pcc-oam

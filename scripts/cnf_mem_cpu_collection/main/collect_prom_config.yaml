@@ -1,0 +1,101 @@
+servers:
+  monitoring:
+    host: "monitoring-eric-victoria-metrics-cluster-vmselect.ingress"
+    cnfhost: "eric-pm-server.ingress"
+    pmtype: victoria-metrics
+    api: "/select/0/prometheus/api/v1/"
+    metrics:
+      - kube_pod_container_status_ready
+      - container_cpu_usage_seconds_total
+      - container_memory_working_set_bytes
+      - container_fs_writes_bytes_total
+      - container_fs_reads_bytes_total
+      - container_fs_reads_total
+      - container_fs_writes_total
+      - container_cpu_cfs_throttled_seconds_total
+      - container_fs_reads_merged_total
+      - container_fs_writes_merged_total
+      - container_fs_read_seconds_total
+      - container_fs_write_seconds_total
+      - container_fs_io_time_seconds_total
+      - kube_pod_container_resource_limits
+      - kube_pod_container_resource_requests
+      - kube_pod_container_status_restarts_total
+      - kubelet_volume_stats_used_bytes
+      - kubelet_volume_stats_capacity_bytes
+      - node_memory_MemTotal_bytes
+      - node_memory_MemFree_bytes
+      - node_memory_MemAvailable_bytes
+      - node_cpu_seconds_total
+      - node_filesystem_avail_bytes
+      - node_filesystem_size_bytes
+
+    criticalPodsTable:
+      pcxx:
+        # Memory usage by request (avg)
+        - unit: percent
+          target: avg(avg_over_time(pmrm_container_mem_usage_percent\{}))
+          #target: avg(avg_over_time(container_memory_usage_bytes\{container=\"\",image=\"\"\}))/sum(avg by (container)(avg_over_time(kube_pod_container_resource_requests\{resource=\"memory\"\})))
+          name: MemoryUsageByRequestAvg
+
+        # Memory usage by request (max)
+        - unit: percent
+          target: max(max_over_time(pmrm_container_mem_usage_percent\{}))
+          #target: max(max(container_memory_usage_bytes\{container=\"\",image=\"\"\}))/sum(avg by (container)(max(kube_pod_container_resource_requests\{resource=\"memory\"\})))
+          name: MemoryUsageByRequestMax
+
+        # CPU usage by request (avg)
+        - unit: percent
+          target: avg(avg_over_time(pmrm_container_cpu_usage_percent\{}))
+          #target: rate(avg(avg_over_time(container_cpu_usage_seconds_total\{container=\"\",image=\"\"\})))/sum(avg by (container)(avg_over_time(kube_pod_container_resource_requests\{resource=\"cpu\"\})))
+          name: CPUUsageByRequestAvg
+
+        # CPU usage by request (max)
+        - unit: percent
+          target: max(max_over_time(pmrm_container_cpu_usage_percent\{}))
+          #target: rate(max(max(container_cpu_usage_seconds_total\{container=\"\",image=\"\"\})))/sum(avg by (container)(max(kube_pod_container_resource_requests\{resource=\"cpu\"\})))
+          name: CPUUsageByRequestMax
+      ccxx:
+        # Memory usage by request (avg)
+        - unit: percent
+          target: avg(avg_over_time(pmrm_container_mem_usage_bytes\{})) / avg(avg_over_time(pmrm_container_mem_limits_bytes\{})) * 100
+          #target: avg(avg_over_time(container_memory_usage_bytes\{container=\"\",image=\"\"\}))/sum(avg by (container)(avg_over_time(kube_pod_container_resource_requests\{resource=\"memory\"\})))
+          name: MemoryUsageByRequestAvg
+
+        # Memory usage by request (max)
+        - unit: percent
+          target: max(max_over_time(pmrm_container_mem_usage_bytes\{})) / max(max_over_time(pmrm_container_mem_limits_bytes\{})) * 100
+          #target: max(max(container_memory_usage_bytes\{container=\"\",image=\"\"\}))/sum(avg by (container)(max(kube_pod_container_resource_requests\{resource=\"memory\"\})))
+          name: MemoryUsageByRequestMax
+
+        # CPU usage by request (avg)
+        - unit: percent
+          target: avg(avg_over_time(pmrm_container_cpu_usage_nanocore\{})) / avg(avg_over_time(pmrm_container_cpu_limits_nanocore\{})) * 100
+          #target: rate(avg(avg_over_time(container_cpu_usage_seconds_total\{container=\"\",image=\"\"\})))/sum(avg by (container)(avg_over_time(kube_pod_container_resource_requests\{resource=\"cpu\"\})))
+          name: CPUUsageByRequestAvg
+
+        # CPU usage by request (max)
+        - unit: percent
+          target: max(max_over_time(pmrm_container_cpu_usage_nanocore\{})) / max(max_over_time(pmrm_container_cpu_limits_nanocore\{})) * 100
+          #target: rate(max(max(container_cpu_usage_seconds_total\{container=\"\",image=\"\"\})))/sum(avg by (container)(max(kube_pod_container_resource_requests\{resource=\"cpu\"\})))
+          name: CPUUsageByRequestMax
+      sc:
+        # Memory usage by request (avg)
+        - unit: percent
+          target: avg(avg_over_time((container_memory_usage_bytes\{\}-container_memory_cache\{\})))/avg(avg_over_time(kube_pod_container_resource_limits\{resource=\"memory\"\})) * 100
+          name: MemoryUsageByRequestAvg
+
+        # Memory usage by request (max)
+        - unit: percent
+          target: max(max_over_time((container_memory_usage_bytes\{\}-container_memory_cache\{\})))/max(max_over_time(kube_pod_container_resource_limits\{resource=\"memory\"\})) * 100
+          name: MemoryUsageByRequestMax
+
+        # CPU usage by request (avg)
+        - unit: percent
+          target: rate(avg(avg_over_time(container_cpu_usage_seconds_total\{\})))/avg(avg_over_time(kube_pod_container_resource_limits\{resource=\"cpu\"\})) * 100
+          name: CPUUsageByRequestAvg
+
+        # CPU usage by request (max)
+        - unit: percent
+          target: rate(max(max_over_time(container_cpu_usage_seconds_total\{\})))/max(max_over_time(kube_pod_container_resource_limits\{resource=\"cpu\"\})) * 100
+          name: CPUUsageByRequestMax

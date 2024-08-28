@@ -1,0 +1,21 @@
+{
+{% if 'clusterName' in vnflcm %}
+  "clusterName": "{{ vnflcm.clusterName }}",
+{% endif %}
+  "additionalParams": {
+       "namespace": "{{ vnflcm.namespace }}",
+       {% if vnflcm.InstantiateVnfRequest.helm_client_version is defined %}
+       "helm_client_version": "{{ vnflcm.InstantiateVnfRequest.helm_client_version }}",
+       {% endif %}
+       "applicationTimeOut": "{{ vnflcm.InstantiateVnfRequest.applicationTimeOut | default("900") }}",
+       "skipJobVerification": "{{ vnflcm.InstantiateVnfRequest.skipJobVerification | default("false") }}",
+       "skipVerification": "{{ vnflcm.InstantiateVnfRequest.skipVerification | default("false") }}"
+      },
+  "extensions": {
+          "deployableModules": {
+            "eric-sc-bsf-module": "{{ deployableModules.bsf | string | lower }}",
+            "eric-sc-scp-module": "{{ deployableModules.scp | string | lower }}",
+            "eric-sc-sepp-module": "{{ deployableModules.sepp | string | lower }}"
+          }
+  }
+}

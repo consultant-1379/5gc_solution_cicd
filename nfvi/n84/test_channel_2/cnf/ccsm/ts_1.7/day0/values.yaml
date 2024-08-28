@@ -1,0 +1,1438 @@
+
+# Set true if real NRF, false otherwise.
+tags:
+  nrfsupport: true
+
+global:
+  ## CCSM profiles selection
+  # Enable only one profile per group
+  # Size:
+  # - small-system  (Small Size Systems -Enterprise & Telco)
+  # - std-system (Standard System - Telco)
+  # Security in the outgoing/incoming traffic:
+  # - mtls (mTLS)
+  # - cleartext (Clear Text)
+  # IP Stack version:
+  # - ipv4
+  # - ipv6
+  profiles:
+    small-system:
+      enabled: false
+    std-system:
+      enabled: true
+    cleartext:
+      enabled: false
+    mtls:
+      enabled: true
+    ipv4:
+      enabled: true
+    ipv6:
+      enabled: false
+  timezone: CET
+  applicationId: n84-ccsm2
+  registry:
+    url: armdocker.rnd.ericsson.se
+    imagePullPolicy: IfNotPresent
+
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: "CCSM"
+          customerId: "946060"
+          swltId: "STA-CCSM-12"
+
+  # Determines if enable the internal mTLS communication
+  # Enable set it "on" / Disable set it "off"
+  internalMtls:
+    enabled: "on"
+
+  # Configure the policy for validating JWT.
+  jwtPolicy: "third-party-jwt"
+
+  ## Valid values: {{eMBB|mIoT}}
+  networkType: eMBB
+
+  # Service Mesh global settings
+  nodeSelector: {}
+  #  5gc-ericsson-se/vnf: ccsm
+
+  ## CCSM global settings
+
+  ## Specific values for Auto-provisioning error handling. Not documented in Day-0 of standard releases.
+  #flexibleErrorHandling:
+  #  autoprovUeauTrigger:
+  #    status: 403
+  #    cause: "AUTHENTICATION_REJECTED"
+  #  autoprovSdmTrigger:
+  #    status: 404
+  #    cause: "DATA_NOT_FOUND"
+  ##
+  scheduler:
+    nodeSelector: {}
+    # 5gc-ericsson-se/vnf: ccsm
+  coredumps:
+    enabled: true
+  udrHandling:
+    failover:
+      errorHttpServiceUnavailableAsFailNudrDr: "off"
+      errorHttpServiceUnavailableAsFailNcudrGudDr: "off"
+
+  hssHandling:
+    failover:
+      errorHttpServiceUnavailableAsFailNhssUecm: "off"
+
+  # This global configuration applies to all eric-ccsm-mapproxy instances
+  map:
+    configuration:
+      ss7:
+        m3ua:
+          asProfile:
+            - dupu-behavior: "dpc-omitted"
+              dupu-handling: "no-dupu-handling"
+              id: 1
+              interval-for-mtp-status-ind: 8
+              notify-behavior: "resume-after-aspac-ack"
+              timer-divert: 10
+              timer-notify: 0
+              timer-scon: 75
+              timer-tr: 100
+          abatementThresholdLevel1: 150
+          abatementThresholdLevel2: 400
+          abatementThresholdLevel3: 650
+          burstSize: 0
+          checkDpcStatusInIpNetwork: "not-check-opc-status"
+          congestionProcForRemoteSgps: "use-both-daud-and-tscon"
+          forbidMessageFromUnknownDpc: "not-check-opc"
+          handleIncomDataMsgWithoutAs: "discard-msg"
+          internalCongestionLevel1: 250
+          internalCongestionLevel2: 500
+          internalCongestionLevel3: 750
+          loadsharingAlgorithm: "basic"
+          maxNumberOfBurstsWithoutProgress: 0
+          modifiedSlsRotation: "no-sls-rotation"
+          retransmitBufferSize: 1024
+          supportDynamicRegistrOfAsp: "dynamic-identif-only"
+          timerBurst: 10
+          timerBurstJittering: 0
+          timerCongAudit: 60000
+          timerInitConf: 100
+          timerReinit: 100
+          timerRetransmit: 5
+          remoteSpProfile:
+            - assoc-establishment-attempts: 4
+              attempts-of-dauds: 5
+              drst-support: "rfc-4666-compliant"
+              heartbeat-procedure: "hb-off"
+              id: 1
+              max-num-of-affected-dpcs-in-daud: 0
+              ntfy-support: "rfc-4666-compliant"
+              timer-ack: 60
+              timer-assoc: 20
+              timer-audit: 300
+              timer-deactivation: 0
+              timer-hb: 300
+              timer-rec: 100
+              timer42: 8
+              tmt-support: "rfc-4666-compliant"
+        tcapEit:
+          timerDialogue: 30000
+
+  ## CCSM EGREES GATEWAY CONFIGURATION for NRF Agent
+  #  The next configuration defines the global egrees Gateway
+  #  default configuration, if different configuration is needed,
+  #  uncomment and change on purpose.
+  #
+  #  NOTE:
+  #  - When mtls profile is selected, it enables the egrees automatically and
+  #    the endpoint host and port must be updated on purpose.
+  #  - When cleartext profile is selected, it disables egrees and the enpoints
+  #    content must be manually removed on purpose.
+  istio:
+    # Egrees: Update the endpoint host and port on purpose
+    egress:
+      endpoints:
+        eric-ccsm-sbi-traffic-mtls:
+          enabled: true
+          host: "*.5gc.mnc081.mcc240.3gppnetwork.org"
+          ports:
+            - port: 443
+              name: https-port-for-mTLS-origination
+              protocol: HTTP2
+              mode: mTLS
+              cacert: /etc/istio/egress-ca-certs/ca-chain.cert.pem
+          resolution: NONE
+
+  ## CCSM FSGROUP CONFIGURATION
+  #  The next configuration defines the global fsGroup, if different configuration is needed change on purpose.
+  #
+  #  NOTE:
+  #  - The default value 10000 for fsGroup will be used when no other value will be set.
+  fsGroup:
+    manual: 10000
+
+## SERVICE MESH SPECIFIC SETTINGS
+#  The next configuration defines the Service Mesh default configuration,
+#  if different configuration is needed, uncomment and change on purpose.
+#
+#  NOTE:
+#    Two values between double curly brackets {{mtls|cleartext}} default values
+#    Do not change the targetPort
+#    Disable eric-ingressgw-<NF>-traffic if no NF will be installed
+eric-ccsm-service-mesh:
+  eric-ingressgw-ausf-traffic:
+    enabled: true
+    replicaCount: 2
+    resources:
+      requests:
+        cpu: 90m
+        memory: 250Mi
+      limits:
+        cpu: 1000m
+        memory: 250Mi
+    cpu:
+      targetAverageUtilization: 80
+    memory:
+      targetAverageUtilization: 80
+    service:
+      type: LoadBalancer
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      annotations:
+        addressPoolName: ausf-signaling
+    #ports:
+    #  - name: {{https-mtls|http2-clear}}
+    #    port: {{443|80}}
+    #    targetPort: 8080
+  eric-ingressgw-udm-traffic:
+    enabled: true
+    replicaCount: 2
+    resources:
+      requests:
+        cpu: 200m
+        memory: 350Mi
+      limits:
+        cpu: 4000m
+        memory: 350Mi
+    cpu:
+      targetAverageUtilization: 80
+    memory:
+      targetAverageUtilization: 80
+    service:
+      type: LoadBalancer
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      annotations:
+        addressPoolName: udm-signaling
+    #ports:
+    #  - name: {{https-mtls|http2-clear}}
+    #    port: {{443|81}}
+    #    targetPort: 8081
+    #    tcpkeepalive:
+    #      time: 60
+    #      interval: 30
+    #      probes: 2
+    #  - name: http-clear
+    #    port: 82
+    #    targetPort: 8082
+    #    tcpkeepalive:
+    #      time: 60
+    #      interval: 30
+    #      probes: 2
+  eric-ingressgw-eir-traffic:
+    enabled: true
+    replicaCount: 2
+    resources:
+      requests:
+        cpu: 70m
+        memory: 350Mi
+      limits:
+        cpu: 1000m
+        memory: 350Mi
+    cpu:
+      targetAverageUtilization: 80
+    memory:
+      targetAverageUtilization: 80
+    service:
+      type: LoadBalancer
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      annotations:
+        addressPoolName: eir-5g-sig
+    #ports:
+    #  - name: {{https-mtls|http2-clear}}
+    #    port: {{443|83}}
+    #    targetPort: 8083
+  eric-ingressgw-epc-soap-traffic:
+    enabled: true
+    replicaCount: 2
+    resources:
+      requests:
+        cpu: 50m
+        memory: 350Mi
+      limits:
+        cpu: 1000m
+        memory: 350Mi
+    cpu:
+      targetAverageUtilization: 80
+    memory:
+      targetAverageUtilization: 80
+    service:
+      type: LoadBalancer
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      annotations:
+        addressPoolName: ccsm-oam
+        sharedVIPLabel: ccsm-oam
+    #ports:
+    #  - name: {{http}}
+    #    port: {{84}}
+    #    targetPort: 8084
+  eric-ingressgw-hss-epc-traffic:
+    enabled: true
+    replicaCount: 2
+    resources:
+      requests:
+        cpu: 50m
+        memory: 350Mi
+      limits:
+        cpu: 1000m
+        memory: 350Mi
+    cpu:
+      targetAverageUtilization: 80
+    memory:
+      targetAverageUtilization: 80
+    service:
+      type: LoadBalancer
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      annotations:
+        addressPoolName: hss-4g-http-sig
+    #ports:
+    #  - name: {{http2-clear}}
+    #    port: {{80}}
+    #    targetPort: 8086
+
+#
+# Overwrite the CCSM specific settings
+#
+
+# Overwrite the NRF-Agent Helm values here
+eric-ccsm-nrfagent:
+  # Set true if real NRF, false otherwise.
+  enabled: true
+  eric-nrf-discovery-agent:
+    resources:
+      cpu: 500m
+  eric-nrf-notify-agent:
+    resources:
+      cpu: 300m
+  eric-nrf-register-agent:
+    resources:
+      cpu: 200m
+
+# Overwrite the AUSF Helm values here
+eric-ccsm-ausf:
+  enabled: true
+  eric-ausf-capacity:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-ausf-engine:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 180m
+        limits:
+          cpu: 216m
+
+# Overwrite smsengine Helm values here
+eric-ccsm-smsengine:
+  minReplicas: 2
+  maxReplicas: 10
+
+# Overwrite the UDM Helm values here
+eric-ccsm-udm:
+  enabled: true
+  eric-udm-amfeenotifications:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-amfeesubscriptions:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-autoprovisioning:
+    minReplicas: 1
+    maxReplicas: 1
+    resources:
+      main:
+        requests:
+          cpu: 95m
+        limits:
+          cpu: 114m
+  eric-udm-cancelepclocation:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 105m
+        limits:
+          cpu: 126m
+  eric-udm-capacity:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-eapauth:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 175m
+        limits:
+          cpu: 210m
+      dbproxy:
+        requests:
+          cpu: 140m
+        limits:
+          cpu: 168m
+  eric-udm-eapprimeauth:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 175m
+        limits:
+          cpu: 210m
+      dbproxy:
+        requests:
+          cpu: 140m
+        limits:
+          cpu: 168m
+  eric-udm-epsauth:
+    minReplicas: 7
+    maxReplicas: 8
+    resources:
+      main:
+        requests:
+          cpu: 175m
+        limits:
+          cpu: 210m
+      dbproxy:
+        requests:
+          cpu: 140m
+        limits:
+          cpu: 168m
+  eric-udm-gbaauth:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 175m
+        limits:
+          cpu: 210m
+      dbproxy:
+        requests:
+          cpu: 140m
+        limits:
+          cpu: 168m
+  eric-udm-imsauth:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 175m
+        limits:
+          cpu: 210m
+      dbproxy:
+        requests:
+          cpu: 140m
+        limits:
+          cpu: 168m
+  eric-udm-iratamflocation:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 160m
+        limits:
+          cpu: 192m
+      dbproxy:
+        requests:
+          cpu: 190m
+        limits:
+          cpu: 228m
+  eric-udm-iratamfdereg:
+    minReplicas: 2
+    maxReplicas: 20
+  eric-udm-iratsndereg:
+    minReplicas: 2
+    maxReplicas: 20
+  eric-udm-iwk5g2g:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      iwk5g2g:
+        requests:
+          cpu: 115m
+        limits:
+          cpu: 138m
+      dbproxy:
+        requests:
+          cpu: 80m
+        limits:
+          cpu: 96m
+  eric-udm-mtsmsdeliverystatus:
+    minReplicas: 2
+    maxReplicas: 62
+  eric-udm-mtsmsreadystatus:
+    minReplicas: 1
+    maxReplicas: 1
+  eric-udm-mtsmsroutinginfo:
+    minReplicas: 2
+    maxReplicas: 62
+  eric-udm-mtsmswaitingdata:
+    minReplicas: 2
+    maxReplicas: 32
+  eric-udm-mtueinfo:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-mtlocation:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-pcscfrestnotif:
+    minReplicas: 1
+    maxReplicas: 10
+  eric-udm-pcscfrestoration:
+    minReplicas: 1
+    maxReplicas: 1
+    resources:
+      main:
+        requests:
+          cpu: 100m
+        limits:
+          cpu: 120m
+      dbproxy:
+        requests:
+          cpu: 75m
+        limits:
+          cpu: 90m
+  eric-udm-sdmamdata:
+    minReplicas: 3
+    maxReplicas: 3
+    resources:
+      main:
+        requests:
+          cpu: 90m
+        limits:
+          cpu: 108m
+      dbproxy:
+        requests:
+          cpu: 95m
+        limits:
+          cpu: 114m
+  eric-udm-sdmimplicitunsub:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-sdmmultipledataset:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      sdmmultipledataset:
+        requests:
+          cpu: 115m
+        limits:
+          cpu: 138m
+      dbproxy:
+        requests:
+          cpu: 80m
+        limits:
+          cpu: 96m
+  eric-udm-sdmnotif:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      sdmnotif:
+        requests:
+          cpu: 185m
+        limits:
+          cpu: 222m
+  eric-udm-sdmnssai:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 80m
+        limits:
+          cpu: 96m
+      dbproxy:
+        requests:
+          cpu: 95m
+        limits:
+          cpu: 114m
+  eric-udm-sdmsmdata:
+    minReplicas: 2
+    maxReplicas: 3
+    resources:
+      main:
+        requests:
+          cpu: 80m
+        limits:
+          cpu: 96m
+      dbproxy:
+        requests:
+          cpu: 80m
+        limits:
+          cpu: 96m
+  eric-udm-sdmsmfselect:
+    minReplicas: 2
+    maxReplicas: 3
+    resources:
+      main:
+        requests:
+          cpu: 80m
+        limits:
+          cpu: 96m
+      dbproxy:
+        requests:
+          cpu: 90m
+        limits:
+          cpu: 108m
+  eric-udm-sdmsmsdata:
+    minReplicas: 2
+    maxReplicas: 20
+  eric-udm-sdmsmsmngdata:
+    minReplicas: 2
+    maxReplicas: 20
+  eric-udm-sdmsubscriptions:
+    minReplicas: 2
+    maxReplicas: 5
+    resources:
+      sdmsubscriptions:
+        requests:
+          cpu: 205m
+        limits:
+          cpu: 246m
+      dbproxy:
+        requests:
+          cpu: 160m
+        limits:
+          cpu: 192m
+  eric-udm-sdmuectxtsmf:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 80m
+        limits:
+          cpu: 96m
+      dbproxy:
+        requests:
+          cpu: 90m
+        limits:
+          cpu: 108m
+  eric-udm-sdmuectxtsmsf:
+    minReplicas: 2
+    maxReplicas: 20
+  eric-udm-sidf:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 65m
+        limits:
+          cpu: 78m
+  eric-udm-ueauth:
+    minReplicas: 3
+    maxReplicas: 4
+    resources:
+      main:
+        requests:
+          cpu: 130m
+        limits:
+          cpu: 156m
+      dbproxy:
+        requests:
+          cpu: 125m
+        limits:
+          cpu: 150m
+  eric-udm-uecmamfderegnotifier:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 100m
+        limits:
+          cpu: 120m
+  eric-udm-uecmamfget:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 60m
+        limits:
+          cpu: 72m
+      dbproxy:
+        requests:
+          cpu: 70m
+        limits:
+          cpu: 84m
+  eric-udm-uecmamfregupdate:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 105m
+        limits:
+          cpu: 126m
+      dbproxy:
+        requests:
+          cpu: 150m
+        limits:
+          cpu: 180m
+  eric-udm-uecmreg:
+    minReplicas: 2
+    maxReplicas: 5
+    resources:
+      main:
+        requests:
+          cpu: 160m
+        limits:
+          cpu: 192m
+      dbproxy:
+        requests:
+          cpu: 160m
+        limits:
+          cpu: 192m
+  eric-udm-uecmsmfderegistration:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 60m
+        limits:
+          cpu: 72m
+      dbproxy:
+        requests:
+          cpu: 75m
+        limits:
+          cpu: 90m
+  eric-udm-uecmsmfregistration:
+    minReplicas: 2
+    maxReplicas: 4
+    resources:
+      main:
+        requests:
+          cpu: 125m
+        limits:
+          cpu: 150m
+      dbproxy:
+        requests:
+          cpu: 130m
+        limits:
+          cpu: 156m
+  eric-udm-uecmsmsfdereg:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-uecmsmsfregget:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-uecmsmsfregistration:
+    minReplicas: 2
+    maxReplicas: 10
+  eric-udm-ueshcm:
+    minReplicas: 1
+    maxReplicas: 1
+    resources:
+      main:
+        requests:
+          cpu: 95m
+        limits:
+          cpu: 114m
+      dbproxy:
+        requests:
+          cpu: 100m
+        limits:
+          cpu: 120m
+      amfproxy:
+        requests:
+          cpu: 100m
+        limits:
+          cpu: 120m
+
+# Overwrite the EIR Helm values here
+eric-ccsm-eir:
+  enabled: true
+  eric-eir-eireic:
+    minReplicas: 2
+    maxReplicas: 4
+    resources:
+      main:
+        requests:
+          cpu: 125m
+        limits:
+          cpu: 150m
+      dbproxy:
+        requests:
+          cpu: 190m
+        limits:
+          cpu: 228m
+  eric-eir-httpnotifier:
+    minReplicas: 2
+    maxReplicas: 11
+  eric-eir-infocollector:
+    minReplicas: 2
+    maxReplicas: 11
+    persistentVolumeClaim:
+      storageClassName: network-block
+
+  eric-eir-socshipper:
+    replicaCount: 2
+
+# Overwrite the HSS-EPC Helm values here
+eric-ccsm-hssepc:
+  enabled: true
+  eric-hssepc-capacity:
+    minReplicas: 2
+    maxReplicas: 2
+  eric-hssepc-iratsndereg:
+    minReplicas: 6
+    maxReplicas: 7
+  eric-hssepc-s6aauthentication:
+    minReplicas: 2
+    maxReplicas: 14
+    resources:
+      main:
+        requests:
+          cpu: 230m
+        limits:
+          cpu: 276m
+      udrproxy:
+        requests:
+          cpu: 165m
+        limits:
+          cpu: 198m
+      udmproxy:
+        requests:
+          cpu: 135m
+        limits:
+          cpu: 162m
+  eric-hssepc-s6acancellocation:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 100m
+        limits:
+          cpu: 120m
+  eric-hssepc-s6adeletesubscriber:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 125m
+        limits:
+          cpu: 150m
+      udrproxy:
+        requests:
+          cpu: 70m
+        limits:
+          cpu: 84m
+  eric-hssepc-s6adiameter:
+    minReplicas: 4
+    maxReplicas: 6
+  eric-hssepc-s6ainsertsubscriber:
+    minReplicas: 2
+    maxReplicas: 2
+  eric-hssepc-s6anotify:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 175m
+        limits:
+          cpu: 210m
+      udrproxy:
+        requests:
+          cpu: 175m
+        limits:
+          cpu: 210m
+  eric-hssepc-s6apurge:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 90m
+        limits:
+          cpu: 108m
+      udrproxy:
+        requests:
+          cpu: 85m
+        limits:
+          cpu: 102m
+  eric-hssepc-s6aupdatelocation:
+    minReplicas: 2
+    maxReplicas: 6
+    resources:
+      main:
+        requests:
+          cpu: 175m
+        limits:
+          cpu: 210m
+      udrproxy:
+        requests:
+          cpu: 175m
+        limits:
+          cpu: 210m
+  eric-hssepc-soap:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 95m
+        limits:
+          cpu: 114m
+  eric-hssepc-subscriptionupdate:
+    minReplicas: 2
+    maxReplicas: 2
+    resources:
+      main:
+        requests:
+          cpu: 175m
+        limits:
+          cpu: 210m
+      udrproxy:
+        requests:
+          cpu: 175m
+        limits:
+          cpu: 210m
+  eric-hssepc-deferrednotification:
+    minReplicas: 9
+    maxReplicas: 17
+
+# Diameter Networking related settings
+eric-stm-diameter:
+  service:
+    loadBalancerIP: ""
+    annotations:
+      addressPoolNameDiameterOverTCP: ""
+      addressPoolNameDiameterOverSCTP: "hss-4g-s6a"
+    diameter:
+      ports:
+        tcp:
+          - port:  3868
+            targetPort:  3868
+        sctp:
+          - port:  3868
+            targetPort:  3868
+    resources:
+      diameter:
+        requests:
+          cpu: 535m
+      dsl:
+        requests:
+          cpu: 450m
+      diametercm:
+        requests:
+          cpu: 120m
+      sctp:
+        requests:
+          cpu: 150m
+
+# Overwrite the Mapproxy Helm values here
+eric-ccsm-mapproxy-1:
+  # Networking related settings
+  service:
+    loadBalancerIP: ""
+    annotations:
+      addressPoolName: map-sig
+    sctp:
+      # The list of ports for traffic
+      # default is the list with one port 2905
+      port:
+        - 2905 # default value
+
+eric-ccsm-mapproxy-2:
+  # Networking related settings
+  service:
+    loadBalancerIP: ""
+    annotations:
+      addressPoolName: map-sig-2
+    sctp:
+      # The list of ports for traffic
+      # default is the list with one port 2905
+      port:
+        - 2905 # default value
+
+# Overwrite the ADP Generic Services Helm values here
+eric-ccsm-adp:
+  eric-cm-mediator:
+    nodeSelector: {}
+    resources:
+      eric-cm-mediator:
+        requests:
+          cpu: 90m
+    #  5gc-ericsson-se/vnf: ccsm
+  eric-cm-yang-provider:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    resources:
+      yangDbAdapter:
+        limits:
+          memory: 2Gi
+        requests:
+          cpu: 10m
+      yangEngine:
+        limits:
+          memory: 18Gi
+        requests:
+          cpu: 200m
+      sshd:
+        requests:
+          cpu: 10m
+      schemaSynchronizer:
+        requests:
+          cpu: 10m
+      externalNotifSender:
+        requests:
+          cpu: 10m
+      yangLibExt:
+        requests:
+          cpu: 50m
+      notificationController:
+        requests:
+          cpu: 10m
+      pmMetrics:
+        requests:
+          cpu: 10m
+      cliExtensionCmds:
+        requests:
+          cpu: 10m
+    service:
+      annotations:
+        addressPoolName: "ccsm-oam"
+        sharedVIPLabel: "ccsm-oam"
+      loadBalancerIP: ""
+      type: LoadBalancer
+  eric-cnom-document-database-mg:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    persistence:
+      storageClass: network-block
+  eric-cnom-server:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    fqdn: cnom.ccsm.n84-eccd3.sero.gic.ericsson.se
+    legalNotice: >
+      IF YOU ARE NOT AN AUTHORIZED USER, PLEASE EXIT IMMEDIATELY
+
+
+      This system processes personal information. Handle personal information
+      with care.  Misuse, including unauthorized access, is grounds for legal
+      action.  Version: 1.0, Date: October 27, 2020.
+    resources:
+      server:
+        requests:
+          cpu: 100m
+  eric-ctrl-bro:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    persistence:
+      persistentVolumeClaim:
+        size: 2Gi
+        storageClassName: network-block
+    resources:
+      backupAndRestore:
+        requests:
+          cpu: 300m
+  eric-data-coordinator-zk:
+    nodeSelector:
+      brAgent: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      datacoordinatorzk: {}
+      #  5gc-ericsson-se/vnf: ccsm
+    persistence:
+      persistentVolumeClaim:
+        size: 10Gi
+        storageClassName: network-block
+    resources:
+      datacoordinatorzk:
+        requests:
+          cpu: 50m
+  eric-data-distributed-coordinator-ed:
+    nodeSelector:
+      brAgent: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      dced: {}
+      #  5gc-ericsson-se/vnf: ccsm
+    persistence:
+      brAgent:
+        backupVolume:
+          storageClassName: network-block
+      persistentVolumeClaim:
+        size: 2Gi
+        storageClassName: network-block
+    resources:
+      etcd:
+        limits:
+          memory: "10Gi"
+      dced:
+        requests:
+          cpu: 150m
+      brAgent:
+        requests:
+          cpu: 50m
+  eric-data-document-database-pg:
+    nodeSelector:
+      brAgent: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      cleanuphook: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      postgres: {}
+      #  5gc-ericsson-se/vnf: ccsm
+    persistentVolumeClaim:
+      size: 8Gi
+      storageClassName: network-block
+    resources:
+      postgres:
+        requests:
+          cpu: 300m
+      metrics:
+        requests:
+          cpu: 20m
+      brm:
+        requests:
+          cpu: 50m
+      bra:
+        requests:
+          cpu: 20m
+  eric-data-document-database-pg-ah:
+    nodeSelector:
+      brAgent: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      cleanuphook: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      postgres: {}
+      #  5gc-ericsson-se/vnf: ccsm
+    persistentVolumeClaim:
+      size: 4Gi
+      storageClassName: network-block
+  eric-data-document-database-pg-lm:
+    nodeSelector:
+      brAgent: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      cleanuphook: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      postgres: {}
+      #  5gc-ericsson-se/vnf: ccsm
+    persistentVolumeClaim:
+      size: 4Gi
+      storageClassName: network-block
+  eric-data-message-bus-kf:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    persistence:
+      persistentVolumeClaim:
+        size: 10Gi
+        storageClassName: network-block
+    replicaCount: 5
+    resources:
+      messagebuskf:
+        limits:
+          cpu: "3"
+        requests:
+          cpu: 1500m
+      jmxExporter:
+        requests:
+          cpu: 150m
+  eric-data-object-storage-mn:
+    persistentVolumeClaim:
+      storageClassName: network-block
+    affinity:
+      ##
+      # Set 'soft' when number of available workers less than 4.
+      # Set 'hard' when number of available workers is 4 or more.
+      podAntiAffinity: "hard"
+  eric-data-search-engine:
+    nodeSelector:
+      bragent: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      data: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      ingest: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      master: {}
+      #  5gc-ericsson-se/vnf: ccsm
+    persistence:
+      backup:
+        persistentVolumeClaim:
+          size: 16Mi
+          storageClassName: network-block
+      data:
+        persistentVolumeClaim:
+          size: 100Gi
+          storageClassName: network-block
+      master:
+        persistentVolumeClaim:
+          size: 64Mi
+          storageClassName: network-block
+    resources:
+      master:
+        requests:
+          cpu: 100m
+  eric-data-search-engine-curator:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    resources:
+      curator:
+        requests:
+          cpu: 50m
+  eric-fh-alarm-handler:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    resources:
+      alarmhandler:
+        requests:
+          cpu: 150m
+      alarmhandlerrest:
+        requests:
+          cpu: 20m
+  eric-fh-snmp-alarm-provider:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    resources:
+      alarmprovider:
+        requests:
+          cpu: 50m
+    oamVIP:
+      enabled: false
+      #vip: "" # example: "10.210.167.174"
+      #destIp : "" # example: "10.210.140.93 10.210.150.90 10.250.110.70"
+    service:
+      annotations:
+        addressPoolName: "ccsm-oam"
+        sharedVIPLabel: "ccsm-oam"
+      loadBalancerIP: ""
+      type: LoadBalancer
+  eric-lm-combined-server:
+    licenseConsumerHandler:
+      nodeSelector: {}
+      #  5gc-ericsson-se/vnf: ccsm
+    resources:
+        licenseConsumerHandler:
+          requests:
+            cpu: 50m
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: "10.221.14.88"
+          port: 9095
+      nodeSelector: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      resources:
+        licenseServerClient:
+          requests:
+            cpu: 50m
+    licenseServerIpAddresses:
+      # licenseServerIpAddresses.ip1 - the first IP address of a license server in the hosts file
+      ip1:
+      # licenseServerIpAddresses.ip2 - the second IP address of a license server in the hosts file for Geographical Redundency
+      ip2:
+  eric-lm-unique-object-reporter:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    uoi:
+      hostname: "n17-stc-nels-a-thrift.sero.gic.ericsson.se"
+      ip: "10.221.14.88"
+      port: 8060
+    resources:
+      uor:
+        requests:
+          cpu: 100m
+  eric-log-shipper:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    resources:
+      logshipper:
+        requests:
+          cpu: 150m
+  eric-log-transformer:
+    egress:
+      lumberjack:
+        enabled: false
+        remoteHosts:
+          #- id: my_lbjk_id1
+          #  host: hostname1.ericsson.se
+          #  port: 9991
+          #  codec: json
+          #- id: my_lbjk_id2
+          #  host: hostname2.ericsson.se
+          #  port: 9992
+          #  codec: json
+        certificates:
+          asymmetricKeyCertificateName: log-lumberjack-client
+      syslog:
+        enabled: false
+        defaultFacility: 1
+        defaultSeverity: 5
+        tls:
+          enabled: true
+        certificates:
+          asymmetricKeyCertificateName: log-syslog-client
+          trustedCertificateListName: log-syslog-client
+        remoteHosts: []
+        inclusions: []
+        exclusions: []
+        filter: ""
+    networkPolicy:
+      egress: {}
+        #- cidr: 172.17.0.0/32
+        #  ports:
+        #  - protocol: TCP
+        #    port: 1234
+        #  - protocol: UDP
+        #    port: 2345
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    resources:
+      logtransformer:
+        requests:
+          cpu: 500m
+      metrics:
+        requests:
+          cpu: 50m
+      tlsproxy:
+        requests:
+          cpu: 50m
+  eric-odca-diagnostic-data-collector:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+  eric-pm-bulk-reporter:
+    env:
+      nodeName: ccsm
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    persistentVolumeClaim:
+      size: 500Mi
+      storageClassName: network-block
+    service:
+      annotations:
+        addressPoolName: "ccsm-oam"
+        sharedVIPLabel: "ccsm-oam"
+      loadBalancerIP: ""
+      type: LoadBalancer
+    resources:
+      bulkreporter:
+        requests:
+          cpu: 20m
+      alarmreporter:
+        requests:
+          cpu: 10m
+      pmsftp:
+        requests:
+          cpu: 50m
+  eric-pm-server:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    server:
+      nodeSelector: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      extraArgs:
+        storage.tsdb.retention.size: 75GB
+      persistentVolume:
+        size: 80Gi
+        storageClass: network-block
+    rbac:
+      appMonitoring:
+        enabled: true
+        configFileCreate: false
+    resources:
+      server:
+        requests:
+          cpu: 1000m
+      configmapReload:
+        requests:
+          cpu: 10m
+      pmExporter:
+        requests:
+          cpu: 20m
+      reverseProxy:
+        requests:
+          cpu: 50m
+  eric-sec-admin-user-management:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    notices:
+      legal: "IF YOU ARE NOT AN AUTHORIZED USER, PLEASE EXIT IMMEDIATELY"
+      privacy: >
+        This system processes personal information. Handle personal information
+        with care.  Misuse, including unauthorized access, is grounds for legal
+        action. Version: 1.0, Date: October 27, 2020.
+    resources:
+      aum:
+        requests:
+          cpu: 50m
+  eric-sec-certm:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+    resources:
+      certm:
+        requests:
+          cpu: 50m
+  eric-sec-key-management:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+  eric-sec-ldap-server:
+    nodeSelector:
+      ldap: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      ldapAgent: {}
+      #  5gc-ericsson-se/vnf: ccsm
+    persistence:
+      storageClassName: network-block
+    resources:
+      ldap:
+        requests:
+          cpu: 50m
+      ldapagent:
+        requests:
+          cpu: 50m
+      ldapproxy:
+        requests:
+          cpu: 50m
+  eric-sec-sip-tls:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+  eric-sw-inventory-manager:
+    nodeSelector: {}
+    #  5gc-ericsson-se/vnf: ccsm
+  eric-tm-ingress-controller-cr:
+    nodeSelector:
+      contour: {}
+      #  5gc-ericsson-se/vnf: ccsm
+      envoy: {}
+      #  5gc-ericsson-se/vnf: ccsm
+    service:
+      annotations:
+        addressPoolName: "ccsm-oam"
+        sharedVIPLabel: "ccsm-oam"
+    images:
+      shutdownmanager:
+        resources:
+          requests:
+            cpu: 20m

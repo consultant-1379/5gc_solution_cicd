@@ -1,0 +1,147 @@
+global:
+  createClusterRoles: true
+  hosts:
+    gas: 'gas01.eoaas.n47.vpod1.sc.sero.gic.ericsson.se'
+    gr: ''
+    iam: 'iam01.eoaas.n47.vpod1.sc.sero.gic.ericsson.se'
+    pf: ''
+    so: ''
+    uds: ''
+    vnfm: 'evnfm01.eoaas.n47.vpod1.sc.sero.gic.ericsson.se'
+  ingressClass: oss_iccr
+  nodeSelector:
+    nodetype: eo
+  registry: 
+    password: ReGstR@N47vp1
+    url: n47-vpod1-registry.sc.sero.gic.ericsson.se
+    username: admin
+  support:
+    ipv6:
+      enabled: false
+  timezone: UTC
+  ericsson:
+    licensing:
+      licenseDomains:
+      - productType: null
+        swltId: null
+        customerId: null
+tags:
+  eoCm: false
+  eoEvnfm: true
+  eoPf: false
+  eoSo: false
+  eoUds: false
+  eoVmvnfm: true
+eric-cloud-native-base:
+  eric-ctrl-bro:
+    persistence:
+      persistentVolumeClaim:
+        size: 450Gi
+    sftp:
+      password: 'DefaultP12345!'
+      username: 'sftp-user'
+  eric-data-search-engine:
+    autoSetRequiredWorkerNodeSysctl: false
+    service:
+      network:
+        protocol:
+          IPv6: false
+  eric-sec-access-mgmt:
+    ingress:
+      hostname: 'iam01.eoaas.n47.vpod1.sc.sero.gic.ericsson.se'
+    replicaCount: 2
+    sipoauth2:
+      enabled: false
+  eric-tm-ingress-controller-cr:
+    service:
+      loadBalancerIP: '214.13.224.135'
+      annotations:
+        cloudProviderLB: {}
+      externalTrafficPolicy: Cluster
+    resources:
+      contour:
+        limits:
+          cpu: "2.2"
+          memory: 4Gi
+      envoy:
+        limits:
+          memory: 500Mi
+  eric-lm-combined-server:
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: ''
+  eric-log-transformer:
+    egress:
+      syslog:
+        enabled: false
+        remoteHosts: []
+geo-redundancy:
+  enabled: false
+eric-eo-evnfm:
+  eric-lcm-container-registry:
+    ingress:
+      hostname: 'registry01.eoaas.n47.vpod1.sc.sero.gic.ericsson.se'
+    persistence:
+      persistentVolumeClaim:
+        size: 450Gi
+    resources:
+      limits:
+        cpu: 5000m
+        memory: 16Gi
+  eric-lcm-helm-chart-registry:
+    ingress:
+      enabled: true
+      hostname: 'helm01.eoaas.n47.vpod1.sc.sero.gic.ericsson.se'
+    env:
+      secret:
+        BASIC_AUTH_USER: 'test'
+        BASIC_AUTH_PASS: 'Test@1234'
+  eric-vnfm-orchestrator-service:
+    oss:
+      topology:
+        secretName: null
+    smallstack:
+      application: true
+eric-eo-evnfm-vm:
+  eric-vnflcm-service:
+    oss:
+      secretName: null
+    persistentVolumeClaim:
+      size: 20Gi
+    service:
+      enabled: false
+      loadBalancerIP: '::'
+      externalTrafficPolicy: Local
+eric-oss-common-base:
+  system-user:
+    credentials:
+      username: 'system-username'
+      password: 'DefaultP123456!'
+  gas:
+    defaultUser:
+      username: 'gas-user'
+      password: 'DefaultP12345!'
+  eric-eo-evnfm-nbi:
+    eric-evnfm-rbac:
+      defaultUser:
+        username: 'vnfm-user'
+        password: 'DefaultP12345!'
+  eric-gr-bur-orchestrator:
+    credentials:
+      username: ''
+      password: ''
+    gr:
+      bro:
+        autoDelete:
+          backupsLimit: 10
+      sftp:
+        url: ''
+        username: ''
+        password: ''
+      cluster:
+        role: ''
+        secondary_hostnames:
+        - ''
+      registry:
+        secondarySiteContainerRegistryHostname: null

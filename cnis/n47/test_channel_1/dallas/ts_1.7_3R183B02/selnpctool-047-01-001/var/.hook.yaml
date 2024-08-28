@@ -1,0 +1,45 @@
+pre_install:
+    - name: disable_puppet_due_to_PCGW-4936
+      executable: "/usr/bin/puppet agent"
+      arg: "--disable 'Disable puppet Dallas 1 installed - PCGW-4936'"
+      host: [tool-01-001, tool-01-101, tool-01-102, tool-01-201, tool-01-202]
+
+    - name: bind_dpdk
+      executable: "/lab/testtools/dallas/rhel764/Release/3R105B05/3pp/ltt/dpdk/lts_bind_dpdk"
+      arg: "/var/dallas/tap.conf"
+      host: [tool-01-201, tool-01-202]
+      debug: on
+
+
+post_install:
+
+
+    - name: tune_system_parameters
+      executable: "sysctl -p"
+      arg: "/lab/testtools/dallas/rhel764/Release/3R105B05/etc/sysconf/sysctl.conf"
+      host: [tool-01-001, tool-01-101, tool-01-102, tool-01-201, tool-01-202]
+
+    - name: add_route
+      executable: "/root/add_nonltt_route.sh"
+      host: [tool-01-101, tool-01-102, tool-01-201, tool-01-202]
+
+#    - name: update_policy
+#      executable: "cp /var/dallas/policy.conf_backup /var/dallas/policy.conf"
+#      host: [tool-01-201, tool-01-202]
+
+
+post_uninstall:
+    - name: unbind_dpdk
+      executable: "/lab/testtools/dallas/rhel764/Release/3R105B05/3pp/ltt/dpdk/lts_unbind_dpdk"
+      host: [tool-01-201, tool-01-202]
+
+    - name: enable_puppet
+      executable: "/usr/bin/puppet agent"
+      arg: "--enable"
+      host: [tool-01-001, tool-01-101, tool-01-102, tool-01-201, tool-01-202]
+
+    - name: run_puppet
+      executable: "/usr/sbin/call_home || true"
+      host: [tool-01-001, tool-01-101, tool-01-102, tool-01-201, tool-01-202]
+      debug: on
+

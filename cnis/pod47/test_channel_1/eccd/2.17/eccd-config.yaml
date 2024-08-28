@@ -1,0 +1,1490 @@
+infra:
+    use_templates: true
+    networks:
+    - name: ccdoam
+      vlan: 3582
+      gateway_ipv4: 10.130.49.78
+      ip_pools:
+        - start: 10.130.49.68
+          end: 10.130.49.77
+          prefix: 28
+    - name: ecfesig
+      vlan: 3802
+      gateway_ipv4: 11.1.2.254
+      ip_pools:
+        - start: 11.1.2.1
+          end: 11.1.2.100
+          prefix: 24
+    - name: ccdint
+      vlan: 1000
+      gateway_ipv4: 10.0.10.1
+      ip_pools:
+        - start: 10.0.10.20
+          end: 10.0.10.100
+          prefix: 24
+    - name: ccdpro
+      gateway_ipv4: 172.22.0.1
+      ip_pools:
+        - start: 172.22.0.4
+          end: 172.22.0.100
+          prefix: 24
+    - name: ecfeoam
+      vlan: 3820
+      gateway_ipv4: 11.1.20.254
+      ip_pools:
+        - start: 11.1.20.2
+          end: 11.1.20.100
+          prefix: 24
+    - name: cephpublic
+      vlan: 1003
+      gateway_ipv4: 10.1.10.1
+      ip_pools:
+        - start: 10.1.10.10
+          end: 10.1.10.200
+          prefix: 24
+    - name: cephprivate
+      vlan: 1002
+      gateway_ipv4: 172.31.255.254
+      ip_pools:
+        - start: 172.31.0.1
+          end: 172.31.255.253
+          prefix: 16
+    iaas:
+        type: metal3
+        spec:
+            bm_hosts_file: "/home/eccd/install_new/eccd/bmhosts.yaml"
+            provisioning_dhcp_cidr: "172.22.0.0/24"
+            provisioning_interface: "br_control"
+            ironic_endpoint: "172.22.0.2"
+        nameservers: 
+           - "10.221.16.10"
+           - "10.221.16.11"
+        ntp_servers:
+           - "10.221.17.6"
+           - "10.221.17.46"
+        timezone: "Asia/Shanghai"
+        provisioning_load_spread_delay: 5
+    bootstrap:
+        authorized_keys:
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCs3w779QDFOerOvinfFqCDYZpHDD+spPXMYdDntQPBtjpWkcEmcRYh1ZmRAFQOkV0cBbl0uT/NsR2+Gi5zRbwglWnRVJnerjwN+Trwa1dNEw1yHUcabxZB0NGohWjjpZ/xxr0z/z9TB109tzQAGmh71m3+srMF/FM3f3IjOYPpyuB5QE+TDcQTH0A7JLGVqrtc8ywhecyOU/jExvdmV/cPy+0iLjdxyFEfJ5QaLiBIVMe+9p2Jc7Zae/KEpp54ugv3ruq12+OpRAlaNkdNpSySAi5VTLs265+iMmc/QjDJ+NgTbHb5U7wUjamiyl+cwvRvvjGbDgt4LrVEE7eUbLxT eccd@jump-server
+        net_cfg_dir: "/home/eccd/install_new/ephemeral/netconfig"
+        k8s_internal_net_interface: "ccd_int"
+        type: preprovisioned
+        spec:
+            kubeconfig: "/home/eccd/install/kube/config"
+    controlplane:
+        control_plane_external_vip: "10.130.49.67"
+        control_plane_internal_vip: "10.0.10.10"
+        control_plane_provisioning_vip: "172.22.0.2"
+        control_plane_registry_vip: "10.0.10.240"
+        control_plane_port: 6443
+        host_workloads: true
+        k8s_internal_net_interface: "ccd_int"
+        pool_cfg:
+            count: 3
+            authorized_keys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCs3w779QDFOerOvinfFqCDYZpHDD+spPXMYdDntQPBtjpWkcEmcRYh1ZmRAFQOkV0cBbl0uT/NsR2+Gi5zRbwglWnRVJnerjwN+Trwa1dNEw1yHUcabxZB0NGohWjjpZ/xxr0z/z9TB109tzQAGmh71m3+srMF/FM3f3IjOYPpyuB5QE+TDcQTH0A7JLGVqrtc8ywhecyOU/jExvdmV/cPy+0iLjdxyFEfJ5QaLiBIVMe+9p2Jc7Zae/KEpp54ugv3ruq12+OpRAlaNkdNpSySAi5VTLs265+iMmc/QjDJ+NgTbHb5U7wUjamiyl+cwvRvvjGbDgt4LrVEE7eUbLxT eccd@jump-server
+            user_node_scripts:
+              #Script for set root password of master nodes
+              pre_network_init: IyEvdXNyL2Jpbi9lbnYgYmFzaApzZXQgLXVleAoKdXNlcm1vZCAtcCAnJDYkbHZhOXk1RVEkcXNkV3cubi8uR3FnRTJRdjYxbWRYNHBkU2tsQmFrQ2RJeFQyQVNzN1NhemNhdm9uZ1Y5bG9DRzFaYWZ4eHFQd3VpS0VyR1hSYWtwNXRVZmNXYXBlMi8nIHJvb3QK
+            node_labels:
+              - "nic-type-sriov=false"
+              - "cnis-control-plane=true"
+              - "label_with_underscore=val"
+              - "label_with_empty_val="
+              - "node-role.rook-ceph/cluster=non-osd"
+            net_config:
+              routes:
+                config:
+                  - destination: 0.0.0.0/0
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ccdoam
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: ccd_om
+              interfaces:
+                # Mgmt Interfaces
+                - name: ens255f0
+                  type: ethernet
+                  state: up
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: ens255f1
+                  type: ethernet
+                  state: up
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: control_bond
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  description: Control bond, Untagged provision vlan 28
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens255f1
+                      - interface-name:
+                          value: ens255f0
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdpro
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdpro
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false   
+                  
+                #NICs Bond for traffic
+                - name: ens3f0
+                  type: ethernet
+                  state: up
+                  description: ovs bond slave
+                  mtu: 9000
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: ens3f1
+                  type: ethernet
+                  state: up
+                  desciption: ovs bond slave
+                  mtu: 9000
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: data_bond
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens3f0
+                      - interface-name:
+                          value: ens3f1
+                - name: data_bridge
+                  type: ovs-bridge
+                  state: up
+                  desciption: ovs bridge
+                  ovs-bridge:
+                    options:
+                      stp: false
+                      rstp: false
+                    port:
+                      - name: data_bond
+                      - name: ccd_int
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 1000
+                      # VLAN interfaces
+                      - name: ccd_om
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3582
+                      # VLAN interfaces
+                      - name: ecfe_om 
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3820
+                      # VLAN interfaces
+                      - name: ecfe_signaling
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3802
+
+                - name: ccd_int
+                  type: ovs-interface
+                  state: up
+                  description: Internal Kubernetes network
+                  mtu: 9000
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdint
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdint
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                - name: ccd_om
+                  type: ovs-interface
+                  state: up
+                  description: O&M and external access
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdoam
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdoam
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false                  
+                - name: ecfe_signaling
+                  type: ovs-interface
+                  state: up
+                  desciption: ECFE O&M network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                - name: ecfe_om
+                  type: ovs-interface
+                  state: up
+                  description: ECFE OAM traffice network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ecfeoam
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ecfeoam
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+    worker_pools:
+        - pool_cfg:
+            name: pool1
+            count: 10
+            initial_deployment_count: 10
+            # image: http://172.22.0.2/node.img
+            # image_checksum: http://172.22.0.2/node.img.md5sum
+            authorized_keys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCs3w779QDFOerOvinfFqCDYZpHDD+spPXMYdDntQPBtjpWkcEmcRYh1ZmRAFQOkV0cBbl0uT/NsR2+Gi5zRbwglWnRVJnerjwN+Trwa1dNEw1yHUcabxZB0NGohWjjpZ/xxr0z/z9TB109tzQAGmh71m3+srMF/FM3f3IjOYPpyuB5QE+TDcQTH0A7JLGVqrtc8ywhecyOU/jExvdmV/cPy+0iLjdxyFEfJ5QaLiBIVMe+9p2Jc7Zae/KEpp54ugv3ruq12+OpRAlaNkdNpSySAi5VTLs265+iMmc/QjDJ+NgTbHb5U7wUjamiyl+cwvRvvjGbDgt4LrVEE7eUbLxT eccd@jump-server
+            user_node_scripts:
+              pre_network_init: IyEvdXNyL2Jpbi9lbnYgYmFzaApzZXQgLXVleAoKdXNlcm1vZCAtcCAnJDYkbHZhOXk1RVEkcXNkV3cubi8uR3FnRTJRdjYxbWRYNHBkU2tsQmFrQ2RJeFQyQVNzN1NhemNhdm9uZ1Y5bG9DRzFaYWZ4eHFQd3VpS0VyR1hSYWtwNXRVZmNXYXBlMi8nIHJvb3QK
+              post_kubeadm_init: IyEvdXNyL2Jpbi9lbnYgYmFzaApzZXQgLXVleAoKbXYgL2xpYi9tb2R1bGVzLyova2VybmVsL25ldC9zY3RwL3NjdHAua28gL2hvbWUvZWNjZC8KY2F0IDw8IEVPRiA+IGFwcGFybW9yLWRvY2tlci1wY2MKcHJvZmlsZSBkb2NrZXItcGNjIGZsYWdzPShhdHRhY2hfZGlzY29ubmVjdGVkLG1lZGlhdGVfZGVsZXRlZCkgewogICNpbmNsdWRlIDxhYnN0cmFjdGlvbnMvYmFzZT4KICBuZXR3b3JrLAogIGNhcGFiaWxpdHksCiAgZmlsZSwKICBtb3VudCwKICB1bW91bnQsCiAgcHRyYWNlIHBlZXI9QHtwcm9maWxlX25hbWV9LAp9CkVPRgoKbXYgYXBwYXJtb3ItZG9ja2VyLXBjYyAvZXRjL2FwcGFybW9yLmQvCnN5c3RlbWN0bCByZXN0YXJ0IGFwcGFybW9yCm1vZHByb2JlIGlwNnRhYmxlX21hbmdsZQplY2hvICJpcDZ0YWJsZV9tYW5nbGUiID4+IC9ldGMvbW9kdWxlcy1sb2FkLmQvaXB2Ni5jb25m              
+            node_labels:
+              - "nic-type-sriov=false"
+              - "node-role.rook-ceph/cluster=non-osd" 
+            net_config:
+              routes:
+                config:
+                  #default route through ecfe_sig
+                  - destination: 0.0.0.0/0
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfesig
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: ecfe_signaling
+                  #
+                  # static route to gic jump server
+                  #
+                  - destination: 10.63.196.192/26
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfeoam
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: ecfe_om
+                  - destination: 10.86.73.48/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfeoam
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: ecfe_om
+                  - destination: 10.86.190.208/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfeoam
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: ecfe_om
+
+              interfaces:
+                # Mgmt Interfaces
+                - name: ens255f0
+                  type: ethernet
+                  state: up
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: ens255f1
+                  type: ethernet
+                  state: up
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: control_bond
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  description: Control bond, Untagged provision vlan 28
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens255f1
+                      - interface-name:
+                          value: ens255f0
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdpro
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdpro
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+ 
+                #Physical Bond for OVS
+                - name: ens3f0
+                  type: ethernet
+                  state: up
+                  description: traffic
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: ens3f1
+                  type: ethernet
+                  state: up
+                  description: traffic
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: data_bond
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens3f0
+                      - interface-name:
+                          value: ens3f1
+                - name: data_bridge
+                  type: ovs-bridge
+                  state: up
+                  ovs-bridge:
+                    options:
+                      stp: false
+                      rstp: false
+                    port:
+                      # Physical bond to outside
+                      - name: data_bond
+                      # VLAN interfaces
+                      - name: ccd_int
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 1000
+                      # VLAN interfaces
+                      - name: ecfe_signaling
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3802
+                      # VLAN interfaces
+                      - name: ecfe_om
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3820
+                      # ceph network
+                      - name: ccd_ceph_priv
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 1002
+                      - name: ccd_ceph_public
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 1003
+
+                - name: ccd_int
+                  type: ovs-interface
+                  state: up
+                  description: Internal Kubernetes network
+                  mtu: 9000
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdint
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdint
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                - name: ecfe_signaling
+                  type: ovs-interface
+                  state: up
+                  desciption: ECFE O&M network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                - name: ecfe_om
+                  type: ovs-interface
+                  state: up
+                  description: ECFE OAM traffice network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ecfeoam
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ecfeoam
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false  
+                - name: ccd_ceph_public
+                  type: ovs-interface
+                  state: up
+                  description: Ceph Public Interface
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: cephpublic
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: cephpublic
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                - name: ccd_ceph_priv
+                  type: ovs-interface
+                  state: up
+                  description: Internal Kubernetes network
+                  mtu: 9000
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: cephprivate
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: cephprivate
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+        - pool_cfg:
+            name: pool2
+            count: 1
+            initial_deployment_count: 1
+            authorized_keys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCs3w779QDFOerOvinfFqCDYZpHDD+spPXMYdDntQPBtjpWkcEmcRYh1ZmRAFQOkV0cBbl0uT/NsR2+Gi5zRbwglWnRVJnerjwN+Trwa1dNEw1yHUcabxZB0NGohWjjpZ/xxr0z/z9TB109tzQAGmh71m3+srMF/FM3f3IjOYPpyuB5QE+TDcQTH0A7JLGVqrtc8ywhecyOU/jExvdmV/cPy+0iLjdxyFEfJ5QaLiBIVMe+9p2Jc7Zae/KEpp54ugv3ruq12+OpRAlaNkdNpSySAi5VTLs265+iMmc/QjDJ+NgTbHb5U7wUjamiyl+cwvRvvjGbDgt4LrVEE7eUbLxT eccd@jump-server
+            user_node_scripts:
+              pre_network_init: IyEvdXNyL2Jpbi9lbnYgYmFzaApzZXQgLXVleAoKdXNlcm1vZCAtcCAnJDYkbHZhOXk1RVEkcXNkV3cubi8uR3FnRTJRdjYxbWRYNHBkU2tsQmFrQ2RJeFQyQVNzN1NhemNhdm9uZ1Y5bG9DRzFaYWZ4eHFQd3VpS0VyR1hSYWtwNXRVZmNXYXBlMi8nIHJvb3QK
+              # config dpdk driver for SR-IOV nodes
+              post_kubeadm_init: IyEvdXNyL2Jpbi9lbnYgYmFzaApzZXQgLXVleAoKc2VkIC1pICJzL0tVQkVMRVRfRVhUUkFfQVJHUz0vJi0tcmVnaXN0ZXItd2l0aC10YWludHM9aGlnaC10aHJvdWdocHV0PXRydWU6Tm9TY2hlZHVsZSAvIiAvdXNyL2xvY2FsL2xpYi9zeXN0ZW1kL3N5c3RlbS9rdWJlbGV0LnNlcnZpY2UKCmJpbmRfZHBkaygpCnsKQ09VTlRFUj0wCndoaWxlIFsgISAtZCAvc3lzL2NsYXNzL25ldC8kezF9L2RldmljZS92aXJ0Zm4wIF0gJiYgWyAkQ09VTlRFUiAtbHQgMTAgXTtkbwpzbGVlcCAyCmVjaG8gIi9zeXMvY2xhc3MvbmV0LyR7MX0vZGV2aWNlL3ZpcnRmbjAgZG9lc24ndCBleGlzdCB5ZXQiCmxldCBDT1VOVEVSKz0xCmRvbmUKCmZvciBpIGluIGBzZXEgMCAkKCgkMi0xKSlgOyBkbwpkcml2ZXJjdGwgc2V0LW92ZXJyaWRlICQobHMgLWwgL3N5cy9jbGFzcy9uZXQvJHsxfS9kZXZpY2UvdmlydGZuJHtpfSB8IGN1dCAtZCAiLyIgLWYgOCkgaWdiX3Vpbwpkb25lCn0KCmlwIGxpbmsgc2V0IGVuczFmMCBkb3duCmlwIGxpbmsgc2V0IGVuczFmMSBkb3duCgptb2Rwcm9iZSBpZ2JfdWlvIC0tYWxsb3ctdW5zdXBwb3J0ZWQKCmJpbmRfZHBkayBlbnMxZjAgOApiaW5kX2RwZGsgZW5zMWYxIDg=
+            node_labels:
+              - "nic-type-sriov=true"
+              - "type=high-throughput"
+            net_config:
+              routes:
+                config:
+                  # default route through ecfe_sig
+                  - destination: 0.0.0.0/0
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfesig
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: ecfe_signaling
+                  #
+                  # static route to gic jump server
+                  #
+                  - destination: 10.63.196.192/26
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfeoam
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: ecfe_om
+                  - destination: 10.86.73.48/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfeoam
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: ecfe_om
+                  - destination: 10.86.190.208/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfeoam
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: ecfe_om
+              interfaces:
+                # Mgmt Interfaces
+                - name: ens255f0
+                  type: ethernet
+                  state: up
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: ens255f1
+                  type: ethernet
+                  state: up
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: control_bond
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  description: Control bond, Untagged provision vlan 28
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens255f1
+                      - interface-name:
+                          value: ens255f0
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdpro
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdpro
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+ 
+                #Physical Bond for OVS
+                - name: ens6f0
+                  type: ethernet
+                  state: up
+                  description: traffic
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: ens6f1
+                  type: ethernet
+                  state: up
+                  description: traffic
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: data_bond
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens6f0
+                      - interface-name:
+                          value: ens6f1
+                - name: data_bridge
+                  type: ovs-bridge
+                  state: up
+                  ovs-bridge:
+                    options:
+                      stp: false
+                      rstp: false
+                    port:
+                      # Physical bond to outside
+                      - name: data_bond
+                      # VLAN interfaces
+                      - name: ccd_int
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 1000
+                      # VLAN interfaces
+                      - name: ecfe_signaling
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3802
+                      # VLAN interfaces
+                      - name: ecfe_om
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3820
+                      - name: ccd_ceph_priv
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 1002
+                      - name: ccd_ceph_public
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 1003
+
+                - name: ccd_int
+                  type: ovs-interface
+                  state: up
+                  description: Internal Kubernetes network
+                  mtu: 9000
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdint
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdint
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                - name: ecfe_signaling
+                  type: ovs-interface
+                  state: up
+                  desciption: ECFE O&M network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                - name: ecfe_om
+                  type: ovs-interface
+                  state: up
+                  description: ECFE OAM traffice network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ecfeoam
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ecfeoam
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false 
+                - name: ccd_ceph_public
+                  type: ovs-interface
+                  state: up
+                  description: Ceph Public Interface
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: cephpublic
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: cephpublic
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                - name: ccd_ceph_priv
+                  type: ovs-interface
+                  state: up
+                  description: Internal Kubernetes network
+                  mtu: 9000
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: cephprivate
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: cephprivate
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+
+                #SR-IOV interface Left
+                - name: ens1f0
+                  type: ethernet
+                  state: up
+                  description: Static SR-IOV interface
+                  mtu: 9000
+                  ethernet:
+                    sr-iov:
+                      total-vfs: 8
+                #SR-IOV interface Right
+                - name: ens1f1
+                  type: ethernet
+                  state: up
+                  description: Static SR-IOV interface
+                  mtu: 9000
+                  ethernet:
+                    sr-iov:
+                      total-vfs: 8
+            hugepage_config:
+              type: 1GB
+              pagecount_2mb: 0
+              pagecount_1gb: 64
+            cpu_isolation_config:
+              reserved_cpus: 0-10,36-53
+              cpu_manager_policy: static
+              topology_manager_policy: single-numa-node
+              isolation_interrupts: true 
+                    
+        - pool_cfg:
+            name: pool3
+            count: 3
+            initial_deployment_count: 3
+            authorized_keys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCs3w779QDFOerOvinfFqCDYZpHDD+spPXMYdDntQPBtjpWkcEmcRYh1ZmRAFQOkV0cBbl0uT/NsR2+Gi5zRbwglWnRVJnerjwN+Trwa1dNEw1yHUcabxZB0NGohWjjpZ/xxr0z/z9TB109tzQAGmh71m3+srMF/FM3f3IjOYPpyuB5QE+TDcQTH0A7JLGVqrtc8ywhecyOU/jExvdmV/cPy+0iLjdxyFEfJ5QaLiBIVMe+9p2Jc7Zae/KEpp54ugv3ruq12+OpRAlaNkdNpSySAi5VTLs265+iMmc/QjDJ+NgTbHb5U7wUjamiyl+cwvRvvjGbDgt4LrVEE7eUbLxT eccd@jump-server
+            user_node_scripts:
+              pre_network_init: IyEvdXNyL2Jpbi9lbnYgYmFzaApzZXQgLXVleAoKdXNlcm1vZCAtcCAnJDYkbHZhOXk1RVEkcXNkV3cubi8uR3FnRTJRdjYxbWRYNHBkU2tsQmFrQ2RJeFQyQVNzN1NhemNhdm9uZ1Y5bG9DRzFaYWZ4eHFQd3VpS0VyR1hSYWtwNXRVZmNXYXBlMi8nIHJvb3QK
+            node_labels:
+              - "nic-type-sriov=false"
+              - "node-role.rook-ceph/cluster=osd"
+            net_config:
+              routes:
+                config:
+                  # default route through ecfe_sig
+                  - destination: 0.0.0.0/0
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfesig
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: ecfe_signaling
+                  #
+                  # static route to gic jump server
+                  #
+                  - destination: 10.63.196.192/26
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfeoam
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: ecfe_om
+                  - destination: 10.86.73.48/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfeoam
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: ecfe_om
+                  - destination: 10.86.190.208/28
+                    next-hop-address:
+                      gateway-from-net:
+                        net-name: ecfeoam
+                        ip-version: 4
+                    table-id: 254
+                    next-hop-interface: ecfe_om
+              interfaces:
+                # Mgmt Interfaces
+                - name: ens255f0
+                  type: ethernet
+                  state: up
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: ens255f1
+                  type: ethernet
+                  state: up
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: control_bond
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  description: Control bond, Untagged provision vlan 28
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens255f1
+                      - interface-name:
+                          value: ens255f0
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdpro
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdpro
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+ 
+                #Physical Bond for OVS
+                - name: ens3f0
+                  type: ethernet
+                  state: up
+                  description: traffic
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: ens3f1
+                  type: ethernet
+                  state: up
+                  description: traffic
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: data_bond
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens3f0
+                      - interface-name:
+                          value: ens3f1
+                - name: data_bridge
+                  type: ovs-bridge
+                  state: up
+                  ovs-bridge:
+                    options:
+                      stp: false
+                      rstp: false
+                    port:
+                      # Physical bond to outside
+                      - name: data_bond
+                      # VLAN interfaces
+                      - name: ccd_int
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 1000
+                      # VLAN interfaces
+                      - name: ecfe_signaling
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3802
+                      # VLAN interfaces
+                      - name: ecfe_om
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 3820
+                      - name: ccd_ceph_public
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net:
+                              value: 1003
+                - name: ccd_int
+                  type: ovs-interface
+                  state: up
+                  description: Internal Kubernetes network
+                  mtu: 9000
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ccdint
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ccdint
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                - name: ecfe_signaling
+                  type: ovs-interface
+                  state: up
+                  desciption: ECFE signal network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ecfesig
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                - name: ecfe_om
+                  type: ovs-interface
+                  state: up
+                  description: ECFE OAM network
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: ecfeoam
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: ecfeoam
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false  
+                - name: ccd_ceph_public
+                  type: ovs-interface
+                  state: up
+                  description: Ceph Public Interface
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: cephpublic
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: cephpublic
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+                 #Physical Bond for ceph
+                - name: ens6f0
+                  type: ethernet
+                  state: up
+                  description: storage
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: ens6f1
+                  type: ethernet
+                  state: up
+                  description: storage
+                  ipv4:
+                    enabled: false
+                  ipv6:
+                    enabled: false
+                - name: storage_bond
+                  state: up
+                  type: bond
+                  mtu: 9000
+                  link-aggregation:
+                    mode: 802.3ad
+                    options:
+                      miimon: "100"
+                      lacp_rate: "1"
+                      xmit_hash_policy: "layer3+4"
+                    slaves:
+                      - interface-name:
+                          value: ens6f0
+                      - interface-name:
+                          value: ens6f1
+                - name: storage_bridge
+                  type: ovs-bridge
+                  state: up
+                  ovs-bridge:
+                    options:
+                      stp: false
+                      rstp: false
+                    port:
+                      # Physical bond to outside
+                      - name: storage_bond
+                      # Ceph private interfaces
+                      - name: ccd_ceph_priv
+                        vlan:
+                          mode: access
+                          tag:
+                            vlan-from-net: 
+                              value: 1002
+                - name: ccd_ceph_priv
+                  type: ovs-interface
+                  state: up
+                  description: Internal Kubernetes network
+                  mtu: 9000
+                  ipv4:
+                    enabled: true
+                    address:
+                      - ip:
+                          ip-from-net:
+                            net-name: cephprivate
+                            ip-version: 4
+                        prefix-length:
+                          prefix-from-net:
+                            net-name: cephprivate
+                            ip-version: 4
+                    dhcp: false
+                  ipv6:
+                    enabled: false
+                    dhcp: false
+kubernetes:
+  ip_version: 4
+  ingress_cluster_ip: "10.97.40.100"
+  pod_cidr_blocks:
+    - "192.168.0.0/16"
+  service_cidr_blocks:
+    - "10.96.0.0/12"
+  apiserver_extra_sans:
+    - api.eccd.local
+    - kubeapi.ingress.pod47-eccd1.seln.ete.ericsson.se
+  ipvs_enabled: false
+  ca_cert: |
+     -----BEGIN CERTIFICATE-----
+     MIIDAzCCAeugAwIBAgIJAI7anwl0/PORMA0GCSqGSIb3DQEBCwUAMBgxFjAUBgNV
+     BAMMDUt1YmVybmV0ZXMtY2EwHhcNMjEwNzA2MDIyMTUzWhcNNDgxMTIxMDIyMTUz
+     WjAYMRYwFAYDVQQDDA1LdWJlcm5ldGVzLWNhMIIBIjANBgkqhkiG9w0BAQEFAAOC
+     AQ8AMIIBCgKCAQEAuK+rclAERpKUEnU5nSjy7XegXSihvQ4x2jUdGY0Z1e1xCPYR
+     Iq1kjC6epVoai97hm8ZktlyPwXuI6KrRZhBpxTGb9QfIUqStjCehEfxk206TWIWl
+     Srjees+0e0V8znnXdUKvTz1Fic38bOkEgcUKgI8nOqfbpjXDXDTW9mglQ8anVxO5
+     RLafU2bPHLFK4vt1umGdNztGl/Kq1SA7sbtGnK0//TVZjfMiTE8oHpFcFmG3WXpH
+     RcmUw/JxmbK8gcTz3ldoRXKDvxbF7MCQ6QEelSjuY4LIR7CX2ywTNPCNkbhBMSeI
+     MKDMK1rT9NSvhYffVrYC/m0hc+6gisVihGhnsQIDAQABo1AwTjAdBgNVHQ4EFgQU
+     IHg2DZoXO7ZM4xpVbkNuzp57Fr8wHwYDVR0jBBgwFoAUIHg2DZoXO7ZM4xpVbkNu
+     zp57Fr8wDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAAdF4CsE1U4Mi
+     YOp+6XM15SpH5aH2wcs3y80DTHZcFlsSM77vHpaUAZkJm+93iGZ6TTXrWzqCTdtG
+     KcwnfsL74g2EAxueJvzxqviN+DDxdBtf5zoUSCCswAZTPor0EhcgFK7bYcub68hi
+     BK7IG313ebdD2k5D4RUk5S4ogqeLatvHvvv6MW1fAZ+5rtQrXDK5YhLbJSa/s1PY
+     P9gNPMUxr+9VdHgHWLw151IfOmVD3ZM1TgCNnUTK4OSmxZrytLL1MJAApvYnyMsG
+     7VAqf5J4/4ZNWGCq+rbOIMkU8fswPlOC3WOTbWxPc+1aXKFys8BnzlQ/WzoWwgk2
+     RURK5s7ptg==
+     -----END CERTIFICATE-----
+  ca_key: |
+     -----BEGIN RSA PRIVATE KEY-----
+     MIIEpAIBAAKCAQEAuK+rclAERpKUEnU5nSjy7XegXSihvQ4x2jUdGY0Z1e1xCPYR
+     Iq1kjC6epVoai97hm8ZktlyPwXuI6KrRZhBpxTGb9QfIUqStjCehEfxk206TWIWl
+     Srjees+0e0V8znnXdUKvTz1Fic38bOkEgcUKgI8nOqfbpjXDXDTW9mglQ8anVxO5
+     RLafU2bPHLFK4vt1umGdNztGl/Kq1SA7sbtGnK0//TVZjfMiTE8oHpFcFmG3WXpH
+     RcmUw/JxmbK8gcTz3ldoRXKDvxbF7MCQ6QEelSjuY4LIR7CX2ywTNPCNkbhBMSeI
+     MKDMK1rT9NSvhYffVrYC/m0hc+6gisVihGhnsQIDAQABAoIBADELlcAZt8j2DBSK
+     xO4Tfc/KQO/8ZldKebq0+DFc40uIbsgucIaA/X6ssry+nOYgHlG78err0dFT+Ruw
+     oUM1gKE5d20uz+gCi4P40jFwkWgcCc0sUKTzS0HZ/tftsCM1AB7Hwr6MSvc5mJtj
+     lirQJOXXHlfZU99jz6mg7qUpKxxAJVGAL3Pg5hlDKnCiq4Ou0VM2P7/CRCu2eSGU
+     SBAspjsVoRtJz+e8F07wbi4UME0nFwVuNV0Sey7kDKKcWMhsxbu6Q+5u1441jB5g
+     AJYDeEDHbWW0LflCwtnsELlx/4pxm0DDu9zrAUstP7gr2QXNJXpt+cCUORnFAHLt
+     BIBVqnECgYEA6V/Uhon4dV4WCWgSFHvn4/QkyRUOYomlecPoWJvjHQT5r9sMDzW9
+     f82cGSbu2ISOUypB5QYpJTLjI61pDksIDTSEYoQcwnBhKjy3cdf/ELskzRexzGw/
+     7M/TxhEq8VK4YJ0TsnJBtbgYQBldnd6YojwaQnNf40I/jv3BfmOG7S8CgYEAypdw
+     IvXPX8Mq8ccFhya7tfz2W23edkuwQsbExxJ67eB8Ir3rOqvRJ7ddBbFoSgHcRe8/
+     DNPl+jmys6wF986//NZsPTpwjjiwKTEfUXXLiaQgR+96UlOTFg8RTg8Ufw5xLCYv
+     TXeqe/iMI96W//oKFDfq05Gcx9ftKvgx2e4DgR8CgYEAq2KeEAPI/GCRLG1KQdLQ
+     9H46eZXGD6VoaajuvAwXWRtrRrNGAvGDbhUQWwRViZqnbvnslIXWt6PMXUoficie
+     bBwyUKsW99BR+xPF4IwwnBfjqd6Jy0eAFqh1rNK0x67pCsKwUW9JRGujG4fFUYfE
+     bfhXjI9wTtQ7GwbOD8SFtS8CgYBfYwg4XbZjJ1hr+EIhDVqqaE1yZPuuhRqbhk0W
+     UhwxLlYkYXmE6WsUISCaUpqA5flZsDjmiEqrE0mRkThKIj2BBVB3T7G5NPW0n11Y
+     lHbd+rn8RMQ6SQFjDHsgXrdOz3T3zY7OEb7imfcZ2G8OXSMru9xD+zZvXbpcVfna
+     21cpDwKBgQDGkQ8EsESLSfP3NfZozA6JWO+/Qw6DmeZ/SpJqb42V8aBzM+bQz/e/
+     XLwoZQjMSl7BrnubHnYVRi8g1k+kdIosSHd0gky6P6zKUp53/HNZ2RMolZlsJsE/
+     UiN3l/8rLwe96cg3EcdQF67E2s/1Wt4MvCxRZOn0CY+SUnT0cMx2uw==
+     -----END RSA PRIVATE KEY-----
+license:
+   nels_host: 10.221.171.132
+   licensing_domains:
+   - customer_id: '800119'
+     product_type: ECCD
+     swlt_id: CCD_13
+
+addons:
+   - name: calico
+     spec:
+       ipv4_pool_ipip_mode: Never
+       interface_name: ccd_int
+   - name: ecfe
+     spec:
+      allocate_speakers: true
+      config: |
+        address-pools:
+        -   addresses:
+            - 5.8.6.1/32
+            auto-assign: false
+            name: smf-nsmf
+            protocol: bgp
+        -   addresses:
+            - 5.8.6.2/32
+            auto-assign: false
+            name: smf-notification
+            protocol: bgp
+        -   addresses:
+            - 5.8.6.4/32
+            auto-assign: false
+            name: udr-signaling
+            protocol: bgp
+        -   addresses:
+            - 5.8.6.5/32
+            auto-assign: false
+            name: ausf-signaling
+            protocol: bgp
+        -   addresses:
+            - 5.8.6.6/32
+            auto-assign: false
+            name: nrf-signaling
+            protocol: bgp
+        -   addresses:
+            - 5.8.6.7/32
+            auto-assign: false
+            name: udm-signaling
+            protocol: bgp
+        -   addresses:
+            - 5.8.6.9/32
+            auto-assign: false
+            name: amf-namf
+            protocol: bgp
+        -   addresses:
+            - 5.8.6.10/32
+            auto-assign: false
+            name: nssf-signaling
+            protocol: bgp
+        -   addresses:
+            - 5.8.6.11/32
+            auto-assign: false
+            name: bsf-sig-http
+            protocol: bgp
+        -   addresses:
+            - 5.8.6.12/32
+            auto-assign: false
+            name: bsf-sig-diameter
+            protocol: bgp
+        -   addresses:
+            - 10.130.49.129/32
+            auto-assign: false
+            name: system-pool
+            protocol: bgp
+        -   addresses:
+            - 10.130.49.130/32
+            auto-assign: false
+            name: pcc-oam
+            protocol: bgp
+        -   addresses:
+            - 10.130.49.138/32
+            auto-assign: false
+            name: pcg-oam
+            protocol: bgp
+        -   addresses:
+            - 10.130.49.131/32
+            auto-assign: false
+            name: ccdm-oam
+            protocol: bgp
+        -   addresses:
+            - 10.130.49.132/32
+            auto-assign: false
+            name: ccdm-prov
+            protocol: bgp
+        -   addresses:
+            - 10.130.49.133/32
+            auto-assign: false
+            name: ccsm-oam
+            protocol: bgp
+        -   addresses:
+            - 10.130.49.135/32
+            auto-assign: false
+            name: ccrc-oam
+            protocol: bgp
+        -   addresses:
+            - 10.130.49.136/32
+            auto-assign: false
+            name: eda-oam
+            protocol: bgp
+        -   addresses:
+            - 10.130.49.139/32
+            auto-assign: false
+            name: sc-oam
+            protocol: bgp
+        bgp-bfd-peers:
+        -   peer-address: 11.1.20.254
+            peer-asn: 8001
+            my-asn: 7001
+            hold-time: 180s
+            min-rx: 300ms
+            min-tx: 300ms
+            multiplier: 3
+            my-address-pools:
+            - system-pool
+            - pcc-oam
+            - pcg-oam
+            - ccdm-oam
+            - ccsm-oam
+            - ccrc-oam
+            - ccdm-prov
+            - eda-oam
+            - sc-oam
+        -   peer-address: 11.1.2.254
+            peer-asn: 8002
+            my-asn: 7002
+            hold-time: 180s
+            min-rx: 300ms
+            min-tx: 300ms
+            multiplier: 3
+            my-address-pools:
+            - smf-nsmf
+            - smf-notification
+            - udr-signaling
+            - ausf-signaling
+            - nrf-signaling
+            - udm-signaling
+            - amf-namf
+            - nssf-signaling
+            - bsf-sig-http
+            - bsf-sig-diameter
+
+
+   - name: tiller
+     spec:
+       max_history: 200
+
+   - name: nfs-provider
+     spec: {} 
+       
+   - name: cr-registry
+     spec:
+       storage_class: erikube-nfs
+       storage_size: 300Gi
+       user_id: cnisadmin
+       password: "01234567890123456789012345678901"
+
+   - name: sriov-network-device-plugin
+     spec:
+       node_selectors:
+         "node-role.kubernetes.io/worker": "worker"
+       tolerations:
+         - "{ effect: NoSchedule, key: node-role.kubernetes.io/master }"
+       sriov_network_device_plugin_configmap_name: "sriov-dp-configmap"
+       sriov_network_device_plugin_configmap_data: >
+         {
+            "resourceList": [{
+                     "resourceName": "intel_sriov_dpdk_left",
+                     "selectors": {
+                         "vendors": ["8086"],
+                         "pfNames": ["ens1f0"],
+                         "drivers": ["vfio-pci", "igb_uio"]
+                     }
+                 },
+                 {
+                     "resourceName": "intel_sriov_dpdk_right",
+                     "selectors": {
+                         "vendors": ["8086"],
+                         "pfNames": ["ens1f1"],
+                         "drivers": ["vfio-pci", "igb_uio"]
+                     }
+                 }
+             ]
+         }
+
+   - name: ingress
+     spec:
+       replicas: 4
+       ingress_service:
+         annotations:
+           ingress: nginx
+           metallb.universe.tf/address-pool: system-pool
+         type: LoadBalancer
+         loadbalancer_ip: 10.130.49.129
+
+   - name: pm-server
+     spec:
+       storage_class: network-block
+       pm_server_memory_limit: 4096Mi
+       pm_server_memory_requests: 2048Mi
+
+   - name: metrics-server
+     spec: {}
+
+   - name: multus
+     spec: {}
+
+   - name: ovs-cni
+     spec: {} 
+
+   - name: network-resources-injector
+     spec: {}
+
+   - name: ccd-licensing
+     spec:
+       storage_class: network-block
+
+   - name: ceph
+     spec:
+      spec:
+        drive_groups:
+        - all: true
+        networks:
+          public:
+            name: cephpublic
+          private:
+            name: cephprivate      
+      storage_classes:
+      - name: network-block
+        type: rbd
+        default: false
+        spec:
+          replication: x2
+          target_size_ratio: 0.2
+      - name: network-file
+        type: cephfs
+        default: true
+        spec:
+          replication: x2
+          target_size_ratio: 0.2
+value_packs:
+  - /home/eccd/ceph/ECCD_Hosted_Storage.tar.gz 

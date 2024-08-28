@@ -1,0 +1,6 @@
+# The below command should be used during instantiation in pre-configuration, otherwise some pods will not come up.
+# This part won't be used on SC 1.16. It is only for this release
+# The files are already under /home/eccd/sc/faultmappings for N47 and N89 test channels
+# Files saved also under /lab/pccc_logs/5GC-CICD/ci/PCVTC-7389_1h_DM_5GC_Stability_with_EDA_BSF_NEF/SC/SC_1.15.25+1081_CNCS_n89/faultmappings
+
+kubectl --namespace sc create configmap eric-fh-alarm-handler-faultmappings --from-file=/home/eccd/sc/faultmappings

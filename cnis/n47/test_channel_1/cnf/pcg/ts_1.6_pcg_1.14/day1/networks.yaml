@@ -1,0 +1,29 @@
+---
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: sriov-left-dpdk-mellanox
+  annotations:
+    k8s.v1.cni.cncf.io/resourceName: mellanox.com/mlnx_left
+spec:
+  config: '{
+  "type": "sriov",
+  "cniVersion": "0.3.1",
+  "name": "sriov-network",
+  "trust": "on"
+}'
+---
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: sriov-right-dpdk-mellanox
+  annotations:
+    k8s.v1.cni.cncf.io/resourceName: mellanox.com/mlnx_right
+spec:
+  config: '{
+  "type": "sriov",
+  "cniVersion": "0.3.1",
+  "name": "sriov-network",
+  "trust": "on"
+}'
+

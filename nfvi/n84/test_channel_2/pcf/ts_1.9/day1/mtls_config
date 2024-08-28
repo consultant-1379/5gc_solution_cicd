@@ -1,0 +1,105 @@
+
+1. upload certificates package to SC board /cluster/storage/ from /5gc_solution_cicd/nfvi/n84/certs/cnf/test_channel_2/sapc, and convert the SAPC application and client *.pem certificates to *.p12 format (use export password=ericsson when asked):
+openssl pkcs12 -export -out certificate-sbi-server.p12 -inkey pcf-sbi-server.key -in pcf-sbi-server.crt 
+openssl pkcs12 -export -out certificate-sbi-client.p12 -inkey pcf-sbi-client.key -in pcf-sbi-client.crt 
+
+2. Stop the following processes:
+sapcH2FwProxy2N -a stop
+sapcH2FwProxyNWay -a stop
+sapcH2RevProxy -a stop
+ 
+or
+ 
+amfHelper -f h2 -a stop
+ 
+3. Get the fingerprints of the certificates (acquiring certificate fingerprint procedure is present in CPI):
+ecehwil@seroiuts01676[08:34] ~/workspace/5gc_solution_cicd/nfvi/n84/certs/root (master) $ openssl dgst -c -hex -sha224 RootCA.crt
+SHA224(RootCA.crt)= fd:bc:13:a1:37:d8:73:bf:0f:0d:90:34:79:80:1d:d2:20:e9:32:d6:23:69:8b:5f:e1:3a:7f:27
+
+ecehwil@seroiuts01676[08:37] ~/workspace/5gc_solution_cicd/nfvi/n84/certs/cnf/sapc (master) $ openssl dgst -c -hex -sha224 certificate-sbi-client.p12
+SHA224(certificate-sbi-client.p12)= 9a:bc:e8:63:0f:5a:4a:bd:7a:41:50:24:83:ed:22:12:7b:e3:e1:68:4f:31:4b:08:34:36:71:27
+
+ecehwil@seroiuts01676[08:38] ~/workspace/5gc_solution_cicd/nfvi/n84/certs/cnf/sapc (master) $ openssl dgst -c -hex -sha224 certificate-sbi-server.p12
+SHA224(certificate-sbi-server.p12)= 58:a2:19:a8:59:41:0f:94:d8:66:97:fe:6a:ac:22:ca:1c:d3:d2:74:a3:0e:82:0f:63:26:5a:1e
+
+4. Certificate installations: 
+##client certificate
+cliss
+configure
+ManagedElement=1,SystemFunctions=1,SecM=1,CertM=1,NodeCredential=sapc-client
+commit
+installCredentialFromUri --uri sftp://root@10.137.48.182/cluster/storage/certificate-sbi-client.p12 --uriPassword ericsson --credentialPassword ericsson --fingerprint 9a:bc:e8:63:0f:5a:4a:bd:7a:41:50:24:83:ed:22:12:7b:e3:e1:68:4f:31:4b:08:34:36:71:27
+show 
+exit
+##server certificate
+cliss
+configure
+ManagedElement=1,SystemFunctions=1,SecM=1,CertM=1,NodeCredential=rest-traffic
+commit
+installCredentialFromUri --uri sftp://root@10.137.48.182/cluster/storage/certificate-sbi-server.p12 --uriPassword ericsson --credentialPassword ericsson --fingerprint 12:e6:a1:db:55:c1:f0:a2:e3:01:c2:05:f0:5c:a4:60:d9:07:2d:63:77:33:ee:26:4f:9d:fb:9e
+show 
+exit
+##root certificates
+cliss
+dn ManagedElement=1,SystemFunctions=1,SecM=1,CertM=1
+installTrustedCertFromUri --uri sftp://root@10.137.48.182/cluster/storage/RootCA.crt --uriPassword ericsson --fingerprint fd:bc:13:a1:37:d8:73:bf:0f:0d:90:34:79:80:1d:d2:20:e9:32:d6:23:69:8b:5f:e1:3a:7f:27
+show
+exit
+
+##intermediate (option step, if there is a intermediate CA)
+cliss
+dn ManagedElement=1,SystemFunctions=1,SecM=1,CertM=1
+installTrustedCertFromUri --uri sftp://root@10.137.48.182/cluster/storage/mtls-go-example/2_intermediate/certs/intermediate.cert.pem --uriPassword ericsson --fingerprint e1:1f:03:ea:56:98:dd:66:0f:16:56:c8:ee:6e:7a:b3:70:93:67:24:a0:5e:b5:c3:54:a4:a4:1d
+show
+exit
+
+5. Create trust category for root & intermediate certificates:
+cliss
+configure
+ManagedElement=1,SystemFunctions=1,SecM=1,CertM=1,TrustCategory=sapc-ca
+trustedCertificates="ManagedElement=1,SystemFunctions=1,SecM=1,CertM=1,TrustedCertificate=1"
+##(option, if install the intermediate CA)
+trustedCertificates="ManagedElement=1,SystemFunctions=1,SecM=1,CertM=1,TrustedCertificate=2"
+commit
+show -r
+exit
+
+6. config pcfsecurity
+cliss
+ManagedElement=1,PolicyControlFunction=1,PcfConfig=1,PcfNetwork=1,PcfSecurity=1
+configure
+enableTLS=true
+enableTLSClientAuthenticationAMF=true
+enableTLSClientAuthenticationNRF=true
+enableTLSClientAuthenticationSMF=true
+enableTLSClientAuthenticationUDR=true
+commit
+up
+up
+show-config
+exit
+ 
+
+7. Start the following processes:
+ 
+sapcH2FwProxy2N -a start
+sapcH2FwProxyNWay -a start
+sapcH2RevProxy -a start
+amfHelper -f nrf -a restart 
+or 
+ 
+amfHelper -f h2 -a start 
+amfHelper -f nrf -a restart
+
+NOTE:
+For cert update, you need stop h2 proxy firstly,
+amfHelper -f h2 -a stop
+then,
+(config-CertM=1)>no NodeCredential=sapc-client
+(config-CertM=1)>commit
+
+after that, repeat step 4 with new cert.
+start the h2 proxy in the end.
+
+
+

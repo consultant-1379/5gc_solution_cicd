@@ -1,0 +1,786 @@
+tags:
+  eric-pc-mm: true
+  storage: false
+
+global:
+  timezone: CET
+  applicationId: n84-pcc2
+  sm:
+    pgw:
+      enabled: false
+    sgw:
+      enabled: false
+    smf:
+      enabled: true
+#  persistentVolumeClaimName: eric-pc-storage
+
+
+eric-pc-routing-engine:
+  interfaces:
+    type: macvlan
+    macvlan:
+      - master: eth1
+eric-odca-diagnostic-data-collector:
+  env:
+    sftphost: 10.36.242.1:22
+    sftpFileLocation: "pcc-2-ddc"
+  sftpCredentials:
+    username: ubuntu
+    password: ubuntu
+
+eric-pm-bulk-reporter:
+  service:
+    annotations:
+      sharedVIPLabel: pcc-oam
+      addressPoolName: pcc-oam
+  env:
+    iscompressed: 'true'
+    nodeName: 'n84-pcc2'
+
+
+
+eric-pm-server:
+  rbac:
+    appMonitoring:
+      enabled: true
+      configFileCreate: false
+  server:
+    persistentVolume:
+      enabled: true
+
+
+eric-pc-mm:
+  global:
+    timeZone: CET
+    persistentVolumeClaimName: ""
+  eric-pc-mm-controller:
+    service:
+      useK8sNwSBI: true
+      sbi:
+        loadBalancerIP: 5.8.6.25
+    nodeSelector:
+      pcc-mm-pod: controller
+    securityContext:
+      appArmorProfile: docker-pcc
+    configMap: |-
+      #!/bin/sh -f
+      #set -x
+      gsh modify_capacity_state -csi attach_iot_limit -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi attach_limit -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi attach_lte_limit -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi context_limit -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi enhanced_uplink_mbr -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi payload_limit -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi qos_hsdpa_mbr -fs ACTIVATED -al 0
+      gsh modify_capacity_state -csi sms_limit -fs ACTIVATED -al 0
+      gsh modify_eea_algorithm -name eea0 -prio 3
+      gsh modify_eea_algorithm -name eea1 -prio 2
+      gsh modify_eea_algorithm -name eea2 -prio 1
+      gsh modify_eea_algorithm -name eea3 -prio 0
+      gsh modify_eia_algorithm -name eia1 -prio 2
+      gsh modify_eia_algorithm -name eia2 -prio 1
+      gsh modify_eia_algorithm -name eia3 -prio 0
+      gsh create_eth_port -eqp 1.1 -ep 1 -fc false -as up
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 3904
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 3929
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 3902
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 3123
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 3901
+      
+      gsh create_eth_port -eqp 1.2 -ep 1 -fc false -as up
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 3904
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 3929
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 3902
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 3123
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 3901
+      
+      gsh create_eth_port -eqp 1.3 -ep 1 -fc false -as up
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 3904
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 3929
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 3902
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 3123
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 3901
+      
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_3902_SIG_SCTP_1
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_3904_PRAN_SCTP_1
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_3929_PRAN_SCTP_2
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_3123_OM_EXTERNAL
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_3901_MEDIA
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_3902_SIG_SCTP_1
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_3904_PRAN_SCTP_1
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_3929_PRAN_SCTP_2
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_3123_OM_EXTERNAL
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_3901_MEDIA
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_3902_SIG_SCTP_1
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_3904_PRAN_SCTP_1
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_3929_PRAN_SCTP_2
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_3123_OM_EXTERNAL
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_3901_MEDIA
+      
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_3902_SIG_SCTP_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_3904_PRAN_SCTP_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_3929_PRAN_SCTP_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_3123_OM_EXTERNAL -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_3901_MEDIA -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_3902_SIG_SCTP_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_3904_PRAN_SCTP_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_3929_PRAN_SCTP_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_3123_OM_EXTERNAL -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_3901_MEDIA -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_3902_SIG_SCTP_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_3904_PRAN_SCTP_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_3929_PRAN_SCTP_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_3123_OM_EXTERNAL -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_3901_MEDIA -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      
+      gsh create_ip_network -nw SIG_SCTP_1 -local false
+      gsh create_ip_network -nw PRAN_SCTP_1 -local false
+      gsh create_ip_network -nw PRAN_SCTP_2 -local false
+      gsh create_ip_network -nw OM_EXTERNAL -local false
+      gsh create_ip_network -nw MEDIA -local false
+      gsh create_ip_interface -ifn ETH_1_1_1_3902_SIG_SCTP_1 -ip 11.2.2.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 3902 -ifp ETH_1_1_1_3902_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_ip_interface -ifn ETH_1_1_1_3904_PRAN_SCTP_1 -ip 11.2.4.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 3904 -ifp ETH_1_1_1_3904_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_ip_interface -ifn ETH_1_1_1_3929_PRAN_SCTP_2 -ip 11.2.29.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 3929 -ifp ETH_1_1_1_3929_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_ip_interface -ifn ETH_1_1_1_3123_OM_EXTERNAL -ip 10.36.241.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 3123 -ifp ETH_1_1_1_3123_OM_EXTERNAL -nw OM_EXTERNAL
+      gsh create_ip_interface -ifn ETH_1_1_1_3901_MEDIA -ip 11.2.1.1 -mask 255.255.255.0 -eqp 1.1 -ep 1 -vid 3901 -ifp ETH_1_1_1_3901_MEDIA -nw MEDIA
+      gsh create_ip_interface -ifn ETH_1_2_1_3902_SIG_SCTP_1 -ip 11.2.2.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 3902 -ifp ETH_1_2_1_3902_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_ip_interface -ifn ETH_1_2_1_3904_PRAN_SCTP_1 -ip 11.2.4.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 3904 -ifp ETH_1_2_1_3904_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_ip_interface -ifn ETH_1_2_1_3929_PRAN_SCTP_2 -ip 11.2.29.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 3929 -ifp ETH_1_2_1_3929_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_ip_interface -ifn ETH_1_2_1_3123_OM_EXTERNAL -ip 10.36.241.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 3123 -ifp ETH_1_2_1_3123_OM_EXTERNAL -nw OM_EXTERNAL
+      gsh create_ip_interface -ifn ETH_1_2_1_3901_MEDIA -ip 11.2.1.2 -mask 255.255.255.0 -eqp 1.2 -ep 1 -vid 3901 -ifp ETH_1_2_1_3901_MEDIA -nw MEDIA
+      gsh create_ip_interface -ifn ETH_1_3_1_3902_SIG_SCTP_1 -ip 11.2.2.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 3902 -ifp ETH_1_3_1_3902_SIG_SCTP_1 -nw SIG_SCTP_1
+      gsh create_ip_interface -ifn ETH_1_3_1_3904_PRAN_SCTP_1 -ip 11.2.4.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 3904 -ifp ETH_1_3_1_3904_PRAN_SCTP_1 -nw PRAN_SCTP_1
+      gsh create_ip_interface -ifn ETH_1_3_1_3929_PRAN_SCTP_2 -ip 11.2.29.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 3929 -ifp ETH_1_3_1_3929_PRAN_SCTP_2 -nw PRAN_SCTP_2
+      gsh create_ip_interface -ifn ETH_1_3_1_3123_OM_EXTERNAL -ip 10.36.241.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 3123 -ifp ETH_1_3_1_3123_OM_EXTERNAL -nw OM_EXTERNAL
+      gsh create_ip_interface -ifn ETH_1_3_1_3901_MEDIA -ip 11.2.1.3 -mask 255.255.255.0 -eqp 1.3 -ep 1 -vid 3901 -ifp ETH_1_3_1_3901_MEDIA -nw MEDIA
+      
+      gsh create_router_instance -eqp 1.1 -nw SIG_SCTP_1 -ip 11.2.2.1 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw PRAN_SCTP_1 -ip 11.2.4.1 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw PRAN_SCTP_2 -ip 11.2.29.1 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw OM_EXTERNAL -ip 10.36.241.1 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw MEDIA -ip 11.2.1.1 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw SIG_SCTP_1 -ip 11.2.2.2 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw PRAN_SCTP_1 -ip 11.2.4.2 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw PRAN_SCTP_2 -ip 11.2.29.2 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw OM_EXTERNAL -ip 10.36.241.2 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw MEDIA -ip 11.2.1.2 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw SIG_SCTP_1 -ip 11.2.2.3 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw PRAN_SCTP_1 -ip 11.2.4.3 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw PRAN_SCTP_2 -ip 11.2.29.3 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw OM_EXTERNAL -ip 10.36.241.3 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw MEDIA -ip 11.2.1.3 -sn NULL -sc NULL -sl NULL
+
+      gsh create_static_route -eqp 1.1 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.2.254
+      gsh create_static_route -eqp 1.1 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.4.254
+      gsh create_static_route -eqp 1.1 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.29.254
+      gsh create_static_route -eqp 1.1 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 10.36.241.254
+      gsh create_static_route -eqp 1.1 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.1.254
+      gsh create_static_route -eqp 1.2 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.2.254
+      gsh create_static_route -eqp 1.2 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.4.254
+      gsh create_static_route -eqp 1.2 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.29.254
+      gsh create_static_route -eqp 1.2 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 10.36.241.254
+      gsh create_static_route -eqp 1.2 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.1.254
+      gsh create_static_route -eqp 1.3 -nw SIG_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.2.254
+      gsh create_static_route -eqp 1.3 -nw PRAN_SCTP_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.4.254
+      gsh create_static_route -eqp 1.3 -nw PRAN_SCTP_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.29.254
+      gsh create_static_route -eqp 1.3 -nw OM_EXTERNAL -dip 0.0.0.0 -mask 0.0.0.0 -gip 10.36.241.254
+      gsh create_static_route -eqp 1.3 -nw MEDIA -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.2.1.254
+
+      gsh modify_gtp_v1 -gnce on -ngncre 3 -tgncre 60 -gnsue on -ngnsure 3 -tgnsure 60 -gpce on -ngpcre 3 -tgpcre 60 -gpue on -ngpure 3 -tgpure 60 -iuue on -niuure 3 -tiuure 60 -ughp true -trgl 24 -trbe 90 -rbef 24 -nrc 2 -trc 6 -nrd 3 -trd 2 -nru 3 -tru 3 -nrsc 3 -trsc 3 -nri 3 -tri 3 -nrfr 2 -trfr 7 -nfsc 2 -tafsc 1 -nfrc 2 -tafrc 1 -nrrc 2 -trrc 1 -cic off -spre true
+      gsh modify_gtp_v2 -nrrc 3 -trac 3 -nrds 3 -trds 2 -nrcs 2 -nrmb 2 -trmb 2 -nrrab 2 -trrab 1 -nri 3 -tri 3 -nrfr 2 -trfr 7 -nfrc 2 -tfrc 1 -nfac 2 -tfac 1 -nrca 2 -trca 1 -nrdbc 2 -trdbc 4 -nrmbc 2 -trmbc 4 -era on -nre 3 -tre 60 -trsl 24 -nrcn 1 -trcn 4 -nrpc 2 -trpc 7 -tnsc 10 -nns 2 -tas 1 -nnr 2 -tar 1 -nnsc 2 -tasc 1 -pb on -sncr on -trer 1 -eras off -nres 3 -tres 3000 -eris 60 -trcs 4000 -eriss 60 -nress 3 -tress 3 -trcss 4000 -trdss 2 -trmbs 2 -trmbcs 4 -nrcss 2 -nrdss 3 -nrmbs 2 -nrmbcs 2 -mmbr off -mabr off -nrmab 2 -trmab 2 -trml 24 -nbsig on -rnccpe true -rnccsi true -dnd 0
+      gsh modify_gw_management -gfst 3 -gsp 60 -gust 50 -ptud 1200 -stud 1200 -genp 24
+      gsh create_imsins -imsi 24081 -rs home -dn mnc081.mcc240.gprs -np e214 -ac true -na international -rd 5 -ad 86582 -m1 NULL -m2 NULL -m3 NULL -eplp NULL -rn ericsson.se -hn esm -s8 gtp -gcc NULL -wcc NULL -lcc NULL -rfsp NULL -arph 1 -arpm 2 -gss gr -vlbo NULL -aifv true -mavs 1 -mavr 2 -earplr 0 -st true -sra noaction -ssc NULL -iess NULL -pcr false -sps8 NULL -ivss NULL -sdssc none -qpmll NULL -srgr true -uut NULL -nia denied -drcl 0 -urcl 0 -vlbaoi NULL -iri NULL -crs allowed_cs_service -arpnl NULL -qpmw 1 -qpmg 1 -mps NULL
+      
+      gsh create_ip_service -sn SBI-Server -dscp NULL -nw SIG_SCTP_1
+      gsh create_ip_service -sn SBI-Client -dscp NULL -nw SIG_SCTP_1
+      gsh create_ip_service -sn N2-1 -dscp NULL -nw PRAN_SCTP_1
+      gsh create_ip_service -sn N2-2 -dscp NULL -nw PRAN_SCTP_2
+      gsh create_ip_service -sn OAM -dscp NULL -nw OM_EXTERNAL
+      gsh create_ip_service_address -sn SBI-Server -ip 5.8.6.25
+      gsh create_ip_service_address -sn SBI-Client -ip 29.0.64.125
+      gsh create_ip_service_address -sn N2-1 -ip 10.131.128.101
+      gsh create_ip_service_address -sn N2-2 -ip 10.131.144.101
+      gsh create_ip_service_address -sn OAM -ip 10.137.48.181
+      gsh modify_ne -cnid NULL -isdn 00 -ni n84-amf2 -nl 4 -rbnri 6 -mgi 32768 -mc 13 -daf 0 -tlo currentTai -ssm allUe -ivh false -dan NULL -hcmv 2 -cpsm false -dpmm false -qna false -aifav true -gtdm false -lrc 14 -hhfdut 60 -nifc NULL -nift NULL -pdri 180 -upt 0 -nrudrr sgw -ari 255 -asi 2 -ap 13 -rac 64
+      gsh create_n2 -n2 n2 -pt 3 -no 3
+      gsh modify_nea_algorithm -name nea0 -prio 1
+      gsh modify_nea_algorithm -name nea1 -prio 2
+      gsh modify_nea_algorithm -name nea2 -prio 3
+      gsh modify_nea_algorithm -name nea3 -prio 0
+      gsh modify_nia_algorithm -name nia1 -prio 2
+      gsh modify_nia_algorithm -name nia2 -prio 1
+      gsh modify_nia_algorithm -name nia3 -prio 0
+      gsh create_nrf_service_instance -nsin srv_3 -nsn nnrf_nfmanagement -fqdn nrf2.n84.5gc.mnc081.mcc240.3gppnetwork.org -fpn 443
+      gsh create_nrf_service_instance -nsin srv_4 -nsn nnrf_nfdiscovery -fqdn nrf2.n84.5gc.mnc081.mcc240.3gppnetwork.org -fpn 443
+      gsh create_plmn -mcc 240 -mnc 81 -pn 24081 -fnn NULL -snn NULL -ci false -me false -s5 gtp -local true -voip no -sl true -nbt NULL -urcl 0 -drcl 0 -tr NULL -ecvh true -gswgli off -sn true
+      gsh modify_qos -gbg NULL -gbw NULL -pe true -co EF -st AF2.1 -in1 AF1.1 -in2 BE -in3 BE -bg BE -gosq off -smah on -smam off -smas off -cqm standard -idgv 0 -qcil 1-9,65,66,69,70
+      gsh modify_s6a -ar 1 -rar 100000 -aanh false -nbsih on
+      gsh create_sctp_end_point -no 3 -portno 38412 -pn S1_MME_SCTP -primsn N2-1 -secsn N2-2
+      gsh create_sctp_profile -pn S1_MME_SCTP -assrtx 20 -irto 200 -minrto 100 -maxrto 400 -pathrtx 10 -bunt 0 -pmtu 1400
+      gsh modify_sctp_sys -noass 8192 -icmpact 1 -tmesbufs 3 -sctpoutbufs 1500 -twfc 20 -twfnb 1 -trec 5000 -ulmbs 500000 -totasmem 0 -ulmsfipart 70 -wbct 70 -upii 0 -udii 0 -tmir 0
+      gsh modify_sftp_auth -sah true
+      gsh modify_snmp -as UNLOCKED -aa "(-host 127.0.0.1 -port 25161)" -aad NULL -eId NULL
+      gsh modify_subscriber_authentication -mavp off -savp off
+      gsh create_supi_range -imsi 24081 -vops 3gpp -rs home
+      gsh create_supported_slice -sn 2 -sst 2 -sd 2
+      gsh modify_sw_m -ft 1200 -ul NULL
+      gsh modify_tai_list_option -um visited -mtll 1 -mta 720
+      gsh modify_ue_trace_log -rp 15
+      
+      gsh create_bfd -nw PRAN_SCTP_1 -dtx 500 -mrx 500 -mult 5
+      gsh create_bfd_neighbor -nw PRAN_SCTP_1 -ip 11.2.4.254
+      
+      gsh create_bfd -nw PRAN_SCTP_2 -dtx 500 -mrx 500 -mult 5
+      gsh create_bfd_neighbor -nw PRAN_SCTP_2 -ip 11.2.29.254
+      
+      gsh create_bfd -nw SIG_SCTP_1 -dtx 500 -mrx 500 -mult 5
+      gsh create_bfd_neighbor -nw SIG_SCTP_1 -ip 11.2.2.254
+      gsh create_bfd -nw MEDIA -dtx 500 -mrx 500 -mult 5
+      gsh create_bfd_neighbor -nw MEDIA -ip 11.1.26.254
+      gsh create_bfd -nw OM_EXTERNAL -dtx 500 -mrx 500 -mult 5
+      gsh create_bfd_neighbor -nw OM_EXTERNAL -ip 10.36.241.254
+      gsh create_snmp_target_v2c -ip 10.139.0.180 -name DallasIPv4
+      gsh modify_snmp -aa "( -host 10.137.48.181  -port 25161 ),( -host 127.0.0.1 -port 25161 )"
+      gsh modify_sbi_http_client_connection -nft SMF -cn 16 -sn nsmf_pdusession -cestt 1 -ctert 0
+      gsh create_node_credential -nci SERVER
+      gsh create_node_credential -nci CLIENT
+      gsh create_ip_service -sn DNS -nw OM_EXTERNAL
+      gsh create_ip_service_address -sn DNS -ip 10.137.48.181
+      gsh create_dns -dn 5gc.mnc081.mcc240.3gppnetwork.org.
+      gsh create_dns_server -dn 5gc.mnc081.mcc240.3gppnetwork.org. -ns selnpctool-1298-01-101.
+      gsh create_dns_server_address -dn 5gc.mnc081.mcc240.3gppnetwork.org. -ns selnpctool-1298-01-101. -ip 10.9.80.135
+      gsh modify_sbi -uhf fqdn
+      gsh create_nels_configuration -nci 1 -h 10.221.14.88 -p 9095
+
+  eric-pc-mm-forwarder:
+    nodeSelector:
+      pcc-mm-pod: non-controller
+    replicaCount: 2
+    ipv6: false
+    networks:
+    - ipam: {}
+#        gateway: 172.31.0.254
+#        rangeEnd: 172.31.0.253
+#        rangeStart: 172.31.0.1
+#        subnet: 172.31.0.0/24
+      master: eth1
+      mtu: 2090
+      name: ext1
+      type: macvlan
+    securityContext:
+      appArmorProfile: docker-pcc
+  eric-pc-mm-mobility:
+    service:
+      useK8sNwSBI: true
+      sbi:
+        loadBalancerIP: 5.8.6.25
+    nodeSelector:
+      pcc-mm-pod: non-controller
+    replicaCount: 8
+    securityContext:
+      appArmorProfile: docker-pcc
+
+  eric-pc-mm-sctp:
+    nodeSelector:
+      pcc-mm-pod: non-controller
+    replicaCount: 5
+    securityContext:
+      appArmorProfile: docker-pcc
+
+eric-pc-mm-controller-supervisor:
+  nodeSelector:
+    pcc-mm-pod: non-controller
+
+
+eric-pc-sm:
+  eric-pc-sm-diameter:
+    diameter:
+      replicaCount: 0
+  eric-pc-sm-http-client:
+    global:
+      nodeSelector:
+        pcc-sm-pod: non-controller
+    httpclient:
+      replicaCount: 4
+  eric-pc-sm-ip-allocator:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+  eric-pc-sm-controller:
+    nodeSelector:
+      pcc-sm-pod: controller
+  eric-pc-sm-gtp-forwarder:
+    forwarder:
+      ingress:
+        enabled: false
+    replicaCount: 2
+
+  eric-pc-sm-notification-forwarder:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    notifForwarder:
+      ingress:
+        enabled: false
+      service:
+        annotations:
+          metallb.universe.tf/address-pool: smf-notification
+          metallb.universe.tf/allow-shared-ip: smf-notification
+      replicaCount: 2
+
+  eric-pc-sm-nsmf-forwarder:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    nsmfForwarder:
+      replicaCount: 6
+      ingress:
+        enabled: false
+      loadBalancerIP:
+        nsmf: 5.8.6.17
+    resources:
+      nsmfforwarder:
+        requests:
+          memory: "4G"
+          cpu: "1"
+        limits:
+          memory: "4G"
+          cpu: "1"
+
+  eric-pc-sm-smf-pgw-session:
+    smf:
+      replicaCount: 8
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+eric-pc-vpn-gw:
+  eric-pc-vpn-gw:
+    global:
+      serviceNames:
+        pc:
+          rs:
+            controller: ''
+  
+    replicaCount: 1
+  
+    vpnGateway:
+      enabled: true
+      # peerTimeout:
+      log:
+        signaling: true
+        payload: false
+  
+    service:
+      type: ''
+      multinetworkInterface:
+        - name: "eric-pc-vpn-gw-common"
+          interface: "vpn-gw-common"
+  
+    resources:
+      dataPlane:
+        limits:
+          cpu: '2'
+          memory: 2Gi
+        requests:
+          cpu: 1
+          memory: 1Gi
+  
+    cm_source_env: false
+
+
+  macvlan:
+  - master: eth1
+    name: common
+
+
+eric-data-object-storage-mn:
+  nodeSelector:
+    pcc-sm-pod: non-controller
+eric-sec-key-management:
+  resources:
+    vault:
+      requests:
+        memory: "800Mi"
+        cpu: "200m"
+      limits:
+        memory: "2400Mi"
+        cpu: "600m"
+  replicas: 2
+
+eric-data-search-engine:
+  replicas:
+    data: 3
+  persistence:
+    data:
+      persistentVolumeClaim:
+        size: "100Gi"
+
+eric-data-search-engine-curator:
+  actions: |
+    1:
+      action: delete_indices
+      description: >-
+        Delete indices older than 7 days (based on index name), for pc-sm and
+        pc-mm prefixed indices. (Exclude pc-mm-worker-report-log, pc-mm-list-subscriber-result-log
+        and pc-mm-gf-imeicheck-log). Ignore the error if the filter does not result in an
+        actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(pc-mm-.*|pc-sm-app)-log-.*$'
+      - filtertype: pattern
+        kind: regex
+        value: '^pc-mm-(worker-report|list-subscriber-result|gf-imeicheck)-log.*$'
+        exclude: True
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    2:
+      action: delete_indices
+      description: >-
+        Delete indices older than 1000 days (based on index name), for isp log
+        prefixed indices. Ignore the error if the filter does not result in
+        an actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(pcc-isp-log).*$'
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 1000
+    3:
+      action: delete_indices
+      description: >-
+        Delete indices older than 24 hours (based on index name), for indices
+        that might contain sensitive information.
+        Ignore the error if the filter does not result in an actionable list
+        of indices(ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^pc-mm-(worker-report|list-subscriber-result|gf-imeicheck)-log.*$'
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 1
+    4:
+      action: delete_indices
+      description: >-
+        Delete indices older than 30 days (based on index name), for audit log
+        and alarm log prefixed indices. Ignore the error if the filter does
+        not result in an actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(adp-app-audit-logs|adp-app-alarm-log).*$'
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 30
+    5:
+      action: delete_indices
+      description: >-
+        Delete indices older than 7 days (based on index name), for common service.
+        Ignore the error if the filter does not result in an actionable list of
+        indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(adp-app-logs|cnom-app-log|pcc-kcdbrd-app-log).*$'
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    6:
+      action: delete_indices
+      description: >-
+        Delete older indices when the total space is greater than upper limit, for pc-mm and
+        pc-sm prefixed indices. Ignore the error if the filter does not result in an
+        actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(pc-mm-.*|pc-sm-app)-log.*$'
+      - filtertype: space
+        disk_space: 30
+        use_age: true
+        source: creation_date
+    7:
+      action: delete_indices
+      description: >-
+        Delete older indices when the total space is greater than upper limit, for isp log
+        prefixed indices. Ignore the error if the filter does not result in an
+        actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(pcc-isp-log).*$'
+      - filtertype: space
+        disk_space: 1
+        use_age: true
+        source: creation_date
+    8:
+      action: delete_indices
+      description: >-
+        Delete older indices when the total space is greater than upper limit, for audit log
+        and alarm log prefixed indices. Ignore the error if the filter does not result in an
+        actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(adp-app-audit-logs|adp-app-alarm-log).*$'
+      - filtertype: space
+        disk_space: 1
+        use_age: true
+        source: creation_date
+    9:
+      action: delete_indices
+      description: >-
+        Delete older indices when the total space is greater than upper limit, for common service
+        prefixed indices. Ignore the error if the filter does not result in an
+        actionable list of indices (ignore_empty_list) and exit cleanly.
+      options:
+        ignore_empty_list: True
+        timeout_override:
+        continue_if_exception: False
+        disable_action: False
+      filters:
+      - filtertype: pattern
+        kind: regex
+        value: '^(adp-app-logs|cnom-app-log|pcc-kvdbrd-app-log).*$'
+      - filtertype: space
+        disk_space: 90
+        use_age: true
+        source: creation_date
+
+
+eric-data-distributed-coordinator-ed:
+  persistentVolumeClaim:
+    etcd:
+      storage: "4Gi"
+
+eric-fh-snmp-alarm-provider:
+  nodeSelector:
+    snmp-sender: eric-pcc
+  service:
+    annotations:
+      sharedVIPLabel: pcc-oam
+      addressPoolName: pcc-oam
+  oamVIP:
+    enabled: true
+    vip: "10.137.48.173"
+    nodeName: ""
+    destIp: "10.36.242.99"
+eric-cnom-server:
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 500m
+  service:
+    type: LoadBalancer
+  annotations:
+    metallb.universe.tf/address-pool: pcc-oam
+    metallb.universe.tf/allow-shared-ip: pcc-oam
+
+eric-pc-kvdb-rd-server:
+  numberOfMaster: 6
+
+eric-pc-controller-ldap-admin-creds:
+  adminCredentials:
+    adminuser: day0
+    adminpasswd: "$6$XcFGoO/Kh1Ruh8ng$J3pHByyQ8Wpq2J5M2H6Ukkf9acGwOWHwvtimlT4.BR0Mtq9264b2ktiEmjRczmQWqFVCkYAiJb3rxXAPtlxLk1"
+eric-cm-yang-provider:
+  service:
+    annotations:
+      sharedVIPLabel: "pcc-oam"
+      addressPoolName: "pcc-oam"
+eric-data-sftp-server:
+  service:
+    annotations:
+      sharedVIPLabel: "pcc-oam"
+      addressPoolName: "pcc-oam"
+eric-log-shipper:
+  logshipper:
+    cfgData: |
+      paths:
+        - /var/log/containers/eric-pc-sm-*_pcc_*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: pc-sm-app-log
+      symlinks: true
+      json.add_error_key: true
+
+      paths:
+        - /var/log/containers/eric-pc-routing-*_pcc_*.log
+        - /var/log/containers/eric-pc-networking-cm-agent-*_pcc_*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: pc-routing-app-log
+      symlinks: true
+      json.add_error_key: true
+
+      paths:
+        - /var/log/containers/eric-cnom-server-*_pcc_*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: cnom-app-log
+      symlinks: true
+      json.add_error_key: true
+
+      paths:
+        # Note that these are not regexps but Go globs. In particular,
+        # [0-9]* means "a digit followed by a sequence of characters".
+        - /var/log/containers/eric-pc-mm-controller-[0-9]*_pcc_*.log
+        - /var/log/containers/eric-pc-mm-forwarder-[0-9]*_pcc_*.log
+        - /var/log/containers/eric-pc-mm-mobility-[0-9]*_pcc_*.log
+        - /var/log/containers/eric-pc-mm-sctp-[0-9]*_pcc_*.log
+      tags: ["docker", "json-in-log"]
+      symlinks: true
+      json.add_error_key: true
+      json.overwrite_keys: true
+
+      # These containers/microservices do not follow the ADP Design rules
+      # to log directly as JSON.
+      paths:
+        - /var/log/containers/eric-pc-mm-*_pcc_*.log
+      exclude_files:
+        - 'eric-pc-mm-(controller|forwarder|mobility|sctp)-[0-9]+_.*\.log'
+      tags: ["docker"]
+      fields:
+        logplane: pc-mm-app-log
+      symlinks: true
+      json.add_error_key: true
+      json.overwrite_keys: true
+
+      paths:
+        - /var/log/containers/eric-pc-kvdb-rd-*_pcc_*.log
+      exclude_files:
+        - 'eric-pc-kvdb-rd-*_eric-pc-kvdb-rd-logcar-*.log'
+      tags: ["docker"]
+      fields:
+        logplane: pcc-kvdbrd-app-log
+      symlinks: true
+      json.add_error_key: true
+      json.overwrite_keys: true
+
+      paths:
+        - /var/log/containers/eric-pc-kvdb-rd-*_pcc_eric-pc-kvdb-rd-logcar-*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: pcc-kvdbrd-app-log
+      symlinks: true
+      json.add_error_key: true
+
+      paths:
+        - /var/log/containers/eric-cnom-*_pcc_*.log
+      exclude_files:
+        - 'eric-cnom-server'
+      tags: ["docker"]
+      fields:
+        logplane: cnom-app-log
+      symlinks: true
+      json.add_error_key: true
+      json.overwrite_keys: true
+
+      paths:
+        - /var/log/containers/eric-pc-vpn-gw-*_pcc_*.log
+      tags: ["docker", "json-in-log", "vpn-gw"]
+      fields:
+        logplane: vpn-gw-app-log
+      symlinks: true
+      json.add_error_key: true
+
+      # Set alarm handler logs with tag "json-in-log"
+      # in order to parse json content and separate alarm
+      # history logs on logstash. And keep other logs on
+      # adp-app-logs log plane.
+      paths:
+        - /var/log/containers/eric-fh-alarm-handler-*_pcc_*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: adp-app-logs
+      symlinks: true
+      json.add_error_key: true
+
+      paths:
+        - /var/log/containers/eric-cm-yang-provider-*_pcc_yang-db-adapter-*.log
+        - /var/log/containers/eric-fh-snmp-alarm-provider-*_pcc_eric-fh-snmp-alarm-provider-*.log
+        - /var/log/containers/eric-pm-bulk-reporter-*_pcc_eric-pm-sftp-*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: adp-app-logs
+      symlinks: true
+      json.add_error_key: true
+
+      paths:
+        - /var/log/containers/*_pcc_*.log
+      exclude_files:
+        - 'eric-pc-mm-.*\.log'
+        - 'eric-pc-sm-.*\.log'
+        - 'eric-pc-kvdb-rd-.*\.log'
+        - 'eric-pc-routing-.*\.log'
+        - 'eric-pc-networking-cm-agent-.*\.log'
+        - 'eric-cnom-.*\.log'
+        - 'eric-tm-.*\.log'
+        - 'calico-node-.*\.log'
+        - 'eric-fh-alarm-handler-.*\.log'
+        - 'eric-cm-yang-provider-.*yang-db-adapter-.*\.log'
+        - 'eric-fh-snmp-alarm-provider-.*eric-fh-snmp-alarm-provider-.*\.log'
+        - 'eric-pm-bulk-reporter-.*eric-pm-sftp-.*\.log'
+        - 'eric-pc-vpn-gw-.*\.log'
+      tags: ["docker"]
+      fields:
+        logplane: adp-app-logs
+      symlinks: true
+      json.add_error_key: true
+      json.overwrite_keys: true

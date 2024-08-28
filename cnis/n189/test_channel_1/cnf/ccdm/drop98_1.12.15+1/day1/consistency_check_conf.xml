@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <capabilities>
+        <capability>urn:ietf:params:netconf:base:1.0</capability>
+    </capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+    <edit-config>
+        <target>
+            <running/>
+        </target>
+        <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+            <udr xmlns="urn:rdns:com:ericsson:oammodel:ericsson-udr">
+                <consistency-check>
+                    <sftp-server>
+                        <name>sftpServerForConsistency</name>
+                        <endpoints>
+                            <endpoint>
+                                <name>sftpServerForConsistency</name>
+                                <!--SFTP server endpoint remote IP address-->
+                                <remote-address>172.30.32.50</remote-address>
+                                <!--SFTP server endpoint remote port -->
+                                <remote-port>22</remote-port>
+                                <!--SFTP server endpoint upload path, for example: /home/<username>/ddcsftp-->
+                                <remote-path>ccdm/consistencyreport</remote-path>
+                                <!--SFTP client information-->
+                                <client-identity>
+                                    <!--A user-name to be used for client authentication.-->
+                                    <username>root</username>
+                                    <password>bG1jX3hkZw==</password>
+                                </client-identity>
+                                <!--SFTP server information-->
+                                <server-authentication>
+                                    <ssh-host-keys>
+                                        <local-definition>
+                                            <!--SFTP server encrypted public key-->
+                                            <host-key>c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFCQVFDdUhnR1ZRQkwrWkhsRyt4QklKUUJKeUJUOStoWjIycHRlZk00WnFtNkpSWWk5SmVpV3JIVm82emYrbkZtQTlXajhGS0hmcmsreDNDK2sxWmJ1bVhwZTk4bFlUTnlDdzlaTjlEQk85N2FackhxSVhvYzFkU013L1BYSEZBTDcyU3M1NkpOOFF5K2VzbFpwZGNHYUJBSGZFMFJLTjM3VmU3cjh6WjlzS3N6V1I2eEZMZDJraS9HQ0cxL1dFUFlyT2I0ak9xdlM2R1QyNGcwTWVqRjVFM3MxOWYrWWdqQVZlc0FSS3Bram93ckl0T1hILzROYWlyUDA1cEdKcHdjU0pvVWtUcUhNWjVLWE5KWVZINys3ekwzcWZSVXRPKzVDTzVmOTQ0Vzg2ek91d1poRjdBTjZhMUtSRnNzM3lSLzBIc09GY28ya3J6cjRpeFR1SUh6N3JtZkwgcm9vdEBwY2NjLW5vZGUxODktbWlzYy0wMS5zZWxuLmV0ZS5lcmljc3Nvbi5zZQo=</host-key>
+                                        </local-definition>
+                                    </ssh-host-keys>
+                                </server-authentication>
+                            </endpoint>
+                        </endpoints>
+                    </sftp-server>
+                </consistency-check>
+            </udr>
+        </config>
+    </edit-config>
+</rpc>

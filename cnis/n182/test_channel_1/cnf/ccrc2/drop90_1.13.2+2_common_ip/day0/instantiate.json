@@ -1,0 +1,9 @@
+{
+  "clusterName": "n182",
+  "additionalParams": {
+       "namespace": "ccrc2",
+       "applicationTimeOut": "3600",
+       "skipJobVerification": "false",
+       "skipVerification": "true"
+      }
+}

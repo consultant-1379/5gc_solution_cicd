@@ -1,0 +1,25 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global_common_ip.yaml
+# targetDir: .
+# jsonschema: pcc/jsonschema.yaml
+# jsonschemaGlobal: common/global-jsonschema.yaml
+templateDir: ../../../../../../config_template/templates/
+# jsonschemaGlobal: ../jsonschemas/schema-global.yaml
+
+files:
+- template: ccpc/drop100_1.15.1/values.yaml.jinja2
+  target: day0/values.yaml
+- template: common/instantiate.json.jinja2
+  target: day0/instantiate.json
+- template: common/user-config.xml.jinja2
+  target: day1/user-config.xml
+- template: ccpc/drop100_1.15.1/nrfagent-config.xml.jinja2
+  target: day1/nrfagent-config.xml
+- template: ccpc/drop100_1.15.1/diameter.xml.jinja2
+  target: day1/diameter.xml
+- template: ccpc/drop100_1.15.1/ccpc-nf-initial-config.xml.jinja2
+  target: day1/ccpc-nf-initial-config.xml
+- template: ccpc/drop100_1.15.1/ddc-config.xml.jinja2
+  target: day1/ddc-config.xml
+- template: common/snmp-config.xml.jinja2
+  target: day1/snmp-config.xml

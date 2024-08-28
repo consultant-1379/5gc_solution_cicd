@@ -1,0 +1,9 @@
+{
+  "clusterName": "n84-eccd3",
+  "additionalParams": {
+       "namespace": "eda",
+       "applicationTimeOut": "2000",
+       "skipJobVerification": "false",
+       "skipVerification": "false"
+      }
+}

@@ -1,0 +1,45 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global.yaml
+# targetDir: .
+# jsonschema: eda/jsonschema.yaml
+# jsonschemaGlobal: common/global-jsonschema.yaml
+templateDir: ../../../../../../config_template/templates/
+#jsonschemaGlobal: ../../ts-config/jsonschemas/schema-global.yaml
+
+files:
+- template: eda/2.12/values.yaml.jinja2
+  target: day0/values.yaml
+- template: common/instantiate.json.jinja2
+  target: day0/instantiate.json
+#- template: common/snmp-config.json.jinja2
+#  target: day1/snmp-config.json
+#- template: common/user-config.xml.jinja2
+#  target: day1/user-config.xml
+- template: eda/2.12/ne/CCDM-LDAP1.node.jinja2
+  target: day1/ne/CCDM-LDAP1.node
+- template: eda/2.12/ne/CCDM-MAPI.node.jinja2
+  target: day1/ne/CCDM-MAPI.node
+- template: eda/2.12/ne/CCSM-NOTI.node.jinja2
+  target: day1/ne/CCSM-NOTI.node
+- template: eda/2.12/routing/ARPF.routing.jinja2
+  target: day1/routing/ARPF.routing
+- template: eda/2.12/routing/CUDB.routing.jinja2
+  target: day1/routing/CUDB.routing
+- template: eda/2.12/routing/CUDB_EIR.routing.jinja2
+  target: day1/routing/CUDB_EIR.routing
+- template: eda/2.12/routing/CUDB_HLR.routing.jinja2
+  target: day1/routing/CUDB_HLR.routing
+- template: eda/2.12/routing/HSS_FE_EPS.routing.jinja2
+  target: day1/routing/HSS_FE_EPS.routing
+- template: eda/2.12/routing/PCF.routing.jinja2
+  target: day1/routing/PCF.routing
+- template: eda/2.12/routing/UDM.routing.jinja2
+  target: day1/routing/UDM.routing
+- template: eda/2.12/routing/UDR.routing.jinja2
+  target: day1/routing/UDR.routing
+- template: eda/2.12/routing/UDR_AUC.routing.jinja2
+  target: day1/routing/UDR_AUC.routing
+- template: eda/2.12/routing/UDR_HLR.routing.jinja2
+  target: day1/routing/UDR_HLR.routing
+- template: eda/2.12/routing/UDR_SAPC.routing.jinja2
+  target: day1/routing/UDR_SAPC.routing

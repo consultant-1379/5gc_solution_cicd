@@ -1,0 +1,9 @@
+{
+  "clusterName": "n89",
+  "additionalParams": {
+    "namespace": "cces",
+    "skipVerification": true,
+    "applicationTimeOut": "1800",
+    "commandTimeOut": "1800"
+  }
+}

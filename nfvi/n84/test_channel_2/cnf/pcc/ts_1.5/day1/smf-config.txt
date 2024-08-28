@@ -1,0 +1,214 @@
+autowizard false
+config
+epg pgw node n84-smf2
+epg pgw ggsn-plmn-id 24081
+epg pgw snssai slice-service-type 2
+epg pgw snssai slice-differentiator 000002
+epg pgw shared-ip-pool pool1
+ address 40.0.0.0/9
+ !
+ ipv6-address 2a01:0002::/44
+ !
+!
+epg pgw apn internet
+ network-instance internet
+ routing-instance internet
+ user-profile-selection n7-profile default n7-1
+ user-profile-selection local-policy-control-profile default lpc_profile1
+ user-profile-selection policy-charging-rule-scope default pc_ruleScope1
+ pdp-context creation    unblocked
+ pdp-context pdp-type    ipv4v6
+ pdp-context address-allocation shared-ip-pool
+ pdp-context ipv6-address-allocation shared-ip-pool
+ pdp-context limit       1500000
+!
+epg pgw charging characteristics default-complete-cc 0000
+epg pgw charging characteristics profile0 no-call-detail
+epg pgw user-plane node-name pcg01
+ pfcp-address 5.8.1.25
+ n3 network-instance ran
+ sx-u network-instance signaling
+ ip-selection-condition condition1
+  data-network              [ internet ]
+  selected-shared-ipv4-pool pool1
+  selected-shared-ipv6-pool pool1
+ !
+!
+epg pgw user-plane-pool pool up-pool0
+ node-name pcg01
+  weight 1
+ !
+!
+epg pgw user-plane-selection default-pool up-pool0
+epg pgw user-plane-selection selection-condition condition1
+ data-network  [ internet ]
+ selected-pool up-pool0
+!
+epg pgw interface sx logical-interface sxb-if
+epg pgw interface s5s8-c logical-interface gn-s5s8-c
+epg pgw interface s5s8-c no-path-management
+epg pgw interface s5s8-c no-peer-restart
+epg pgw pdp-context limit 1500000
+epg pgw policy-control n7-profile n7-1
+!
+epg pgw policy-control rule-scope policy_ruleScope1
+ pcc-rule acr-unconditional
+  application  app100
+  rating-group 255
+  precedence   255
+ !
+!
+epg pgw policy-control local profile lpc_profile1
+ unconditional pcc-rule [ acr-unconditional ]
+!
+epg pgw charging-control rule-scope charging_ruleScope1
+!
+epg pgw policy-charging-rule-scope pc_ruleScope1
+ policy-control   policy_ruleScope1
+ charging-control charging_ruleScope1
+!
+epg pgw qos-control maximum-bit-rate-uplink 100000000
+epg pgw qos-control maximum-bit-rate-downlink 100000000
+epg pgw sbi amf logical-interface amf-service-if
+epg pgw sbi amf connection-client-profile client-profile-1
+epg pgw sbi amf notification logical-interface amf-notify-if
+epg pgw sbi amf notification port 4040
+epg pgw sbi amf notification server-profile server-profile-1
+epg pgw sbi pcf logical-interface pcf-service-if
+epg pgw sbi pcf connection-client-profile client-profile-1
+epg pgw sbi pcf notification logical-interface pcf-notify-if
+epg pgw sbi pcf notification port 6060
+epg pgw sbi pcf notification server-profile server-profile-1
+epg pgw sbi connection-client-profile client-profile-1
+ transport-layer-security no-transport-layer-security
+ stream-id-threshold-for-new-connection 80
+ max-concurrent-streams                 900
+ number-of-connection                   6
+ request-timeout                        5
+ idle-timeout                           30
+ connection-down-retry-times            1
+ request-timeout-retry-times            1
+!
+epg pgw sbi udm logical-interface udm-service-if
+epg pgw sbi udm connection-client-profile client-profile-1
+epg pgw sbi udm notification logical-interface udm-notify-if
+epg pgw sbi udm notification port 5050
+epg pgw sbi udm notification server-profile server-profile-1
+epg pgw sbi nrf logical-interface nrf-service-if
+epg pgw sbi nrf connection-client-profile client-profile-1
+epg pgw sbi nrf notification logical-interface nrf-notify-if
+epg pgw sbi nrf notification port 7070
+epg pgw sbi nrf notification server-profile server-profile-1
+epg pgw sbi nrf service nnrf-disc
+ nfservice-instance nnrf-disc-ins1
+  priority  1
+  fqdn      nrf2.n84.5gc.mnc081.mcc240.3gppnetwork.org
+  fqdn-port 443
+  ip-end-point nnrf-disc-ipv4
+   ipv4-address 5.8.6.22
+   port         443
+  !
+ !
+!
+epg pgw sbi nrf service nnrf-nfm
+ nfservice-instance nnrf-nfm-ins1
+  priority  1
+  fqdn      nrf2.n84.5gc.mnc081.mcc240.3gppnetwork.org
+  fqdn-port 443
+  ip-end-point nnrf-nfm-ipv4
+   ipv4-address 5.8.6.22
+   port         443
+  !
+ !
+!
+epg pgw sbi smf-services logical-interface smf-service-if
+epg pgw sbi smf-services nf-instance-id d67766fc-210f-4ecf-858f-cc42a60fc00e
+epg pgw sbi smf-services server-profile server-profile-1
+epg pgw sbi smf-services service nsmf-pdusession
+ authorization allowed-nf [ AMF ]
+ fqdn smf2.n84.5gc.mnc081.mcc240.3gppnetwork.org
+ port [ 7070 ]
+!
+epg pgw sbi connection-server-profile server-profile-1
+ max-concurrent-streams   1000000
+ max-pending-transactions 20000
+ transport-layer-security no-transport-layer-security
+!
+epg node node-type pgw-c
+epg node feature-activation integrated-traffic-capture
+epg node feature-activation smf-5gc
+epg node vpn-gw address 109.1.1.50
+epg node secm certm node-credential smf-sbi-client
+ subject-name           "C=SE, ST=Stockholm, L=Stockholm, O=Ericsson, CN=SMF"
+ expiry-alarm-threshold 30
+ key-info               rsa-2048
+!
+epg node secm certm node-credential smf-sbi-server
+ subject-name           "C=SE, ST=Stockholm, L=Stockholm, O=Ericsson, CN=SMF"
+ expiry-alarm-threshold 30
+ key-info               rsa-2048
+!
+!
+
+epg node logical-interface amf-notify-if
+ routing-instance signaling
+ address          5.8.6.18
+!
+epg node logical-interface amf-service-if
+ routing-instance signaling
+ address          5.8.6.17
+!
+epg node logical-interface gn-s5s8-c
+ routing-instance media
+ address          5.0.0.17
+ vpn-gw           true
+!
+epg node logical-interface nrf-notify-if
+ routing-instance signaling
+ address          5.8.6.18
+!
+epg node logical-interface nrf-service-if
+ routing-instance signaling
+ address          5.8.6.17
+!
+epg node logical-interface pcf-notify-if
+ routing-instance signaling
+ address          5.8.6.18
+!
+epg node logical-interface pcf-service-if
+ routing-instance signaling
+ address          5.8.6.17
+!
+epg node logical-interface smf-notify-if
+ routing-instance signaling
+ address          5.8.6.18
+!
+epg node logical-interface smf-service-if
+ routing-instance signaling
+ address          5.8.6.17
+!
+epg node logical-interface sxb-if
+ routing-instance signaling
+ address          5.8.1.18
+ vpn-gw           true
+!
+epg node logical-interface udm-notify-if
+ routing-instance signaling
+ address          5.8.6.18
+!
+epg node logical-interface udm-service-if
+ routing-instance signaling
+ address          5.8.6.17
+!
+epg routing-instances routing-instance internet
+!
+epg routing-instances routing-instance default
+!
+epg routing-instances routing-instance media
+ vlan-id 3851
+!
+epg routing-instances routing-instance signaling
+ vlan-id 3952
+!
+commit
+end

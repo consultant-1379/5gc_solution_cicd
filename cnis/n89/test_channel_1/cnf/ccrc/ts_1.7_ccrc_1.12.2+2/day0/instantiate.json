@@ -1,0 +1,12 @@
+{
+  "clusterName": "n89",
+  "additionalParams": {
+    "namespace": "ccrc",
+    "skipVerification": true,
+    "cleanUpResources": false,
+    "applicationTimeOut": "1800",
+    "commandTimeOut": "900",
+    "manoControlledScaling": false,
+    "global.ipStackMode": "ipv4"
+  }
+}

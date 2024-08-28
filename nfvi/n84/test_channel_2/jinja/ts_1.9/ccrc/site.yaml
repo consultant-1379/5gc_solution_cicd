@@ -1,0 +1,24 @@
+snmp:
+  agentEngineId: 8000137001C0A899ECCD12A63F
+license:
+  customerId: "946060"
+  swltId: STA-CCRC-4
+
+nrf:
+- instanceId: 0c765084-9cc5-49c6-9876-56eccd12a63f
+- instanceId: 0c765084-9cc5-49c6-9876-28eccd52a63f
+
+nssf:
+- instanceId: 13a1de33-ec45-4cd6-a842-56eccd1ba3d8
+- instanceId: 13a1de33-ec45-4cd6-a842-28eccd5ba3d8
+
+ddc:
+  remotePath: /home/admin/ddc/eccd1/n84-ccrc2
+amf:
+- amfInstanceId: 543dc31c-6220-46c4-9c32-720bbdc2842d
+- amfInstanceId: 3fb31bb6-99ee-4a34-b714-28eccd56c3cf
+
+kvdb:
+- siteId: 1
+- siteId: 2
+

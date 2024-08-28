@@ -1,0 +1,119 @@
+nodeName: n67-ccsm1
+nodeType: CCSM
+
+vnflcm:
+  clusterName: n67-eccd1
+  namespace: ccsm
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day0:
+    username: sysadmin
+    password: Pa$$w0rd4LDAP
+  day1:
+  - username: ccsmoam
+    password: Changeme@1st
+    groups:
+    - ausf_admin
+    - udm_sensitive_key_admin
+    - udm_admin
+    - system-admin
+    - nrfagent-admin
+    - hssepc_admin
+    - ccsm-admin
+    - eir_admin
+  - username: ccsmsec
+    password: Changeme@1st
+    groups:
+    - udm_security_admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+snmp:
+  agentEngineId: 8000137001C0A899ECCD107E28
+  sourceIdentifier: 127.0.0.1
+license:
+  customerId: "946060"
+  swltId: STA-CCSM-12
+cnom:
+  fqdn: cnom.ccsm.n67-eccd1.sero.gic.ericsson.se
+ddc:
+  remotePath: /lab/pccc_logs/5GC-CICD/ci/N67_DDC/eccd1/n67-ccsm-ddc
+vtap:
+  tapagent: false
+
+######################################
+## CNF specific information
+######################################
+ccsm:
+  ausf:
+    instanceId: 76f4b62e-f3f7-454e-9562-67eccd1d0793
+    host: ausf1.n67
+    port: 443
+  udm:
+    instanceId: 841d1b7c-5103-11e9-8c09-67eccd107e28
+    host: udm1.n67
+    port: 443
+  eir:
+    instanceId: 77fba27d-6a44-4074-8d9a-67eccd1fc6ef
+    host: eir1.n67
+    port: 443
+  hss:
+    instanceId: 9448c0d3-6590-4e54-b90f-67eccd1fc48d
+    host: hss1.n67
+    port: 80
+#diameter-config.xml <origin-host>not align
+    diameter:
+      host: esm
+
+hpaReplica:
+  eric-udm-cancelepclocation: {min: 2, max: 2}
+  eric-udm-capacity: {min: 2, max: 2}
+  eric-udm-eapauth: {min: 2, max: 2}
+  eric-udm-eapprimeauth: {min: 2, max: 2}
+  eric-udm-epsauth: {min: 5, max: 6}
+  eric-udm-gbaauth: {min: 2, max: 2}
+  eric-udm-imsauth: {min: 2, max: 2}
+  eric-udm-iratamfdereg: {min: 3, max: 3}
+  eric-udm-iratamflocation: {min: 2, max: 2}
+  eric-udm-iratsndereg: {min: 3, max: 3}
+  eric-udm-iwk5g2g: {min: 2, max: 2}
+  eric-udm-sdmamdata: {min: 3, max: 3}
+  eric-udm-sdmimplicitunsub: {min: 2, max: 3}
+  eric-udm-sdmmultipledataset: {min: 2, max: 2}
+  eric-udm-sdmnotif: {min: 2, max: 2}
+  eric-udm-sdmnssai: {min: 2, max: 2}
+  eric-udm-sdmsmdata: {min: 2, max: 3}
+  eric-udm-sdmsmfselect: {min: 2, max: 3}
+  eric-udm-sdmsubscriptions: {min: 5, max: 5}
+  eric-udm-sdmuectxtsmf: {min: 2, max: 2}
+  eric-udm-ueauth: {min: 3, max: 3}
+  eric-udm-uecmamfget: {min: 2, max: 2}
+  eric-udm-uecmamfderegnotifier: {min: 1, max: 1}
+  eric-udm-uecmamfregupdate: {min: 2, max: 2}
+  eric-udm-uecmreg: {min: 4, max: 5}
+  eric-udm-uecmsmfderegistration: {min: 2, max: 2}
+  eric-udm-uecmsmfregistration: {min: 3, max: 4}
+  eric-ausf-capacity: {min: 2, max: 3}
+  eric-ausf-engine: {min: 2, max: 2}
+  eric-eir-eireic: {min: 4, max: 5}
+  eric-hssepc-capacity: {min: 2, max: 2}
+  eric-hssepc-s6adiameter: {min: 4, max: 4}
+  eric-hssepc-iratsndereg: {min: 4, max: 5}
+  eric-hssepc-s6aauthentication: {min: 5, max: 5}
+  eric-hssepc-s6acancellocation: {min: 4, max: 5}
+  eric-hssepc-s6adeletesubscriber: {min: 2, max: 2}
+  eric-hssepc-s6ainsertsubscriber: {min: 2, max: 2}
+  eric-hssepc-s6anotify: {min: 2, max: 2}
+  eric-hssepc-s6apurge: {min: 2, max: 2}
+  eric-hssepc-s6aupdatelocation: {min: 5, max: 6}
+  eric-hssepc-soap: {min: 2, max: 2}
+  eric-hssepc-subscriptionupdate: {min: 2, max: 2}
+  eric-ccsm-smsengine: {min: 2, max: 2}
+  eric-udm-mtueinfo: {min: 2, max: 2}
+  eric-udm-mtlocation: {min: 2, max: 2}
+  eric-udm-pcscfrestnotif: {min: 2, max: 2}
+  eric-udm-pcscfrestoration: {min: 2, max: 2}
+  eric-udm-ueshcm: {min: 2, max: 2}

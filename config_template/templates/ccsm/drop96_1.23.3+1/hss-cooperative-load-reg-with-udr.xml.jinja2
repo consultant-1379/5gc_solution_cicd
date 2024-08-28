@@ -1,0 +1,137 @@
+?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  Notice that it is a configuration template in XML format
+  compliant with NF YANG model.  This XML template provides
+  a configuration skeleton that shall be modified before
+  loading into the yang service.  Some parts of the document
+  must be deleted or added depending on the network configuration
+  where the VNF will be deployed.
+-->
+  <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+  </capabilities>
+  </hello>]]>]]>
+  <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+  <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="0">
+  <edit-config>
+    <target><running/></target>
+    <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+      <!--
+        Configuration for the feature Cooperative Load Regulation or Early Rejection
+      -->
+      <hssepc xmlns="urn:rdns:com:ericsson:oammodel:ericsson-hssepc">
+        <!-- States the epc-diameter -->
+        <eps-diameter>
+            <early-rejection>
+              <external-busy-ratio>
+                <algorithm>adaptive</algorithm>
+                <threshold-up>4</threshold-up>
+                <threshold-down>0</threshold-down>
+                <step-up>10</step-up>
+                <step-down>5</step-down>
+                <throttling-rate-up>105</throttling-rate-up>
+                <throttling-rate-down>120</throttling-rate-down>
+              </external-busy-ratio>
+              <time-interval>2000</time-interval>
+              <statistics-window-size>10</statistics-window-size>
+              <message-priorities>
+                <application>S6a</application>
+                <commands>
+                  <command>Update-Location-Request</command>
+                  <priority>4</priority>
+                  <conditions>
+                    <priority>9</priority>
+                    <type>value-has-bit</type>
+                    <avp>ULR-Flags</avp>
+                    <value>32</value>
+                  </conditions>
+                </commands>
+                <commands>
+                  <command>Authentication-Information-Request</command>
+                  <priority>8</priority>
+                  <conditions>
+                    <priority>10</priority>
+                    <type>value-has-bit</type>
+                    <avp>AIR-Flags</avp>
+                    <value>1</value>
+                  </conditions>
+                  <conditions>
+                    <priority>7</priority>
+                    <type>avp-exists</type>
+                    <avp>Requested-EUTRAN-Authentication-Info/Immediate-Response-Preferred</avp>
+                  </conditions>
+                </commands>
+                <commands>
+                  <command>Notify-Request</command>
+                  <priority>5</priority>
+                </commands>
+                <commands>
+                  <command>Purge-UE-Request</command>
+                  <priority>11</priority>
+                </commands>
+              </message-priorities>
+            </early-rejection>
+        </eps-diameter>
+        <!-- States the swx-diameter -->
+        <swx-diameter>
+            <early-rejection>
+              <external-busy-ratio>
+                <algorithm>adaptive</algorithm>
+                <threshold-up>4</threshold-up>
+                <threshold-down>0</threshold-down>
+                <step-up>10</step-up>
+                <step-down>5</step-down>
+                <throttling-rate-up>105</throttling-rate-up>
+                <throttling-rate-down>120</throttling-rate-down>
+              </external-busy-ratio>
+              <time-interval>2000</time-interval>
+              <statistics-window-size>10</statistics-window-size>
+              <message-priorities>
+                <application>SWx</application>
+                <commands>
+                  <command>Server-Assignment-Request</command>
+                  <priority>8</priority>
+                  <conditions>
+                    <priority>10</priority>
+                    <type>value-equals-to</type>
+                    <avp>Server-Assignment-Type</avp>
+                    <value>1</value>
+                  </conditions>
+                  <conditions>
+                    <priority>11</priority>
+                    <type>value-equals-to</type>
+                    <avp>Server-Assignment-Type</avp>
+                    <value>5</value>
+                  </conditions>
+                  <conditions>
+                    <priority>12</priority>
+                    <type>value-equals-to</type>
+                    <avp>Server-Assignment-Type</avp>
+                    <value>8</value>
+                  </conditions>
+                  <conditions>
+                    <priority>13</priority>
+                    <type>value-equals-to</type>
+                    <avp>Server-Assignment-Type</avp>
+                    <value>9</value>
+                  </conditions>
+                  <conditions>
+                    <priority>14</priority>
+                    <type>value-equals-to</type>
+                    <avp>Server-Assignment-Type</avp>
+                    <value>10</value>
+                  </conditions>
+                </commands>
+                <commands>
+                  <command>Multimedia-Authentication-Request</command>
+                  <priority>9</priority>
+                </commands>
+              </message-priorities>
+            </early-rejection>
+        </swx-diameter>
+      </hssepc>
+    </config>
+  </edit-config>
+  </rpc>
+  <close-session/>

@@ -1,0 +1,8 @@
+{
+  "clusterName": "n67-eccd1",
+  "additionalParams": {
+    "namespace": "eda",
+    "applicationTimeOut": "2000",
+    "commandTimeOut": "2000"
+  }
+}

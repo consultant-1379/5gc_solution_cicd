@@ -1,0 +1,18 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global.yaml
+templateDir: ../../../../../../config_template/templates/
+#jsonschemaGlobal: ../jsonschemas/schema-global.yaml
+
+files:
+- template: sc/1.13.25+746/values.yaml.jinja2
+  target: day0/values-bsf-scp.yaml
+- template: common/instantiate.json.jinja2
+  target: day0/instantiate.json
+- template: sc/1.13.25+746/scp-config.txt.jinja2
+  target: day1/scp-config.txt
+- template: sc/1.13.25+746/bsf-config.txt.jinja2
+  target: day1/bsf-config.txt
+- template: sc/1.13.25+746/ddc-config.txt.jinja2
+  target: day1/ddc-config.txt
+- template: common/user-config.txt.jinja2
+  target: day1/user-config.txt

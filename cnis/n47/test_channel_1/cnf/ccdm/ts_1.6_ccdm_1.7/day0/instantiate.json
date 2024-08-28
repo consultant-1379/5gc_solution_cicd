@@ -1,0 +1,8 @@
+{
+  "additionalParams": {
+    "namespace": "ccdm",
+    "skipVerification": true,
+    "applicationTimeOut": "2000",
+    "commandTimeOut": "2000"
+  }
+}

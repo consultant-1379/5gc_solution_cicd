@@ -1,0 +1,105 @@
+vnflcm:
+  vnfInstanceName: n84-sc2
+  vnfProductName: Signaling_Controller
+  vnfSoftwareVersion: 1.8.0+180
+  values_file: ../../../../../../../ts-config/templates/sc/1.8/values.yaml.jinja2
+  rendered-values-file: ../../../cnf/sc/ts_1.9/day0/values.yaml
+  instantiate_file: ../../../../../../../ts-config/templates/common/instantiate.json.jinja2
+  rendered-instantiate-file: ../../../cnf/sc/ts_1.9/day0/instantiate.json
+  clusterName: n84-eccd3
+  namespace: sc
+  InstantiateVnfRequest:
+    applicationTimeOut: 3000
+    skipVerification: "true"
+
+day0:
+ # k8s-resource:
+ #   - file: day0_secrets/bsf-db-secret.yaml
+ #   - file: day0_secrets/distributed_coordinator_ed_sc_secret.yaml
+ #   - file: day0_secrets/distributed_coordinator_ed_secret.yaml
+ #   - file: day0_secrets/ldap-secret.yaml
+ #   - file: day0_secrets/eric-sc-bragent-secret.yaml
+ #   - file: day0_secrets/wcdbcd-admin-secret.yaml
+ #   - file: day0_secrets/wcdbcd-day0-secret.yaml
+ 
+  k8s-secret:
+  - name: snmp-alarm-provider-config
+    sources:
+    - { type: file, key: config.json, file: ../../../../../../../ts-config/templates/common/snmp-config.json.jinja2 ,rendered-file: ../../../cnf/sc/ts_1.9/day0/snmp-config.json }
+
+verify-running: true
+ignore-not-running:
+- eric-data-search-engine-curator
+
+day1:
+  access:
+    oam: 214.12.117.203
+    ldap-admin:
+      user: admin
+      pass: rootroot
+    users:
+    - user: tsadm
+      pass: tsadm
+      pass_init: tsadm
+      groups: [ system-admin system-security-admin sc-admin bsf-admin bsf-security-admin scp-admin scp-security-admin sc-security-admin sc-read-only]
+    configs:
+    - file: ../../../../../../../ts-config/templates/common/user-config.txt.jinja2
+      rendered-file: ../../../cnf/sc/ts_1.9/day1/user-config.txt
+      proto: ssh
+      pre-verify-pods-ready:
+        check-interval: 5
+        deployments:
+        - eric-cm-yang-provider
+      post-delay: 30
+      retry-interval: 30
+
+  app-config:
+  # - file: external-certificates.txt
+    # user-id: 0
+    # proto: ssh
+    # retry-interval: 30
+    # post-delay: 10
+  # - file: external-certificates-bsf.txt
+    # user-id: 0
+    # proto: ssh
+    # retry-interval: 30
+    # post-delay: 10
+  # - file: external-certificates-scp.txt
+    # condition:
+      # sitedata-param: indirectCommunication.enabled
+      # expected-value: true
+    # user-id: 0
+    # proto: ssh
+    # retry-interval: 30
+    # post-delay: 10
+  - file: ../../../../../../../ts-config/templates/sc/1.8/bsf-config.txt.jinja2
+    rendered-file: ../../../cnf/sc/ts_1.9/day1/bsf-config.txt
+    user-id: 0
+    proto: ssh
+    retry-interval: 30
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/sc/1.8/scp-config.txt.jinja2
+    rendered-file: ../../../cnf/sc/ts_1.9/day1/scp-config.txt 
+    condition:
+      sitedata-param: indirectCommunication.enabled
+      expected-value: true
+    user-id: 0
+    proto: ssh
+    retry-interval: 30
+    post-delay: 10
+  # - file: ../../../../../../../ts-config/templates/sc/common/ddc-config.txt.jinja2
+    # rendered-file: ../../../cnf/sc/ts_1.9/day1/ddc-config.txt 
+    # user-id: 0
+    # proto: ssh
+    # retry-interval: 30
+    # post-delay: 10
+  - name: Database initialize
+    user-id: 0
+    commands: |-
+      bsf-function nf-instance bsf1 bsf-service serviceName1 binding-database initialize-db datacenter { name datacenter1 }
+      end
+    post-delay: 10
+
+sitedata:
+- site.yaml
+- ../site_global.yaml

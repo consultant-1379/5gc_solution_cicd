@@ -1,0 +1,213 @@
+---
+global:
+  timezone: CET
+  applicationid: eric-n47-pcg001
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: 'PACKET_CORE_GATEWAY'
+          customerId: '946060'
+          swltId: 'STA-PCG-20'
+
+eric-pc-kvdb-rd-server:
+  resources:
+    node:
+      limits:
+        cpu: 1000m
+        memory: 5Gi
+      requests:
+        cpu: 250m
+        memory: 1Gi
+
+eric-cm-mediator:
+  cmm:
+    restWorkers: 2
+#    debug: True
+#    logLevel: "Debug"
+#    kafkaLogLevel: "Debug"
+#    kafkaProducerConfig: "{\"max_request_size\": 2097152}"
+
+eric-data-document-database-pg:
+  persistentVolumeClaim:
+    enabled: true
+    storageClassName: network-block
+#  postgresConfig:
+#    client_min_messages: debug5
+#    log_min_messages: debug5
+#    log_min_error_statement: debug5
+
+eric-data-document-database-pg-cm:
+  persistentVolumeClaim:
+    enabled: true
+    storageClassName: network-block
+#  postgresConfig:
+#    client_min_messages: debug5
+#    log_min_messages: debug5
+#    log_min_error_statement: debug5
+
+eric-si-application-sys-info-handler:
+  resources:
+    eric-si-application-sys-info-handler:
+      limits:
+        cpu: "100m"
+        memory: 150Mi
+      requests:
+        cpu: "50m"
+        memory: 50Mi
+
+eric-pc-up-data-plane:
+  allowNetworkConfigChanges: true
+  replicaCount: 20
+  acceleratedIo:
+    enabled: true
+    driver: bifurcated
+  metadata:
+    podAnnotations:
+      k8s.v1.cni.cncf.io/networks: default/sriov-left-dpdk-mellanox, default/sriov-right-dpdk-mellanox
+  deployment:
+    pinThreads: true
+  resources:
+    dataPlane:
+      requests:
+        cpu: '12'
+        memory: 18Gi
+        hugepages-1Gi: 1Gi
+        mellanox.com/mlnx_left: "1"
+        mellanox.com/mlnx_right: "1"
+      limits:
+        cpu: '12'
+        memory: 18Gi
+        hugepages-1Gi: 1Gi
+        mellanox.com/mlnx_left: "1"
+        mellanox.com/mlnx_right: "1"
+
+  interfaces:
+    - name: net1
+      type: host-device
+      resourceName: 'mellanox.com/mlnx_left'
+    - name: net2
+      type: host-device
+      resourceName: 'mellanox.com/mlnx_right'
+
+  nodeSelector:
+    node-pool: pool2
+
+  tolerations:
+    - key: high-throughput
+      effect: NoSchedule
+  cm_source_env: false
+  global:
+    serviceNames:
+      cm:
+        mediator: ''
+  applications:
+    - name: app100
+
+eric-pc-up-pfcp-endpoint:
+  replicaCount: 8
+  cm_source_env: false
+  global:
+    serviceNames:
+      cm:
+        mediator: ''
+
+eric-pc-routing-engine:
+  interfaces:
+    type: ovs
+    ovs:
+    - bridge: br_data
+      vlan_mode: trunk
+      trunk:
+        - minID: 164
+          maxID: 165
+        - minID: 167
+          maxID: 168
+
+eric-cm-yang-provider:
+  objectStorage:
+    enableImportExportCommands: true
+    secretName: eric-pc-gateway-obj-storage-secret
+  service:
+    annotations:
+      addressPoolName: pcg-oam
+      sharedVIPLabel: pcg-oam
+
+eric-pm-server:
+  rbac:
+    appMonitoring:
+      enabled: true
+      configFileCreate: false
+  server:
+    persistentVolume:
+      enabled: true
+      size: 64Gi
+  resources:
+    eric-pm-server:
+      limits:
+        cpu: "3"
+        memory: 32Gi
+      requests:
+        cpu: 500m
+        memory: 12Gi
+
+
+eric-cnom-server:
+  service:
+    type: LoadBalancer
+  annotations:
+    metallb.universe.tf/address-pool: pcg-oam
+    metallb.universe.tf/allow-shared-ip: pcg-oam
+
+eric-data-object-storage-mn:
+  affinity:
+    podAntiAffinity: hard
+
+eric-data-search-engine:
+  data:
+
+eric-fh-snmp-alarm-provider:
+  service:
+    annotations:
+     addressPoolName: pcg-oam
+     sharedVIPLabel: pcg-oam
+
+eric-odca-diagnostic-data-collector:
+  env:
+    sftphost: "11.100.3.51:22"
+    sftpFileLocation: n47-pcg-ddc
+  sftpCredentials:
+    username: "root"
+    password: "lmc_xdg"
+  resources:
+    promReceiver:
+      limits:
+        cpu: '2'
+        memory: 32Gi
+        ephemeral-storage: 30Gi
+      requests:
+        cpu: 1600m
+        memory: 800M
+        ephemeral-storage: 24Gi
+
+eric-pm-bulk-reporter:
+  service:
+    annotations:
+      addressPoolName: pcg-oam
+      sharedVIPLabel: pcg-oam
+eric-data-sftp-server:
+  service:
+    annotations:
+      sharedVIPLabel: pcg-oam
+      addressPoolName: pcg-oam
+
+eric-sec-ldap-server:
+  adminCredentials:
+    adminuser: day0
+    adminpasswd: "$6$XcFGoO/Kh1Ruh8ng$J3pHByyQ8Wpq2J5M2H6Ukkf9acGwOWHwvtimlT4.BR0Mtq9264b2ktiEmjRczmQWqFVCkYAiJb3rxXAPtlxLk1"
+
+eric-lm-combined-server:
+  licenseServerClient:
+    licenseServer:
+      thrift:
+        host: 10.221.14.88
+        port: 9095

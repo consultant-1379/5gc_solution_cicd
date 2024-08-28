@@ -1,0 +1,129 @@
+# general settings
+global:
+  timezone: CET
+  domainName: sero.gic.ericsson.se
+  clusterName: eda2.n84-eccd3
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: EDA
+          customerId: 946060
+          swltId: STA-EDA-1
+  activation:
+    service:
+      prov:
+        annotations:
+          metallb.universe.tf/allow-shared-ip: eda-oam
+          metallb.universe.tf/address-pool: eda-oam
+      oam:
+        annotations:
+          metallb.universe.tf/allow-shared-ip: eda-oam
+          metallb.universe.tf/address-pool: eda-oam
+  kubeApi:
+    port: 6443
+
+#ingress:
+#  oam:
+#    secret: eda-oam-tlscrt
+#  prov:
+#    secret: eda-prov-tlscrt
+
+eric-tm-ingress-controller-cr:
+  service:
+    annotations:
+      sharedVIPLabel: eda-oam
+      addressPoolName: eda-oam
+
+eric-data-wide-column-database-cd:
+  persistence:
+    dataVolume:
+      persistentVolumeClaim:
+        storageClassName: network-block
+        size: 30G
+eric-act-activation-engine:
+  statefulset:
+    storageClass: network-block
+  deployment:
+    replicas: 2
+  initContainers:
+    eric-act-hss-validator:
+      imageName: hss-validator-image
+      tag: 1.29.102
+
+eric-cnom-document-database-mg:
+  persistence:
+    storageClass: network-block
+    persistentVolumeClaim:
+      storageClassName: network-block
+
+eric-cloud-native-base:
+  eric-si-application-sys-info-handler:
+    asih:
+      applicationId: n84-eda2
+  eric-fh-snmp-alarm-provider:
+    service:
+      annotations:
+        sharedVIPLabel: eda-oam
+        addressPoolName: eda-oam
+  eric-data-message-bus-kf:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+        size: 2G
+  eric-data-document-database-pg:
+    persistentVolumeClaim:
+      storageClassName: network-block
+  eric-data-search-engine:
+    autoSetRequiredWorkerNodeSysctl: false
+    persistence:
+      data:
+        persistentVolumeClaim:
+          storageClassName: network-block
+      master:
+        persistentVolumeClaim:
+          storageClassName: network-block
+  eric-data-coordinator-zk:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+  eric-data-distributed-coordinator-ed:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+  eric-ctrl-bro:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+  eric-pm-server:
+    server:
+      persistentVolume:
+        storageClass: network-block
+  eric-lm-combined-server:
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: 10.221.14.88
+          port: 9095
+
+eric-act-aaa:
+  misc:
+    replicaCount: 1
+eric-act-inbound-async:
+  misc:
+    replicaCount: 1
+eric-act-inbound-interfaces:
+  misc:
+    replicaCount: 1
+eric-act-inbound-mml:
+  misc:
+    replicaCount: 1
+eric-act-proclog-cassandra-stasher:
+  misc:
+    proclog_stasher:
+      replicaCount: 1
+eric-act-rest-provisioning:
+  misc:
+    replicaCount: 1
+eric-act-tomcat:
+  misc:
+    replicaCount: 1

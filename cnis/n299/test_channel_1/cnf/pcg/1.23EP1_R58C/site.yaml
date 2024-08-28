@@ -1,0 +1,147 @@
+nodeName: node299-cluster1-pcg1
+nodeType: PCG
+instance: 1
+
+vnflcm:
+  clusterName: node299-cluster1
+  namespace: pcg1
+#  InstantiateVnfRequest:
+#    applicationTimeOut: 1200
+#    skipVerification: "true"
+
+users:
+  day1:
+  - username: pcg-admin
+    password: Changeme@1st
+    groups: [ system-admin system-troubleshooter ]
+
+ddc:
+  remotePath: /root/ddc/node299-cluster1-pcg1
+
+license:
+  customerId: '946060'
+  swltId: STA-PCG-29 #DM5GC-NODE299-C1-PCG1-1  #for vNels its : STA-PCG-29
+snmp:
+  agentEngineId: 800000c1047063673163317331
+  sourceIdentifier: 10.221.124.5
+  heartbeatInterval: 600
+replicaCount:
+  eric-pc-up-data-plane: 14
+  eric-pc-kvdb-rd-server: 3
+  eric-pc-up-pfcp-endpoint: 4
+pcg:
+  nicVendor: mellanox
+  dpMaxNum: 18
+  dpCpu: 12
+  nicResrName:
+  - mellanox.com/mlnx25g_left
+  - mellanox.com/mlnx25g_right
+  ipRule:
+    ipv4:
+      defaultGw: [1]
+      bgpNeighbors: [2,3]
+      creIpFrom: 21
+      dpIpFrom: 31
+    ipv6:
+      defaultGw: [1]
+      bgpNeighbors: [2,3]
+      creIpFrom: 33
+      dpIpFrom: 49
+  intraForward:
+    vlan: 2210
+    ipv4: 172.21.128.128/25
+
+
+  networkInstances:
+  - name: sig_cn
+    localAs: 4202111002
+    remoteAs: 4251100002
+    ipForward:
+      vlan: 2202
+      ipv4: 172.22.32.0/24
+    vnfLoop:
+      ipv4: 172.18.32.254
+    upLoop:
+    - name: cp
+      ipv4: 172.18.32.1
+      interfaces:
+      - type: cp-function
+        name: sxn4u
+      - type: pfcp
+        name: sxn4
+
+
+  - name: toext_open_1
+    localAs: 4202111005
+    remoteAs: 4251100005
+    ipForward:
+      vlan: 2205
+      ipv4: 172.22.128.0/24
+    dpLoop:
+      ipv4: 172.18.128.0/25
+    vnfLoop:
+      ipv4: 172.18.128.254
+    ipPools:
+    - 21.0.0.0/10
+    - 21.64.0.0/10
+    - fd21:1::/44
+    - fd21:1:0200::/44
+   
+  - name: toext_open_2
+    localAs: 4202111006
+    remoteAs: 4251100006
+    ipForward:
+      vlan: 2206
+      ipv4: 172.22.160.0/24
+    dpLoop:
+      ipv4: 172.18.160.0/25
+    vnfLoop:
+      ipv4: 172.18.160.254
+    ipPools:
+    - 21.128.0.0/10
+    - 21.192.0.0/10
+    - fd21:1:0400::/44
+    - fd21:1:0600::/44
+
+
+  - name: ran
+    localAs: 4202111004
+    remoteAs: 4251100004
+    ipForward:
+      vlan: 2204
+      ipv4: 172.22.64.0/24
+    dpLoop:
+      ipv4: 172.18.192.0/25
+    vnfLoop:
+      ipv4: 172.18.192.254
+    upLoop:
+    - name: access
+      ipv4: 172.18.64.0/25
+      interfaces:
+      - type: access
+        name: s1n3
+
+
+  - name: media_cn
+    localAs: 4202111001
+    remoteAs: 4251100001
+    ipForward:
+      vlan: 2201
+      ipv4: 172.22.0.0/24
+    dpLoop:
+      ipv4: 172.18.96.0/25
+    vnfLoop:
+      ipv4: 172.18.96.254
+    upLoop:
+    - name: pgw
+      ipv4: 172.18.0.0/25
+      interfaces:
+      - type: access
+        name: s5s8u
+        default: false
+    - name: sgw
+      ipv4: 172.18.0.128/25
+      interfaces:
+      - type: core
+        name: s5s8u
+

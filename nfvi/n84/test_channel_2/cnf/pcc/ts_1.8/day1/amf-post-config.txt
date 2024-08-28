@@ -1,0 +1,13 @@
+gsh action_node_credential_install_credential_from_uri -nci SERVER -uri /Core/log/server-certificate-pkcs12.p12 -cp ericsson
+gsh action_node_credential_install_credential_from_uri -nci CLIENT -uri /Core/log/client-certificate-pkcs12.p12 -cp ericsson
+gsh action_cert_m_install_trusted_cert_from_uri -uri /Core/log/RootCA.crt
+gsh create_trust_category -tci CA -tcr "-cei RootCA.crt"
+gsh modify_ip_service -sn SBI-Client -nci CLIENT -tci CA
+gsh modify_ip_service -sn SBI-Server -nci SERVER -tci CA
+gsh modify_nssf_service_instance -nsin nssf_srv_1 -scheme https
+gsh modify_nssf_service_instance -nsin nssf_ava_1 -scheme https
+gsh modify_nrf_service_instance -nsin srv_3 -scheme https
+gsh modify_nrf_service_instance -nsin srv_4 -scheme https
+gsh check_config
+gsh activate_config_pending
+gsh checkpoint { -cpn config } -default_sc true

@@ -1,0 +1,446 @@
+autowizard false
+config
+!
+network-instances network-instance intraForward
+ enabled true
+!
+network-instances network-instance media
+ enabled     true
+ description media
+ routing bgp 10812
+  neighbor 11.108.1.254
+   choice                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              101
+   address-family ipv4 unicast
+  !
+  neighbor 11.108.1.253
+   choice                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              101
+   address-family ipv4 unicast
+  !
+ !
+ ip static-route up 0.0.0.0/0 11.108.1.1
+ !
+!
+network-instances network-instance ran
+ enabled     true
+ description access
+ default-tgpp-access true
+ routing bgp 10842
+  neighbor 11.108.4.254
+   choice                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              104
+   address-family ipv4 unicast
+  !
+  neighbor 11.108.4.253
+   choice                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              104
+   address-family ipv4 unicast
+  !
+ !
+ ip static-route up 0.0.0.0/0 11.108.4.1
+ !
+!
+network-instances network-instance sgi1
+ enabled     true
+ description core
+ default-tgpp-core true
+ routing bgp 10852
+  neighbor 11.108.5.254
+   choice                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              105
+   address-family ipv4 unicast
+  !
+  neighbor 11.108.5.253
+   choice                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              105
+   address-family ipv4 unicast
+  !
+  neighbor 2a11:108:5::fe
+   choice                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              105
+   address-family ipv6 unicast
+  !
+  neighbor 2a11:108:5::fd
+   choice                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              105
+   address-family ipv6 unicast
+  !
+ !
+ ip static-route up 0.0.0.0/0 11.108.5.1
+ !
+ ipv6 static-route up ::/0 2a11:108:5::1
+ !
+!
+network-instances network-instance signaling
+ enabled     true
+ description signaling
+ default-tgpp-cp-function true
+ routing bgp 10822
+  neighbor 11.108.2.254
+   choice                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              102
+   address-family ipv4 unicast
+  !
+  neighbor 11.108.2.253
+   choice                 external
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              102
+   address-family ipv4 unicast
+  !
+ !
+ ip static-route up 0.0.0.0/0 11.108.2.1
+ !
+!
+interfaces interface cre:net0
+ description cre:net0
+ type        ethernetCsmacd
+ enabled     true
+!
+interfaces interface cre:link_media
+ description      media
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 164
+ parent-interface cre:net0
+ bind-ni-name     media
+ ipv4 enabled true
+ ipv4 address 11.108.1.50
+  prefix-length 24
+interfaces interface cre:link_media
+ address-type ip-range 2
+ !
+!
+interfaces interface cre:link_ran
+ description      access
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 167
+ parent-interface cre:net0
+ bind-ni-name     ran
+ ipv4 enabled true
+ ipv4 address 11.108.4.50
+  prefix-length 24
+interfaces interface cre:link_ran
+ address-type ip-range 2
+ !
+!
+interfaces interface cre:link_sgi1
+ description      core
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 168
+ parent-interface cre:net0
+ bind-ni-name     sgi1
+ ipv4 enabled true
+ ipv4 address 11.108.5.50
+  prefix-length 24
+ !
+ ipv6 enabled true
+ ipv6 address 2a11:108:5::50
+  prefix-length 64
+interfaces interface cre:link_sgi1
+ address-type ip-range 2
+ !
+!
+interfaces interface cre:link_sig
+ description      cp-function
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 165
+ parent-interface cre:net0
+ bind-ni-name     signaling
+ ipv4 enabled true
+ ipv4 address 11.108.2.50
+  prefix-length 24
+interfaces interface cre:link_sig
+ address-type ip-range 2
+ !
+!
+interfaces interface up:eth0
+ description up:eth0
+ type        ethernetCsmacd
+ enabled     true
+ l2-mtu      9000
+!
+interfaces interface up:eth1
+ description up:eth1
+ type        ethernetCsmacd
+ enabled     true
+ l2-mtu      9000
+!
+interfaces interface up:group1
+ type      activeBackupBonding
+ enabled   true
+ l2-mtu    9000
+ member-if [ up:eth0 up:eth1 ]
+!
+interfaces interface up:link_media
+ description      up:link_media
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 164
+ l2-mtu           9000
+ parent-interface up:group1
+ bind-ni-name     media
+ ipv4 enabled true
+ ipv4 address 11.108.1.2
+  prefix-length 24
+interfaces interface up:link_media
+ address-type ip-range  20
+ !
+!
+interfaces interface up:link_ran
+ description      up:link_ran
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 167
+ l2-mtu           9000
+ parent-interface up:group1
+ bind-ni-name     ran
+ ipv4 enabled true
+ ipv4 address 11.108.4.2
+  prefix-length 24
+interfaces interface up:link_ran
+ address-type ip-range 20
+ !
+!
+interfaces interface up:link_sgi1
+ description      up:link_sgi1
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 168
+ l2-mtu           9000
+ parent-interface up:group1
+ bind-ni-name     sgi1
+ ipv4 enabled true
+ ipv4 address 11.108.5.2
+  prefix-length 24
+ !
+ ipv6 enabled true
+ ipv6 address 2a11:108:5::2
+  prefix-length 64
+interfaces interface up:link_sgi1
+ address-type ip-range 20
+ !
+!
+interfaces interface up:link_sig
+ description      up:link_sig
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 165
+ l2-mtu           9000
+ parent-interface up:group1
+ bind-ni-name     signaling
+ ipv4 enabled true
+ ipv4 address 11.108.2.2
+  prefix-length 24
+interfaces interface up:link_sig
+ address-type ip-range 20
+ !
+!
+interfaces interface up:dploop_media
+ description  up:dploop_media
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name media
+ ipv4 enabled true
+ ipv4 address 108.1.1.2
+  prefix-length 27
+interfaces interface up:dploop_media
+ address-type ip-range 20
+ !
+!
+interfaces interface up:dploop_ran
+ description  up:dploop_ran
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name ran
+ ipv4 enabled true
+ ipv4 address 108.4.1.2
+  prefix-length 27
+interfaces interface up:dploop_ran
+ address-type ip-range 20
+ !
+!
+interfaces interface up:dploop_sgi1
+ description  up:dploop_sgi1
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name sgi1
+ ipv4 enabled true
+ ipv4 address 108.5.1.2
+  prefix-length 27
+ !
+ ipv6 enabled true
+ ipv6 address 2a00:108:2:f::2
+  prefix-length 120
+interfaces interface up:dploop_sgi1
+ address-type ip-range 20
+ !
+!
+interfaces interface up:dploop_sig
+ description  up:dploop_sig
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name signaling
+ ipv4 enabled true
+ ipv4 address 108.2.1.2
+  prefix-length 27
+interfaces interface up:dploop_sig
+ address-type ip-range 20
+ !
+!
+interfaces interface up:packet_core_media_pgw
+ type         tgppAccess
+ enabled      true
+ bind-ni-name media
+ ipv4 enabled true
+ address-type ip-range 30
+ ipv4 address 108.1.0.1
+  prefix-length 27
+ !
+!
+interfaces interface up:packet_core_media_sgw
+ type         tgppCore
+ enabled      true
+ bind-ni-name media
+ ipv4 enabled true
+ address-type ip-range 30
+ ipv4 address 108.1.0.33
+  prefix-length 27
+ !
+!
+interfaces interface up:packet_core_ran
+ type                 tgppAccess
+ enabled              true
+ bind-ni-name         ran
+ ipv4 enabled true
+ ipv4 address 108.4.0.65
+  prefix-length 27
+interfaces interface up:packet_core_ran
+ address-type ip-range 30
+ !
+!
+interfaces interface up:packet_core_sgi1
+ type                 tgppCore
+ enabled              true
+ bind-ni-name         sgi1
+ hosted-address-range [ 16.0.0.0/8 2a01:1::/44 ]
+!
+interfaces interface up:packet_core_sig
+ type                       tgppCpFunction
+ enabled                    true
+ bind-ni-name               signaling
+ heartbeat-interval         50
+ disable-path-management    false
+ ignore-path-failure        false
+ n1-requests                5
+ t1-response-time           6.0
+ heartbeat-n1-requests      12
+ heartbeat-t1-response-time 4.0
+ ipv4 enabled true
+ ipv4 address 108.2.0.33
+  prefix-length 32
+interfaces interface up:packet_core_sig
+ address-type single
+ !
+!
+interfaces interface up:vnfloop_media
+ description  up:vnfloop_media
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name media
+ ipv4 enabled true
+ ipv4 address 108.1.1.254
+  prefix-length 32
+interfaces interface up:vnfloop_media
+ address-type single
+ !
+!
+interfaces interface up:vnfloop_ran
+ description  up:vnfloop_ran
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name ran
+ ipv4 enabled true
+ ipv4 address 108.4.1.254
+  prefix-length 32
+interfaces interface up:vnfloop_ran
+ address-type single
+ !
+!
+interfaces interface up:vnfloop_sgi1
+ description  up:vnfloop_sgi1
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name sgi1
+ ipv4 enabled true
+ ipv4 address 108.5.1.254
+  prefix-length 32
+ !
+ ipv6 enabled true
+ ipv6 address 2a00:108:5:f::2
+  prefix-length 128
+interfaces interface up:vnfloop_sgi1
+ address-type single
+ !
+!
+interfaces interface up:vnfloop_sig
+ description  up:vnfloop_sig
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name signaling
+ ipv4 enabled true
+ ipv4 address 108.2.1.254
+  prefix-length 32
+interfaces interface up:vnfloop_sig
+ address-type single
+ !
+!
+interfaces interface up:intra_forward
+ description      intraForward
+ type             intraForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3700
+ parent-interface up:group1
+ bind-ni-name     intraForward
+ ipv4 enabled true
+ ipv4 address 172.31.100.1
+  prefix-length 24
+ interfaces interface up:intra_forward
+ address-type ip-range 28
+!
+up packet-detection applications application app100
+ enabled true
+ default
+!
+commit

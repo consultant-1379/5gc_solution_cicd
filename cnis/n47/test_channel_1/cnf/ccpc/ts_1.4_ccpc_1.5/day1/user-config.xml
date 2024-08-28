@@ -1,0 +1,76 @@
+<!--xml template for creation of CCPC OAM users. -->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Template should be used by replacing the variable placeholders
+  with actual values. This XML template provides a configuration
+  skeleton that shall be modified before loading into the yang
+  service. Some parts of the document must be deleted or added
+  depending on the network configuration where the CNF will be deployed.
+  OPTIONAL parameters for which value will not be set need to be deleted.
+-->
+<!--HELLO message. It is needed before sending "edit-config".-->
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <capabilities>
+        <capability>urn:ietf:params:netconf:base:1.0</capability>
+    </capabilities>
+</hello>]]>]]>
+
+<!--edit-config rpc-->
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+    <edit-config>
+        <target>
+            <running/>
+        </target>
+        <config>
+            <!--Configuration of users and for authentication.-->
+            <system xmlns="urn:ietf:params:xml:ns:yang:ietf-system">
+                <authentication>
+                    <!-- The list of local users configured for CNF instance.-->
+                    <user>
+                        <!-- The user name string identifying this entry. -->
+                        <name>ccpcoam</name>
+                        <!-- The password for this entry. -->
+                        <password>Changeme1st!</password>
+                        <!-- The password policy. If not defined, the default-password-policy is used.
+                        OPTIONAL. -->
+                        <!-- <password-policy xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">${USER_1_PASSWORD_POLICY}</password-policy> -->
+                        <!-- The groups of the user provided for the NACM module. -->
+                        <groups xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">pcf-admin</groups>
+                        <groups xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">system-admin</groups>
+                        <groups xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">nrfagent-admin</groups>
+                        <groups xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">ccpc-prov-admin</groups>
+                        <!-- groups xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">${GROUP_NAME}</groups -->
+                        <!-- The user account policy. If not defined, the default-account-policy is used.
+                        OPTIONAL. -->
+                        <!--<account-policy xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">${USER_1_ACCOUNT_POLICY}</account-policy>-->
+                        <!-- The administrative state of the user account. Value can be "locked" or "unlocked".
+                        Default value is "unlocked".
+                        OPTIONAL.-->
+                        <administrative-state xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">unlocked</administrative-state>
+                        <!-- The full name of the user assigned to the user account.
+                        OPTIONAL. -->
+                        <full-name xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">CCPC Admin user</full-name>
+                        <!-- Label for free use.
+                        OPTIONAL. -->
+                        <user-label xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">CCPC Admin user</user-label>
+                    </user>
+                    <user>
+                        <name>ccpcsec</name>
+                        <password>Changeme1st!</password>
+                        <!--<password-policy xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">${USER_2_PASSWORD_POLICY}</password-policy> -->
+                        <groups xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">pcf-security-admin</groups>
+                        <groups xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">nrfagent-security-admin</groups>
+                        <groups xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">system-security-admin</groups>
+                        <!--<account-policy xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">${USER_2_ACCOUNT_POLICY}</account-policy> -->
+                        <administrative-state xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">unlocked</administrative-state>
+                        <full-name xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">CCPC Security Admin user</full-name>
+                        <user-label xmlns="urn:rdns:com:ericsson:oammodel:ericsson-system-ext">CCPC Security Admin user</user-label>
+                    </user>
+                </authentication>
+            </system>
+        </config>
+    </edit-config>
+</rpc>
+

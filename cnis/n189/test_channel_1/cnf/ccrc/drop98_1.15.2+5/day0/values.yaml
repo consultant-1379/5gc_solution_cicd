@@ -1,0 +1,1497 @@
+###################################################################################################################################
+#
+# Note:
+#    1. Parametes with "PREFIX-" prefix belong to profiles and set automatically when the related profileName is enabled.
+#       In case user want to customize the parameters, please remove "PREFIX-" in parameter names with proper values. Please
+#       refer to Day-0 Parameter Description for details.
+#
+#    2. All parameters have default value, and some parameters, such as eric-log-transformer.egress.syslog.inclusions,
+#       have sample value in the comments. When user wants to overide the default value, need to remove the default value and
+#       fill in the value that conforming with the format on comments.
+#
+###################################################################################################################################
+global:
+  nrf:
+    istio:
+      #istio-proxy container resources in NRF KVDB pods
+      kvdb:
+        locator:
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+        server:
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 150m
+        adminMgr:
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+      traffic_ingressGatewayHTTPSPort: 443
+      traffic_ingressGatewayHTTPPort:
+      PREFIX-traffic_ingressGatewayHTTPSPort: 443
+      PREFIX-traffic_ingressGatewayHTTPPort: 80
+    forwarding:
+      sendRedundant: true
+    dst:
+      #Note: Mode can be "disabled", "propagate-only" or "full"
+      mode: "disabled"
+      propagator:
+        http:
+          #NOTE: Inject can be "w3c-trace-context", "b3-single" or "b3-multiple"
+          inject: "b3-multiple"
+  dns:
+    istio:
+      kvdb:
+        locator:
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+        server:
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 150m
+        adminMgr:
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+      traffic_ingressGatewayHTTPSPort: 443
+      traffic_ingressGatewayHTTPPort:
+      PREFIX-traffic_ingressGatewayHTTPSPort: 443
+      PREFIX-traffic_ingressGatewayHTTPPort: 80
+    features:
+      dnsEpcSupport:
+        enabled: true
+      dnsRecursionSupport:
+        enabled: true
+        dscp: 0
+        allowedNonStandardPorts: ""
+  istio:
+    tlsHandledByServiceMesh: true
+    egress:
+      enabled: true
+      endpoints:
+        eric_nrf_sbi_traffic:
+          mode: MUTUAL
+          host: "*.3gppnetwork.org"
+          port: 443
+        eric_nrf_kvdb_sbi_traffic:
+          host: "*.kvdb.nrf.3gppnetwork.org"
+        eric_nrf_nbi_traffic:
+          mode: MUTUAL
+          host: "*.sic.com"
+          port: 443
+        eric_nssf_sbi_traffic:
+          mode: MUTUAL
+          host: "*.3gppnetwork.org"
+          port: 443
+        eric_nssf_kvdb_sbi_traffic:
+          host: "*.kvdb.nssf.3gppnetwork.org"
+        eric_dns_sbi_traffic:
+          mode: MUTUAL
+          host: "*.3gppnetwork.org"
+          port: 443
+        eric_dns_kvdb_sbi_traffic:
+          host: "*.kvdb.dns.3gppnetwork.org"
+        eric_policy_studio_traffic:
+          entries:
+            - name: cluster1-nrf
+              host: ""
+              port: 443
+      maxProtocolVersion: TLSv1_3
+      minProtocolVersion: TLSv1_2
+    # Update the value according to kubernetes service ipaddress in default namespace
+    kubernetes_service_ipaddress: 10.96.0.1
+    ingress:
+      maxProtocolVersion: TLSV1_3
+      minProtocolVersion: TLSV1_2
+      apiPrefix: ""
+      mode: MUTUAL
+      cipherSuites:
+        - ECDHE-ECDSA-AES128-GCM-SHA256
+        - ECDHE-RSA-AES128-GCM-SHA256
+        - ECDHE-ECDSA-AES256-GCM-SHA384
+        - ECDHE-RSA-AES256-GCM-SHA384
+  nssf:
+    istio:
+      traffic_ingressGatewayHTTPSPort: 443
+      traffic_ingressGatewayHTTPPort:
+      PREFIX-traffic_ingressGatewayHTTPPort: 80
+      PREFIX-traffic_ingressGatewayHTTPSPort: 443
+    features:
+      notificationIndirectRouting:
+        enabled: false
+    dst:
+      mode: "disabled"
+      propagator:
+        http:
+          #NOTE: Inject can be "w3c-trace-context", "b3-single" or "b3-multiple"
+          inject: "b3-multiple"
+  nsacf:
+    istio:
+      traffic_ingressGatewayHTTPSPort: 443
+      traffic_ingressGatewayHTTPPort:
+  profiles:
+    small-system:
+      enabled: false
+    std-system:
+      enabled: true
+    high-availability:
+      enabled: false
+    cleartext:
+      enabled: false
+    mtls:
+      enabled: true
+    mtls-and-cleartext:
+      enabled: false
+  pullSecret: regcred
+  nodeSelector: {}
+  # The fsGroup default value is set as 10000.
+  # The fsGroup value can be manually set by using the attribute 'global.fsGroup.manual'.
+  # If security policies provide namespace default value in use, 'global.fsGroup.namespace=true' is suggested to use.
+  # Note manual have higher priority than namespace.
+  # fsGroup:
+  #    #  manual: 10000
+  #   #  namespace: true
+  ericsson:
+    licensing:
+      licenseDomains:
+        - customerId: "946060"
+          productType: "CCRC"
+          swltId: "STA-CCRC-19"
+  licensing:
+    sites:
+      - hostname: "nelsaas-vnf1-thrift.sero.gic.ericsson.se"
+        ip: ""
+        priority: 100
+  eric_nrf:
+    enabled: true
+  eric-nrf-extnotify:
+    enabled: false
+  eric_dns:
+    enabled: false
+    dnsOnly: false
+  eric_nssf:
+    enabled: true
+  eric-ps-policystudio:
+    enabled: false
+  service_routing_agent_enabled: false
+  tapagent:
+    allowPrivilegeEscalation: false
+    pvtb:
+      enabled: false
+    egress_exclude_ips: "10.96.0.0/12,192.168.0.0/16"
+  license:
+    nrf:
+      sau_tps_ratio: "2"
+      miot_sau_tps_ratio: "2"
+      dn_sau_tps_ratio: "2"
+      dn_miot_sau_tps_ratio: "2"
+      used_bp_keys: "FAT1024199/1;FAT1024199/6"
+    nssf:
+      sau_tps_ratio: "0.2"
+      used_bp_keys: "FAT1024199/3;FAT1024199/4"
+    dns:
+      sau_qps_ratio: "0.1"
+      miot_sau_qps_ratio: "0.1"
+      used_bp_keys: "FAT1024199/18;FAT1024199/19"
+  security:
+    policyBinding:
+      create: false
+  nrfagent:
+    subscription:
+      # Recommended to set 'true' if CCRC NRF is hierarchical deployment.
+      prediscoveryInstanceId: false
+  registry:
+    url: ""
+  ipStackMode: ipv4
+  #NOTE: internalIPFamily,externalIPv4 and externalIPv6 are only applicable in dual stack cluster
+  internalIPFamily: ""
+  externalIPv4:
+    enabled: false
+  externalIPv6:
+    enabled: false
+  timezone: CET
+eric-pm-bulk-reporter:
+  resources:
+    bulkreporter:
+      requests:
+        cpu: 50m
+    pmsftp:
+      requests:
+        cpu: 50m
+        memory: 147Mi
+      limits:
+        memory: 294Mi
+  persistentVolumeClaim:
+    storageClassName: "network-block"
+  service:
+    annotations:
+      sharedVIPLabel: ccrc-adp
+      addressPoolName: ccrc1-oam
+      cloudProviderLB: {}
+    externalIPv4:
+      annotations:
+        sharedVIPLabel: "ccrc-adp"
+        addressPoolName: "ccrc1-oam"
+        cloudProviderLB: {}
+    externalIPv6:
+      annotations:
+        sharedVIPLabel: "ccrc-adp"
+        addressPoolName: "ccrc1-oam"
+        cloudProviderLB: {}
+eric-cm-mediator:
+  resources:
+    eric-cm-mediator:
+      requests:
+        cpu: 50m
+        memory: 655Mi
+      limits:
+        memory: 1310Mi
+    eric-cm-mediator-notifier:
+      requests:
+        memory: 512Mi
+      limits:
+        memory: 1024Mi
+eric-data-coordinator-zk:
+  resources:
+    datacoordinatorzk:
+      requests:
+        cpu: 200m
+  probes:
+    datacoordinatorzk:
+      livenessProbe:
+        initialDelaySeconds: 100
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+eric-data-message-bus-kf:
+  configurationOverrides:
+    log.retention.bytes: "524288000"
+    message.max.bytes: "2097152"
+  resources:
+    messagebuskf:
+      requests:
+        cpu: 1500m
+        memory: 5632Mi
+      limits:
+        cpu: 3000m
+        memory: 11264Mi
+    jmxExporter:
+      requests:
+        cpu: 300m
+  nodeSelector: {}
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+  affinity:
+    podAntiAffinity: "hard"
+eric-data-distributed-coordinator-ed:
+  resources:
+    dced:
+      limits:
+        cpu: 1
+        memory: 4Gi
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+    brAgent:
+      backupVolume:
+        storageClassName: "network-block"
+eric-cm-yang-provider:
+  resources:
+    notificationController:
+      requests:
+        memory: 100Mi
+    schemaSynchronizer:
+      requests:
+        memory: 100Mi
+    sshd:
+      requests:
+        memory: 126Mi
+  ldap:
+    ipv6Enabled: false
+  service:
+    annotations:
+      sharedVIPLabel: "ccrc-adp"
+      addressPoolName: "ccrc1-oam"
+      cloudProviderLB: {}
+    externalIPv4:
+      annotations:
+        sharedVIPLabel: "ccrc-adp"
+        addressPoolName: "ccrc1-oam"
+        cloudProviderLB: {}
+    externalIPv6:
+      annotations:
+        sharedVIPLabel: "ccrc-adp"
+        addressPoolName: "ccrc1-oam"
+        cloudProviderLB: {}
+  externalTls:
+    netconf:
+      enabled: false
+    tls12Ciphers:
+      - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+      - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+      - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+      - TLS_RSA_WITH_AES_128_GCM_SHA256
+      - TLS_RSA_WITH_AES_256_GCM_SHA384
+eric-fh-snmp-alarm-provider:
+  resources:
+    alarmprovider:
+      requests:
+        cpu: "50m"
+        memory: 1308Mi
+      limits:
+        memory: 2616Mi
+    vip:
+      requests:
+        memory: 100Mi
+      limits:
+        memory: 150Mi
+        cpu: 140m
+  probes:
+    snmpAP:
+      livenessProbe:
+        initialDelaySeconds: 200
+  service:
+    annotations:
+      sharedVIPLabel: "ccrc-adp"
+      addressPoolName: "ccrc1-oam"
+      cloudProviderLB: {}
+    externalIPv4:
+      annotations:
+        sharedVIPLabel: "ccrc-adp"
+        addressPoolName: "ccrc1-oam"
+        cloudProviderLB: {}
+    externalIPv6:
+      annotations:
+        sharedVIPLabel: "ccrc-adp"
+        addressPoolName: "ccrc1-oam"
+        cloudProviderLB: {}
+  sourceIdentifierType: 1
+  sourceIdentifier: "127.0.0.1"
+eric-fh-alarm-handler:
+  resources:
+    alarmhandler:
+      requests:
+        cpu: 120m
+eric-pm-server:
+  resources:
+    eric-pm-server:
+      limits:
+        cpu: 2
+        memory: 15Gi
+        PREFIX-memory: 15Gi
+      requests:
+        cpu: 500m
+        memory: 3883Mi
+        PREFIX-memory: 2048Mi
+    eric-pm-configmap-reload:
+      limits:
+        memory: 42Mi
+      requests:
+        cpu: 50m
+        memory: 21Mi
+    eric-pm-exporter:
+      limits:
+        memory: 100Mi
+      requests:
+        memory: 50Mi
+    eric-pm-reverseproxy:
+      limits:
+        memory: 172Mi
+      requests:
+        memory: 86Mi
+  # config:
+  #  certm_tls:
+  #    - name: remotewrite1
+  #      trustedCertName: remotewrite1-ca
+  #      clientKeyName: remotewrite1-client-key
+  #      clientCertName: remotewrite1-client-certificate
+  externalRemoteWrite: []
+  # - url: 'http://127.0.0.1:54321'
+  #   tls_config:
+  #     ca_file: /run/secrets/remwrtca/remotewrite1/cert1.pem
+  #     cert_file: /run/secrets/remwrtcert/remotewrite1/tls.crt
+  #     key_file: /run/secrets/remwrtcert/remotewrite1/tls.key
+  #   queue_config:
+  #     capacity: 2500
+  #     max_shards: 200
+  #     min_shards: 1
+  #     max_samples_per_send: 500
+  #     batch_send_deadline: 5s
+  #     min_backoff: 30ms
+  #     max_backoff: 100ms
+  #   write_relabel_configs:
+  #     - source_labels: [job]
+  #       regex: 'kubernetes-.*'
+  #       action: drop
+  #     - source_labels: [ddc_job]
+  #       regex: 'kubernetes-.*'
+  #       action: drop
+  #     - source_labels: [scrape_job]
+  #       regex: 'kubernetes-.*'
+  #       action: drop
+  # - url: 'http://127.0.0.1:12345'
+  #   tls_config:
+  #     ca_file: /run/secrets/remwrtca/remotewrite1/cert1.pem
+  #     cert_file: /run/secrets/remwrtcert/remotewrite1/tls.crt
+  #     key_file: /run/secrets/remwrtcert/remotewrite1/tls.key
+  #   queue_config:
+  #     capacity: 2500
+  #     max_shards: 200
+  #     min_shards: 1
+  #     max_samples_per_send: 500
+  #     batch_send_deadline: 5s
+  #     min_backoff: 30ms
+  #     max_backoff: 100ms
+  #   write_relabel_configs:
+  #     - source_labels: [job]
+  #       regex: 'kubernetes-.*'
+  #       action: drop
+  #     - source_labels: [ddc_job]
+  #       regex: 'kubernetes-.*'
+  #       action: drop
+  #     - source_labels: [scrape_job]
+  #       regex: 'kubernetes-.*'
+  #       action: drop
+  rbac:
+    appMonitoring:
+      enabled: true
+      federation:
+        jobOverride: false
+        jobConfiguration: |
+          #- job_name: 'federate-3pp-caas'
+          #  scrape_interval: 60s
+          #  honor_labels: true
+          #  metrics_path: '/federate'
+          #  params:
+          #    'match[]':
+          #      - '{job="kubernetes-nodes",namespace="ccrc"}'
+          #  static_configs:
+          #    - targets:
+          #      - 'eric-victoria-metrics-cluster-vmselect.monitoring:8481'
+  server:
+    persistentVolume:
+      storageClass: "network-block"
+eric-pm-resource-monitor:
+  resources:
+    pmrm:
+      requests:
+        memory: 128Mi
+eric-log-shipper:
+  resources:
+    logshipper:
+      limits:
+        memory: 2Gi
+        cpu: 500m
+      requests:
+        memory: 2Gi
+        cpu: 100m
+eric-cnom-server:
+  resources:
+    server:
+      requests:
+        memory: 400Mi
+        cpu: 200m
+      limits:
+        memory: 1000Mi
+        cpu: 1500m
+  fqdn: cnom.ccrc1-oam.n189-eccd1.seli.gic.ericsson.se
+  legalNotice: |-
+    IF YOU ARE NOT AN AUTHORIZED USER, PLEASE EXIT IMMEDIATELY
+
+    This system processes personal information. Handle personal information with care. Misuse, including unauthorized access, is grounds for legal action. Version: 1.0, Date: October 27, 2020.
+eric-ctrl-bro:
+  resources:
+    backupAndRestore:
+      requests:
+        cpu: 500m
+        memory: 2Gi
+        ephemeral-storage: 500Mi
+      limits:
+        cpu: 2
+        memory: 4Gi
+        ephemeral-storage: 1Gi
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+eric-sec-access-mgmt:
+  resources:
+    iam:
+      requests:
+        memory: 2400Mi
+      limits:
+        memory: 4800Mi
+  enabled: false
+  preLoginMessage:
+    messageString: |-
+      Important legal notice
+
+      IF YOU ARE NOT AN AUTHORIZED USER STOP ANY ACTIVITY YOU ARE PERFORMING ON THIS SYSTEM AND EXIT IMMEDIATELY.
+
+      This system is provided for authorized and official use only. The usage of this system is monitored and audited. Unauthorized or improper usage may result in disciplinary action, civil or criminal penalties.
+  service:
+    ipv6:
+      enabled: false
+  http:
+    hostValidation:
+      allowedHosts: ""
+  ingress:
+    hostname: ""
+eric-sec-ldap-server:
+  replicaCount: 2
+  resources:
+    ldap:
+      requests:
+        cpu: 50m
+  persistentVolumeClaim:
+    storageClassName: "network-block"
+eric-sec-key-management:
+  replicaCount:
+    kms: 2
+  resources:
+    vault:
+      requests:
+        cpu: 50m
+        memory: 1272Mi
+      limits:
+        memory: 2544Mi
+    metrics:
+      requests:
+        memory: 30Mi
+      limits:
+        memory: 60Mi
+eric-sec-sip-tls:
+  resources:
+    sip-tls:
+      requests:
+        cpu: 100m
+    sip-tls-supervisor:
+      requests:
+        cpu: 50m
+eric-tm-ingress-controller-cr:
+# According ADP Service User Guide
+  resources:
+    contour:
+      limits:
+        cpu: "600m"
+        memory: "2400Mi"
+    envoy:
+      limits:
+        cpu: "2"
+        memory: 600Mi
+  service:
+    annotations:
+      sharedVIPLabel: "ccrc-adp"
+      addressPoolName: "ccrc1-oam"
+      cloudProviderLB: {}
+    externalIPv4:
+      annotations:
+        sharedVIPLabel: "ccrc-adp"
+        addressPoolName: "ccrc1-oam"
+        cloudProviderLB: {}
+    externalIPv6:
+      annotations:
+        sharedVIPLabel: "ccrc-adp"
+        addressPoolName: "ccrc1-oam"
+        cloudProviderLB: {}
+  minimumProtocolVersion: "1.2"
+eric-lm-combined-server:
+  resources:
+    eric-lm-license-server-client:
+      requests:
+        cpu: 300m
+        memory: 1024Mi
+    eric-lm-license-consumer-handler:
+      requests:
+        cpu: 500m
+        memory: 1024Mi
+      limits:
+        cpu: 2000m
+        memory: 2048Mi
+eric-odca-diagnostic-data-collector:
+  resources:
+    diagnostic-data-collector-manual:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        ephemeral-storage: 15Gi
+        cpu: 1
+        memory: 2Gi
+    diagnostic-data-collector:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        ephemeral-storage: 15Gi
+        cpu: 1
+        memory: 2Gi
+eric-data-object-storage-mn:
+  resources:
+    server:
+      requests:
+        memory: 7413Mi
+      limits:
+        memory: 14827Mi
+  affinity:
+    podAntiAffinity: "hard"
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+eric-log-transformer:
+  replicaCount: 2
+  jvmHeap: 4000m
+  resources:
+    logtransformer:
+      requests:
+        cpu: 1000m
+        memory: 6Gi
+      limits:
+        cpu: 2000m
+        memory: 6Gi
+    metrics:
+      limits:
+        memory: 512Mi
+      requests:
+        memory: 256Mi
+  networkPolicy:
+    egress: []
+    #  - cidr: 172.17.100.0/22
+    #    ports:
+    #    - protocol: TCP
+    #      port: 514
+    #    - protocol: UDP
+    #      port: 514
+  egress:
+    syslog:
+      enabled: false
+      tls:
+        enabled: true
+      remoteHosts: []
+      #  - host: hostname
+      #    port: 514
+      inclusions:
+        - field: "[facility]"
+          value: "log audit"
+        - field: "[facility]"
+          value: "security/authorization messages"
+      exclusions: []
+      #  - logplane:
+      #    rules:
+      #      - field: "[field1]"
+      #        value: "value1"
+      #      - field: "[field2]"
+      #        value: "value2"
+      filter: "" #|
+    lumberjack:
+      enabled: false
+      remoteHosts: []
+      #  - id: ext-lj-1
+      #    host: "external-logstash-1"
+      #    port: 5044
+      #    codec: json
+      #    inclusions:
+      #      - field: "[facility]"
+      #        value: "log audit"
+      #      - field: "[metadata][category]"
+      #        pattern: 'privacy*'
+      #    exclusions:
+      #      - logplane:
+      #        rules:
+      #          - field: "[facility]"
+      #            value: "security"
+      #          - field: "[severity]"
+      #            value: "error"
+      #  - id: ext-lj-2
+      #    host: "external-logstash-2"
+      #    port: 5044
+      #    codec: json
+      #    filter: #|
+eric-data-search-engine:
+  jvmHeap:
+    ingest: 1024m
+    master: 512m
+    data: 2048m
+  resources:
+    ingest:
+      limits:
+        cpu: 500m
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 2Gi
+    data:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 1000m
+        memory: 4Gi
+    metrics:
+      limits:
+        memory: 250Mi
+      requests:
+        memory: 125Mi
+  persistence:
+    data:
+      persistentVolumeClaim:
+        size: "120Gi"
+        storageClassName: "network-block"
+    master:
+      persistentVolumeClaim:
+        size: "1Gi"
+        storageClassName: "network-block"
+  index_management:
+    delete_indices_by_diskspace:
+      - index: adp-app-debug-logs*
+        size: 60gb
+      - index: adp-app-logs*
+        size: 120gb
+      - index: jaeger-span*
+        size: 40gb
+  service:
+    network:
+      protocol:
+        IPv6: false
+eric-ingressgw-nssf-traffic:
+  resources:
+    istio-proxy:
+      requests:
+        cpu: 700m
+        memory: 256Mi
+        PREFIX-cpu: 500m
+        PREFIX-memory: 256Mi
+      limits:
+        cpu: 2000m
+        memory: 2048Mi
+        PREFIX-cpu: 2000m
+        PREFIX-memory: 2048Mi
+  # loadBalancerIP: ""
+
+  # serviceAnnotations:
+
+  #   metallb.universe.tf/allow-shared-ip: ccrc-nssf-traffic
+
+  #   metallb.universe.tf/address-pool: ccrc-nssf-sig
+  ports:
+    - port: 443
+      targetPort: 8443
+      name: tls
+      tcpkeepalive:
+        ###tcp_keepalive_time in the unit of sec
+        time: 500
+        ###tcp_keepalive_interval in the unit of sec
+
+        interval: 10
+        ###tcp_keepalive_probes
+
+        probes: 6
+    - port: 8091
+      targetPort: 8091
+      name: geode-locators
+      protocol: TCP
+    - port: 8092
+      targetPort: 8092
+      name: geode-gw-rcvrs
+      protocol: TCP
+  externalTrafficPolicy: Local
+  service:
+    annotations:
+      sharedVIPLabel: "ccrc-nssf-traffic"
+      addressPoolName: "ccrc1-nssf-sig"
+      cloudProviderLB: {}
+    externalIPv4:
+      annotations:
+        sharedVIPLabel: "ccrc-nssf-traffic"
+        addressPoolName: "ccrc1-nssf-sig"
+        cloudProviderLB: {}
+    externalIPv6:
+      annotations:
+        sharedVIPLabel: "ccrc-nssf-traffic"
+        addressPoolName: "ccrc1-nssf-sig"
+        cloudProviderLB: {}
+  PREFIX-ports:
+    - name: geode-locators
+      port: 8091
+      protocol: TCP
+      targetPort: 8091
+    - name: geode-gw-rcvrs
+      port: 8092
+      protocol: TCP
+      targetPort: 8092
+    - name: tls
+      port: 443
+      targetPort: 8443
+      tcpkeepalive:
+        interval: 10
+        probes: 6
+        time: 500
+  annotations: {}
+  # proxy.istio.io/config: '{"gatewayTopology" : { "numTrustedProxies": 0 } }'
+eric-ingressgw-nrf-traffic:
+  resources:
+    istio-proxy:
+      requests:
+        cpu: 1400m
+        memory: 1024Mi
+        PREFIX-cpu: 500m
+        PREFIX-memory: 512Mi
+      limits:
+        cpu: 2000m
+        memory: 4096Mi
+        PREFIX-cpu: 2000m
+        PREFIX-memory: 4096Mi
+  # loadBalancerIP: ""
+
+  # serviceAnnotations:
+
+  #   metallb.universe.tf/allow-shared-ip: ccrc-nrf-traffic
+
+  #   metallb.universe.tf/address-pool: ccrc-nrf-sig
+  ports:
+    - port: 443
+      targetPort: 8443
+      name: tls
+      tcpkeepalive:
+        ###tcp_keepalive_time in the unit of sec
+        time: 500
+        ###tcp_keepalive_interval in the unit of sec
+
+        interval: 10
+        ###tcp_keepalive_probes
+
+        probes: 6
+    - port: 8091
+      targetPort: 8091
+      name: geode-locators
+      protocol: TCP
+    - port: 8092
+      targetPort: 8092
+      name: geode-gw-rcvrs
+      protocol: TCP
+  externalTrafficPolicy: Local
+  service:
+    annotations:
+      sharedVIPLabel: "ccrc-nrf-traffic"
+      addressPoolName: "ccrc1-nrf-sig"
+      cloudProviderLB: {}
+    externalIPv4:
+      annotations:
+        sharedVIPLabel: "ccrc-nrf-traffic"
+        addressPoolName: "ccrc1-nrf-sig"
+        cloudProviderLB: {}
+    externalIPv6:
+      annotations:
+        sharedVIPLabel: "ccrc-nrf-traffic"
+        addressPoolName: "ccrc1-nrf-sig"
+        cloudProviderLB: {}
+  PREFIX-ports:
+    - name: tls
+      port: 443
+      targetPort: 8443
+      tcpkeepalive:
+        interval: 10
+        probes: 6
+        time: 500
+    - name: geode-locators
+      port: 8091
+      protocol: TCP
+      targetPort: 8091
+    - name: geode-gw-rcvrs
+      port: 8092
+      protocol: TCP
+      targetPort: 8092
+  annotations: {}
+  # proxy.istio.io/config: '{"gatewayTopology" : { "numTrustedProxies": 0 } }'
+eric-ingressgw-ccrc-nbi-traffic:
+  resources:
+    istio-proxy:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: 2000m
+        memory: 1024Mi
+  enabled: false
+  service:
+    annotations:
+      sharedVIPLabel: "ccrc-nbi-traffic"
+      addressPoolName: "ccrc1-nbi-oam"
+      cloudProviderLB: {}
+    externalIPv4:
+      annotations:
+        sharedVIPLabel: "ccrc-nbi-traffic"
+        addressPoolName: "ccrc1-nbi-oam"
+        cloudProviderLB: {}
+    externalIPv6:
+      annotations:
+        sharedVIPLabel: "ccrc-nbi-traffic"
+        addressPoolName: "ccrc1-nbi-oam"
+        cloudProviderLB: {}
+  annotations: {}
+  # proxy.istio.io/config: '{"gatewayTopology" : { "numTrustedProxies": 0 } }'
+eric-ingressgw-nsacf-traffic:
+  resources:
+    istio-proxy:
+      requests:
+        cpu: 700m
+        memory: 512Mi
+      limits:
+        cpu: 2000m
+        memory: 2048Mi
+  # loadBalancerIP: ""
+
+  # serviceAnnotations:
+
+  #   metallb.universe.tf/allow-shared-ip: ccrc-nsacf-traffic
+
+  #   metallb.universe.tf/address-pool: ccrc-nsacf-sig
+  ports:
+    - port: 443
+      targetPort: 8443
+      name: tls
+      tcpkeepalive:
+        ###tcp_keepalive_time in the unit of sec
+        time: 500
+        ###tcp_keepalive_interval in the unit of sec
+
+        interval: 10
+        ###tcp_keepalive_probes
+
+        probes: 6
+eric-ingressgw-dns-sbi-traffic:
+  resources:
+    istio-proxy:
+      requests:
+        cpu: 700m
+        memory: 512Mi
+        PREFIX-cpu: 500m
+        PREFIX-memory: 512Mi
+      limits:
+        cpu: 2000m
+        memory: 4096Mi
+        PREFIX-cpu: 2000m
+        PREFIX-memory: 4096Mi
+  # loadBalancerIP: ""
+
+  # serviceAnnotations:
+
+  #   metallb.universe.tf/allow-shared-ip: ccrc-dns-sbi-traffic
+
+  #   metallb.universe.tf/address-pool: ccrc-dns-sbi-sig
+  ports:
+    - port: 443
+      targetPort: 8443
+      name: tls
+      tcpkeepalive:
+        ###tcp_keepalive_time in the unit of sec
+        time: 500
+        ###tcp_keepalive_interval in the unit of sec
+
+        interval: 10
+        ###tcp_keepalive_probes
+
+        probes: 6
+    - port: 8091
+      targetPort: 8091
+      name: geode-locators
+      protocol: TCP
+    - port: 8092
+      targetPort: 8092
+      name: geode-gw-rcvrs
+      protocol: TCP
+  externalTrafficPolicy: Local
+  service:
+    annotations:
+      sharedVIPLabel: "ccrc-dns-sbi-traffic"
+      addressPoolName: "ccrc1-dns-sig"
+      cloudProviderLB: {}
+    externalIPv4:
+      annotations:
+        sharedVIPLabel: "ccrc-dns-sbi-traffic"
+        addressPoolName: "ccrc1-dns-sig"
+        cloudProviderLB: {}
+    externalIPv6:
+      annotations:
+        sharedVIPLabel: "ccrc-dns-sbi-traffic"
+        addressPoolName: "ccrc1-dns-sig"
+        cloudProviderLB: {}
+  PREFIX-ports:
+    - name: tls
+      port: 443
+      targetPort: 8443
+      tcpkeepalive:
+        interval: 10
+        probes: 6
+        time: 500
+    - name: geode-locators
+      port: 8091
+      protocol: TCP
+      targetPort: 8091
+    - name: geode-gw-rcvrs
+      port: 8092
+      protocol: TCP
+      targetPort: 8092
+  annotations: {}
+  # proxy.istio.io/config: '{"gatewayTopology" : { "numTrustedProxies": 0 } }'
+eric-data-kvdb-ag-operator:
+  resources:
+    operator:
+      requests:
+        cpu: 500m
+        memory: 550Mi
+      limits:
+        cpu: 1000m
+        memory: 550Mi
+  nodeSelector:
+    operator: {}
+eric-nrf-kvdb-ag:
+  persistence:
+    gwsender:
+      persistentVolumeClaim:
+        size: 24Gi
+        enabled: false
+        storageClassName: "network-block"
+    data:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+    backup:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+  jvmHeap:
+    database:
+      locator: 3000m
+      server: 4500m
+    adminMgr: 560m
+  resources:
+    server:
+      requests:
+        memory: 6Gi
+        cpu: 3100m
+      limits:
+        memory: 7500Mi
+        cpu: 8000m
+    locator:
+      requests:
+        memory: 4Gi
+        cpu: 500m
+      limits:
+        memory: 5Gi
+        cpu: 2000m
+    adminMgr:
+      requests:
+        memory: 900Mi
+        cpu: 600m
+      limits:
+        memory: 1125Mi
+        cpu: 2000m
+    monitor:
+      requests:
+        memory: 650Mi
+        cpu: 300m
+      limits:
+        memory: 650Mi
+        cpu: 500m
+    jmxExporter:
+      requests:
+        memory: 512Mi
+        cpu: 200m
+      limits:
+        memory: 512Mi
+        cpu: 200m
+    initDb:
+      requests:
+        memory: 128Mi
+        cpu: 200m
+      limits:
+        memory: 128Mi
+        cpu: 200m
+  multiSite:
+    enabled: false
+    locator:
+      distributedSystemID: 0
+      localHost: ""
+    runtimeConfigMode:
+      enabled: false
+  nodeSelector:
+    locator: {}
+    server: {}
+    adminMgr: {}
+  affinity:
+    podAntiAffinity: hard
+  servicePorts:
+    kvdbAgLocator: 10334
+  serviceMesh:
+    ingress:
+      ingress-gateway:
+        enabled: false
+eric-nssf-kvdb-ag:
+  persistence:
+    gwsender:
+      persistentVolumeClaim:
+        size: 80Gi
+        enabled: false
+        storageClassName: "network-block"
+    data:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+    backup:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+  jvmHeap:
+    database:
+      locator: 3000m
+      server: 5625m
+    adminMgr: 900m
+  resources:
+    server:
+      requests:
+        memory: 7500Mi
+        cpu: 3000m
+      limits:
+        memory: 9400Mi
+        cpu: 8000m
+    locator:
+      requests:
+        memory: 4Gi
+        cpu: 500m
+      limits:
+        memory: 5Gi
+        cpu: 2000m
+    adminMgr:
+      requests:
+        memory: 1200Mi
+        cpu: 600m
+      limits:
+        memory: 1500Mi
+        cpu: 2000m
+    monitor:
+      requests:
+        memory: 512Mi
+        cpu: 200m
+      limits:
+        memory: 650Mi
+        cpu: 500m
+    jmxExporter:
+      requests:
+        memory: 512Mi
+        cpu: 200m
+      limits:
+        memory: 512Mi
+        cpu: 200m
+    initDb:
+      requests:
+        memory: 128Mi
+        cpu: 200m
+      limits:
+        memory: 128Mi
+        cpu: 200m
+  multiSite:
+    enabled: false
+    runtimeConfigMode:
+      enabled: false
+    locator:
+      localHost: ""
+      distributedSystemID: 0
+  nodeSelector:
+    locator: {}
+    server: {}
+    adminMgr: {}
+  affinity:
+    podAntiAffinity: hard
+  servicePorts:
+    kvdbAgLocator: 10334
+  serviceMesh:
+    ingress:
+      ingress-gateway:
+        enabled: false
+eric-dns-kvdb-ag:
+  persistence:
+    gwsender:
+      persistentVolumeClaim:
+        size: 24Gi
+        enabled: false
+        storageClassName: "network-block"
+    data:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+    backup:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+  jvmHeap:
+    database:
+      locator: 3000m
+      server: 4500m
+    adminMgr: 560m
+  resources:
+    server:
+      requests:
+        memory: 6Gi
+        cpu: 3100m
+      limits:
+        memory: 7500Mi
+        cpu: 8000m
+    locator:
+      requests:
+        memory: 4Gi
+        cpu: 500m
+      limits:
+        memory: 5Gi
+        cpu: 2000m
+    adminMgr:
+      requests:
+        memory: 900Mi
+        cpu: 600m
+      limits:
+        memory: 1125Mi
+        cpu: 2000m
+    monitor:
+      requests:
+        memory: 650Mi
+        cpu: 300m
+      limits:
+        memory: 650Mi
+        cpu: 500m
+    jmxExporter:
+      requests:
+        memory: 512Mi
+        cpu: 200m
+      limits:
+        memory: 512Mi
+        cpu: 200m
+    initDb:
+      requests:
+        memory: 128Mi
+        cpu: 200m
+      limits:
+        memory: 128Mi
+        cpu: 200m
+  multiSite:
+    enabled: false
+    locator:
+      distributedSystemID: 0
+      localHost: ""
+    runtimeConfigMode:
+      enabled: false
+  nodeSelector:
+    locator: {}
+    server: {}
+    adminMgr: {}
+  affinity:
+    podAntiAffinity: hard
+  servicePorts:
+    kvdbAgLocator: 10334
+  serviceMesh:
+    ingress:
+      ingress-gateway:
+        enabled: false
+eric-probe-virtual-tap-broker:
+  replicaCount: 2
+  resources:
+    VirtualTapBroker:
+      limits:
+        cpu: "10"
+      requests:
+        cpu: 5000m
+  PREFIX-replicaCount: 2
+  dtls:
+    enabled: true
+eric-dst-query:
+  resources:
+    eric-dst-query-elasticsearch:
+      requests:
+        memory: 300Mi
+        cpu: 100m
+      limits:
+        memory: 380Mi
+        cpu: 500m
+  enabled: false
+  ingress:
+    fqdn: dst.ericsson.com
+    tls:
+      mode: "MUTUAL"
+eric-data-document-database-pg-app:
+  persistentVolumeClaim:
+    size: 1Gi
+    storageClassName: "network-block"
+# eric-nrf
+
+eric-nrf-common:
+  dbproxy:
+    resources:
+      requests:
+        memory: 6100Mi
+        PREFIX-cpu: 1400m
+      limits:
+        memory: 6100Mi
+        PREFIX-cpu: 3000m
+  configagent:
+    resources:
+      # gwsender_disk_store_size = (eric-nrf.eric-data-kvdb-ag.persistence.gwsender.size[Gi] - 14) * 1000
+      gwsender_disk_store_size: 10000
+eric-nrf-management:
+  proxy:
+    resources:
+      requests:
+        memory: 235Mi
+  mgmt:
+    PREFIX-replicaCount: 2
+    PREFIX-maxReplicas: 6
+    PREFIX-minReplicas: 2
+# eric-nssf
+eric-nssf-common:
+  configagent:
+    resources:
+      # gwsender_disk_store_size = (eric-nssf.eric-data-kvdb-ag.persistence.gwsender.size[Gi] - 5) * 1000
+      gwsender_disk_store_size: 75000
+  dbproxy:
+    proxy:
+      resources:
+        requests:
+          cpu: 400m
+eric-nssf-provisioning:
+  provisioning:
+    resources:
+      requests:
+        cpu: 200m
+  ingress:
+    fqdn: nssf-prov.ccrc1-oam.n189-eccd1.seli.gic.ericsson.se
+eric-nssf-nssai-availability:
+  nssaiavailability:
+    proxy:
+      resources:
+        requests:
+          cpu: 400m
+    PREFIX-maxReplicas: 3
+    PREFIX-replicaCount: 2
+    PREFIX-minReplicas: 2
+  notification:
+    proxy:
+      resources:
+        requests:
+          cpu: 450m
+          memory: 245Mi
+    PREFIX-maxReplicas: 3
+    PREFIX-replicaCount: 2
+    PREFIX-minReplicas: 2
+# eric-dns
+eric-dns-common:
+  dbproxy:
+    resources:
+      requests:
+        memory: 6100Mi
+        PREFIX-cpu: 1400m
+      limits:
+        memory: 6100Mi
+        PREFIX-cpu: 3000m
+  configagent:
+    resources:
+      # same with the value of eric-nrf-common
+      gwsender_disk_store_size: 10000
+eric-mesh-controller:
+  pilot:
+    env:
+      PILOT_ENABLE_INBOUND_PASSTHROUGH: "true"
+# eric-nrf:
+eric-dns-server:
+  service:
+    annotations:
+      sharedVIPLabel: "ccrc-dns-traffic"
+      addressPoolName: "ccrc1-dns"
+      cloudProviderLB: {}
+    externalTrafficPolicy: Local
+    externalIPv4:
+      annotations:
+        sharedVIPLabel: "ccrc-dns-traffic"
+        addressPoolName: "ccrc1-dns"
+        cloudProviderLB: {}
+    externalIPv6:
+      annotations:
+        sharedVIPLabel: "ccrc-dns-traffic"
+        addressPoolName: "ccrc1-dns"
+        cloudProviderLB: {}
+  PREFIX-replicaCount: 2
+  PREFIX-maxReplicas: 10
+  PREFIX-minReplicas: 2
+eric-nrf-extnotify:
+  ingress:
+    fqdn: nrf.ericsson.com
+    mode: MUTUAL
+eric-nrf-provision:
+  ingress:
+    fqdn: nrf-prov.ccrc1-oam.n189-eccd1.seli.gic.ericsson.se
+eric-nrf-accesstoken:
+  accesstoken:
+    PREFIX-minReplicas: 2
+    PREFIX-replicaCount: 2
+    PREFIX-maxReplicas: 8
+eric-nrf-discovery:
+  disc:
+    resources:
+      limits:
+        PREFIX-cpu: 2500m
+      requests:
+        PREFIX-cpu: 2500m
+    PREFIX-minReplicas: 2
+    PREFIX-replicaCount: 2
+    PREFIX-maxReplicas: 10
+eric-nrf-management-notification:
+  notification:
+    PREFIX-replicaCount: 2
+    PREFIX-maxReplicas: 27
+    PREFIX-minReplicas: 2
+eric-dns-provision:
+  ingress:
+    fqdn: ""
+eric-nssf-slice-selection-control:
+  sliceselectioncontrol:
+    PREFIX-maxReplicas: 5
+    PREFIX-replicaCount: 2
+    PREFIX-minReplicas: 2
+eric-ps-policystudio:
+  istioEgressEnabled: false
+  ingress:
+    hostname: ""
+  iam:
+    cookieDomain: ""
+    ingress:
+      hostname: ""
+eric-data-document-database-pg:
+  persistentVolumeClaim:
+    storageClassName: "network-block"
+  postgresConfig:
+    max_connections: 300
+eric-sec-admin-user-management:
+  notices:
+    legal: IF YOU ARE NOT AN AUTHORIZED USER, PLEASE EXIT IMMEDIATELY
+    privacy: 'This system processes personal information. Handle personal information with care. Misuse, including unauthorized access, is grounds for legal action. Version: 1.0, Date: October 27, 2020.'
+    postLogin: ""
+eric-si-application-sys-info-handler:
+  asih:
+    applicationId: "n189-ccrc"
+eric-dst-collector:
+  enabled: false
+eric-nrf-register-agent:
+  PREFIX-minReplicas: 2
+  PREFIX-replicaCount: 2
+  PREFIX-maxReplicas: 3
+eric-nrf-discovery-agent:
+  PREFIX-minReplicas: 2
+  PREFIX-replicaCount: 2
+  PREFIX-maxReplicas: 3
+eric-nrf-notify-agent:
+  PREFIX-minReplicas: 2
+  PREFIX-replicaCount: 2
+  PREFIX-maxReplicas: 3
+eric-svc-routing-agent:
+  PREFIX-minReplicas: 2
+  PREFIX-replicaCount: 2
+  PREFIX-maxReplicas: 3

@@ -1,0 +1,115 @@
+global:
+  timezone: CET
+  domainName: seli.gic.ericsson.se
+  clusterName: eda2.n182
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: EDA
+          customerId: 946060
+          swltId: STA-EDA-13
+  activation:
+    service:
+      prov:
+        annotations:
+          metallb.universe.tf/allow-shared-ip: eda-oam
+          metallb.universe.tf/address-pool: eda-oam
+      oam:
+        annotations:
+          metallb.universe.tf/allow-shared-ip: eda-oam
+          metallb.universe.tf/address-pool: eda-oam
+  kubeApi:
+    port: 6443
+
+eric-tm-ingress-controller-cr:
+  service:
+    annotations:
+      sharedVIPLabel: eda-oam
+      addressPoolName: eda-oam
+  # According ADP Service User Guide
+  resources:
+    contour:
+      limits:
+        memory: 500Mi
+
+eric-data-wide-column-database-cd:
+  persistence:
+    dataVolume:
+      persistentVolumeClaim:
+        size: 200Gi
+        storageClassName: network-block
+
+eric-cnom-document-database-mg:
+  persistence:
+    storageClass: network-block
+
+eric-act-activation-engine:
+  statefulset:
+    storageClass: network-block
+  deployment:
+    replicas: 2
+  initContainers:
+    eric-act-hss-validator:
+      imageName: hss-validator-image
+      tag: 1.29.102
+
+eric-cloud-native-base:
+  eric-data-document-database-pg:
+    persistentVolumeClaim:
+      storageClassName: network-block
+
+  eric-data-search-engine:
+    autoSetRequiredWorkerNodeSysctl: false
+    persistence:
+      data:
+        persistentVolumeClaim:
+          storageClassName: network-block
+      master:
+        persistentVolumeClaim:
+          storageClassName: network-block
+
+  eric-data-message-bus-kf:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+
+  eric-data-coordinator-zk:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+
+  eric-data-distributed-coordinator-ed:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+
+  eric-ctrl-bro:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: network-block
+
+  eric-pm-server:
+    server:
+      persistentVolume:
+        storageClass: network-block
+
+  eric-lm-combined-server:
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: nelsaas-vnf1-thrift.sero.gic.ericsson.se
+
+  eric-fh-snmp-alarm-provider:
+    service:
+      annotations:
+        sharedVIPLabel: eda-oam
+        addressPoolName: eda-oam
+
+  eric-si-application-sys-info-handler:
+    asih:
+      applicationId: n182
+
+
+profile:
+  small-telco-system: false # Check para no. A73 Optional parameter.
+  standard-telco-system: true # Check para no. A74 Optional parameter.

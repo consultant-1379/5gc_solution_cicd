@@ -1,0 +1,11 @@
+autowizard false
+config
+diagnostic-data-collection sftp-server Default
+ endpoints endpoint Default
+  remote-address 11.0.18.2
+  remote-port    22
+  remote-path    /lab/pccc_logs/5GC-CICD/ci/N67_DDC/eccd1/n67-pcc-ddc
+  client-identity username test
+  client-identity password dGVzdA==
+commit
+end

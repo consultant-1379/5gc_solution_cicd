@@ -1,0 +1,166 @@
+autowizard false
+config
+network-instances network-instance media
+ enabled true
+ routing bgp 101
+  neighbor 11.109.1.254
+   peer-type external
+   shutdown false
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              10812
+   address-family ipv4 unicast
+  !
+ !
+ ip static-route cre 0.0.0.0/0 11.109.1.254
+ !
+ ip static-route up 0.0.0.0/0 11.109.1.254
+ !
+!
+
+network-instances network-instance signaling
+ enabled true
+ routing bgp 102
+  neighbor 11.109.2.254
+   peer-type external
+   shutdown false
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              3802
+   address-family ipv4 unicast
+  !
+ !
+ ip static-route cre 0.0.0.0/0 11.109.2.254
+ !
+ ip static-route up 0.0.0.0/0 11.109.2.254
+ !
+!
+
+network-instances network-instance intra
+ enabled true
+!
+
+interfaces interface cre:ipfw_media
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 402
+ parent-interface cre:net0
+ bind-ni-name     media
+ ipv4 enabled true
+ ipv4 address 11.109.1.100
+  prefix-length 24
+interfaces interface cre:ipfw_media
+ address-type ip-range 2
+ !
+!
+
+interfaces interface cre:ipfw_signaling
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 454
+ parent-interface cre:net0
+ bind-ni-name     signaling
+ ipv4 enabled true
+ ipv4 address 11.109.2.100
+  prefix-length 24
+interfaces interface cre:ipfw_signaling
+ address-type ip-range 2
+ !
+!
+
+interfaces interface cre:net0
+ type    ethernetCsmacd
+ enabled true
+ l2-mtu  1968
+!
+
+interfaces interface up:intra
+ type            intraForward
+ enabled         true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 652
+ parent-interface up:net0
+ bind-ni-name    intra
+ ipv4 enabled true
+ ipv4 address 172.31.0.1
+  prefix-length 24
+interfaces interface up:intra
+ address-type ip-range 2
+ !
+!
+
+interfaces interface up:cnf_loopback_media
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name media
+ ipv4 enabled true
+ ipv4 address 109.1.1.1
+  prefix-length 32
+interfaces interface up:cnf_loopback_media
+ address-type single
+ !
+!
+
+interfaces interface up:cnf_loopback_signaling
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name signaling
+ ipv4 enabled true
+ ipv4 address 109.2.1.1
+  prefix-length 32
+interfaces interface up:cnf_loopback_signaling
+ address-type single
+ !
+!
+
+interfaces interface up:ipfw_media
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 402
+ parent-interface up:net0
+ bind-ni-name     media
+ ipv4 enabled true
+ ipv4 address 11.109.1.1
+  prefix-length 24
+interfaces interface up:ipfw_media
+ address-type ip-range 8
+ !
+!
+
+interfaces interface up:ipfw_signaling
+ type             ipForward
+ enabled          true
+ parent-interface up:net0
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 454
+ bind-ni-name     signaling
+ ipv4 enabled true
+ ipv4 address 11.109.2.1
+  prefix-length 24
+interfaces interface up:ipfw_signaling
+ address-type ip-range 8
+ !
+!
+
+interfaces interface up:net0
+ type    ethernetCsmacd
+ enabled true
+!
+
+
+interfaces interface up:vpngw
+ type         vpnGateway
+ enabled      true
+ bind-ni-name signaling
+ ipv4 enabled true
+ ipv4 address 109.2.0.1
+  prefix-length 32
+interfaces interface up:vpngw
+ address-type single
+ !
+!
+commit
+end

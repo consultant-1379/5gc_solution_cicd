@@ -1,0 +1,35 @@
+ccd:
+  batch_size: 10
+  collection:
+  - name: kubectl_get_node
+    cmd: kubectl get node -o wide
+  - name: kubectl_get_pod_kube-system
+    cmd: kubectl get  pod -n kube-system
+  - name: kubectl_get_pod_monitoring
+    cmd: kubectl get  pod -n monitoring
+  - name: kubectl_get_ingress
+    cmd: kubectl get ingress -A  
+  - name: kubectl_get_svc
+    cmd: kubectl get svc -A
+  - name: kubectl_get_pvc
+    cmd: kubectl get pvc -A  
+  - name: helm_list
+    cmd: helm list -A         
+  - name: kubectl_get_event
+    cmd: kubectl get event -A --sort-by=.metadata.creationTimestamp -o json
+  - name: kubectl_top_pod
+    cmd: kubectl top pod -A
+  - name: kubectl_top_containers
+    cmd: kubectl top pod --containers -A
+  - name: kubectl_get_pod
+    cmd: kubectl get pod -A -owide
+  - name: kubectl_top_node
+    cmd: kubectl top node
+  - name: kubectl_describe_node
+    cmd: kubectl describe node
+  - name: kubectl_describe_pod
+    cmd: kubectl describe pod -A
+  - name: kubectl_get_hpa
+    cmd: kubectl get hpa -A
+  - name: kubectl_get_machines
+    cmd: kubectl get machines -A

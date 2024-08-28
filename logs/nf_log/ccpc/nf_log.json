@@ -1,0 +1,18 @@
+[
+    {"logplane.keyword": "adp-app-security-logs", "extra_data.asi.severity.keyword": "Clear"},
+    {"logplane.keyword": "adp-app-audit-logs"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-ccpc-data-access"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-ccpc-provisioning"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-data-coordinator-zk "},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-ingressgw-ccpc-provisioning"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-ingressgw-pcf-traffic"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nrf-discovery-agent"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nrf-notify-agent"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nrf-register-agent"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-pcf-charging"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-pcf-dms"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-pcf-gx"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-pcf-npcf-smpolicycontrol"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-pcf-session-management-policy-control"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-pcrf-ipcan-session-management"}
+]

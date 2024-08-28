@@ -1,0 +1,11 @@
+{   "clusterName": "n89",
+    "additionalParams": {
+        "namespace": "sc",
+        "skipVerification": true,
+        "cleanUpResources": false,
+        "applicationTimeOut": "900",
+        "commandTimeOut": "900",
+        "manoControlledScaling": "false",
+        "global.ipStackMode": "ipv4"
+    }
+}

@@ -1,0 +1,780 @@
+---
+global:
+  timezone: CET
+  applicationId: n89-pcc
+  ericsson:
+    licensing:
+      licenseDomains:
+      - productType: "PACKET_CORE_CONTROLLER"
+        customerId: "946060"
+        swltId: "STA-PCC-9"
+  probe:
+    enabled: false
+  licensing:
+    sites:
+      - hostname: 'nelsaas-vnf1-thrift-ipv6.sero.gic.ericsson.se'
+        ip: '10.155.142.68'
+  sm:
+    pgw:
+      enabled: true
+    sgw:
+      enabled: true
+    smf:
+      enabled: true
+
+##########by default prob is enabled, disable prob manually
+eric-probe-event-report-broker:
+  enabled: false
+  replicaCount: 2
+  staticConfig:
+    eventReporting:
+      streamConsumer:
+        - name: ebm-server1
+          address: <10.5.5.68>
+          port: 8090
+          domain: ["pc-mm", "pc-sm"]
+          amfEvents: ["activate", "l-attach", "l-cdma2000"]
+          smfEvents: ["gx-terminate", "pdp-context-deletion"]
+      fileConsumer:
+        interval: 15
+        domain: ["pc-mm"]
+        amfEvents: ["l-attach", "l-cdma2000"]
+
+
+eric-cloud-native-base:
+  eric-si-application-sys-info-handler:
+    asih:
+      applicationId: n89-pcc
+  eric-fh-snmp-alarm-provider:
+    service:
+      annotations:
+        sharedVIPLabel: pcc-oam
+        addressPoolName: pcc-oam
+      secretName: snmp-alarm-provider-config
+    oamVIP:
+      enabled: false
+
+  eric-lm-combined-server:
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: "10.155.142.68"
+          port: 9095
+      timer:
+        licenseRequestAggregationPeriod: 86400
+        peakUsageReportAggregationPeriod: 86400
+
+snmp-alarm-provider-secret-creation:
+  enabled: false
+
+
+eric-pc-sm:
+  enabled: true
+  eric-pc-sm-controller:
+    nodeSelector:
+      pcc-sm-pod: controller
+
+  eric-pc-sm-diameter:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+  eric-pc-sm-http-client:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    replicaCount: 3
+
+  eric-pc-sm-ip-allocator:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+  eric-pc-sm-notification-forwarder:
+    replicaCount: 2
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    services:
+      namfnotification:
+        annotations:
+          metallb.universe.tf/allow-shared-ip: "pcc-smf-notification"
+          metallb.universe.tf/address-pool: "pcc-smf-notification"
+      nudmnotification:
+        annotations:
+          metallb.universe.tf/allow-shared-ip: "pcc-smf-notification"
+          metallb.universe.tf/address-pool: "pcc-smf-notification"
+      npcfnotification:
+        annotations:
+          metallb.universe.tf/allow-shared-ip: "pcc-smf-notification"
+          metallb.universe.tf/address-pool: "pcc-smf-notification"
+      nnrfnotification:
+        annotations:
+          metallb.universe.tf/allow-shared-ip: "pcc-smf-notification"
+          metallb.universe.tf/address-pool: "pcc-smf-notification"
+      nchfnotification:
+        annotations:
+          metallb.universe.tf/allow-shared-ip: "pcc-smf-notification"
+          metallb.universe.tf/address-pool: "pcc-smf-notification"
+      nsmfnotification:
+        annotations:
+          metallb.universe.tf/address-pool: "pcc-smf-notification"
+          metallb.universe.tf/allow-shared-ip: "pcc-smf-notification"
+
+  eric-pc-sm-nsmf-forwarder:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    services:
+      nsmf:
+        loadBalancerIP: 107.2.0.1
+    replicaCount: 6
+
+  eric-pc-sm-smf-pgw-session:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    replicaCount: 8
+
+  eric-pc-sm-sgw-session:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    replicaCount: 5
+
+  eric-pc-sm-udp-forwarder:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+    replicaCount: 3
+
+  eric-pc-sm-br-agent:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+  eric-pc-sm-target-database-master-rd:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+  eric-pc-sm-target-database-replica-rd:
+    nodeSelector:
+      pcc-sm-pod: non-controller
+
+eric-pc-mm:
+  enabled: true
+  eric-pc-mm-controller:
+    nodeSelector:
+      pcc-mm-pod: controller
+    adpCm:
+      enabled: false
+      httpMaxIdleTime: 240000  # 4 minutes
+      httpMaxReqLen: 15728640  # 15 MB
+    securityContext:
+      appArmorProfile: docker-pcc
+    service:
+      useK8sNwSBI: true
+      sbi:
+        loadBalancerIP: 107.2.0.7
+    configMap: |-
+      #!/bin/sh -f
+      #set -x
+      gsh modify_ne -ni amf1-n89 -mgi 32768 -mc 13 -ari 255 -asi 2 -ap 13 -daf 1
+      gsh modify_ne -uuid 8b85f3f9-2f66-4698-b07e-63a07010632e
+      gsh modify_nrf_option -anpap fqdn
+      gsh create_imsins -imsi 24081 -rs home -dn mnc081.mcc240.gprs -np e214 -ac true -na international -rd 5 -ad 86582 -m1 NULL -m2 NULL -m3 NULL -eplp NULL -rn ericsson.se -hn esm -s8 gtp -gcc NULL -wcc NULL -lcc NULL -rfsp NULL -arph 1 -arpm 2 -gss gr -vlbo NULL -aifv true -mavs 1 -mavr 2 -earplr 0 -st true -sra noaction -ssc NULL -iess NULL -pcr false -sps8 NULL -ivss NULL -sdssc none -qpmll NULL -srgr true -uut NULL -nia denied -drcl 0 -urcl 0 -vlbaoi NULL -iri NULL -crs allowed_cs_service -arpnl NULL -qpmw 1 -qpmg 1 -mps NULL
+      gsh create_plmn -mcc 240 -mnc 81 -pn 24081 -fnn NULL -snn NULL -sn true -ci false -me false -s5 gtp -local true -voip no -sl true -nbt NULL -urcl 0 -drcl 0 -tr NULL -ecvh true -gswgli off
+      gsh modify_date_and_time -tz CET
+      gsh create_ntp_server -ip 10.221.17.6
+      gsh create_ntp_server -ip 10.221.17.46
+      gsh create_eth_port -eqp 1.1 -ep 1 -fc false -as up
+      gsh create_eth_port -eqp 1.2 -ep 1 -fc false -as up
+      gsh create_eth_port -eqp 1.3 -ep 1 -fc false -as up
+      gsh create_eth_port -eqp 1.4 -ep 1 -fc false -as up
+      gsh create_eth_port -eqp 1.5 -ep 1 -fc false -as up
+      gsh create_eth_port -eqp 1.6 -ep 1 -fc false -as up
+      gsh create_eth_port -eqp 1.7 -ep 1 -fc false -as up
+      gsh create_eth_port -eqp 1.8 -ep 1 -fc false -as up
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 100
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 101
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 102
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 128
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 130
+      gsh create_eth_vlan -eqp 1.1 -ep 1 -vid 136
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 100
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 101
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 102
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 128
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 130
+      gsh create_eth_vlan -eqp 1.2 -ep 1 -vid 136
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 100
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 101
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 102
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 128
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 130
+      gsh create_eth_vlan -eqp 1.3 -ep 1 -vid 136
+      gsh create_eth_vlan -eqp 1.4 -ep 1 -vid 100
+      gsh create_eth_vlan -eqp 1.4 -ep 1 -vid 101
+      gsh create_eth_vlan -eqp 1.4 -ep 1 -vid 102
+      gsh create_eth_vlan -eqp 1.4 -ep 1 -vid 128
+      gsh create_eth_vlan -eqp 1.4 -ep 1 -vid 130
+      gsh create_eth_vlan -eqp 1.4 -ep 1 -vid 136
+      gsh create_eth_vlan -eqp 1.5 -ep 1 -vid 100
+      gsh create_eth_vlan -eqp 1.5 -ep 1 -vid 101
+      gsh create_eth_vlan -eqp 1.5 -ep 1 -vid 102
+      gsh create_eth_vlan -eqp 1.5 -ep 1 -vid 128
+      gsh create_eth_vlan -eqp 1.5 -ep 1 -vid 130
+      gsh create_eth_vlan -eqp 1.5 -ep 1 -vid 136
+      gsh create_eth_vlan -eqp 1.6 -ep 1 -vid 100
+      gsh create_eth_vlan -eqp 1.6 -ep 1 -vid 101
+      gsh create_eth_vlan -eqp 1.6 -ep 1 -vid 102
+      gsh create_eth_vlan -eqp 1.6 -ep 1 -vid 128
+      gsh create_eth_vlan -eqp 1.6 -ep 1 -vid 130
+      gsh create_eth_vlan -eqp 1.6 -ep 1 -vid 136
+      gsh create_eth_vlan -eqp 1.7 -ep 1 -vid 100
+      gsh create_eth_vlan -eqp 1.7 -ep 1 -vid 101
+      gsh create_eth_vlan -eqp 1.7 -ep 1 -vid 102
+      gsh create_eth_vlan -eqp 1.7 -ep 1 -vid 128
+      gsh create_eth_vlan -eqp 1.7 -ep 1 -vid 130
+      gsh create_eth_vlan -eqp 1.7 -ep 1 -vid 136
+      gsh create_eth_vlan -eqp 1.8 -ep 1 -vid 100
+      gsh create_eth_vlan -eqp 1.8 -ep 1 -vid 101
+      gsh create_eth_vlan -eqp 1.8 -ep 1 -vid 102
+      gsh create_eth_vlan -eqp 1.8 -ep 1 -vid 128
+      gsh create_eth_vlan -eqp 1.8 -ep 1 -vid 130
+      gsh create_eth_vlan -eqp 1.8 -ep 1 -vid 136
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_100_MEDIA_CN
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_100_MEDIA_CN
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_100_MEDIA_CN
+      gsh create_inbound_pf_policy -ifp ETH_1_4_1_100_MEDIA_CN
+      gsh create_inbound_pf_policy -ifp ETH_1_5_1_100_MEDIA_CN
+      gsh create_inbound_pf_policy -ifp ETH_1_6_1_100_MEDIA_CN
+      gsh create_inbound_pf_policy -ifp ETH_1_7_1_100_MEDIA_CN
+      gsh create_inbound_pf_policy -ifp ETH_1_8_1_100_MEDIA_CN
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_101_SIG_CN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_101_SIG_CN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_101_SIG_CN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_4_1_101_SIG_CN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_5_1_101_SIG_CN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_6_1_101_SIG_CN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_7_1_101_SIG_CN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_8_1_101_SIG_CN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_128_SIG_CN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_128_SIG_CN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_128_SIG_CN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_4_1_128_SIG_CN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_5_1_128_SIG_CN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_6_1_128_SIG_CN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_7_1_128_SIG_CN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_8_1_128_SIG_CN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_102_RAN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_102_RAN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_102_RAN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_4_1_102_RAN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_5_1_102_RAN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_6_1_102_RAN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_7_1_102_RAN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_8_1_102_RAN_1
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_130_RAN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_130_RAN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_130_RAN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_4_1_130_RAN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_5_1_130_RAN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_6_1_130_RAN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_7_1_130_RAN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_8_1_130_RAN_2
+      gsh create_inbound_pf_policy -ifp ETH_1_1_1_136_OAM
+      gsh create_inbound_pf_policy -ifp ETH_1_2_1_136_OAM
+      gsh create_inbound_pf_policy -ifp ETH_1_3_1_136_OAM
+      gsh create_inbound_pf_policy -ifp ETH_1_4_1_136_OAM
+      gsh create_inbound_pf_policy -ifp ETH_1_5_1_136_OAM
+      gsh create_inbound_pf_policy -ifp ETH_1_6_1_136_OAM
+      gsh create_inbound_pf_policy -ifp ETH_1_7_1_136_OAM
+      gsh create_inbound_pf_policy -ifp ETH_1_8_1_136_OAM
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_100_MEDIA_CN -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_100_MEDIA_CN -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_100_MEDIA_CN -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_4_1_100_MEDIA_CN -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_5_1_100_MEDIA_CN -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_6_1_100_MEDIA_CN -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_7_1_100_MEDIA_CN -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_8_1_100_MEDIA_CN -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_101_SIG_CN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_101_SIG_CN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_101_SIG_CN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_4_1_101_SIG_CN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_5_1_101_SIG_CN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_6_1_101_SIG_CN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_7_1_101_SIG_CN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_8_1_101_SIG_CN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_128_SIG_CN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_128_SIG_CN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_128_SIG_CN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_4_1_128_SIG_CN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_5_1_128_SIG_CN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_6_1_128_SIG_CN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_7_1_128_SIG_CN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_8_1_128_SIG_CN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_102_RAN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_102_RAN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_102_RAN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_4_1_102_RAN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_5_1_102_RAN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_6_1_102_RAN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_7_1_102_RAN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_8_1_102_RAN_1 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_130_RAN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_130_RAN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_130_RAN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_4_1_130_RAN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_5_1_130_RAN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_6_1_130_RAN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_7_1_130_RAN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_8_1_130_RAN_2 -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_1_1_136_OAM -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_2_1_136_OAM -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_3_1_136_OAM -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_4_1_136_OAM -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_5_1_136_OAM -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_6_1_136_OAM -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_7_1_136_OAM -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_inbound_pf_rule -ifp ETH_1_8_1_136_OAM -fr 1 -r permit -p ip -d NULL -dm NULL -sip 0.0.0.0 -sipm 0.0.0.0 -dip 0.0.0.0 -dipm 0.0.0.0 -pp 0 -ppq gt -ipo true -sp 0 -spq gt -dp 0 -dpq gt -tf NULL -tfm NULL -it 0 -itq gt -sd NULL -lt false
+      gsh create_ip_network -nw MEDIA_CN -local false
+      gsh create_ip_network -nw SIG_CN_1 -local false
+      gsh create_ip_network -nw SIG_CN_2 -local false
+      gsh create_ip_network -nw RAN_1 -local false
+      gsh create_ip_network -nw RAN_2 -local false
+      gsh create_ip_network -nw OM_CN -local false
+      gsh create_ip_network -nw lb_sig_cn -local false
+      gsh create_ip_interface -ifn ETH_1_1_1_100_MEDIA_CN -ip 11.106.1.11 -mask 255.255.255.224 -eqp 1.1 -ep 1 -vid 100 -ifp ETH_1_1_1_100_MEDIA_CN -nw MEDIA_CN
+      gsh create_ip_interface -ifn ETH_1_2_1_100_MEDIA_CN -ip 11.106.1.12 -mask 255.255.255.224 -eqp 1.2 -ep 1 -vid 100 -ifp ETH_1_2_1_100_MEDIA_CN -nw MEDIA_CN
+      gsh create_ip_interface -ifn ETH_1_3_1_100_MEDIA_CN -ip 11.106.1.13 -mask 255.255.255.224 -eqp 1.3 -ep 1 -vid 100 -ifp ETH_1_3_1_100_MEDIA_CN -nw MEDIA_CN
+      gsh create_ip_interface -ifn ETH_1_4_1_100_MEDIA_CN -ip 11.106.1.14 -mask 255.255.255.224 -eqp 1.4 -ep 1 -vid 100 -ifp ETH_1_4_1_100_MEDIA_CN -nw MEDIA_CN
+      gsh create_ip_interface -ifn ETH_1_5_1_100_MEDIA_CN -ip 11.106.1.15 -mask 255.255.255.224 -eqp 1.5 -ep 1 -vid 100 -ifp ETH_1_5_1_100_MEDIA_CN -nw MEDIA_CN
+      gsh create_ip_interface -ifn ETH_1_6_1_100_MEDIA_CN -ip 11.106.1.16 -mask 255.255.255.224 -eqp 1.6 -ep 1 -vid 100 -ifp ETH_1_6_1_100_MEDIA_CN -nw MEDIA_CN
+      gsh create_ip_interface -ifn ETH_1_7_1_100_MEDIA_CN -ip 11.106.1.17 -mask 255.255.255.224 -eqp 1.7 -ep 1 -vid 100 -ifp ETH_1_7_1_100_MEDIA_CN -nw MEDIA_CN
+      gsh create_ip_interface -ifn ETH_1_8_1_100_MEDIA_CN -ip 11.106.1.18 -mask 255.255.255.224 -eqp 1.8 -ep 1 -vid 100 -ifp ETH_1_8_1_100_MEDIA_CN -nw MEDIA_CN
+      gsh create_ip_interface -ifn ETH_1_1_1_101_SIG_CN_1 -ip 11.106.2.11 -mask 255.255.255.224 -eqp 1.1 -ep 1 -vid 101 -ifp ETH_1_1_1_101_SIG_CN_1 -nw SIG_CN_1
+      gsh create_ip_interface -ifn ETH_1_2_1_101_SIG_CN_1 -ip 11.106.2.12 -mask 255.255.255.224 -eqp 1.2 -ep 1 -vid 101 -ifp ETH_1_2_1_101_SIG_CN_1 -nw SIG_CN_1
+      gsh create_ip_interface -ifn ETH_1_3_1_101_SIG_CN_1 -ip 11.106.2.13 -mask 255.255.255.224 -eqp 1.3 -ep 1 -vid 101 -ifp ETH_1_3_1_101_SIG_CN_1 -nw SIG_CN_1
+      gsh create_ip_interface -ifn ETH_1_4_1_101_SIG_CN_1 -ip 11.106.2.14 -mask 255.255.255.224 -eqp 1.4 -ep 1 -vid 101 -ifp ETH_1_4_1_101_SIG_CN_1 -nw SIG_CN_1
+      gsh create_ip_interface -ifn ETH_1_5_1_101_SIG_CN_1 -ip 11.106.2.15 -mask 255.255.255.224 -eqp 1.5 -ep 1 -vid 101 -ifp ETH_1_5_1_101_SIG_CN_1 -nw SIG_CN_1
+      gsh create_ip_interface -ifn ETH_1_6_1_101_SIG_CN_1 -ip 11.106.2.16 -mask 255.255.255.224 -eqp 1.6 -ep 1 -vid 101 -ifp ETH_1_6_1_101_SIG_CN_1 -nw SIG_CN_1
+      gsh create_ip_interface -ifn ETH_1_7_1_101_SIG_CN_1 -ip 11.106.2.17 -mask 255.255.255.224 -eqp 1.7 -ep 1 -vid 101 -ifp ETH_1_7_1_101_SIG_CN_1 -nw SIG_CN_1
+      gsh create_ip_interface -ifn ETH_1_8_1_101_SIG_CN_1 -ip 11.106.2.18 -mask 255.255.255.224 -eqp 1.8 -ep 1 -vid 101 -ifp ETH_1_8_1_101_SIG_CN_1 -nw SIG_CN_1
+      gsh create_ip_interface -ifn ETH_1_1_1_128_SIG_CN_2 -ip 11.106.2.43 -mask 255.255.255.224 -eqp 1.1 -ep 1 -vid 128 -ifp ETH_1_1_1_128_SIG_CN_2 -nw SIG_CN_2
+      gsh create_ip_interface -ifn ETH_1_2_1_128_SIG_CN_2 -ip 11.106.2.44 -mask 255.255.255.224 -eqp 1.2 -ep 1 -vid 128 -ifp ETH_1_2_1_128_SIG_CN_2 -nw SIG_CN_2
+      gsh create_ip_interface -ifn ETH_1_3_1_128_SIG_CN_2 -ip 11.106.2.45 -mask 255.255.255.224 -eqp 1.3 -ep 1 -vid 128 -ifp ETH_1_3_1_128_SIG_CN_2 -nw SIG_CN_2
+      gsh create_ip_interface -ifn ETH_1_4_1_128_SIG_CN_2 -ip 11.106.2.46 -mask 255.255.255.224 -eqp 1.4 -ep 1 -vid 128 -ifp ETH_1_4_1_128_SIG_CN_2 -nw SIG_CN_2
+      gsh create_ip_interface -ifn ETH_1_5_1_128_SIG_CN_2 -ip 11.106.2.47 -mask 255.255.255.224 -eqp 1.5 -ep 1 -vid 128 -ifp ETH_1_5_1_128_SIG_CN_2 -nw SIG_CN_2
+      gsh create_ip_interface -ifn ETH_1_6_1_128_SIG_CN_2 -ip 11.106.2.48 -mask 255.255.255.224 -eqp 1.6 -ep 1 -vid 128 -ifp ETH_1_6_1_128_SIG_CN_2 -nw SIG_CN_2
+      gsh create_ip_interface -ifn ETH_1_7_1_128_SIG_CN_2 -ip 11.106.2.49 -mask 255.255.255.224 -eqp 1.7 -ep 1 -vid 128 -ifp ETH_1_7_1_128_SIG_CN_2 -nw SIG_CN_2
+      gsh create_ip_interface -ifn ETH_1_8_1_128_SIG_CN_2 -ip 11.106.2.50 -mask 255.255.255.224 -eqp 1.8 -ep 1 -vid 128 -ifp ETH_1_8_1_128_SIG_CN_2 -nw SIG_CN_2
+      gsh create_ip_interface -ifn ETH_1_1_1_102_RAN_1 -ip 11.106.4.11 -mask 255.255.255.224 -eqp 1.1 -ep 1 -vid 102 -ifp ETH_1_1_1_102_RAN_1 -nw RAN_1
+      gsh create_ip_interface -ifn ETH_1_2_1_102_RAN_1 -ip 11.106.4.12 -mask 255.255.255.224 -eqp 1.2 -ep 1 -vid 102 -ifp ETH_1_2_1_102_RAN_1 -nw RAN_1
+      gsh create_ip_interface -ifn ETH_1_3_1_102_RAN_1 -ip 11.106.4.13 -mask 255.255.255.224 -eqp 1.3 -ep 1 -vid 102 -ifp ETH_1_3_1_102_RAN_1 -nw RAN_1
+      gsh create_ip_interface -ifn ETH_1_4_1_102_RAN_1 -ip 11.106.4.14 -mask 255.255.255.224 -eqp 1.4 -ep 1 -vid 102 -ifp ETH_1_4_1_102_RAN_1 -nw RAN_1
+      gsh create_ip_interface -ifn ETH_1_5_1_102_RAN_1 -ip 11.106.4.15 -mask 255.255.255.224 -eqp 1.5 -ep 1 -vid 102 -ifp ETH_1_5_1_102_RAN_1 -nw RAN_1
+      gsh create_ip_interface -ifn ETH_1_6_1_102_RAN_1 -ip 11.106.4.16 -mask 255.255.255.224 -eqp 1.6 -ep 1 -vid 102 -ifp ETH_1_6_1_102_RAN_1 -nw RAN_1
+      gsh create_ip_interface -ifn ETH_1_7_1_102_RAN_1 -ip 11.106.4.17 -mask 255.255.255.224 -eqp 1.7 -ep 1 -vid 102 -ifp ETH_1_7_1_102_RAN_1 -nw RAN_1
+      gsh create_ip_interface -ifn ETH_1_8_1_102_RAN_1 -ip 11.106.4.18 -mask 255.255.255.224 -eqp 1.8 -ep 1 -vid 102 -ifp ETH_1_8_1_102_RAN_1 -nw RAN_1
+      gsh create_ip_interface -ifn ETH_1_1_1_130_RAN_2 -ip 11.106.4.43 -mask 255.255.255.224 -eqp 1.1 -ep 1 -vid 130 -ifp ETH_1_1_1_130_RAN_2 -nw RAN_2
+      gsh create_ip_interface -ifn ETH_1_2_1_130_RAN_2 -ip 11.106.4.44 -mask 255.255.255.224 -eqp 1.2 -ep 1 -vid 130 -ifp ETH_1_2_1_130_RAN_2 -nw RAN_2
+      gsh create_ip_interface -ifn ETH_1_3_1_130_RAN_2 -ip 11.106.4.45 -mask 255.255.255.224 -eqp 1.3 -ep 1 -vid 130 -ifp ETH_1_3_1_130_RAN_2 -nw RAN_2
+      gsh create_ip_interface -ifn ETH_1_4_1_130_RAN_2 -ip 11.106.4.46 -mask 255.255.255.224 -eqp 1.4 -ep 1 -vid 130 -ifp ETH_1_4_1_130_RAN_2 -nw RAN_2
+      gsh create_ip_interface -ifn ETH_1_5_1_130_RAN_2 -ip 11.106.4.47 -mask 255.255.255.224 -eqp 1.5 -ep 1 -vid 130 -ifp ETH_1_5_1_130_RAN_2 -nw RAN_2
+      gsh create_ip_interface -ifn ETH_1_6_1_130_RAN_2 -ip 11.106.4.48 -mask 255.255.255.224 -eqp 1.6 -ep 1 -vid 130 -ifp ETH_1_6_1_130_RAN_2 -nw RAN_2
+      gsh create_ip_interface -ifn ETH_1_7_1_130_RAN_2 -ip 11.106.4.49 -mask 255.255.255.224 -eqp 1.7 -ep 1 -vid 130 -ifp ETH_1_7_1_130_RAN_2 -nw RAN_2
+      gsh create_ip_interface -ifn ETH_1_8_1_130_RAN_2 -ip 11.106.4.50 -mask 255.255.255.224 -eqp 1.8 -ep 1 -vid 130 -ifp ETH_1_8_1_130_RAN_2 -nw RAN_2
+      gsh create_ip_interface -ifn ETH_1_1_1_136_OAM -ip 11.106.3.11 -mask 255.255.255.224 -eqp 1.1 -ep 1 -vid 136 -ifp ETH_1_1_1_136_OAM -nw OM_CN
+      gsh create_ip_interface -ifn ETH_1_2_1_136_OAM -ip 11.106.3.12 -mask 255.255.255.224 -eqp 1.2 -ep 1 -vid 136 -ifp ETH_1_2_1_136_OAM -nw OM_CN
+      gsh create_ip_interface -ifn ETH_1_3_1_136_OAM -ip 11.106.3.13 -mask 255.255.255.224 -eqp 1.3 -ep 1 -vid 136 -ifp ETH_1_3_1_136_OAM -nw OM_CN
+      gsh create_ip_interface -ifn ETH_1_4_1_136_OAM -ip 11.106.3.14 -mask 255.255.255.224 -eqp 1.4 -ep 1 -vid 136 -ifp ETH_1_4_1_136_OAM -nw OM_CN
+      gsh create_ip_interface -ifn ETH_1_5_1_136_OAM -ip 11.106.3.15 -mask 255.255.255.224 -eqp 1.5 -ep 1 -vid 136 -ifp ETH_1_5_1_136_OAM -nw OM_CN
+      gsh create_ip_interface -ifn ETH_1_6_1_136_OAM -ip 11.106.3.16 -mask 255.255.255.224 -eqp 1.6 -ep 1 -vid 136 -ifp ETH_1_6_1_136_OAM -nw OM_CN
+      gsh create_ip_interface -ifn ETH_1_7_1_136_OAM -ip 11.106.3.17 -mask 255.255.255.224 -eqp 1.7 -ep 1 -vid 136 -ifp ETH_1_7_1_136_OAM -nw OM_CN
+      gsh create_ip_interface -ifn ETH_1_8_1_136_OAM -ip 11.106.3.18 -mask 255.255.255.224 -eqp 1.8 -ep 1 -vid 136 -ifp ETH_1_8_1_136_OAM -nw OM_CN
+      gsh create_static_route -eqp 1.1 -nw MEDIA_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.1
+      gsh create_static_route -eqp 1.2 -nw MEDIA_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.1
+      gsh create_static_route -eqp 1.3 -nw MEDIA_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.1
+      gsh create_static_route -eqp 1.4 -nw MEDIA_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.1
+      gsh create_static_route -eqp 1.5 -nw MEDIA_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.1
+      gsh create_static_route -eqp 1.6 -nw MEDIA_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.1
+      gsh create_static_route -eqp 1.7 -nw MEDIA_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.1
+      gsh create_static_route -eqp 1.8 -nw MEDIA_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.1.1
+      gsh create_static_route -eqp 1.1 -nw SIG_CN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.1
+      gsh create_static_route -eqp 1.2 -nw SIG_CN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.1
+      gsh create_static_route -eqp 1.3 -nw SIG_CN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.1
+      gsh create_static_route -eqp 1.4 -nw SIG_CN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.1
+      gsh create_static_route -eqp 1.5 -nw SIG_CN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.1
+      gsh create_static_route -eqp 1.6 -nw SIG_CN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.1
+      gsh create_static_route -eqp 1.7 -nw SIG_CN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.1
+      gsh create_static_route -eqp 1.8 -nw SIG_CN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.1
+      gsh create_static_route -eqp 1.1 -nw SIG_CN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.33
+      gsh create_static_route -eqp 1.2 -nw SIG_CN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.33
+      gsh create_static_route -eqp 1.3 -nw SIG_CN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.33
+      gsh create_static_route -eqp 1.4 -nw SIG_CN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.33
+      gsh create_static_route -eqp 1.5 -nw SIG_CN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.33
+      gsh create_static_route -eqp 1.6 -nw SIG_CN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.33
+      gsh create_static_route -eqp 1.7 -nw SIG_CN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.33
+      gsh create_static_route -eqp 1.8 -nw SIG_CN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.2.33
+      gsh create_static_route -eqp 1.1 -nw RAN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.1
+      gsh create_static_route -eqp 1.2 -nw RAN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.1
+      gsh create_static_route -eqp 1.3 -nw RAN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.1
+      gsh create_static_route -eqp 1.4 -nw RAN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.1
+      gsh create_static_route -eqp 1.5 -nw RAN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.1
+      gsh create_static_route -eqp 1.6 -nw RAN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.1
+      gsh create_static_route -eqp 1.7 -nw RAN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.1
+      gsh create_static_route -eqp 1.8 -nw RAN_1 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.1
+      gsh create_static_route -eqp 1.1 -nw RAN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.33
+      gsh create_static_route -eqp 1.2 -nw RAN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.33
+      gsh create_static_route -eqp 1.3 -nw RAN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.33
+      gsh create_static_route -eqp 1.4 -nw RAN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.33
+      gsh create_static_route -eqp 1.5 -nw RAN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.33
+      gsh create_static_route -eqp 1.6 -nw RAN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.33
+      gsh create_static_route -eqp 1.7 -nw RAN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.33
+      gsh create_static_route -eqp 1.8 -nw RAN_2 -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.4.33
+      gsh create_static_route -eqp 1.1 -nw OM_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.1
+      gsh create_static_route -eqp 1.2 -nw OM_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.1
+      gsh create_static_route -eqp 1.3 -nw OM_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.1
+      gsh create_static_route -eqp 1.4 -nw OM_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.1
+      gsh create_static_route -eqp 1.5 -nw OM_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.1
+      gsh create_static_route -eqp 1.6 -nw OM_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.1
+      gsh create_static_route -eqp 1.7 -nw OM_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.1
+      gsh create_static_route -eqp 1.8 -nw OM_CN -dip 0.0.0.0 -mask 0.0.0.0 -gip 11.106.3.1
+      gsh create_router_instance -eqp 1.1 -nw MEDIA_CN -ip 11.106.1.11 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw MEDIA_CN -ip 11.106.1.12 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw MEDIA_CN -ip 11.106.1.13 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.4 -nw MEDIA_CN -ip 11.106.1.14 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.5 -nw MEDIA_CN -ip 11.106.1.15 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.6 -nw MEDIA_CN -ip 11.106.1.16 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.7 -nw MEDIA_CN -ip 11.106.1.17 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.8 -nw MEDIA_CN -ip 11.106.1.18 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw SIG_CN_1 -ip 11.106.2.11 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw SIG_CN_1 -ip 11.106.2.12 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw SIG_CN_1 -ip 11.106.2.13 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.4 -nw SIG_CN_1 -ip 11.106.2.14 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.5 -nw SIG_CN_1 -ip 11.106.2.15 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.6 -nw SIG_CN_1 -ip 11.106.2.16 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.7 -nw SIG_CN_1 -ip 11.106.2.17 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.8 -nw SIG_CN_1 -ip 11.106.2.18 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw SIG_CN_2 -ip 11.106.2.43 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw SIG_CN_2 -ip 11.106.2.44 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw SIG_CN_2 -ip 11.106.2.45 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.4 -nw SIG_CN_2 -ip 11.106.2.46 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.5 -nw SIG_CN_2 -ip 11.106.2.47 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.6 -nw SIG_CN_2 -ip 11.106.2.48 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.7 -nw SIG_CN_2 -ip 11.106.2.49 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.8 -nw SIG_CN_2 -ip 11.106.2.50 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw RAN_1 -ip 11.106.4.11 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw RAN_1 -ip 11.106.4.12 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw RAN_1 -ip 11.106.4.13 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.4 -nw RAN_1 -ip 11.106.4.14 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.5 -nw RAN_1 -ip 11.106.4.15 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.6 -nw RAN_1 -ip 11.106.4.16 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.7 -nw RAN_1 -ip 11.106.4.17 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.8 -nw RAN_1 -ip 11.106.4.18 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw RAN_2 -ip 11.106.4.43 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw RAN_2 -ip 11.106.4.44 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw RAN_2 -ip 11.106.4.45 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.4 -nw RAN_2 -ip 11.106.4.46 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.5 -nw RAN_2 -ip 11.106.4.47 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.6 -nw RAN_2 -ip 11.106.4.48 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.7 -nw RAN_2 -ip 11.106.4.49 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.8 -nw RAN_2 -ip 11.106.4.50 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.1 -nw OM_CN -ip 11.106.3.11 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.2 -nw OM_CN -ip 11.106.3.12 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.3 -nw OM_CN -ip 11.106.3.13 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.4 -nw OM_CN -ip 11.106.3.14 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.5 -nw OM_CN -ip 11.106.3.15 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.6 -nw OM_CN -ip 11.106.3.16 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.7 -nw OM_CN -ip 11.106.3.17 -sn NULL -sc NULL -sl NULL
+      gsh create_router_instance -eqp 1.8 -nw OM_CN -ip 11.106.3.18 -sn NULL -sc NULL -sl NULL
+      gsh create_bfd -nw MEDIA_CN -dtx 500 -mrx 500 -mult 3
+      gsh create_bfd_neighbor -nw MEDIA_CN -ip 11.106.1.2
+      gsh create_bfd_neighbor -nw MEDIA_CN -ip 11.106.1.3
+      gsh create_bfd -nw SIG_CN_1 -dtx 500 -mrx 500 -mult 3
+      gsh create_bfd -nw SIG_CN_2 -dtx 500 -mrx 500 -mult 3
+      gsh create_bfd_neighbor -nw SIG_CN_1 -ip 11.106.2.2
+      gsh create_bfd_neighbor -nw SIG_CN_1 -ip 11.106.2.3
+      gsh create_bfd_neighbor -nw SIG_CN_2 -ip 11.106.2.34
+      gsh create_bfd_neighbor -nw SIG_CN_2 -ip 11.106.2.35
+      gsh create_bfd -nw RAN_1 -dtx 500 -mrx 500 -mult 3
+      gsh create_bfd -nw RAN_2 -dtx 500 -mrx 500 -mult 3
+      gsh create_bfd_neighbor -nw RAN_1 -ip 11.106.4.2
+      gsh create_bfd_neighbor -nw RAN_1 -ip 11.106.4.3
+      gsh create_bfd_neighbor -nw RAN_2 -ip 11.106.4.34
+      gsh create_bfd_neighbor -nw RAN_2 -ip 11.106.4.35
+      gsh create_bfd -nw OM_CN -dtx 500 -mrx 500 -mult 3
+      gsh create_bfd_neighbor -nw OM_CN -ip 11.106.3.2
+      gsh create_bfd_neighbor -nw OM_CN -ip 11.106.3.3
+      gsh create_ip_service -sn SBI-Server -dscp NULL -nw lb_sig_cn
+      gsh create_ip_service -sn SBI-Client -dscp NULL -nw lb_sig_cn
+      gsh create_ip_service -sn N2-1 -dscp NULL -nw RAN_1
+      gsh create_ip_service -sn N2-2 -dscp NULL -nw RAN_2
+      gsh create_ip_service -sn OAM -dscp NULL -nw OM_CN
+      gsh create_ip_service -sn NTP -dscp NULL -nw OM_CN
+      gsh create_ip_service_address -sn SBI-Server -ip 107.2.0.7
+      gsh create_ip_service_address -sn SBI-Client -ip 106.2.2.1
+      gsh create_ip_service_address -sn N2-1 -ip 106.4.0.129
+      gsh create_ip_service_address -sn N2-2 -ip 106.4.0.161
+      gsh create_ip_service_address -sn OAM -ip 10.221.124.79
+      gsh create_ip_service_address -sn NTP -ip 10.221.124.79
+      gsh create_n2 -n2 n2 -no 3
+      gsh modify_gtp_v2 -era off
+      gsh create_ip_endpoint_list -ln NRFDiscHttpServer
+      gsh create_ip_endpoint_list -ln NRFNfmHttpServer
+      gsh create_ip_endpoint -ln NRFDiscHttpServer -ipepid 1 -ip 107.2.0.5 -port 443
+      gsh create_ip_endpoint -ln NRFNfmHttpServer -ipepid 1 -ip 107.2.0.5 -port 443
+      gsh create_nrf_service_instance -nsin nrf_srv_1 -nsn nnrf_nfdiscovery -ln NRFDiscHttpServer -nr primary -scheme http -fqdn nrf1.n89.nrf.5gc.mnc081.mcc240.3gppnetwork.org
+      gsh create_nrf_service_instance -nsin nrf_srv_2 -nsn nnrf_nfmanagement -ln NRFNfmHttpServer -nr primary -scheme http -fqdn nrf1.n89.nrf.5gc.mnc081.mcc240.3gppnetwork.org
+      gsh create_nssf_service_instance -nsin nssf_srv_1 -nsn nnssf_nsselection -scheme http -fqdn nssf1.n89.nssf.5gc.mnc081.mcc240.3gppnetwork.org
+      gsh create_nssf_service_instance -nsin nssf_ava_1 -nsn nnssf_nssaiavailability -scheme http -fqdn nssf1.n89.nssf.5gc.mnc081.mcc240.3gppnetwork.org
+      gsh modify_sbi_http_client_connection -nft SMF -sn nsmf_pdusession -msn 50000
+      gsh modify_sbi -uhf fqdn
+      gsh create_sctp_end_point -no 3 -portno 38412 -pn S1_MME_SCTP -primsn N2-1 -secsn N2-2
+      gsh modify_sctp_sys -noass 8192 -icmpact 1 -tmesbufs 3 -sctpoutbufs 1500 -twfc 20 -twfnb 1 -trec 5000 -ulmbs 500000 -totasmem 0 -ulmsfipart 70 -wbct 70 -upii 0 -udii 0 -tmir 0
+      gsh modify_subscriber_authentication -mavp off -savp off
+      gsh create_supi_range -imsi 24081 -vops 3gpp -rs home -doie false -udk NULL -ddoi mnc081.mcc240.gprs
+      gsh modify_feature_state -fsi amf_multiple_network_slices_support -fs ACTIVATED
+      gsh create_supported_slice -sn 2 -sst 1 -sd 2
+      gsh modify_eea_algorithm -name eea0 -prio 3
+      gsh modify_eea_algorithm -name eea1 -prio 2
+      gsh modify_eea_algorithm -name eea2 -prio 1
+      gsh modify_eea_algorithm -name eea3 -prio 0
+      gsh modify_eia_algorithm -name eia1 -prio 2
+      gsh modify_eia_algorithm -name eia2 -prio 1
+      gsh modify_eia_algorithm -name eia3 -prio 0
+      gsh modify_nia_algorithm -name nia1 -prio 2
+      gsh modify_nia_algorithm -name nia2 -prio 1
+      gsh modify_nia_algorithm -name nia3 -prio 0
+      gsh modify_nea_algorithm -name nea0 -prio 1
+      gsh modify_nea_algorithm -name nea1 -prio 2
+      gsh modify_nea_algorithm -name nea2 -prio 3
+      gsh modify_nea_algorithm -name nea3 -prio 0
+      gsh modify_subscriber_authentication -mavp off -savp on
+      gsh modify_sftp_auth -sah true
+      gsh create_nels_configuration -nci 1 -h 10.155.142.68 -p 9095
+      gsh create_ga -gan MSTZ
+      gsh create_ga_ta_range -gan MSTZ -tan TaLteZone1 -mcc 240 -mnc 81 -first 1 -last 2304
+      gsh create_ga_time_zone -gan MSTZ -tz Hongkong
+      gsh create_s1_mme -s1 S1 -no 1  -sar false
+      gsh create_s11 -s11 S11 -s11sg off
+      gsh create_diameter_peer -ip 107.2.0.8 -dh s6a-pccc -rn ericsson.se -pn 1
+      gsh create_local_diameter_host -dh s6a-pccc -rn ericsson.se -no 2
+      gsh create_diameter_application -da s6a -ls true -dh s6a-pccc -rn ericsson.se
+      gsh create_diameter_realm -da s6a -rn ericsson.se -dpl 1 -ls true
+      gsh create_sctp_profile -pn default -pmtu 1400
+      gsh create_sctp_profile -pn 4gsctpS1 -assrtx 20 -irto 200 -minrto 100 -maxrto 400 -pathrtx 10 -bunt 0 -pmtu 1400
+      gsh create_sctp_profile -pn S1_MME_SCTP -assrtx 20 -irto 200 -minrto 100 -maxrto 400 -pathrtx 10 -bunt 0 -pmtu 1400
+      gsh create_sctp_end_point -no 1 -primsn S1-MME-1 -secsn S1-MME-2 -portno 36412 -pn 4gsctpS1
+      gsh create_sctp_end_point -no 2 -primsn S6a-1 -portno 3868 -pn default
+      gsh create_ip_service -sn S1-MME-1 -nw RAN_1
+      gsh create_ip_service_address -sn S1-MME-1 -ip 106.4.0.65
+      gsh create_ip_service -sn S1-MME-2 -nw RAN_2
+      gsh create_ip_service_address -sn S1-MME-2 -ip 106.4.0.97
+      gsh create_ip_service -sn S10-GTP-C -nw MEDIA_CN
+      gsh create_ip_service_address -sn S10-GTP-C -ip 106.1.0.33
+      gsh create_ip_service -sn S11-GTP-C -nw MEDIA_CN
+      gsh create_ip_service_address -sn S11-GTP-C -ip 106.1.0.65
+      gsh create_ip_service -sn S6a-1 -nw SIG_CN_1
+      gsh create_ip_service_address -sn S6a-1 -ip 106.2.0.65
+      gsh create_ip_service -sn S6a-2 -nw SIG_CN_2
+      gsh create_ip_service_address -sn S6a-2 -ip 106.2.0.97
+      gsh create_node_credential -nci ncCLIENT
+      gsh create_node_credential -nci ncSERVER
+      gsh create_dns -dn epc.mnc081.mcc240.3gppnetwork.org. -qt recursive
+
+  eric-pc-mm-mobility:
+    replicaCount: 16
+    nodeSelector:
+      pcc-mm-pod: non-controller
+    securityContext:
+      appArmorProfile: docker-pcc
+    service:
+      useK8sNwSBI: true
+      sbi:
+        loadBalancerIP: 107.2.0.7
+
+  eric-pc-mm-forwarder:
+    replicaCount: 8
+    ipv6: false
+    nodeSelector:
+      pcc-mm-pod: non-controller
+    securityContext:
+      appArmorProfile: docker-pcc
+    networks:
+    - name: ext1
+      cniVersion: 0.3.1
+      type: ovs
+      bridge: br_data
+      trunk:
+      - "minID" : 100
+        "maxID" : 102
+      - "minID" : 128
+        "maxID" : 128
+      - "minID" : 130
+        "maxID" : 130
+      - "minID" : 136
+        "maxID" : 136
+      mtu: 9000
+
+  eric-pc-mm-sctp:
+    replicaCount: 7
+    nodeSelector:
+      pcc-mm-pod: non-controller
+    securityContext:
+      appArmorProfile: docker-pcc
+
+  eric-pc-mm-br-agent:
+    nodeSelector:
+      pcc-mm-pod: non-controller
+
+  eric-pc-mm-controller-supervisor:
+    nodeSelector:
+      pcc-mm-pod: non-controller
+
+eric-pc-kvdb-rd-server:
+    numberOfMaster: 13
+
+eric-data-distributed-coordinator-ed:
+  nodeSelector:
+    dced:
+      pcc-sm-pod: non-controller
+  persistence:
+    persistentVolumeClaim:
+      size: "4Gi"
+
+eric-pc-controller-ldap-admin-creds:
+  adminCredentials:
+    adminuser: day0
+    adminpasswd: $6$PQjSCFpQ30lwcgu6$yF3HmVLpBVe55OywV5HQ4yhGcRgKesFhK8Q8CBzqVjhDf93CO2yytjYII2gsvJhJTsbnc4A4lF.LGDd9AeFTm.
+
+#eric-pc-controller-ldap-admin-creds:
+#  adminCredentials: null
+#
+#m2m:
+#  day0-user-json: |
+#    {
+#      "user": [
+#        {
+#          "name": "day0",
+#          "password": "$6$PQjSCFpQ30lwcgu6$yF3HmVLpBVe55OywV5HQ4yhGcRgKesFhK8Q8CBzqVjhDf93CO2yytjYII2gsvJhJTsbnc4A4lF.LGDd9AeFTm.",
+#          "groups": [
+#          ]
+#        }
+#      ]
+#    }
+#
+
+eric-data-search-engine:
+  autoSetRequiredWorkerNodeSysctl: false
+  persistence:
+    data:
+      persistentVolumeClaim:
+        size: "100Gi"
+  resources:
+    data:
+      limits:
+        memory: "10Gi"
+
+eric-data-object-storage-mn:
+  nodeSelector:
+    pcc-sm-pod: non-controller
+
+eric-pm-server:
+  rbac:
+    appMonitoring:
+      enabled: true
+      configFileCreate: false
+  server:
+    persistentVolume:
+      enabled: true
+
+eric-odca-diagnostic-data-collector:
+#  env:
+#    sftphost: "11.100.3.51:22"
+#    sftpFileLocation: n89-pcc-ddc
+#  sftpCredentials:
+#    username: "root"
+#    password: "lmc_xdg"
+  resources:
+    diagnostic-data-collector:
+      limits:
+        cpu: 1500m
+        ephemeral-storage: 20Gi
+        memory: 4Gi
+      requests:
+        cpu: 1000m
+        ephemeral-storage: 5Gi
+        memory: 1Gi
+
+eric-pc-vpn-gateway-forwarder:
+  replicaCount: 2
+  resourceName: ovs-cni.network.kubevirt.io/br_data
+  resources:
+    dataPlane:
+      limits:
+        ovs-cni.network.kubevirt.io/br_data: 1
+      requests:
+        ovs-cni.network.kubevirt.io/br_data: 1
+  vpnGateway:
+    enabled: true
+    multiPod: intra
+  interfaces:
+  - name: net0
+    type: ovs
+    bridge: br_data
+    trunk:
+      - "minVlan" : 160 # media_cn
+        "maxVlan" : 161 # sig_cn
+      - "minVlan" : 3400
+        "maxVlan" : 3400
+    l2Mtu: 9000
+
+#Default replicaCount is 2
+eric-pc-routing-engine:
+  interfaces:
+    type: ovs
+    ovs:
+    - bridge: br_data
+      vlan_mode: trunk
+      mtu: 9000
+      trunk:
+        - minID: 160
+          maxID: 161
+        - minID: 3400
+          maxID: 3400
+
+eric-sec-key-management:
+  nodeSelector:
+    pcc-sm-pod: non-controller
+
+eric-lcm-upgrade-sequencer:
+  resources:
+    lcmupgradesequencer:
+      requests:
+        memory: "2G"
+      limits:
+        memory: "2G"
+
+eric-cloud-native-nf-additions:
+
+  eric-pm-bulk-reporter:
+    resources:
+      bulkreporter:
+        requests:
+          memory: 200Mi
+    env:
+      iscompressed: 'true'
+      nodeName: n89-pcc
+
+  eric-cm-yang-provider:
+    service:
+      annotations:
+        sharedVIPLabel: pcc-oam
+        addressPoolName: pcc-oam
+
+  eric-data-sftp-server:
+    service:
+      annotations:
+        sharedVIPLabel: pcc-oam
+        addressPoolName: pcc-oam
+                                    
+cnom-loadBalancer-service:
+  enabled: true
+  annotations:
+    metallb.universe.tf/address-pool: pcc-oam
+    metallb.universe.tf/allow-shared-ip: pcc-oam
+

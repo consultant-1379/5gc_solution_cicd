@@ -1,0 +1,11 @@
+{
+  "additionalParams": {
+    "namespace": "ccrc",
+    "skipVerification": true,
+    "applicationTimeOut": "2000",
+    "commandTimeOut": "1000",
+    "manoControlledScaling": false,
+    "global.ipStackMode":"ipv4"
+  }
+}
+

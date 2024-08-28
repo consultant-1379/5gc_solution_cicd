@@ -1,0 +1,604 @@
+global:
+  timezone: CET
+  createExternalCertificateCR: true
+  pullSecret: regcred
+  registry:
+    pullSecret: regcred
+  istio:
+    # Update the value according to kubernetes service ipaddress in default namespace
+    kubernetes_service_ipaddress: 10.96.0.1
+    tlsHandledByServiceMesh: true
+    egress:
+      enabled: true
+      endpoints:
+        eric_nrf_sbi_traffic:
+          mode: MUTUAL
+          host: "*.n84.5gc.mnc081.mcc240.3gppnetwork.org"
+          port: 443
+        eric_nrf_kvdb_sbi_traffic:
+          secretName: eric-ccrc-nrf-sbi-client-certs
+          caSecretName: eric-ccrc-nrf-sbi-client-certs-cacert
+          host: "*.kvdb.n84.5gc.mnc081.mcc240.3gppnetwork.org"
+        eric_nrf_nbi_traffic:
+          mode: MUTUAL
+          host: "*.n84.5gc.mnc081.mcc240.3gppnetwork.org"
+          port: 443
+        eric_nssf_sbi_traffic:
+          mode: MUTUAL
+          host: "*.n84.5gc.mnc081.mcc240.3gppnetwork.org"
+          port: 443
+        eric_nssf_kvdb_sbi_traffic:
+          secretName: eric-ccrc-nssf-sbi-client-certs
+          caSecretName: eric-ccrc-nssf-sbi-client-certs-cacert
+          host: "*.kvdb.n84.5gc.mnc081.mcc240.3gppnetwork.org"
+
+  ericsson:
+    licensing:
+      licenseDomains:
+      - productType: "CCRC"
+        customerId: "946060"
+        swltId: "STA-CCRC-4"
+
+  eric_nrf:
+    enabled: true
+
+  eric-nrf-extnotify:
+    enabled: false
+
+  eric-nrf-dns:
+    enabled: false
+
+  eric_nssf:
+    enabled: true
+
+  nrf:
+    istio:
+      traffic_ingressGatewayHTTPSPort: 443
+    rollbackHookImage:
+      tag: 1.0.4
+    features:
+      policyControl:
+        enabled: false
+  nssf:
+    istio:
+      traffic_ingressGatewayHTTPSPort: 443
+    rollbackHookImage:
+      tag: 1.0.4
+  nrfagent:
+    rollbackHookImage:
+      tag: 1.0.4
+
+  tapagent:
+     enabled: false
+
+tags:
+  # enable below function of CCRC COMMON
+  eric-probe-adapter: false
+
+eric-udm-mesh-integration:
+  eric-ingressgw-nrf-traffic:
+    externalTrafficPolicy: Local
+    replicaCount: 1
+    loadBalancerIP: ""
+    serviceAnnotations:
+      metallb.universe.tf/allow-shared-ip: nrf-signaling
+      metallb.universe.tf/address-pool: nrf-signaling
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    ports:
+    - port: 8091
+      targetPort: 8091
+      name: geode-locators
+      protocol: TCP
+    - port: 8092
+      targetPort: 8092
+      name: geode-gateway-receivers
+      protocol: TCP
+    - port: 443
+      targetPort: 8443
+      name: tls
+    secretVolumes: []
+  eric-ingressgw-nssf-traffic:
+    externalTrafficPolicy: Local
+    loadBalancerIP: ""
+    serviceAnnotations:
+      metallb.universe.tf/allow-shared-ip: nssf-signaling
+      metallb.universe.tf/address-pool: nssf-signaling
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    ports:
+    - port: 8091
+      targetPort: 8091
+      name: geode-locators
+      protocol: TCP
+    - port: 8092
+      targetPort: 8092
+      name: geode-gateway-receivers
+      protocol: TCP
+    - port: 443
+      targetPort: 8443
+      name: tls
+    secretVolumes: []
+
+eric-adp-5g-udm:
+  eric-cm-mediator:
+    nodeSelector: {}
+  eric-pm-server:
+    replicaCount: 1
+    server:
+      persistentVolume:
+        storageClass: "network-block"
+# Modified values for pm-server rbac
+    rbac:
+      appMonitoring:
+        enabled: false
+        configFileCreate: false
+  eric-pm-bulk-reporter:
+    nodeSelector: {}
+    env:
+      nodeName: "CCRC"
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+    service:
+      loadBalancerIP: ""
+      annotations:
+        sharedVIPLabel: ccrc-oam
+        addressPoolName: ccrc-oam
+  eric-data-search-engine:
+    persistence:
+      data:
+        persistentVolumeClaim:
+          storageClassName: "network-block"
+  eric-data-document-database-pg:
+    nodeSelector: {}
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+  eric-log-transformer:
+    replicaCount: 1
+    networkPolicy:
+      egress:
+      #  - cidr: 172.17.100.0/22
+      #    ports:
+      #    - protocol: TCP
+      #      port: 514
+      #    - protocol: UDP
+      #      port: 514
+    syslog:
+      output:
+        enabled: false
+        tls:
+          enabled: true
+          certificates:
+            asymmetricKeyCertificateName: eric-log-transformer-client-key/eric-log-transformer-client-certificate
+            trustedCertificateListName: eric-log-transformer-cacerts
+        remoteHosts:
+        #  - host: hostname
+        #    port: 514
+        #inclusions:
+        #  - field: "[facility]"
+        #    value: "log audit"
+        #  - field: "[other]"
+        #    value: "other value"
+        #exclusions:
+        #  - logplane:
+        #    rules:
+        #      - field: "[field1]"
+        #        value: "value1"
+        #      - field: "[field2]"
+        #        value: "value2"
+        filter: #|
+  eric-data-coordinator-zk:
+    nodeSelector:
+      datacoordinatorzk: {}
+      brAgent: {}
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+  eric-data-message-bus-kf:
+    nodeSelector: {}
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+  eric-fh-snmp-alarm-provider:
+    nodeSelector:
+      snmp-sender: eric-ccrc    # eric-pcc, eric-pcg, eric-ccsm, eric-ccdm, eric-ccrc, eric-eda2
+    service:
+      loadBalancerIP: ""
+      annotations:
+        sharedVIPLabel: "ccrc-oam"
+        addressPoolName: "ccrc-oam"
+      secretName: "snmp-alarm-provider-config"
+    oamVIP:
+      enabled: true
+      vip: "10.137.48.166"
+      destIp: "10.36.242.99"
+  eric-log-shipper:
+    nodeSelector: {}
+  eric-cm-yang-provider:
+    nodeSelector: {}
+    ldap:
+      ipv6Enabled: false
+    persistentVolumeClaim:
+      storageClassName: "network-block"
+    service:
+      loadBalancerIP: ""
+      annotations:
+        sharedVIPLabel: "ccrc-oam"
+        addressPoolName: "ccrc-oam"
+  eric-cnom-document-database-mg:
+    nodeSelector: {}
+    persistence:
+      storageClass: "network-block"
+  eric-ctrl-bro:
+    nodeSelector: {}
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+  eric-sec-ldap-server:
+    ldap:
+      pwdquality:
+        minPoints: 3
+        minUpper: 1
+        minLower: 1
+        minDigit: 1
+        minPunct: 1
+        maxConsecClass: 3
+      pwdpolicy:
+        pwdMinLength: 12
+        pwdMaxAge: 7776000
+        pwdInHistory: 12
+    persistence:
+      storageClassName: "network-block"
+  eric-data-distributed-coordinator-ed:
+    persistence:
+      persistentVolumeClaim:
+        storageClassName: "network-block"
+      brAgent:
+        backupVolume:
+          storageClassName: "network-block"
+  eric-tm-ingress-controller-cr:
+    service:
+      loadBalancerIP: ""
+      annotations:
+        sharedVIPLabel: "ccrc-oam"
+        addressPoolName: "ccrc-oam"
+    minimumProtocolVersion: "TLS1.3"
+    externalCertificate:
+      keyAndCertificateName: iccr-external-tls-key/iccr-external-tls-certificate
+  eric-cnom-server:
+    nodeSelector: {}
+    fqdn: cnom.ccrc.n84-eccd3.sero.gic.ericsson.se
+  eric-lm-combined-server:
+    licenseConsumerHandler:
+      resources:
+        licenseConsumerHandler:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: "10.221.14.88"
+      resources:
+        licenseServerClient:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+  eric-data-object-storage-mn:
+    nodeSelector: {}
+    persistentVolumeClaim:
+      storageClassName:"network-block"
+
+# 100tps of NRF resource
+eric-nrf:
+  externalcertificate:
+    ingress:
+      trustedCertificateListName: eric-ccrc-nrf-sbi-server-certs-cacerts
+      asymmetricKeyCertificateName: eric-ccrc-nrf-sbi-server-key/eric-ccrc-nrf-sbi-server-certificate
+      kvdbTrustedCertificateListName: eric-ccrc-nrf-kvdb-server-certs-cacerts
+      kvdbAsymmetricKeyCertificateName: eric-ccrc-nrf-kvdb-server-key/eric-ccrc-nrf-kvdb-server-certificate
+      extnotifyTrustedCertificateListName: eric-ccrc-nrf-nbi-extnotify-server-certs-cacerts
+      extnotifyAsymmetricKeyCertificateName: eric-ccrc-nrf-nbi-extnotify-server-key/eric-ccrc-nrf-nbi-extnotify-server-certificate
+      provisionTrustedCertificateListName: eric-ccrc-nrf-provision-server-certs-cacerts
+      provisionAsymmetricKeyCertificateName: eric-ccrc-nrf-provision-server-key/eric-ccrc-nrf-provision-server-certificate
+    egress:
+      trustedCertificateListName: eric-ccrc-nrf-sbi-client-certs-cacerts
+      asymmetricKeyCertificateName: eric-ccrc-nrf-sbi-client-key/eric-ccrc-nrf-sbi-client-certificate
+      kvdbTrustedCertificateListName: eric-ccrc-nrf-kvdb-client-certs-cacerts
+      kvdbAsymmetricKeyCertificateName: eric-ccrc-nrf-kvdb-client-key/eric-ccrc-nrf-kvdb-client-certificate
+      nbiTrustedCertificateListName: eric-ccrc-nrf-nbi-client-certs-cacerts
+      nbiAsymmetricKeyCertificateName: eric-ccrc-nrf-nbi-client-key/eric-ccrc-nrf-nbi-client-certificate
+
+  eric-nrf-dns:
+    service:
+      annotations:
+        metallb.universe.tf/allow-shared-ip: ccrc-dns-traffic
+        metallb.universe.tf/address-pool: ccrc-dns
+      externalTrafficPolicy: Local
+      loadBalancerIP: ""
+    frontend:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+    proxy:
+      resources:
+        requests:
+          memory: 128Mi
+          cpu: 100m
+
+  eric-nrf-register-agent:
+    replicaCount: 1
+
+  eric-nrf-accesstoken-agent:
+    replicaCount: 1
+
+  eric-nrf-discovery-agent:
+    replicaCount: 1
+
+  eric-nrf-notify-agent:
+    replicaCount: 1
+
+
+  eric-data-kvdb-ag:
+    replicas:
+      locator: 1
+      server: 1
+    persistence:
+      data:
+        persistentVolumeClaim:
+          storageClassName: "network-block"
+          locator:
+            size: 1Gi
+          server:
+            size: 4Gi
+          adminMgr:
+            size: 1Gi
+      backup:
+        persistentVolumeClaim:
+          enabled: true
+          storageClassName: "network-block"
+          locator:
+            size: 1Gi
+          server:
+            size: 8Gi
+          adminMgr:
+            size: 16Gi
+      gwsender:
+        persistentVolumeClaim:
+          enabled: true
+          storageClassName: "network-block"
+          size: 3Gi
+    jvmHeap:
+      database:
+        locator: 3200m
+        server: 3200m
+      monitor: 384m
+      jmxExporter: 384m
+      adminMgr: 512m
+
+    jvmOptions:
+      initDepend:
+      database:
+        locator:
+        - '"-XX:+UseG1GC"'
+        - '"-XX:MaxGCPauseMillis=10"'
+        - '"-Xlog:gc:file=srvgc.log"'
+        server:
+        - '"-XX:+UseG1GC"'
+        - '"-XX:MaxGCPauseMillis=10"'
+        - '"-Xlog:gc:file=srvgc.log"'
+        - '"-Dgeode.feature-protobuf-protocol=true"'
+      monitor:
+      jmxExporter:
+
+    resources:
+      server:
+        requests:
+          memory: 4Gi
+          cpu: 200m
+      locator:
+        requests:
+          memory: 4Gi
+          cpu: 50m
+      adminMgr:
+        requests:
+          memory: 750Mi
+          cpu: 100m
+      monitor:
+        requests:
+          memory: 650Mi
+          cpu: 50m
+      jmxExporter:
+        requests:
+          memory: 512Mi
+          cpu: 200m
+      initDepend:
+        requests:
+          memory: 128Mi
+          cpu: 200m
+      initDb:
+        requests:
+          memory: 128Mi
+          cpu: 200m
+
+    probing:
+      readiness:
+        initialDelaySeconds: 50
+      liveness:
+        monitor:
+          initialDelaySeconds: 60
+        database:
+          initialDelaySeconds: 60
+        jmxExporter:
+          initialDelaySeconds: 60
+
+  eric-nrf-common:
+    dbproxy:
+      replicaCount: 1
+      resources:
+        requests:
+          memory: 300Mi
+          cpu: 300m
+        limits:
+          memory: 2Gi
+          cpu: 600m
+    configagent:
+      resources:
+        # gwsender_disk_store_size = (eric-nrf.eric-data-kvdb-ag.persistence.gwsender.size[Gi] - 0.3) * 1000
+        gwsender_disk_store_size: 2700
+  eric-nrf-management:
+    mgmt:
+      replicaCount: 1
+      resources:
+        requests:
+          memory: 1000Mi
+          cpu: 200m
+
+  eric-nrf-management-notification:
+    notification:
+      replicaCount: 1
+      resources:
+        requests:
+          memory: 1000Mi
+          cpu: 200m
+
+  eric-nrf-discovery:
+    disc:
+      replicaCount: 1
+      resources:
+        requests:
+          memory: 500Mi
+          cpu: 250m
+      proxy:
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 100m
+
+  eric-nrf-provision:
+    ingress:
+      fqdn: nrf-prov.ccrc.n84-eccd3.sero.gic.ericsson.se
+    prov:
+      replicaCount: 1
+      resources:
+        requests:
+          memory: 100Mi
+          cpu: 100m
+
+  eric-nrf-extnotify:
+    ingress:
+      fqdn: nrf-extnotify.ccrc.n84-eccd3.sero.gic.ericsson.se
+
+# 100tps of NSSF resource
+eric-nssf:
+  externalcertificate:
+    ingress:
+      trustedCertificateListName: eric-ccrc-nssf-sbi-server-certs-cacerts
+      asymmetricKeyCertificateName: eric-ccrc-nssf-sbi-server-key/eric-ccrc-nssf-sbi-server-certificate
+      kvdbTrustedCertificateListName: eric-ccrc-nssf-kvdb-server-certs-cacerts
+      kvdbAsymmetricKeyCertificateName: eric-ccrc-nssf-kvdb-server-key/eric-ccrc-nssf-kvdb-server-certificate
+      provisioningTrustedCertificateListName: eric-ccrc-nssf-provisioning-server-certs-cacerts
+      provisioningAsymmetricKeyCertificateName: eric-ccrc-nssf-provisioning-server-key/eric-ccrc-nssf-provisioning-server-certificate
+    egress:
+      trustedCertificateListName: eric-ccrc-nssf-sbi-client-certs-cacerts
+      asymmetricKeyCertificateName: eric-ccrc-nssf-sbi-client-key/eric-ccrc-nssf-sbi-client-certificate
+      kvdbTrustedCertificateListName: eric-ccrc-nssf-kvdb-client-certs-cacerts
+      kvdbAsymmetricKeyCertificateName: eric-ccrc-nssf-kvdb-client-key/eric-ccrc-nssf-kvdb-client-certificate
+
+  configagent:
+    resources:
+      # gwsender_disk_store_size = (eric-nssf.eric-data-kvdb-ag.persistence.gwsender.size[Gi] - 0.5) * 1000
+      gwsender_disk_store_size: 7500
+
+  eric-data-kvdb-ag-operator:
+    nodeSelector:
+      operator: {}
+  eric-data-kvdb-ag:
+    nodeSelector:
+      locator: {}
+      server: {}
+      adminMgr: {}
+    persistence:
+      data:
+        persistentVolumeClaim:
+          storageClassName: "network-block"
+          locator:
+            size: 1Gi
+          server:
+            size: 4Gi
+          adminMgr:
+            size: 1Gi
+      backup:
+        persistentVolumeClaim:
+          enabled: true
+          storageClassName: ""
+          locator:
+            size: 1Gi
+          server:
+            size: 8Gi
+          adminMgr:
+            size: 16Gi
+      gwsender:
+        persistentVolumeClaim:
+          enabled: true
+          storageClassName: "network-block"
+          size: 8Gi
+
+    resources:
+      server:
+        requests:
+          memory: 1Gi
+          cpu: 200m
+      locator:
+        requests:
+          memory: 1Gi
+          cpu: 200m
+      adminMgr:
+        requests:
+          memory: 512Mi
+          cpu: 100m
+      monitor:
+        requests:
+          memory: 512Mi
+          cpu: 50m
+      jmxExporter:
+        requests:
+          memory: 512Mi
+          cpu: 200m
+
+  eric-nssf-slice-selection-control:
+    sliceselectioncontrol:
+      resources:
+        requests:
+          cpu: 200m
+          memory: 512Mi
+        scaleLimit:
+          cpu: 80
+
+  eric-nssf-provisioning:
+    ingress:
+      fqdn: nssf-prov.ccrc.n84-eccd3.sero.gic.ericsson.se
+    provisioning:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+
+  eric-nssf-nssai-availability:
+    nssaiavailability:
+      resources:
+        requests:
+          cpu: 1000m
+          memory: 2048Mi
+    notification:
+      resources:
+        requests:
+          cpu: 1000m
+          memory: 2048Mi
+
+

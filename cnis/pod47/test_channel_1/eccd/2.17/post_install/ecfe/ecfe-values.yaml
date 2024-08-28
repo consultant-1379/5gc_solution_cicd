@@ -1,0 +1,28 @@
+---
+global:
+  registry:
+    url: "registry.eccd.local:5000"
+imageCredentials:
+  repoPath: ""
+images:
+  controller:
+    name: eric-tm-external-connectivity-frontend-controller
+    tag: 2.3.0-2-76eea4a3
+  speaker:
+    name: eric-tm-external-connectivity-frontend-speaker
+    tag: 2.3.0-2-76eea4a3
+nodeSelector:
+  controller: {}
+  speaker: 
+    host: tm-speaker
+qosGuaranteed:
+  enable: false
+rbac:
+  create: true
+tolerations:
+  controller: null
+  speaker:
+  - key: CriticalAddonsOnly
+    operator: Exists
+allocateSpeakers: true
+existingConfigMap: ecfe-ccdadm

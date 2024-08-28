@@ -1,0 +1,20 @@
+config
+system authentication user expert
+password rootroot
+groups [ scp-admin ]
+system authentication user scp-read
+password readread
+groups [ scp-read-only ]
+system authentication user scp-sec-admin
+password scpsec
+groups [ scp-security-admin ]
+system authentication user scp-admin
+password scpscp
+groups [ scp-admin ]
+system authentication user tsadm
+password tsadm
+groups [ scp-admin ]
+system authentication user sc-admin
+password scsc
+groups [ scp-admin ]
+commit

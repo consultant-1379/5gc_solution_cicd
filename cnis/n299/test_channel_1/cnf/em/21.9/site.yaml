@@ -1,0 +1,44 @@
+########################################
+### CNF general information
+########################################
+
+nodeName: node299-cluster1-em
+nodeType: EM
+instance: 1
+
+vnflcm:
+  clusterName: node299-cluster1
+  namespace: em1
+  InstantiateVnfRequest:
+    applicationTimeOut: 1800
+    skipVerification: "true"
+license:
+  customerId: '946060'
+  swltId: STA-EM-2  #DM5GC-NODE299-C1-EM1-1    #STA-EM-2
+
+ddc:
+  remotePath: /root/ddc/node299-cluster1-em1
+
+users:
+  day1:
+  - username: user1
+    password: $6$DuKu80iwcGlQJP5g$M5fWxae8NoDZ06ebvOq/I9odwFw4Hcs74VvCHHj5DCVK2jlqi39SiEA1haaentizKNZhhMdyZp1ETtYWz0oai0
+    groups:
+    - adp-pm-core
+  - username: user2
+    password: $6$DuKu80iwcGlQJP5g$M5fWxae8NoDZ06ebvOq/I9odwFw4Hcs74VvCHHj5DCVK2jlqi39SiEA1haaentizKNZhhMdyZp1ETtYWz0oai0
+    groups:
+    - adp-pm-users
+
+snmp:
+  agentEngineId: 800000c104656D3163317331
+
+########################################
+#### CNF specific information
+########################################
+em:
+  oamFqdn: em1-oam.node299-cluster1.sero.gic.ericsson.se
+  chf:
+      host: em1-chf-iccr.site1-cluster1
+  #defaultMgrServiceName: eric-bss-em-manager-node299-c1-em1-mgr-1
+  defaultMgrServiceName: eric-bss-em-manager-node299-c1-em1-mgr  # EVNFM version >=23.1.0

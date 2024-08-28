@@ -1,0 +1,33 @@
+nodeInfo: site.yaml
+siteGlobal: ../site_global.yaml
+# targetDir: .
+# jsonschema: pcc/jsonschema.yaml
+# jsonschemaGlobal: common/global-jsonschema.yaml
+templateDir: ../../../../../../../Public/ts-config/templates/
+jsonschemaGlobal: ../jsonschemas/schema-global.yaml
+
+files:
+- template: ccdm/1.9/values.yaml.jinja2
+  target: ../../../cnf/ccdm/ts_1.10/day0/values.yaml
+- template: common/instantiate.json.jinja2
+  target: ../../../cnf/ccdm/ts_1.10/day0/instantiate.json
+#- template: common/snmp-config.json.jinja2
+#  target: ../../../cnf/ccdm/ts_1.10/day1/snmp-config.json
+- template: common/user-config.xml.jinja2
+  target: ../../../cnf/ccdm/ts_1.10/day1/user-config.xml
+- template: ccdm/1.9/nrfagent-config.xml.jinja2
+  target: ../../../cnf/ccdm/ts_1.10/day1/nrfagent-config.xml
+- template: ccdm/1.9/udr-config.xml.jinja2
+  target: ../../../cnf/ccdm/ts_1.10/day1/udr-config.xml
+- template: ccsm/1.10/hss-application-counters.xml.jinja2
+  target: ../../../cnf/ccdm/ts_1.10/day1/hss-application-counters.xml
+- template: ccsm/1.10/eir-application-counters.xml.jinja2
+  target: ../../../cnf/ccdm/ts_1.10/day1/eir-application-counters.xml
+#- template: ccdm/1.9/consistency-config.xml.jinja2
+#  target: ../../../cnf/ccdm/ts_1.10/day1/consistency-config.xml
+- template: ccdm/1.9/ddc-config.xml.jinja2
+  target: ../../../cnf/ccdm/ts_1.10/day1/ddc-config.xml
+#- template: common/network-policy/eric-pm-server-allow.yaml.jinja2
+#  target: ../../../cnf/ccdm/ts_1.10/day1/eric-pm-server-allow.yaml
+#- template: common/network-policy/eric-data-search-engine-allow.yaml.jinja2
+#  target: ../../../cnf/ccdm/ts_1.10/day1/eric-data-search-engine-allow.yaml

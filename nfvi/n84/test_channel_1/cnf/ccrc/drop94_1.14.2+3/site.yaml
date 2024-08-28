@@ -1,0 +1,73 @@
+######################################
+## CNF general information
+######################################
+nodeName: n84-ccrc1
+nodeType: CCRC
+vtap:
+  tapagent: false
+
+vnflcm:
+  clusterName: n84-eccd1
+  namespace: ccrc
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+ericPmServer:
+  jobOverride: false
+  
+users:
+  day1:
+  - username: ccrcoam
+    password: Changeme@1st
+    groups:
+    - nrf-admin
+    - nssf-admin
+    - nrfagent-admin
+    - system-admin
+  - username: ccrcsec
+    password: Changeme@1st
+    groups:
+    - nrf-security-admin
+    - nssf-security-admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+cnom:
+  fqdn: cnom.ccrc.n84-eccd1.sero.gic.ericsson.se
+
+snmp:
+  agentEngineId: 8000137001C0A884ECCD12A63F
+license:
+  customerId: "946060"
+  swltId: STA-CCRC-4
+
+ccrc:
+  nrf:
+    instanceId: 0c765084-9cc5-49c6-9876-84eccd12a63f
+  nssf:
+    instanceId: 13a1de33-ec45-4cd6-a842-84eccd1ba3d8
+    provisioning:
+      fqdn: nssf-prov.ccrc.n84-eccd1.sero.gic.ericsson.se
+      amf:
+        regionId: 255
+        setId: 1
+        instanceId:
+        - 3fb31bb6-99ee-4a34-b714-84eccd16c3cf
+ddc:
+  remotePath: /home/admin/ddc/eccd1/n84-ccrc1
+
+kvdb:
+- siteId: 1
+
+######################################
+## CNF dimensioning specific
+######################################
+hpaReplica:
+  eric-nrf-discovery: {min: 2, max: 10}
+  eric-nrf-management: {min: 2, max: 6}
+  eric-nrf-management-notification: {min: 2, max: 27}
+  eric-nssf-slice-selection-control: {min: 2, max: 5}
+  eric-nssf-nssai-availability: {min: 2, max: 3}
+  eric-nssf-notification: {min: 2, max: 3}
+

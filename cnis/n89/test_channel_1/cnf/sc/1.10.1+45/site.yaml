@@ -1,0 +1,44 @@
+nodeName: n89
+nodeType: SC
+
+vnflcm:
+  clusterName: n89
+  namespace: sc
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day0:
+    username: admin
+    password: rootroot
+  day1:
+  - username: tsadm
+    password: tsadm
+    groups: [ system-admin system-security-admin sc-admin bsf-admin bsf-security-admin scp-admin scp-security-admin sc-security-admin sc-read-only ]
+
+cnom:
+  fqdn: cnom.sc1.n89.sero.gic.ericsson.se
+
+
+license:
+  customerId: '946060'
+  swltId: STA-SC-9
+snmp:
+  agentEngineId: 800000c10400000007
+  heartbeatInterval: 600
+ddc:
+  remotePath: /lab/pccc_logs/5GC-CICD/ci/N89_DDC/n89-sc-ddc
+sc:
+  bsfSigLbIp: 107.2.0.10
+  bsfDiameterLbIp: 107.2.0.11
+  bsfSbiHost: bsf1.n89.bsf
+
+#  scpSbiHost: xxx
+#  scpSigLbIp: x.x.x.x
+#  smfSbiNotifyIp: xx.xx.xx.xx
+#  smfSbiNotifyHost: xxxx
+locality: n89
+
+shared_vip_oam_label: sc-oam
+addressPoolName_oam: sc-oam

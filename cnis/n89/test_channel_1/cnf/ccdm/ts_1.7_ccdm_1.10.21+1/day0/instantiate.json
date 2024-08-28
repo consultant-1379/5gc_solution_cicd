@@ -1,0 +1,12 @@
+{
+  "clusterName": "n89",
+  "additionalParams": {
+    "skipJobVerification": true,
+    "skipVerification": true,
+    "namespace": "ccdm",
+    "helmNoHooks": false,
+    "cleanUpResources": true,
+    "applicationTimeOut": "2000",
+    "disableOpenapiValidation": false
+  }
+}

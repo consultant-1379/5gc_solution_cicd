@@ -1,0 +1,153 @@
+vnflcm:
+  vnfInstanceName: n84-ccrc2
+  vnfProductName: CCRC
+  vnfSoftwareVersion: 1.8.6-1
+  instantiate_file: ../../../../../../../ts-config/templates/common/instantiate.json.jinja2
+  rendered-instantiate-file: ../../../cnf/ccrc/ts_1.9/day0/instantiate.json
+  values_file: ../../../../../../../ts-config/templates/ccrc/1.8/values.yaml.jinja2
+  rendered-values-file: ../../../cnf/ccrc/ts_1.9/day0/values.yaml
+  clusterName: n84-eccd3
+  namespace: ccrc
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+skip-instantiation: false
+
+day0:
+  k8s-secret:
+  # 1. Create Secret for LDAP Admin User
+  - name: eric-sec-ldap-server-creds
+    sources:
+    - { type: literal, key: adminuser, value: sysadmin }
+    - { type: literal, key: passwd, value: keycloak }
+    - type: literal
+      key: adminpasswd
+      value: $6$tMyqIzGUW4jHtsGw$3tGshIwt6O4CpC/Vm5frHWE40QprbxFQi4Eg.XT7Xk31u8DGG0IO2/70TaT2rLhTRhMdRONBGF2TvmegMcqQm0
+  # 2. Create Machine User Account Secret
+  #- name: eric-sec-admin-user-management-day0-user
+  #  sources:
+  #  - { type: file, key: config.json, value: user-machine-config.json }
+  # 3. Create the SNMP Alarm Provider Secret
+#  - name: snmp-alarm-provider-config
+#    sources:
+#    - { type: file, key: config.json, file: ../../../../../../../ts-config/templates/common/snmp-config.json.jinja2, rendered-file: ../../../cnf/ccrc/ts_1.9/day1/snmp-config.json }
+  # 4. Create the Distributed Coordinator ED Service Secret
+  - name: eric-data-distributed-coordinator-creds
+    sources:
+    - { type: literal, key: etcdpasswd, value: admin }
+  # 5. Create Object Storage MN Secret
+  - name: eric-data-object-storage-mn-creds
+    sources:
+    - { type: literal, key: accesskey, value: adminaccess }
+    - { type: literal, key: secretkey, value: adminsecret }
+
+verify-running: true
+ignore-not-running:
+- eric-data-search-engine-curator
+
+day1:
+  access:
+    oam: 214.12.117.199
+    ldap-admin:
+      user: sysadmin
+      pass: Pa$$w0rd4LDAP
+    users:
+    - user: ccrcoam
+      pass: WeakPas#worD-1
+      pass_init: Changeme1st!
+      groups:
+      - nrf-admin
+      - nssf-admin
+      - nrfagent-admin
+      - system-admin
+    - user: ccrcsec
+      pass: WeakPas#worD-1
+      pass_init: Changeme1st!
+      groups:
+      - nrf-security-admin
+      - nssf-security-admin
+      - nrfagent-security-admin
+      - system-security-admin
+    configs:
+    - file: ../../../../../../../ts-config/templates/common/user-config.xml.jinja2
+      rendered-file: ../../../cnf/ccrc/ts_1.9/day1/user-config.xml
+      proto: netconf
+      pre-verify-pods-ready:
+        check-interval: 5
+        deployments:
+        - eric-cm-yang-provider
+      post-delay: 30
+      retry-interval: 30
+  app-config:
+#  - file: external-certificates.xml
+#    user-id: 1
+#    proto: netconf
+#    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccrc/1.8/nrf-config.xml.jinja2
+    rendered-file: ../../../cnf/ccrc/ts_1.9/day1/nrf-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccrc/1.8/nrfagent-config.xml.jinja2
+    rendered-file: ../../../cnf/ccrc/ts_1.9/day1/nrfagent-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccrc/1.8/nssf-config.xml.jinja2
+    rendered-file: ../../../cnf/ccrc/ts_1.9/day1/nssf-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccrc/1.8/ddc-config.xml.jinja2
+    rendered-file: ../../../cnf/ccrc/ts_1.9/day1/ddc-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 60
+  nssf-provisioning:
+    host: nssf-prov.ccrc.n99-eccd1.sero.gic.ericsson.se
+    trustca: ../../../../certs/root/RootCA.crt
+    client-cert: ../../../../certs/cnf/test_channel_2/ccrc/nssf-sbi-client.crt
+    client-key: ../../../../certs/cnf/test_channel_2/ccrc/nssf-sbi-client.key
+    prov-data:
+    - api-path: /profiles/amf-set-profiles/amf-set-id/240-81-ff-002
+      json-data: ../../../../../../../ts-config/templates/ccrc/1.8/nssf-provisioning/amf-set-profile.json.jinja2
+      rendered-file: ../../../cnf/ccrc/ts_1.9/day1/amf-set-profile.json
+    - api-path: /profiles/nrf-instance-profiles/nrf-slice-common-region-001
+      json-data: ../../../../../../../ts-config/templates/ccrc/1.8/nssf-provisioning/nrf-instance-profile.json.jinja2
+      rendered-file: ../../../cnf/ccrc/ts_1.9/day1/nrf-instance-profile.json
+    - api-path: /profiles/tai-group-nss-profiles/tai-group-slice1-amf-001
+      json-data: ../../../../../../../ts-config/templates/ccrc/1.8/nssf-provisioning/tai-group-profile.json.jinja2
+      rendered-file: ../../../cnf/ccrc/ts_1.9/day1/tai-group-profile.json
+    - api-path: /profiles/network-slice-instances/nsi-slice-common-region-001
+      json-data: ../../../../../../../ts-config/templates/ccrc/1.8/nssf-provisioning/slice-instance-profile.json.jinja2
+      rendered-file: ../../../cnf/ccrc/ts_1.9/day1/slice-instance-profile.json
+  k8s-config:
+  - name: Create outbound policy for non-443 TLS
+    cmd: |
+      apply -f {file1}
+      apply -f {file2}
+      apply -f {file3}
+      apply -f {file4}
+      apply -f {file5}
+      apply -f {file6}
+    inline-files:
+      file1: ../../../../../../../ts-config/templates/ccrc/1.8/outbound-policy/auto-sni-amf.yaml.jinja2
+      file2: ../../../../../../../ts-config/templates/ccrc/1.8/outbound-policy/auto-sni-smf.yaml.jinja2
+      file3: ../../../../../../../ts-config/templates/ccrc/1.8/outbound-policy/auto-sni-pcf.yaml.jinja2
+      file4: ../../../../../../../ts-config/templates/ccrc/1.8/outbound-policy/tcp-options-for-tls-amf.yaml.jinja2
+      file5: ../../../../../../../ts-config/templates/ccrc/1.8/outbound-policy/tcp-options-for-tls-smf.yaml.jinja2
+      file6: ../../../../../../../ts-config/templates/ccrc/1.8/outbound-policy/tcp-options-for-tls-pcf.yaml.jinja2
+#  - name: Create networkpolicy to allow accessing eric-pm-server and eric-data-search-engine
+#    cmd: |
+#      apply -f {file1}
+#      apply -f {file2}
+#    inline-files:
+#      file1: ../../../../../../../ts-config/templates/ccrc/1.8/allow-pm-server.yaml.jinja2
+#      file2: ../../../../../../../ts-config/templates/ccrc/1.8/eric-data-search-engine-allow.yaml.jinja2
+
+sitedata:
+- site.yaml
+- ../site_global.yaml
+
+

@@ -1,0 +1,89 @@
+$TTL 600
+@   IN    SOA     apa root.pccc-tool-niv-249-01. ( 14 3H 1H 1D 300 )
+
+    IN    A       11.100.3.51
+
+    IN    NS      5gc.mnc081.mcc240.3gppnetwork.org.
+
+;------------------- only fake addresses ------
+;
+; N63 SIG_CN
+;
+smf1.n63.smf             IN     A    107.9.0.1
+smf-notification.n63.smf IN     A    107.9.0.2
+udr1.n63.udr             IN     A    107.9.0.3
+ausf1.n63.ausf           IN     A    107.9.0.4
+nrf1.n63.nrf             IN     A    107.9.0.5
+udm1.n63.udm             IN     A    107.9.0.6
+amf1.n63.amf             IN     A    107.9.0.7
+amf1-n63.amf             IN     A    107.9.0.7
+hss1.n63.hss             IN     A    107.9.0.8
+nssf1.n63.nssf           IN     A    107.9.0.9
+bsf1.n63.bsf             IN     A    107.9.0.10
+bsf1-diam.n63.bsf        IN     A    107.9.0.11
+eir1.n63.eir             IN     A    107.9.0.12
+pcf1.n63.pcf             IN     A    107.9.0.13
+pcf1-diam.n63.pcf        IN     A    107.9.0.14
+hss1-epc-http.n63.hss    IN     A    107.9.0.15
+nef1.n63.nef             IN     A    107.9.0.16
+udr2.n63.udr             IN     A    107.9.0.17
+ausf2.n63.ausf           IN     A    107.9.0.18
+udm2.n63.udm             IN     A    107.9.0.19
+eir2.n63.eir             IN     A    107.9.0.20
+hss2-epc-http.n63.hss    IN     A    107.9.0.21
+hss2.n63.hss             IN     A    107.9.0.21
+nef1-nbi-trust.n63.nef   IN     A    107.9.0.22
+scp1.n63.scp             IN     A    107.9.0.23
+
+;
+; N63 SIG_DATA
+;
+udr1-intersite.n63.udr   IN     A    112.2.0.35
+udr1-4g.n63.udr          IN     A    112.2.0.36
+udr2-intersite.n63.udr   IN     A    112.2.0.33
+udr2-4g.n63.udr          IN     A    112.2.0.34
+;
+; N63 DTG DATA
+;
+;dtg1-om-cn.n63.dtg       IN     A    8.124.224.1
+;dtg1-sig-cn.n63.dtg      IN     A    8.44.224.1
+;
+; N89 SIG_CN
+;
+smf1.n89.smf             IN     A    107.2.0.1
+smf-notification.n89.smf IN     A    107.2.0.2
+udr1.n89.udr             IN     A    107.2.0.3
+ausf1.n89.ausf           IN     A    107.2.0.4
+nrf1.n89.nrf             IN     A    107.2.0.5
+udm1.n89.udm             IN     A    107.2.0.6
+amf1.n89.amf             IN     A    107.2.0.7
+amf1-n89.amf             IN     A    107.2.0.7
+hss1.n89.hss             IN     A    107.2.0.8
+nssf1.n89.nssf           IN     A    107.2.0.9
+bsf1.n89.bsf             IN     A    107.2.0.10
+bsf1-diam.n89.bsf        IN     A    107.2.0.11
+eir1.n89.eir             IN     A    107.2.0.12
+pcf1.n89.pcf             IN     A    107.2.0.13
+pcf1-diam.n89.pcf        IN     A    107.2.0.14
+hss1-epc-http.n89.hss    IN     A    107.2.0.15
+nef1.n89.nef             IN     A    107.2.0.21
+udr2.n89.udr             IN     A    107.2.0.16
+ausf2.n89.ausf           IN     A    107.2.0.17
+udm2.n89.udm             IN     A    107.2.0.18
+eir2.n89.eir             IN     A    107.2.0.19
+hss2-epc-http.n89.hss    IN     A    107.2.0.20
+hss2.n89.hss             IN     A    107.2.0.20
+nef1-nbi-trust.n89.nef   IN     A    107.2.0.22
+scp1.n89.scp             IN     A    107.2.0.23
+;
+; N89 SIG_DATA
+;
+udr1-intersite.n89.udr   IN     A    112.2.0.1
+udr1-4g.n89.udr          IN     A    112.2.0.2
+udr2-intersite.n89.udr   IN     A    112.2.0.3
+udr2-4g.n89.udr          IN     A    112.2.0.4
+;
+; N89 DTG DATA
+;
+dtg1-om-cn.n89.dtg       IN     A    8.124.224.1
+dtg1-sig-cn.n89.dtg      IN     A    8.44.224.1

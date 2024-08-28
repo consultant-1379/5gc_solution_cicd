@@ -1,0 +1,69 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global.yaml
+templateDir: ../../../../../../../ts-config/templates/
+jsonschema: ../jsonschemas/schema-cnf.yaml
+jsonschemaGlobal: ../jsonschemas/schema-global.yaml
+
+files:
+- template: common/snmp-config.xml.jinja2
+  target: snmp-config.xml
+- template: common/user-config.xml.jinja2
+  target: user-config.xml
+
+- template: ccpc/1.13/instantiate.json.jinja2
+  target: instantiate.json
+- template: ccpc/1.13/values.yaml.jinja2
+  target: values.yaml
+- template: ccpc/1.13/ccpc-nf-profile-config.xml.jinja2
+  target: nf-profile-config.xml
+- template: ccpc/1.13/ccpc-nrf-agent-config.xml.jinja2
+  target: nrf-agent-config.xml
+- template: ccpc/1.13/ccpc-diameter-config.xml.jinja2
+  target: diameter-config.xml
+- template: ccpc/1.13/ccpc-sm-policy-control.xml.jinja2
+  target: sm-policy-control.xml
+- template: ccpc/1.13/ccpc-switch-admin-state.xml.jinja2
+  target: switch-admin-state.xml
+- template: ccpc/1.13/ccpc-ddc-config.xml.jinja2
+  target: ddc-config.xml
+#- template: ccpc/1.11/ccpc-remote-nf-type-discovery-mode.xml.jinja2
+#  target: remote-nf-type-discovery-mode.xml
+#- template: ccpc/1.11/ccpc-svc-routing-agent-config.xml.jinja2
+#  target: svc-routing-agent-config.xml
+- template: common/network-policy/eric-pm-server-allow.yaml.jinja2
+  target: network-policy/eric-pm-server-allow.yaml
+- template: common/network-policy/eric-data-search-engine-allow.yaml.jinja2
+  target: network-policy/eric-data-search-engine-allow.yaml
+- template: ccpc/1.13/policy-provisioning/Bronze.json.jinja2
+  target: policy-provisioning/bronze.json
+- template: ccpc/1.13/policy-provisioning/defaultIpCanSessionQos.json.jinja2
+  target: policy-provisioning/default-ip-can-session-qos.json
+- template: ccpc/1.13/policy-provisioning/global.json.jinja2
+  target: policy-provisioning/global.json
+#- template: ccpc/1.11/policy-provisioning/dbr_on_attach_qos_profile.json.jinja2
+#  target: policy-provisioning/dbr_on_attach_qos_profile.json
+#- template: ccpc/1.11/policy-provisioning/dbr_on_attach_select_policy.json.jinja2
+#  target: policy-provisioning/dbr_on_attach_select_policy.json
+#- template: ccpc/1.11/policy-provisioning/dbr_on_attach_select_rule.json.jinja2
+#  target: policy-provisioning/dbr_on_attach_select_rule.json
+#- template: ccpc/1.11/policy-provisioning/dbr_on_attach_service.json.jinja2
+#  target: policy-provisioning/dbr_on_attach_service.json
+#- template: ccpc/1.11/policy-provisioning/service-classification.json.jinja2
+#  target: policy-provisioning/service-classification.json
+- template: ccpc/1.13/external-certificates.xml.jinja2
+  target: external-certificates.xml
+- template: ccpc/1.13/policy-provisioning/classify_audio.json.jinja2
+  target: policy-provisioning/classify-audio.json
+- template: ccpc/1.13/policy-provisioning/mmtel_audio.json.jinja2
+  target: policy-provisioning/mmtel-audio.json
+- template: ccpc/1.13/policy-provisioning/mmtel_classification.json.jinja2
+  target: policy-provisioning/mmtel-classification.json
+- template: ccpc/1.13/policy-provisioning/mmtel_policy.json.jinja2
+  target: policy-provisioning/mmtel-policy.json
+- template: ccpc/1.13/policy-provisioning/mmtel_video.json.jinja2
+  target: policy-provisioning/mmtel-video.json
+- template: ccpc/1.13/policy-provisioning/volte_charging_profile.json.jinja2
+  target: policy-provisioning/volte-charging-profile.json
+- template: ccpc/1.13/policy-provisioning/volte_qos_profile.json.jinja2
+  target: policy-provisioning/volte-qos-profile.json
+

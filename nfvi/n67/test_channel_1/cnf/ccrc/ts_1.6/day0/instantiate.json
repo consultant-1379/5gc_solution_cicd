@@ -1,0 +1,11 @@
+{
+  "clusterName": "n67-eccd1",
+  "additionalParams": {
+    "namespace": "ccrc",
+    "skipVerification": true,
+    "applicationTimeOut": "900",
+    "manoControlledScaling": false,
+    "global.ipStackMode":"ipv4"
+  }
+}
+

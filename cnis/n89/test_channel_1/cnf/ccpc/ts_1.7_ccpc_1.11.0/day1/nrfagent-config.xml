@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <capabilities>
+        <capability>
+            urn:ietf:params:netconf:base:1.0
+        </capability>
+    </capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <edit-config>
+        <target>
+            <running/>
+        </target>
+        <config>
+            <nrf-agent xmlns="urn:rdns:com:ericsson:oammodel:ericsson-nrf-agent">
+                <nrf>
+                    <mode>active-standby</mode>
+                    <failover-threshold>10</failover-threshold>
+                    <profile>
+                        <id>nrf-server-0</id>
+                        <fqdn>nrf1.n89.nrf.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                        <service>
+                            <id>0</id>
+                            <name>nnrf-nfm</name>
+                            <fqdn>nrf1.n89.nrf.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                            <version>
+                                <api-version-in-uri>v1</api-version-in-uri>
+                            </version>
+                            <scheme>https</scheme>
+                            <ip-endpoint>
+                                <id>1</id>
+                                <transport>tcp</transport>
+                                <port>443</port>
+                            </ip-endpoint>
+                        </service>
+                        <service>
+                            <id>1</id>
+                            <name>nnrf-disc</name>
+                            <fqdn>nrf1.n89.nrf.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                            <version>
+                                <api-version-in-uri>v1</api-version-in-uri>
+                            </version>
+                            <scheme>https</scheme>
+                            <ip-endpoint>
+                                <id>2</id>
+                                <transport>tcp</transport>
+                                <port>443</port>
+                            </ip-endpoint>
+                        </service>
+                    </profile>
+                </nrf>
+                <nrfagent-notify-service>
+                    <notification-address>
+                        <id>0</id>
+                        <nf-type>pcf</nf-type>
+                        <fqdn>pcf1.n89.pcf.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                        <scheme>https</scheme>
+                        <port>443</port>
+                    </notification-address>
+                </nrfagent-notify-service>
+                <nrfagent-register-service>
+                    <nf-load-report-threshold>30</nf-load-report-threshold>
+                </nrfagent-register-service>
+            </nrf-agent>
+        </config>
+    </edit-config>
+</rpc>

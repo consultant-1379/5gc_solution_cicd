@@ -1,0 +1,140 @@
+nodeName: n47-pcg1
+nodeType: PCG
+
+vnflcm:
+  clusterName: n47-eccd1
+  namespace: pcg
+  InstantiateVnfRequest:
+    applicationTimeOut: 1200
+    skipVerification: "true"
+
+users:
+  day0:
+    username: sysadmin
+    password: sysadmin
+  day1:
+  - username: tsadm
+    password: tsadm
+    groups: [ system-admin system-troubleshooter ]
+
+ddc:
+  remotePath: /root/ddc/n47-pcg1
+
+license:
+  customerId: '946060'
+  swltId: STA-PCG-20
+snmp:
+#not found agentEngineId in old files, give a fake agentEngineId
+  agentEngineId: 800000c10400000099
+  heartbeatInterval: 600
+replicaCount:
+  eric-pc-up-data-plane: 24
+  eric-pc-kvdb-rd-server: 7
+  eric-pc-up-pfcp-endpoint: 8
+
+pcg:
+  routingEngine:
+    predefine: false
+  nicVendor: mellanox
+  dpMaxNum: 28
+  dpCpu: 12
+  nicResrName:
+  - mellanox.com/mlnx_left
+  - mellanox.com/mlnx_right
+  ipRule:
+    ipv4:
+      defaultGw: [1]
+      bgpNeighbors: [253 ,254]
+      creIpFrom: 50
+      dpIpFrom: 2
+    ipv6:
+      defaultGw: [1]
+      bgpNeighbors: [254 ,253]
+      creIpFrom: 80
+      dpIpFrom: 2
+  intraForward:
+    vlan: 3700
+    ipv4: 172.31.100.0/24
+
+
+  networkInstances:
+  - name: sig_cn
+    vrf: sig_cn
+    localAs: 10822
+    remoteAs: 102
+    ipForward:
+      vlan: 165
+      ipv4: 11.108.2.0/24
+    vnfLoop:
+      ipv4: 108.2.1.254
+    upLoop:
+    - name: cp
+      ipv4: 108.2.0.33
+      interfaces:
+      - type: cp-function
+        name: sxn4u
+      - type: pfcp
+        name: sxn4
+
+
+  - name: toext_open1
+    localAs: 10852
+    remoteAs: 105
+    ipForward:
+      vlan: 168
+      ipv4: 11.108.5.0/24
+      ipv6: 2a11:108:5::/64
+    dpLoop:
+      ipv4: 108.5.1.0/27
+      ipv4addr: 108.5.1.2
+      ipv6: 2a00:108:2:f::/120
+      ipv6addr: 2a00:108:2:f::2
+    vnfLoop:
+      ipv4: 108.5.1.254
+      ipv6: 2a00:108:5:f::1
+    ipPools:
+    - 16.0.0.0/8
+    - 2a01:1::/44
+
+  - name: ran
+    localAs: 10842
+    remoteAs: 104
+    ipForward:
+      vlan: 167
+      ipv4: 11.108.4.0/24
+    dpLoop:
+      ipv4: 108.4.1.0/27
+      ipv4addr: 108.4.1.2
+    vnfLoop:
+      ipv4: 108.4.1.254
+    upLoop:
+    - name: ran_access
+      ipv4: 108.4.0.64/27
+      interfaces:
+      - type: access
+        name: s1n3
+
+
+  - name: media_cn
+    localAs: 10812
+    remoteAs: 101
+    ipForward:
+      vlan: 164
+      ipv4: 11.108.1.0/24
+    dpLoop:
+      ipv4: 108.1.1.0/27
+      ipv4addr: 108.1.1.2
+    vnfLoop:
+      ipv4: 108.1.1.254
+    upLoop:
+    - name: media_cn_pgw
+      ipv4: 108.1.0.0/27
+      interfaces:
+      - type: access
+        name: s5s8u
+        default: false
+    - name: media_cn_sgw
+      ipv4: 108.1.0.32/27
+      interfaces:
+      - type: core
+        name: s5s8u

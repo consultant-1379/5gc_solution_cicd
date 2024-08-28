@@ -1,0 +1,70 @@
+nodeName: n47
+nodeType: SC
+instance: 1
+vnflcm:
+  clusterName: n47-eccd1
+  namespace: sc
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day0:
+    username: admin
+    password: rootroot
+  day1:
+  - username: tsadm
+    password: tsadm
+    groups: [ system-admin system-security-admin sc-admin bsf-admin bsf-security-admin scp-admin scp-security-admin sc-security-admin sc-read-only ]
+
+cnom:
+  fqdn: cnom.sc1-oam.n47-eccd1.sero.gic.ericsson.se
+
+
+license:
+  customerId: '946060'
+  swltId: STA-SC-10
+
+snmp:
+  agentEngineId: 800000c10400000007
+  heartbeatInterval: 600
+
+ddc:
+  remotePath: n47-sc-ddc
+
+deployableModules:
+  bsf: enabled
+  scp: disabled
+  sepp: disabled
+  dsc: disabled
+
+sc:
+  bsf:
+    enabled: true
+    bsfDiameter:
+      enabled: true
+    instanceId: 652e666f-88f9-4864-914f-627366a1c1d1
+    bsfSigLbIp: 172.17.128.18
+    bsfDiameterLbIp: 172.17.128.17
+    bsfSbiHost: sc1-bsf-sig.site1-cluster1
+  scp:
+    enabled: false
+  sepp:
+    enabled: false
+  dsc:
+    enabled: false
+
+#  scpSbiHost: xxx
+#  scpSigLbIp: x.x.x.x
+#  smfSbiNotifyIp: xx.xx.xx.xx
+#  smfSbiNotifyHost: xxxx
+locality: n47
+
+shared_vip_oam_label: sc1-oam
+addressPoolName_oam: sc1-oam
+
+# This part should be used only for the specific release, because an internal file has not been included from SC team.
+# Should be tested without this on next drop. 27-May-2024 (Earibou)
+swim:
+  commercialVersion: 1.15.25
+  semanticVersion: 1.15.25+1303

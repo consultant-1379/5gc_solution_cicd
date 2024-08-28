@@ -1,0 +1,21 @@
+## The configuration is used for Grafana accessing pm-server to get counters (only for internal test usage)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+  generation: 1
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: allow-eric-pm-server # change xxx-allow to allow-xxx to align with fivegcsafe
+  namespace: ccrc
+  selfLink: /apis/networking.k8s.io/v1/namespaces/ccrc/networkpolicies/allow-eric-pm-server
+spec:
+  egress:
+  - {}
+  ingress:
+  - {}
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: eric-pm-server
+  policyTypes:
+  - Ingress

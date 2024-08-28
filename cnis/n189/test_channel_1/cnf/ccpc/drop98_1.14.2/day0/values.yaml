@@ -1,0 +1,1800 @@
+da:
+  Limits:
+    Memory: 722Mi
+    ephermeral-storage: 315Mi
+  autoScaling:
+    maxReplicas: 15
+    minReplicas: 9
+  nameOverride: eric-ccpc-data-access
+  nodeSelector: {}
+datamodel:
+  redundantCopies: 1
+dms:
+  ipv6stackPreferred: false
+  multiSite:
+    enabled: false
+    locator:
+      localHost: null
+    runtimeConfigMode:
+      enabled: false
+  nameOverride: eric-pcf-dms
+  nodeSelector:
+    adminMgr: null
+    brAgent: {}
+    locator: null
+    server: null
+  persistence:
+    backup:
+      persistentVolumeClaim:
+        adminMgr:
+          size: 1Gi
+        enabled: true
+        locator:
+          size: 64Mi
+        server:
+          size: 8Gi
+        storageClassName: network-block
+    data:
+      persistentVolumeClaim:
+        enabled: true
+        storageClassName: network-block
+    gwsender:
+      persistentVolumeClaim:
+        enabled: false
+        size: 1Gi
+        storageClassName: network-block
+  replicaCount:
+    server: 7
+dms-operator:
+  ipv6stackPreferred: false
+  nodeSelector:
+    operator: {}
+eric-ccpc-dynamic-k8s-controller:
+  tolerations: []
+eric-ccpc-state-controller:
+  tolerations: []
+eric-cloud-native-kvdb-rd-operand:
+  enabled: false
+eric-cloud-native-nf-additions-log-shipper:
+  enabled: false
+eric-cloud-native-service-mesh-log-shipper:
+  enabled: false
+eric-cm-mediator:
+  backend:
+    dbname: adp_gs_cm
+    dbuser: customname
+    hostname: eric-data-document-database-pg
+  cmkey:
+    enable: true
+  cmm:
+    tls:
+      enableClientCert: true
+      enabled: true
+      verifyClientCert: true
+  dbbr:
+    backupType: eric-ccpc-configuration-backup
+    enabled: true
+  enabled: true
+  kafka:
+    hostname: eric-data-message-bus-kf
+    port: 9092
+  nodeSelector: {}
+  resources:
+    eric-cm-mediator:
+      requests:
+        cpu: 150m
+    eric-cm-mediator-notifier:
+      requests:
+        cpu: 100m
+  service:
+    endpoints:
+      restapi:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+    nodePort: 0
+eric-cm-mediator-db-pg:
+  enabled: false
+eric-cm-yang-provider:
+  auditLog_v2: true
+  authorization:
+    enabled: true
+  cliExtensionCmds:
+    showAlarms:
+      enabled: true
+    showAlarmsHistory:
+      enabled: true
+  enableCliCommandAuditLogs: true
+  enabled: true
+  externalTls:
+    netconf:
+      enabled: false
+  externaldb:
+    dbuser: customname
+    host: eric-data-document-database-pg
+  keyManagement:
+    storeHostKeys: false
+  ldap:
+    enableChangePassword: true
+    enabled: true
+    ipv6Enabled: false
+  nbiNotifications:
+    notifyInternalChanges: true
+  nodeSelector: {}
+  objectStorage:
+    secretName: eric-data-object-storage-mn-secret
+  persistentVolumeClaim:
+    storageClassName: network-block
+  pmMetrics:
+    enableQueryMetricsCommands: true
+    enabled: true
+    httpsHost: eric-pm-server:9089
+  resources:
+    cliExtensionCmds:
+      requests:
+        cpu: 50m
+    externalNotifSender:
+      requests:
+        cpu: 50m
+    notificationController:
+      requests:
+        cpu: 50m
+    objectStorageAdapter:
+      requests:
+        cpu: 50m
+    pmMetrics:
+      requests:
+        cpu: 50m
+    schemaSynchronizer:
+      requests:
+        cpu: 100m
+    sshd:
+      requests:
+        cpu: 50m
+    yangDbAdapter:
+      requests:
+        cpu: 100m
+    yangEngine:
+      requests:
+        cpu: 250m
+  rollback:
+    directory: /rollback_files
+    enableRollbackCommands: true
+    numberOfRollbacksToStore: 20
+  service:
+    annotations:
+      addressPoolName: ccpc1-oam
+      cloudProviderLB: {}
+      sharedVIPLabel: ccpc-oam
+    cmNbiPorts:
+      dscp: 0
+    loadBalancerIP: ''
+    type: LoadBalancer
+eric-cnom-document-database-mg:
+  nodeSelector: {}
+  persistence:
+    storageClass: network-block
+  serviceAccountName: default
+eric-cnom-server:
+  authentication:
+    ldap:
+      enabled: true
+    local:
+      enabled: false
+  dashboards:
+    configMap: eric-ccpc-cnom-dashboards
+  documentDatabase:
+    enabled: false
+  documentDatabasePg:
+    enabled: true
+    host: eric-data-document-database-pg
+    user: cnom
+  enabled: true
+  externalTls:
+    enabled: true
+  features:
+    metricViewer: true
+  fqdn: cnom.ccpc1-oam.n189-eccd1.seli.gic.ericsson.se
+  ingress:
+    ingressClass: OAM-IngressClass
+  legalNotice: null
+  metrics:
+    dataPath: files/cnom_metrics_viewer
+    hierarchy:
+      configMap: eric-ccpc-cnom-metrics-hierarchy
+  nodeSelector: {}
+  objectStorageMN:
+    secret: eric-data-object-storage-mn-secret
+  resources:
+    server:
+      requests:
+        cpu: 150m
+  service:
+    endpoints:
+      api:
+        tls:
+          ca:
+          - bundle: ca.pem
+            name: eric-tm-ingress-controller-cr-client-ca
+          verifyClientCertificate: optional
+  tags:
+    ccpc: true
+    pcf: true
+eric-cnom-server-db-pg:
+  brAgent:
+    enabled: false
+  enabled: false
+  log:
+    schema: adp
+  persistentVolumeClaim:
+    enabled: true
+    size: 1Gi
+    storageClassName: network-block
+  postgresDatabase: cnom
+  service:
+    endpoints:
+      postgres:
+        tls:
+          enforced: required
+eric-ctrl-bro:
+  bro:
+    enableAgentDiscovery: true
+    enableConfigurationManagement: true
+    vBRMAutoCreate: NONE
+  enabled: true
+  metrics:
+    enabled: true
+  nodeSelector: {}
+  osmn:
+    credentials:
+      secretName: eric-data-object-storage-mn-secret
+    enabled: false
+  persistence:
+    persistentVolumeClaim:
+      enabled: true
+      size: 1Gi
+      storageClassName: network-block
+  resources:
+    backupAndRestore:
+      requests:
+        cpu: 600m
+  service:
+    endpoints:
+      broToAgent:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      cmmHttpNotif:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      restActions:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      scrape:
+        pm:
+          tls:
+            enforced: optional
+            verifyClientCertificate: optional
+eric-data-coordinator-zk:
+  affinity:
+    podAntiAffinity: hard
+  enabled: true
+  metricsexporter:
+    enabled: true
+  nodeSelector:
+    brAgent: {}
+    datacoordinatorzk: {}
+  persistence:
+    persistentVolumeClaim:
+      enabled: true
+      storageClassName: network-block
+  podDisruptionBudget:
+    minAvailable: 50%
+  replicaCount: 2
+  resources:
+    datacoordinatorzk:
+      requests:
+        cpu: 300m
+    metricsexporter:
+      limits:
+        memory: 64Mi
+      requests:
+        cpu: 50m
+  service:
+    endpoints:
+      datacoordinatorzk:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+eric-data-distributed-coordinator-ed:
+  brAgent:
+    backupTypeList:
+    - eric-ccpc-configuration-backup
+    brLabelValue: dc-etcd
+    enabled: true
+    etcd:
+      acls:
+        adminSecret: eric-data-distributed-coordinator-creds
+    properties:
+      applicationProperties: 'dced.agent.restore.type=overwrite
+
+        dced.excluded.paths=/shelter,/kms/core/lock'
+  enabled: true
+  metricsexporter:
+    enabled: true
+  persistence:
+    brAgent:
+      backupVolume:
+        storageClassName: network-block
+    persistentVolumeClaim:
+      enabled: true
+      size: 2Gi
+      storageClassName: network-block
+  podDisruptionBudget:
+    minAvailable: 50%
+  resources:
+    brAgent:
+      requests:
+        cpu: 10m
+    dced:
+      requests:
+        cpu: 150m
+    metricsexporter:
+      limits:
+        memory: 64Mi
+      requests:
+        cpu: 100m
+  service:
+    endpoints:
+      dced:
+        tls:
+          enforced: required
+          verifyClientCertificate: optional
+eric-data-document-database-pg:
+  brAgent:
+    backupDataModelConfig: eric-data-document-database-pg-br-agent
+    backupTypeList:
+    - eric-ccpc-configuration-backup
+    - eric-ccpc-policystudio-backup
+    enabled: true
+    logicalDBBackupEnable: true
+  enabled: true
+  log:
+    schema: adp
+  nodeSelector:
+    brAgent: {}
+    cleanuphook: {}
+    postgres: {}
+  persistentVolumeClaim:
+    backup:
+      storageClass: network-block
+      storageClassName: network-block
+    housekeeping_threshold: 70
+    storageClassName: network-block
+  postgresDatabase: adp_gs_cm
+  resources:
+    bra:
+      requests:
+        cpu: 100m
+    brm:
+      requests:
+        cpu: 100m
+    metrics:
+      requests:
+        cpu: 30m
+    postgres:
+      limits:
+        cpu: '1'
+      requests:
+        cpu: 90m
+  security:
+    postgres:
+      tls:
+        enable: false
+    tls:
+      brAgent:
+        enabled: false
+eric-data-document-database-pg-app:
+  persistentVolumeClaim:
+    backup:
+      storageClassName: network-block
+    storageClassName: network-block
+eric-data-key-value-database-rd:
+  enabled: false
+eric-data-message-bus-kf:
+  affinity:
+    podAntiAffinity: hard
+  configurationOverrides:
+    auto.create.topics.enable: true
+    log.retention.bytes: '104857600'
+  enabled: true
+  jmx:
+    enableRemote: false
+    enabled: true
+  nodeSelector: {}
+  persistence:
+    persistentVolumeClaim:
+      enabled: true
+      size: 25Gi
+      storageClassName: network-block
+  persistentVolumeClaim:
+    enabled: false
+  resources:
+    jmxexporter:
+      requests:
+        cpu: 150m
+    messagebuskf:
+      limits:
+        cpu: '3'
+        memory: 4096Mi
+      requests:
+        cpu: '2'
+        memory: 2048Mi
+  service:
+    endpoints:
+      messagebuskf:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+  tolerations:
+    messagebuskf: []
+eric-data-object-storage-mn:
+  affinity:
+    podAntiAffinity: hard
+  credentials:
+    kubernetesSecretName: ''
+  enabled: true
+  persistence:
+    persistentVolumeClaim:
+      size: 10Gi
+      storageClassName: network-block
+  resources:
+    mgt:
+      limits:
+        memory: 2Gi
+eric-data-search-engine:
+  affinity:
+    podAntiAffinity: hard
+  autoSetRequiredWorkerNodeSysctl: false
+  enabled: true
+  index_management:
+    delete_indices_by_diskspace:
+    - index: adp-app-debug-logs*
+      size: 4gb
+    - index: adp-app-logs*
+      size: 8gb
+    - index: jaeger-span*
+      size: 12gb
+    enabled: true
+    job_interval_in_minutes: 60
+    policies:
+    - description: Remove debug logs older than 3 days
+      indices:
+      - adp-app-debug-logs*
+      priority: 1
+      states:
+      - name: init
+        transitions:
+        - condition: min_index_age=3d
+          destination_state: delete
+      - actions:
+        - delete
+        name: delete
+    - description: Remove non-audit, non-debug logs older than 15 days
+      indices:
+      - adp-app-logs*
+      priority: 1
+      states:
+      - name: init
+        transitions:
+        - condition: min_index_age=15d
+          destination_state: delete
+      - actions:
+        - delete
+        name: delete
+    - description: Remove audit/alarm/security logs older than 30 days
+      indices:
+      - adp-app-audit-logs*
+      - adp-app-asi-logs*
+      - adp-app-security-logs*
+      priority: 1
+      states:
+      - name: init
+        transitions:
+        - condition: min_index_age=30d
+          destination_state: delete
+      - actions:
+        - delete
+        name: delete
+    - description: Remove jeager span and jeager service indices older than 8 days
+      indices:
+      - jaeger-span*
+      - jaeger-service*
+      priority: 1
+      states:
+      - name: init
+        transitions:
+        - condition: min_index_age=8d
+          destination_state: delete
+      - actions:
+        - delete
+        name: delete
+  jvmHeap:
+    data: 2048m
+    ingest: 1024m
+  nodeSelector:
+    bragent: {}
+    data: {}
+    ingest: {}
+    master: {}
+  persistence:
+    data:
+      persistentVolumeClaim:
+        size: 175Gi
+        storageClassName: network-block
+    master:
+      persistentVolumeClaim:
+        size: 16Mi
+        storageClassName: network-block
+  resources:
+    data:
+      limits:
+        cpu: 1000m
+        memory: 4Gi
+      requests:
+        cpu: 1000m
+        memory: 4Gi
+    ingest:
+      limits:
+        cpu: 500m
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 2Gi
+  service:
+    endpoints:
+      rest:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+    network:
+      protocol:
+        IPv6: false
+eric-data-search-engine-curator:
+  enabled: false
+  nodeSelector: {}
+eric-data-sftp-server:
+  configuration:
+    default_bucket_policy: system-admin * rw:system-read-only * r:* * none
+  enabled: true
+  objectStorage:
+    accessSecretName: eric-data-object-storage-mn-secret
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1024Mi
+    requests:
+      cpu: 50m
+      memory: 256Mi
+  service:
+    annotations:
+      addressPoolName: ccpc1-oam
+      sharedVIPLabel: ccpc-oam
+    type: LoadBalancer
+eric-dst-collector:
+  enabled: false
+eric-fh-alarm-handler:
+  alarmhandler:
+    configmap:
+      faultmappings: eric-ccpc-faultmappings
+    rest:
+      fi:
+        api:
+          enabled: true
+  backend:
+    dbname: adp_gs_ah
+    dbuser: customname
+    hostname: eric-fh-alarm-handler-db-pg
+  cmm:
+    enabled: true
+  enabled: true
+  ingress:
+    enabled: false
+  nodeSelector: {}
+  resources:
+    alarmhandler:
+      requests:
+        cpu: 150m
+  service:
+    endpoints:
+      fiapi:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      restapi:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+    type: ClusterIP
+eric-fh-alarm-handler-db-pg:
+  enabled: true
+  log:
+    schema: adp
+  persistentVolumeClaim:
+    size: 4Gi
+    storageClassName: network-block
+  postgresDatabase: adp_gs_ah
+  resources:
+    metrics:
+      requests:
+        cpu: 100m
+    postgres:
+      requests:
+        cpu: 100m
+eric-fh-snmp-alarm-provider:
+  enabled: true
+  ingress:
+    enabled: false
+  nodeSelector: {}
+  probes:
+    snmpAP:
+      livenessProbe:
+        initialDelaySeconds: 120
+  service:
+    annotations:
+      addressPoolName: ccpc1-oam
+      cloudProviderLB: {}
+      sharedVIPLabel: ccpc-oam
+    loadBalancerIP: ''
+    secretName: false
+    snmpPort:
+      dscp: 0
+    type: LoadBalancer
+  sourceIdentifier: 127.0.0.1
+  sourceIdentifierType: 1
+  yang:
+    enabled: true
+    readConfigFromSecret: false
+    removeByUninstall: false
+eric-ingressgw-ccpc-policy-studio:
+  dscpDualStack: false
+  enabled: true
+  externalTrafficPolicy: Cluster
+  service:
+    annotations:
+      addressPoolName: ccpc1-policy-studio
+      cloudProviderLB: {}
+eric-ingressgw-ccpc-provisioning:
+  dscpDualStack: false
+  enabled: true
+  externalTrafficPolicy: Cluster
+  service:
+    annotations:
+      addressPoolName: ccpc1-5g-prov
+      cloudProviderLB: {}
+eric-ingressgw-pcf-intersite:
+  dscpDualStack: false
+  enabled: false
+  externalTrafficPolicy: Cluster
+  service:
+    annotations:
+      addressPoolName: ccpc1-5g-geored
+      cloudProviderLB: {}
+eric-ingressgw-pcf-traffic:
+  dscpDualStack: false
+  enabled: true
+  externalTrafficPolicy: Cluster
+  service:
+    annotations:
+      addressPoolName: ccpc1-5g-traffic
+      cloudProviderLB: {}
+eric-lm-combined-server:
+  affinity:
+    podAntiAffinity: soft
+  database:
+    credentials: null
+    host: eric-lm-combined-server-db-pg
+    instanceName: eric-lm-combined-server-db-pg
+    name: adp_gs_lm
+    userName: customname
+  egress:
+    licenseServer:
+      dscp: 0
+  enabled: true
+  features:
+    alarmHandling:
+      enabled: true
+  licenseServerClient:
+    asih:
+      host: eric-si-application-sys-info-handler
+      port: 5000
+      tls: true
+    licenseServer:
+      thrift:
+        host: nels.network.local
+        port: '9095'
+  resources:
+    eric-lm-license-consumer-handler:
+      requests:
+        cpu: 50m
+    eric-lm-license-server-client:
+      requests:
+        cpu: 50m
+  service:
+    endpoints:
+      licenseConsumerHandler:
+        restapi:
+          tls:
+            enforced: optional
+            verifyClientCertificate: optional
+eric-lm-combined-server-db-pg:
+  enabled: true
+  log:
+    schema: adp
+  persistentVolumeClaim:
+    size: 4Gi
+    storageClassName: network-block
+  postgresDatabase: adp_gs_lm
+  resources:
+    metrics:
+      requests:
+        cpu: 30m
+    postgres:
+      requests:
+        cpu: 90m
+eric-log-shipper:
+  enabled: true
+  logshipper:
+    autodiscover:
+      hints:
+        enabled: true
+      logplane: adp-app-logs
+      namespace: .RELEASE.NAMESPACE
+      useContainerInput: true
+    cfgData: ''
+    harvester:
+      ignoreOlder: 24h
+  rbac:
+    automountServiceAccountToken: true
+    createClusterRole: true
+    createClusterRoleBinding: true
+  resources:
+    logshipper:
+      limits:
+        cpu: 500m
+        memory: 1.5Gi
+      requests:
+        cpu: 100m
+        memory: 100Mi
+    security: null
+    tls:
+      logtransformer:
+        enabled: true
+eric-log-transformer:
+  config:
+    adpJson:
+      transformation:
+        enabled: true
+      validation:
+        enabled: true
+  egress:
+    lumberjack:
+      enabled: false
+      remoteHosts: []
+    syslog:
+      certificates:
+        asymmetricKeyCertificateName: log-syslog-client
+        trustedCertificateListName: log-syslog-client
+      enabled: false
+      exclusions: []
+      filter: ''
+      inclusions: []
+      remoteHosts: []
+      tls:
+        enabled: true
+  enabled: true
+  ensureOnceDelivery:
+    enabled: true
+  jvmHeap: 4096m
+  replicaCount: 5
+  resources:
+    logtransformer:
+      limits:
+        cpu: 1500m
+        memory: 6Gi
+      requests:
+        memory: 6Gi
+    metrics:
+      requests:
+        memory: 128Mi
+  searchengine:
+    logplaneConfig:
+    - field: '[facility]'
+      newLogplane: adp-app-audit-logs
+      value: log audit
+    - field: '[severity]'
+      newLogplane: adp-app-debug-logs
+      value: debug
+    - field: '[extra_data][asi][log_plane]'
+      newLogplane: adp-app-asi-logs
+      value: alarm
+    - field: '[facility]'
+      newLogplane: adp-app-security-logs
+      value: security/authorization messages
+    - field: '[metadata][groups]'
+      newLogplane: eric-ccpc-business-policy-logs
+      value: business-policy-logs
+  service:
+    endpoints:
+      filebeat:
+        tls:
+          enforced: optional
+      syslogIn:
+        tls:
+          enforced: optional
+  syslog:
+    syslogLogplane: adp-app-logs
+eric-mesh-controller:
+  enabled: true
+  pilot:
+    env:
+      PILOT_ENABLE_INBOUND_PASSTHROUGH: 'true'
+  resources:
+    discovery:
+      limits:
+        cpu: 500m
+        ephemeral-storage: null
+        memory: 2048Mi
+      requests:
+        cpu: 300m
+        ephemeral-storage: null
+        memory: 1024Mi
+    istio-proxy:
+      limits:
+        cpu: 2000m
+        ephemeral-storage: null
+        memory: 1024Mi
+      requests:
+        cpu: 100m
+        ephemeral-storage: null
+        memory: 128Mi
+eric-nrfagent:
+  global:
+    ipStackMode: '''ipv4'''
+    istio:
+      egress:
+        caCertificates: ca.crt
+        caCertsPath: /run/secrets/eric-ccpc-sbi-client-certs/
+        caSecretNameSuffix: -cacert
+        certsPath: /run/secrets/eric-ccpc-sbi-client-certs/
+        clientCertificate: tls.crt
+        enabled: true
+        nrfAgent_secretName: eric-ccpc-sbi-client-certs
+        privateKey: tls.key
+      nrfagent_egressrule_enabled: false
+    scheduler:
+      nodeSelector: {}
+eric-odca-diagnostic-data-collector:
+  appSysInfoHandler:
+    enabled: true
+  enabled: true
+  env:
+    adminState: locked
+    collectDelayMinutes: 0
+    enableCmConfig: true
+    enableCmypConfig: true
+    enableFileCollector: true
+    enableInitialConfig: true
+    enablePromReceiver: true
+    enableSwICollector: true
+    logIndices:
+    - adp-app-logs*
+    - adp-app-debug-logs*
+    - adp-app-asi-logs*
+  initialConfig:
+    yang-config.json: "{\"ericsson-data-collector-adp:diagnostic-data-collection\"\
+      :\n    {\"data-collector\":\n        {\"profile\": \"defaultProfileForPeriodicalLogExport\"\
+      ,\n          \"collection-interval\": 15,\n          \"administrative-state\"\
+      : \"locked\"},\n      \"collector-profile\": [\n        {\"profile-type\": \"\
+      collection-profile\",\n        \"log-plane\": [\"adp-app-logs*\", \"adp-app-debug-logs*\"\
+      , \"adp-app-asi-logs*\", \"adp-app-audit-logs*\"],\n        \"profile-id\":\
+      \ \"defaultProfileForPeriodicalLogExport\",\n        \"export-ddb-to\": [\"\
+      sftp\"],\n        \"data-to-collect\": [\"logs\", \"software-information\"],\n\
+      \        \"collection-window\": 15}\n      ]\n    }\n  }\n"
+  kms:
+    enabled: true
+  kubernetesInfo:
+    enabled: true
+  log:
+    streamingMethod: indirect
+  manualService:
+    endpoints:
+      cm_action:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      pm_scrape:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+  nodeSelector: {}
+  objectStorage:
+    enabled: true
+    secretName: eric-data-object-storage-mn-secret
+  pmRemoteWrite:
+    enabled: false
+  promQuery:
+    enabled: true
+  resources:
+    diagnostic-data-collector:
+      limits:
+        cpu: 1500m
+        ephemeral-storage: 17Gi
+        memory: 1Gi
+      requests:
+        cpu: 100m
+        ephemeral-storage: 10Gi
+        memory: 100M
+    diagnostic-data-collector-manual:
+      limits:
+        cpu: 500m
+        ephemeral-storage: 11Gi
+        memory: 250M
+      requests:
+        cpu: 100m
+        ephemeral-storage: 10Gi
+        memory: 100M
+  service:
+    endpoints:
+      cm_subscription:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      pm_rw:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      pm_scrape:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+  sftpCredentials:
+    enabled: false
+  swim:
+    enabled: false
+  tls:
+    enabled: true
+eric-pcf-charging:
+  autoScaling:
+    maxReplicas: 4
+    minReplicas: 2
+  nodeSelector: {}
+eric-pcf-egress-proxy:
+  autoScaling:
+    maxReplicas: 4
+    minReplicas: 2
+  nodeSelector: {}
+eric-pcf-egress-proxy-bsf:
+  autoScaling:
+    maxReplicas: 4
+    minReplicas: 2
+  nodeSelector: {}
+eric-pcf-egress-proxy-ccpc:
+  autoScaling:
+    maxReplicas: 30
+    minReplicas: 2
+  nodeSelector: {}
+eric-pcf-egress-proxy-chf:
+  autoScaling:
+    maxReplicas: 4
+    minReplicas: 2
+  nodeSelector: {}
+eric-pcf-end-user-notifier:
+  autoScaling:
+    maxReplicas: 60
+    minReplicas: 2
+  nodeSelector: {}
+eric-pcf-geored-controller:
+  autoScaling:
+    maxReplicas: 1
+    minReplicas: 1
+  nodeSelector: {}
+  tolerations: []
+eric-pcf-kvdb-supervisor:
+  nodeSelector: {}
+  persistence:
+    persistentVolumeClaim:
+      storageClassName: network-block
+eric-pcf-license-handler:
+  licensehandler:
+    licenses:
+      data:
+        ampc_bp:
+          enabled: true
+        smpc_bp:
+          enabled: true
+        smpc_data_vp:
+          enabled: false
+        smpc_miot_bp:
+          enabled: true
+        smpc_miot_data_vp:
+          enabled: false
+        smpc_voice_miot_vp:
+          enabled: true
+        smpc_voice_vp:
+          enabled: true
+  nodeSelector: {}
+eric-pcf-nrf-registration:
+  nodeSelector: {}
+eric-pcf-peer-discoverer:
+  nodeSelector: {}
+  peerdiscoverer:
+    config:
+      data:
+        connectivityConfiguration:
+          alpnProtocols: h2,http/1.1
+          healthCheck:
+            acceptedCodes:
+            - 200,300
+            - 404,405
+            healthyThreshold: 1
+            httpMethod: GET
+            interval: 60000
+            resource: /nudr-dr/v2/policy-data/ues/imsi-100000/sm-data
+            unhealthyThreshold: 3
+            unhealthyThresholdCodes:
+            - 300,403
+            - 405,600
+          outlier:
+            consecutiveFailures: 3
+          timeout: 500
+          tlsMode: 2
+        targetNFSpecification:
+          maxRedundantNFs: 3
+eric-pcf-peer-discoverer-bsf:
+  nodeSelector: {}
+  peerdiscoverer:
+    config:
+      data:
+        connectivityConfiguration:
+          alpnProtocols: h2,http/1.1
+          healthCheck:
+            acceptedCodes:
+            - 200,300
+            - 404,406
+            healthyThreshold: 1
+            httpMethod: GET
+            interval: 60000
+            resource: /nbsf-management/v1/pcfBindings/pcf-dummy-bindingid
+            unhealthyThreshold: 3
+            unhealthyThresholdCodes:
+            - 300,403
+            - 406,600
+          outlier:
+            consecutiveFailures: 3
+          timeout: 500
+          tlsMode: 2
+        targetNFSpecification:
+          maxRedundantNFs: 3
+eric-pcf-peer-discoverer-ccpc:
+  nodeSelector: {}
+  peerdiscoverer:
+    config:
+      data:
+        connectivityConfiguration:
+          alpnProtocols: h2,http/1.1
+          outlier:
+            consecutiveFailures: 3
+          timeout: 1720
+        targetNFSpecification:
+          maxRedundantNFs: 3
+eric-pcf-peer-discoverer-chf:
+  nodeSelector: {}
+  peerdiscoverer:
+    config:
+      data:
+        connectivityConfiguration:
+          alpnProtocols: h2,http/1.1
+          healthCheck:
+            acceptedCodes:
+            - 200,300
+            - 404,405
+            healthyThreshold: 1
+            httpMethod: GET
+            interval: 60000
+            resource: /nchf-spendinglimitcontrol/v1/subscriptions/imsi100000
+            unhealthyThreshold: 3
+            unhealthyThresholdCodes:
+            - 300,403
+            - 405,600
+          outlier:
+            consecutiveFailures: 3
+          timeout: 500
+          tlsMode: 2
+        targetNFSpecification:
+          maxRedundantNFs: 3
+eric-pcf-rx-policy-control:
+  autoScaling:
+    maxReplicas: 10
+    minReplicas: 2
+  nodeSelector: {}
+  rxpolicycontrol:
+    diameter:
+      dsd:
+        network_type: ip
+    rxpcConfiguration:
+      properties:
+        afStrWaitNetlocTimeout: 3000
+eric-pcf-session-management-policy-control:
+  autoScaling:
+    maxReplicas: 6
+    minReplicas: 4
+  nodeSelector: {}
+  sessionmanagementpolicycontrol:
+    resources:
+      limits:
+        cpu: 2400m
+        ephemeral: 315Mi
+        memory: 3Gi
+      requests:
+        cpu: 2000m
+        ephemeral: 300Mi
+        memory: 1Gi
+    smpcConfiguration:
+      properties:
+        checkForSessionAlive: false
+        inactivityPeriod: 86400
+eric-pcf-ue-policy-control:
+  autoScaling:
+    maxReplicas: 60
+    minReplicas: 2
+  nodeSelector: {}
+eric-pcrf-ipcan-session-management:
+  autoScaling:
+    maxReplicas: 6
+    minReplicas: 4
+  ipcansessionmanagement:
+    diameter:
+      dsd:
+        network_type: ip
+    ipsmConfiguration:
+      properties:
+        checkForSessionAlive: false
+        inactivityPeriod: 86400
+  nodeSelector: {}
+eric-pm-bulk-reporter:
+  alarmreporter:
+    requests:
+      cpu: 100m
+  applicationId:
+    enabled: true
+  aumSupport:
+    enabled: true
+  bulkreporter:
+    requests:
+      cpu: 100m
+  enabled: true
+  env:
+    iscompressed: true
+    nodeName: ccpc
+    nodeType: CCPC
+  nodeSelector: {}
+  objectStorage:
+    enabled: true
+    secretName: eric-data-object-storage-mn-secret
+  persistentVolumeClaim:
+    enabled: false
+    storageClassName: network-block
+  pmsftp:
+    requests:
+      cpu: 50m
+  security:
+    keyManagement:
+      enabled: true
+    tls:
+      objectStorage:
+        enabled: true
+  service:
+    annotations:
+      addressPoolName: ccpc1-oam
+      cloudProviderLB: {}
+      sharedVIPLabel: ccpc-oam
+    loadBalancerIP: ''
+    pmBulksftpPort:
+      dscp: 0
+    servicePort: 9022
+    type: LoadBalancer
+  thresholdReporter:
+    enabled: true
+    restAPI: true
+  userConfig:
+    ldap:
+      enabled: true
+      rolesConfig:
+        readOnlyGroup: system-security-admin,system-read-only
+        readWriteGroup: system-admin
+eric-pm-server:
+  config:
+    certm_tls: null
+  enabled: true
+  externalRemoteWrite: []
+  limitRWDestionations: false
+  log:
+    format: json
+  podPriority:
+    eric-pm-server:
+      priorityClassName: ''
+  rbac:
+    appMonitoring:
+      enabled: true
+      federation:
+        cadvisorJob: true
+        jobConfiguration: '#- job_name: ''federate-victoria''
+
+          #  scrape_interval: 1m
+
+          #  honor_labels: true
+
+          #  metrics_path: ''/select/0/prometheus/federate''
+
+          #  params:
+
+          #    ''match[]'':
+
+          #      - ''{job="kubernetes-nodes",namespace="ccpc"}''
+
+          #      - ''{job="kubernetes-nodes-cadvisor",namespace="ccpc"}''
+
+          #  static_configs:
+
+          #    - targets:
+
+          #      - ''eric-victoria-metrics-cluster-vmselect.monitoring:8481''
+
+          '
+        jobOverride: false
+  resources:
+    eric-pm-configmap-reload:
+      requests:
+        cpu: 50m
+    eric-pm-exporter:
+      limits:
+        memory: 48Mi
+      requests:
+        cpu: 50m
+    eric-pm-reverseproxy:
+      requests:
+        cpu: 50m
+    eric-pm-server:
+      limits:
+        cpu: '2'
+        memory: 20Gi
+      requests:
+        cpu: 500m
+        memory: 2048Mi
+  server:
+    configMapOverrideName: eric-ccpc-pm-server-config
+    extraArgs:
+      storage.tsdb.retention.size: 17GB
+    extraSecretMounts:
+    - defaultMode: 420
+      mountPath: /var/run/secrets/etcd/client
+      name: etcd-client-cert
+      readOnly: true
+      secretName: eric-data-distributed-coordinator-ed-etcdctl-client-cert
+      subPath: ''
+    - defaultMode: 420
+      mountPath: /var/run/secrets/etcd/cacert
+      name: etcd-cacert
+      readOnly: true
+      secretName: eric-sec-sip-tls-trusted-root-cert
+      subPath: ''
+    persistentVolume:
+      enabled: true
+      size: 20Gi
+      storageClass: network-block
+    retention: 3d
+    serviceAccountName: eric-adp-5g-udm-pm-server
+  service:
+    endpoints:
+      reverseproxy:
+        tls:
+          certificateAuthorityBackwardCompatibility: false
+          enforced: optional
+          verifyClientCertificate: required
+eric-probe-virtual-tap-broker:
+  enabled: false
+eric-sec-access-mgmt:
+  accountManager:
+    enabled: true
+  application:
+    recordLoginTimeEnabled: true
+  enabled: true
+  http:
+    hostValidation:
+      allowedHosts: ccpc1-5g-prov.n189-eccd1.seli.gic.ericsson.se
+  ingress:
+    enabled: false
+  ldap:
+    denyLockedUsers: true
+    enabled: true
+  nodeSelector: {}
+  persistence:
+    dbHost: eric-sec-access-mgmt-db-pg
+    dbName: adp_gs_iam
+    dbbr:
+      backupType: configuration-data
+      enabled: true
+  preLoginMessage:
+    messageString: ''
+  replicaCount: 2
+  resources:
+    iam:
+      requests:
+        cpu: 300m
+    sipoauth2:
+      requests:
+        cpu: 50m
+  tls:
+    client:
+      pg:
+        issuer: eric-sec-access-mgmt-db-pg-client-ca
+        subject: customname
+eric-sec-access-mgmt-db-pg:
+  enabled: true
+  log:
+    schema: adp
+  persistentVolumeClaim:
+    size: 4Gi
+    storageClassName: network-block
+  postgresDatabase: adp_gs_iam
+  resources:
+    metrics:
+      requests:
+        cpu: 30m
+    postgres:
+      requests:
+        cpu: 90m
+eric-sec-admin-user-management:
+  enabled: true
+  iam:
+    baseUrl: https://eric-sec-access-mgmt-http:8443
+    enabled: true
+    realm: local-ldap3
+  imageCredentials:
+    pullSecret: null
+    registry:
+      url: ''
+  notices:
+    legal: IF YOU ARE NOT AN AUTHORIZED USER, PLEASE EXIT IMMEDIATELY
+    privacy: 'This system processes personal information. Handle personal information
+      with care. Misuse, including unauthorized access, is grounds for legal action.
+      Version: 1.0, Date: October 27, 2020.'
+  resources:
+    aum:
+      requests:
+        cpu: 50m
+  service:
+    endpoints:
+      cmmCallback:
+        tls:
+          verifyClientCertificate: optional
+      metrics:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+      probes:
+        tls:
+          enforced: optional
+eric-sec-certm:
+  egress:
+    caServer:
+      dscp: 0
+  enabled: true
+  features:
+    alarmHandling:
+      useRestApi: true
+    yang:
+      enabled: true
+  resources:
+    certm:
+      limits:
+        ephemeral-storage: null
+      requests:
+        cpu: 300m
+        ephemeral-storage: null
+eric-sec-key-management:
+  enabled: true
+  nodeSelector: {}
+  replicaCount:
+    kms: 2
+  resources:
+    metrics:
+      requests:
+        cpu: 10m
+    shelter:
+      limits:
+        cpu: 450m
+      requests:
+        cpu: 150m
+    vault:
+      limits:
+        cpu: 450m
+      requests:
+        cpu: 150m
+  shelter:
+    enabled: true
+eric-sec-ldap-server:
+  brAgent:
+    backupTypeList:
+    - eric-ccpc-configuration-backup
+    brLabelValue: LDAPAgent
+    enabled: true
+  enabled: true
+  ldap:
+    aum:
+      enabled: false
+    pwdpolicy:
+      pwdMaxAge: 7776000
+      pwdMaxFailure: 3
+      pwdMinAge: 0
+    pwdquality: null
+  nodeSelector:
+    ldap: {}
+    ldapAgent: {}
+    ldapProxy: {}
+  persistentVolumeClaim:
+    storageClassName: network-block
+  replicaCount: 2
+  resources:
+    ldap:
+      requests:
+        cpu: 300m
+        memory: 1Gi
+    ldapagent:
+      requests:
+        cpu: 20m
+    ldapproxy:
+      requests:
+        cpu: 50m
+    metricsExporter:
+      requests:
+        cpu: 30m
+  service:
+    endpoints:
+      ldap:
+        tls:
+          enforced: required
+          verifyClientCertificate: required
+eric-sec-sip-tls:
+  affinity:
+    podAntiAffinity: hard
+  alarmHandler:
+    useAPIDefinition: true
+  alarmInstanceModel:
+    compliantWithFHDRs:
+      enabled: true
+  enabled: true
+  internalCertificate:
+    validLifetimeSeconds: 604800
+  keyManagement:
+    port: 8210
+  metrics:
+    enabled: false
+  nodeSelector: {}
+eric-si-application-sys-info-handler:
+  applicationInfoService:
+    enabled: true
+    hostname: ''
+    port: 9099
+    sendAppReport: true
+  asih:
+    applicationId: ccpc
+    pmMetricsTLS: true
+    serverRequestTimeout: 70
+  enabled: true
+  nodeSelector: {}
+  resources:
+    eric-si-application-sys-info-handler:
+      requests:
+        cpu: 20m
+  tolerations: []
+eric-slt-dsl:
+  initialConfig:
+    dsl:
+      enableIPv6: false
+eric-stm-diameter:
+  initialConfig:
+    dsl:
+      enableIPv6: false
+  service:
+    annotations:
+      cloudProviderLB: {}
+    certificates:
+      asymmetricKeyCertificateName: diameter-tls
+      trustedCertificateListName: diameter-tls
+    externalIPv4:
+      annotations:
+        addressPoolNameDiameterOverTCP: ccpc1-4g-traffic
+        sharedVIPLabelDiameterOverTCP: ''
+      enabled: true
+    externalIPv6:
+      annotations:
+        addressPoolNameDiameterOverTCP: ccpc1-4g-traffic
+        sharedVIPLabelDiameterOverTCP: ''
+      enabled: false
+    tcp:
+      enable: true
+eric-tm-ingress-controller-cr:
+  CRDinstalledByUser: true
+  clientCertificate:
+    enabled: true
+  enabled: true
+  envoyWorkloadMode:
+    daemonset:
+      enabled: false
+    deployment:
+      enabled: true
+  externalCertificate:
+    keyAndCertificateName: iccr-external-tls-key/iccr-external-tls-certificate
+  ingressClass: eric-ccpc-ic
+  log:
+    format: adp
+  logLevel:
+    access: info
+  metrics:
+    enabled: false
+  minimumProtocolVersion: '1.2'
+  nodeSelector:
+    envoy: {}
+  pmRemoteWrite:
+    enabled: false
+  promQuery:
+    enabled: true
+    url: ''
+  rbac:
+    create: true
+  resources:
+    contour:
+      limits:
+        memory: 500Mi
+      requests:
+        cpu: 50m
+    envoy:
+      limits:
+        memory: 1000Mi
+      requests:
+        cpu: 100m
+        memory: 500Mi
+  service:
+    annotations:
+      addressPoolName: ccpc1-oam
+      cloudProviderLB: {}
+      sharedVIPLabel: ccpc-oam
+    dscp: 0
+    externalTrafficPolicy: Cluster
+    loadBalancerIP: ''
+    type: LoadBalancer
+  tlsSecret: iccr-external-tls-secret
+global:
+  adpBR:
+    brLabelKey: adpbrlabelkey
+  alarms:
+    nfDiscoveryAgentNoAvailableDestination:
+      enabled: true
+  applicationId: ccxx
+  autoScaling:
+    enabled: true
+  container:
+    resources:
+      limits:
+        log: 500Mi
+  createExternalCertificateCR: true
+  database:
+    multiSite:
+      runtimeConfigMode:
+        enabled: false
+  databaseName: eric-pcf-dms
+  diameter:
+    originHostForOutgoingRequests:
+      siteCreatingSession:
+        enabled: true
+  documentDatabasePG:
+    operator:
+      enabled: false
+  egressproxy:
+    istio:
+      udrSubRetransConfig:
+        attempts: 3
+  enableCrashDumps: false
+  eric-dst:
+    enabled: false
+  ericsson:
+    licensing:
+      licenseDomains:
+      - customerId: '946060'
+        productType: CCPC
+        swltId: STA-CCPC-23
+  internalMtls:
+    enabled: 'on'
+  istio:
+    annotations:
+      serviceMesh: 12.0.0
+    bootstrapOverride: true
+    egress:
+      enabled: true
+      endpoints:
+        eric-amf-sbi-traffic-mtls:
+          enabled: true
+          host: '*.5gc.mnc081.mcc240.3gppnetwork.org'
+          ports:
+            http-secure:
+              mode: mTLS
+              port: 443
+        eric-ccrc-sbi-traffic-mtls:
+          enabled: true
+          host: ccrc1-nrf-sig.site1-cluster1.5gc.mnc081.mcc240.3gppnetwork.org
+          ports:
+            http-secure:
+              mode: mTLS
+              port: 443
+        eric-policy-studio-target-prov-mtls:
+          enabled: true
+          host: '*.5gc.mnc081.mcc240.3gppnetwork.org'
+          ports:
+            http-secure:
+              mode: mTLS
+              port: 443
+          resolution: NONE
+        eric-scp-sbi-traffic-mtls:
+          enabled: true
+          host: ccrc1-nrf-sig.site1-cluster1.5gc.mnc081.mcc240.3gppnetwork.org
+          ports:
+            http-secure:
+              mode: mTLS
+              port: 443
+        eric-smf-sbi-traffic-mtls:
+          enabled: true
+          host: '*.5gc.mnc081.mcc240.3gppnetwork.org'
+          ports:
+            http-secure:
+              mode: mTLS
+              port: 6060
+    ingress:
+      gateways:
+        eric-ccpc-policy-studio-gw:
+          enabled: true
+        eric-ccpc-provisioning-gw:
+          enabled: true
+        eric-pcf-intersite-gw:
+          enabled: false
+        eric-pcf-traffic-gw:
+          enabled: true
+      oauth2:
+        eric-pcf-traffic:
+          enabled: false
+          keys:
+          - issuer: nrf-a-id
+            jwks: '{"keys":[ { "crv":"P-256", "kid":"key-c-id", "kty":"EC", "x":"wO3-TFT5fd-Xqx5f9eGLlJHmR9ZgEvRfEoBLXro97co",
+              "y":"rETYnJ2jUfav7lFr8I0pQnnF_1nDXfnOWG3vv-gvKEc" } ]}'
+          permissive: true
+          rules:
+          - audiences:
+            - pcf-a-id
+            issuers:
+            - nrf-a-id
+            methods:
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+            paths:
+            - /npcf-smpolicycontrol/v1*
+            scopes:
+            - npcf-smpolicycontrol
+            subjects:
+            - smf-a-id
+          - audiences:
+            - pcf-a-id
+            issuers:
+            - nrf-a-id
+            methods:
+            - POST
+            - DELETE
+            paths:
+            - /npcf-ue-policy-control/v1*
+            scopes:
+            - npcf-ue-policy-control
+            subjects:
+            - amf-a-id
+          - audiences:
+            - pcf-a-id
+            issuers:
+            - nrf-a-id
+            methods:
+            - POST
+            - DELETE
+            paths:
+            - /npcf-am-policy-control/v1*
+            scopes:
+            - npcf-am-policy-control
+            subjects:
+            - amf-a-id
+          selector: eric-ingressgw-pcf-traffic
+  licensing:
+    sites:
+    - hostname: nelsaas-vnf1-thrift.sero.gic.ericsson.se
+  log:
+    outputs:
+    - k8sLevel
+    streamingMethod: indirect
+  logAnonymization: false
+  logDirSizeMiB: 250
+  logging:
+    level: default:info
+  meshConfig:
+    defaultHttpRetryPolicy:
+      attempts: 0
+    outboundTrafficPolicy:
+      mode: ALLOW_ANY
+  nodeSelector: {}
+  probes:
+    istio-proxy:
+      readinessProbe:
+        failureThreshold: 3
+  profiles:
+    cleartext-geored:
+      enabled: false
+    cleartext-policy-studio-gw:
+      enabled: false
+    cleartext-provisioning-gw:
+      enabled: false
+    cleartext-traffic-gw:
+      enabled: false
+    mtls-geored:
+      enabled: false
+    mtls-policy-studio-gw:
+      enabled: true
+    mtls-provisioning-gw:
+      enabled: true
+    mtls-traffic-gw:
+      enabled: true
+    small-system:
+      enabled: false
+    std-system:
+      enabled: true
+    tls-policy-studio-gw:
+      enabled: false
+    tls-provisioning-gw:
+      enabled: false
+  proxy:
+    autoInject: disabled
+  pullSecret: null
+  registry:
+    imagePullPolicy: IfNotPresent
+    pullSecret: null
+    url: null
+  security:
+    policyBinding:
+      create: false
+    policyReferenceMap:
+      default-restricted-security-policy: default-restricted-security-policy
+    tls:
+      enabled: true
+  securityPolicy:
+    rolekind: ''
+  tapagent:
+    enabled: true
+    pvtb:
+      enabled: false
+  timezone: CET
+prov:
+  nameOverride: eric-ccpc-provisioning
+  nodeSelector: {}
+  provisioning:
+    replicaCount: 12
+servicemesh:
+  namespace: ccpc

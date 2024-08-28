@@ -1,0 +1,10 @@
+[
+ {"counter-name": "bsf_in_requests_created"},
+ {"counter-name": "bsf_in_requests_total"},
+ {"counter-name": "bsf_load"},
+ {"counter-name": "bsf_out_answers_created"},
+ {"counter-name": "bsf_out_answers_total"},
+ {"counter-name": "bsf_worker_load"},
+ {"counter-name": "bsf_proxy_grpc_diameter_load"},
+ {"counter-name": "scp_load"}
+]

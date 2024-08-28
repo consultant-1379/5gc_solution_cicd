@@ -1,0 +1,113 @@
+{{- $_ := . }}
+{{- $useIpv6 := index .Values "eric-pc-mm-forwarder" "ipv6" }}
+{{- $useTuning := eq (index .Values "eric-pc-mm-forwarder" "netSysctls" "setupMethod") "tuningPlugin" }}
+{{- range $i, $nw := index .Values "eric-pc-mm-forwarder" "networks" }}
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: pc-mm-{{ .name | lower | replace "_" "-" }}
+  labels:
+    chart: {{ template "eric-pc-mm.chart" $_ }}
+    release: {{ $_.Release.Name }}
+    heritage: {{ $_.Release.Service }}
+{{- if (eq .type "ovs") }}
+  annotations:
+    k8s.v1.cni.cncf.io/resourceName: ovs-cni.network.kubevirt.io/{{ required "A bridge name must be provided" .bridge }}
+{{- end }}
+spec:
+  config: |
+    {
+        "cniVersion": "{{ required "CNI version must be provided" $.Values.networks.cniVersion }}",
+        "plugins": [
+          {
+            "type": {{ required "A plugin type must be provided" .type | quote }},
+            {{- if (eq .type "bridge") }}
+            "bridge": "{{ .name }}",
+            "addIf": "true",
+            "hairpinMode": false,
+            {{- else if (eq .type "macvlan") }}
+            "master": {{ required "A host interface must be provided" .master | quote }},
+            {{- else if (eq .type "ovs") }}
+              "bridge": {{ .bridge | quote }},
+              {{- if .vlan }}
+              "vlan": {{ required "A vlan id must be provided" .vlan }},
+              {{- else if .trunk }}
+              "trunk": [
+                {{- with index .trunk }}
+                  {{- $trunks := . -}}
+                  {{- $len:=(len .) -}}
+                  {{- range $i := until (len .) }}
+                    {{- if eq $i (sub $len 1) }}
+                {"minID" : {{ (index $trunks $i).minID }} , "maxID" : {{ (index $trunks $i).maxID }}}
+                    {{- else }}
+                {"minID" : {{ (index $trunks $i).minID }} , "maxID" : {{ (index $trunks $i).maxID }}},
+                    {{- end }}
+                  {{- end }}
+               {{- end }}
+              ],
+              {{- end }}
+            {{- end }}
+            "mtu": {{ .mtu | default 1500 }},
+            "ipam": {{ .ipam | default dict | toJson }}
+          }
+          {{- if $useTuning }}
+          ,{
+            "type": "tuning",
+            "sysctl": {
+              {{ printf "net.ipv4.conf.eth%d.proxy_arp" ($i | add1) | quote }}: "0",
+              {{ printf "net.ipv4.conf.eth%d.forwarding" ($i | add1) | quote }}: "1"
+              {{- if $useIpv6 }}
+              ,{{ printf "net.ipv6.conf.eth%d.forwarding" ($i | add1) | quote }}: "1"
+              {{- end }}
+            }
+          }
+          {{- end }}
+        ]
+    }
+{{- end }}
+
+{{- range $i, $pod := .Values.netSysctl.tunablePods }}
+{{- if eq (index $.Values $pod "netSysctls" "setupMethod") "tuningPlugin" }}
+{{- $useIpv6 := index $.Values $pod "ipv6" }}
+---
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: {{ $pod }}-net-tuning
+spec:
+  config: |
+    {
+        "cniVersion": "{{ required "CNI version must be provided" $.Values.networks.cniVersion }}",
+        "plugins": [
+          {
+            "type": "macvlan"
+          },
+          {
+            "type": "tuning",
+            "sysctl": {
+              {{- range $i, $v := $.Values.netSysctl.interfaces }}
+              {{ printf "net.ipv4.conf.%s.proxy_arp" $v | quote }}: "0",
+              {{ printf "net.ipv4.conf.%s.accept_local" $v | quote }}: "1",
+              {{ printf "net.ipv4.conf.%s.arp_announce" $v | quote }}: "2",
+              {{ printf "net.ipv4.conf.%s.arp_ignore" $v | quote }}: "1",
+              {{ printf "net.ipv4.conf.%s.forwarding" $v | quote }}: "1",
+              {{ printf "net.ipv4.conf.%s.rp_filter" $v | quote }}: "0",
+              {{ printf "net.ipv4.conf.%s.src_valid_mark" $v | quote }}: "1",
+              {{ printf "net.ipv6.conf.%s.accept_dad" $v | quote }}: "0",
+              {{ printf "net.ipv6.conf.%s.dad_transmits" $v | quote }}: "0",
+              {{ printf "net.ipv6.conf.%s.disable_ipv6" $v | quote }}: "0",
+              {{- end }}
+              "net.ipv4.fwmark_reflect": "1",
+              "net.ipv4.ip_local_port_range": "49152 61000"
+              {{- if $useIpv6 }}
+              ,"net.ipv6.conf.all.forwarding": "1",
+              "net.ipv6.conf.default.forwarding": "1",
+              "net.ipv6.fwmark_reflect": "1"
+              {{- end }}
+            }
+          }
+        ]
+    }
+{{- end }}
+{{- end }}

@@ -1,0 +1,95 @@
+nodeName: ccpc
+nodeType: ERIC-CCPC
+clusterName: ccpc1.n47
+
+vnflcm:
+  clusterName: n47-eccd1
+  namespace: ccpc
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+pcf:
+  host: pcf1.n47
+  port: 443
+
+pcrf:
+  host: pcf1-diam
+
+users:
+  day0:
+    username: sysadmin
+    password: Pa$$w0rd4LDAP
+  day1:
+  - username: ccpcoam
+    password: Changeme1st!
+    groups:
+    - pcf-admin
+    - system-admin
+    - nrfagent-admin
+    - ccpc-prov-admin
+  - username: ccpcsec
+    password: Changeme1st!
+    groups:
+    - pcf-security-admin
+    - system-security-admin
+    - nrfagent-security-admin
+
+cnom:
+  fqdn: cnom.pcf.n47-eccd1.sero.gic.ericsson.se
+
+iam:
+  host: iam.pcf.n47-eccd1.sero.gic.ericsson.se
+
+license:
+  customerId: "946060"
+  swltId: STA-CCPC-7
+
+ddc:
+  remotePath: /lab/pccc_logs/5GC-CICD/ci/N47_DDC/n47-ccpc-ddc
+
+pcfInstanceId: 98aae42e-da25-4329-acf0-63e2986785aa
+
+replicaCount:
+  eric-pcf-dms: 7
+  eric-ccpc-provisioning: 12
+
+#Remove parameter 'minReplica' and 'maxReplica', using hpaReplica[max, min] to replace
+hpaReplica:
+  eric-ccpc-data-access:
+    max: 15
+    min: 9
+  eric-pcf-session-management-policy-control:
+    max: 6
+    min: 4
+  eric-pcrf-ipcan-session-management:
+    max: 6
+    min: 4
+  eric-pcf-charging:
+    max: 4
+    min: 2
+  eric-pcf-egress-proxy:
+    max: 4
+    min: 2
+  eric-pcf-ue-policy-control:
+    max: 60
+    min: 2
+  eric-pcf-rx-policy-control:
+    max: 10
+    min: 2
+  eric-pcf-egress-proxy-chf:
+    max: 4
+    min: 2
+  eric-pcf-egress-proxy-bsf:
+    max: 4
+    min: 2
+  eric-pcf-egress-proxy-ccpc:
+    max: 30
+    min: 2
+  eric-pcf-geored-controller:
+    max: 1
+    min: 1
+  eric-pcf-end-user-notifier:
+    max: 60
+    min: 2
+

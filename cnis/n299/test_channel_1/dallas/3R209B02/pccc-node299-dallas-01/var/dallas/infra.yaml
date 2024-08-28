@@ -1,0 +1,206 @@
+pccc-node299-dallas-01:
+  AP-N:
+    - otp:
+        cores: [0]
+      raw:
+        cores: [0]
+    - otp:
+        cores: [0]
+      raw:
+        cores: [0]
+    - otp:
+        cores: [48]
+      raw:
+        cores: [48]
+    - otp:
+        cores: [50]
+      raw:
+        cores: [50]
+    - otp:
+        cores: [100]
+      raw:
+        cores: [100]
+    - otp:
+        cores: [102]
+      raw:
+        cores: [102]
+    - otp:
+        cores: [43]
+      raw:
+        cores: [43]
+    - otp:
+        cores: [45]
+      raw:
+        cores: [45]
+    - otp:
+        cores: [47]
+      raw:
+        cores: [47]
+    - otp:
+        cores: [49]
+      raw:
+        cores: [49]
+    - otp:
+        cores: [51]
+      raw:
+        cores: [51]
+    - otp:
+        cores: [95]
+      raw:
+        cores: [95]
+    - otp:
+        cores: [97]
+      raw:
+        cores: [97]
+    - otp:
+        cores: [99]
+      raw:
+        cores: [99]
+    - otp:
+        cores: [101]
+      raw:
+        cores: [101]
+    - otp:
+        cores: [103]
+      raw:
+        cores: [103]
+    - otp:
+        cores: [6]
+      raw:
+        cores: [6]
+    - otp:
+        cores: [58]
+      raw:
+        cores: [58]
+    - otp:
+        cores: [90]
+      raw:
+        cores: [90]
+    - otp:
+        cores: [92]
+      raw:
+        cores: [92]
+    - otp:
+        cores: [91]
+      raw:
+        cores: [91]
+    - otp:
+        cores: [93]
+      raw:
+        cores: [93]
+  DP-N:
+    - otp:
+        cores: [52]
+      raw:
+        cores: [96, 98, 42, 44, 46, 94]
+  LTT:
+    oam:
+        [[0, 1, 52, 53, 36, 88, 35, 87, 37, 89],[2, 3, 4, 5, 54, 55, 56, 57, 34, 86],[7, 8, 9, 10, 11, 59, 60, 61, 62, 63]]
+
+    ports:
+      tap0: [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 38, 40, 64, 66, 68, 70, 72,
+        74, 76, 78, 80, 82, 84]
+      tap1: [13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 39, 41, 65, 67, 69, 71, 73,
+        75, 77, 79, 81, 83, 85]
+
+pccc-node299-dallas-02:
+  AP-N:
+    - otp:
+        cores: [0]
+      raw:
+        cores: [0]
+    - otp:
+        cores: [48]
+      raw:
+        cores: [48]
+    - otp:
+        cores: [50]
+      raw:
+        cores: [50]
+    - otp:
+        cores: [100]
+      raw:
+        cores: [100]
+    - otp:
+        cores: [102]
+      raw:
+        cores: [102]
+    - otp:
+        cores: [43]
+      raw:
+        cores: [43]
+    - otp:
+        cores: [45]
+      raw:
+        cores: [45]
+    - otp:
+        cores: [47]
+      raw:
+        cores: [47]
+    - otp:
+        cores: [49]
+      raw:
+        cores: [49]
+    - otp:
+        cores: [51]
+      raw:
+        cores: [51]
+    - otp:
+        cores: [95]
+      raw:
+        cores: [95]
+    - otp:
+        cores: [97]
+      raw:
+        cores: [97]
+    - otp:
+        cores: [99]
+      raw:
+        cores: [99]
+    - otp:
+        cores: [101]
+      raw:
+        cores: [101]
+    - otp:
+        cores: [103]
+      raw:
+        cores: [103]
+    - otp:
+        cores: [6]
+      raw:
+        cores: [6]
+    - otp:
+        cores: [58]
+      raw:
+        cores: [58]
+    - otp:
+        cores: [90]
+      raw:
+        cores: [90]
+    - otp:
+        cores: [92]
+      raw:
+        cores: [92]
+    - otp:
+        cores: [91]
+      raw:
+        cores: [91]
+    - otp:
+        cores: [93]
+      raw:
+        cores: [93]
+  DP-N:
+    - otp:
+        cores: [52]
+      raw:
+        cores: [96, 98, 42, 44, 46, 94]
+  LTT:
+    oam:
+        [[0, 1, 52, 53, 36, 88, 35, 87, 37, 89],[2, 3, 4, 5, 54, 55, 56, 57, 34, 86],[7, 8, 9, 10, 11, 59, 60, 61, 62, 63]]
+
+    ports:
+      tap0: [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 38, 40, 64, 66, 68, 70, 72,
+        74, 76, 78, 80, 82, 84]
+      tap1: [13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 39, 41, 65, 67, 69, 71, 73,
+        75, 77, 79, 81, 83, 85]
+

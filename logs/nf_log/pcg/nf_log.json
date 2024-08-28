@@ -1,0 +1,7 @@
+[
+    {"logplane.keyword": "adp-app-asi-logs", "extra_data.asi.severity.keyword": "Clear"},
+    {"logplane.keyword": "adp-app-asi-logs"},
+    {"logplane.keyword": "adp-app-audit-logs"},
+    {"logplane.keyword": "adp-app-debug-logs"},
+    {"logplane.keyword": "isp-logs"}
+]

@@ -1,0 +1,5 @@
+build=/lab/testtools/rhel764/dallas/dpdk-18.11
+kernel_driver=(i40e i40e)
+port_name=(p1p1 p3p1)
+port_id=(0000:82:00.0 0000:03:00.0)
+nic_type=(Intel)

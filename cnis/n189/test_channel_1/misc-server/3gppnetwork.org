@@ -1,0 +1,21 @@
+==================================================================================
+;
+; BIND data file for 3gppnetwork.org
+;
+  
+$TTL    604800
+@       IN      SOA  localhost. root.localhost. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS   localhost.
+@       IN      A    127.0.0.1
+@       IN      AAAA ::1
+ 
+ccrc1-nrf-sig.site1-cluster1.kvdb.nrf   IN  A   172.17.128.9
+ccrc1-nssf-sig.site1-cluster1.kvdb.nssf IN  A   172.17.128.10
+==================================================================================
+

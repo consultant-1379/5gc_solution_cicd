@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    meta.helm.sh/release-namespace: ccsm
+  generation: 1
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: allow-eric-pm-server
+  namespace: ccsm
+  selfLink: /apis/networking.k8s.io/v1/namespaces/ccsm/networkpolicies/allow-eric-pm-server
+spec:
+  egress:
+  - {}
+  ingress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: eric-pm-server
+      component: server
+  policyTypes:
+  - Ingress
+

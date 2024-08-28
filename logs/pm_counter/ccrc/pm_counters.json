@@ -1,0 +1,8 @@
+[
+ {"counter-name": "eric_nrf_nnrf_disc_requests_recv"},
+ {"counter-name": "eric_nrf_nnrf_disc_unsuccessful_responses_sent"},
+ {"counter-name": "eric_nrf_nnrf_disc_successful_responses_sent"},
+ {"counter-name": "eric_nrf_nnrf_nfm_requests_recv"},
+ {"counter-name": "eric_nrf_nnrf_nfm_unsuccessful_responses_sent"},
+ {"counter-name": "eric_nrf_nnrf_nfm_successful_responses_sent"}
+]

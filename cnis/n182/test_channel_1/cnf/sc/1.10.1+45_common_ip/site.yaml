@@ -1,0 +1,45 @@
+nodeName: n182
+nodeType: SC
+#instance: 1
+vnflcm:
+  clusterName: n182
+  namespace: sc
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day0:
+    username: admin
+    password: rootroot
+  day1:
+  - username: tsadm
+    password: tsadm
+    groups: [ system-admin system-security-admin sc-admin bsf-admin bsf-security-admin scp-admin scp-security-admin sc-security-admin sc-read-only ]
+
+cnom:
+  fqdn: cnom.sc1.n182.seli.gic.ericsson.se
+
+
+
+license:
+  customerId: '946060'
+  swltId: STA-SC-10
+snmp:
+  agentEngineId: 800000c10400000007
+  heartbeatInterval: 600
+ddc:
+  remotePath: /lab/pccc_logs/5GC-CICD/ci/N182_DDC/n182-sc-ddc
+sc:
+  bsfSigLbIp: 172.17.128.18
+  bsfDiameterLbIp: 172.17.128.17
+  bsfSbiHost: sc1-bsf-sig.site1-cluster1
+
+#  scpSbiHost: xxx
+#  scpSigLbIp: x.x.x.x
+#  smfSbiNotifyIp: xx.xx.xx.xx
+#  smfSbiNotifyHost: xxxx
+locality: n182
+
+shared_vip_oam_label: sc1-oam
+addressPoolName_oam: sc1-oam

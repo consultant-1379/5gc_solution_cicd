@@ -1,0 +1,162 @@
+vnflcm:
+  vnfInstanceName: n84-ccsm2
+  vnfProductName: CCSM
+  vnfSoftwareVersion: 1.9.4-10
+  instantiate_file: ../../../../../../../ts-config/templates/common/instantiate.json.jinja2
+  rendered-instantiate-file: ../../../cnf/ccsm/ts_1.9/day0/instantiate.json
+  values_file: ../../../../../../../ts-config/templates/ccsm/1.9/values.yaml.jinja2
+  rendered-values-file: ../../../cnf/ccsm/ts_1.9/day0/values.yaml
+  clusterName: n84-eccd3
+  namespace: ccsm
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+skip-instantiation: false
+
+day0:
+  k8s-secret:
+  # 1. Create Secret for LDAP Admin User
+  - name: eric-sec-ldap-server-creds
+    sources:
+    - { type: literal, key: adminuser, value: sysadmin }
+    - { type: literal, key: passwd, value: keycloak }
+    - type: literal
+      key: adminpasswd
+      value: $6$tMyqIzGUW4jHtsGw$3tGshIwt6O4CpC/Vm5frHWE40QprbxFQi4Eg.XT7Xk31u8DGG0IO2/70TaT2rLhTRhMdRONBGF2TvmegMcqQm0
+  # 2. Create Machine User Account Secret
+  # - name: eric-sec-admin-user-management-day0-user
+  #   sources:
+  #   - { type: file, key: config.json, value: user-machine-config.json }
+  # 3. Create the SNMP Alarm Provider Secret
+#  - name: snmp-alarm-provider-config
+#    sources:
+#    - { type: file, key: config.json, file: ../../../../../../../ts-config/templates/common/snmp-config.json.jinja2 }
+  # 4. Create the Distributed Coordinator ED Service Secret
+  - name: eric-data-distributed-coordinator-creds
+    sources:
+    - { type: literal, key: etcdpasswd, value: admin }
+  # 5. Create Object Storage MN Secret
+  - name: eric-data-object-storage-mn-creds
+    sources:
+    - { type: literal, key: accesskey, value: adminaccess }
+    - { type: literal, key: secretkey, value: adminsecret }
+
+verify-running: true
+ignore-not-running:
+- eric-data-search-engine-curator
+
+day1:
+  access:
+    oam: 214.12.117.198
+    ldap-admin:
+      user: sysadmin
+      pass: Pa$$w0rd4LDAP
+    users:
+    - user: ccsmoam
+      pass: WeakPas#worD-1
+      pass_init: Changeme1st!
+      groups:
+      - ausf_admin
+      - udm_sensitive_key_admin
+      - udm_admin
+      - system-admin
+      - nrfagent-admin
+      - hssepc_admin
+      - ccsm-admin
+      - eir_admin
+    - user: ccsmsec
+      pass: WeakPas#worD-1
+      pass_init: Changeme1st!
+      groups:
+      - udm_security_admin
+      - nrfagent-security-admin
+      - system-security-admin
+    configs:
+    - file: ../../../../../../../ts-config/templates/common/user-config.xml.jinja2
+      rendered-file: ../../../cnf/ccsm/ts_1.9/day1/user-config.xml
+      proto: netconf
+      pre-verify-pods-ready:
+        check-interval: 5
+        deployments:
+        - eric-cm-yang-provider
+      post-delay: 30
+      retry-interval: 30
+
+  k8s-config:
+  - cmd: |-
+      patch svc eric-pm-server --type=json -p='[{"op": "add", "path": "/spec/ports/1", "value": { "name": "http", "port": 9090, "protocol": "TCP", "targetPort": 9090 }}]'
+
+  app-config:
+#  - file: external-certificates.xml
+#    user-id: 1
+#    proto: netconf
+#    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccsm/1.9/nrfagent-config.xml.jinja2
+    rendered-file: ../../../cnf/ccsm/ts_1.9/day1/nrfagent-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccsm/1.9/ausf-config.xml.jinja2
+    rendered-file: ../../../cnf/ccsm/ts_1.9/day1/ausf-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccsm/1.9/udm-config.xml.jinja2
+    rendered-file: ../../../cnf/ccsm/ts_1.9/day1/udm-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccsm/1.9/hss-config.xml.jinja2
+    rendered-file: ../../../cnf/ccsm/ts_1.9/day1/hss-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccsm/1.9/ccsm-sctp-config.xml.jinja2
+    rendered-file: ../../../cnf/ccsm/ts_1.9/day1/ccsm-sctp-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccsm/1.9/hssepc-config.xml.jinja2
+    rendered-file: ../../../cnf/ccsm/ts_1.9/day1/hssepc-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccsm/1.9/hss-remote-nf-profile.xml.jinja2
+    rendered-file: ../../../cnf/ccsm/ts_1.9/day1/hss-remote-nf-profile.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccsm/1.9/udm-remote-nf-profile.xml.jinja2
+    rendered-file: ../../../cnf/ccsm/ts_1.9/day1/udm-remote-nf-profile.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccsm/1.9/diameter-config.xml.jinja2 
+    rendered-file: ../../../cnf/ccsm/ts_1.9/day1/diameter-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccsm/1.9/eir-config.xml.jinja2
+    rendered-file: ../../../cnf/ccsm/ts_1.9/day1/eir-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccsm/1.9/ddc-config.xml.jinja2
+    rendered-file: ../../../cnf/ccsm/ts_1.9/day1/ddc-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+
+#  post-day1-k8s-config:
+#  - name: Restarting eric-mesh-controller to avoid signaling failure after initial installation
+#    cmd: |-
+#      delete pod -l app.kubernetes.io/name=eric-mesh-controller
+#    post-verify-pods-ready:
+#      check-interval: 5
+#      deployments:
+#      - eric-mesh-controller
+sitedata:
+- site.yaml
+- ../site_global.yaml
+

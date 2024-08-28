@@ -1,0 +1,6 @@
+{
+  "networkElementType": "PCF",
+  "routingMethod": "UnconditionalRouting",
+  "instance": "ccdm-mapi-1",
+  "instanceType": "NetworkElement"
+}

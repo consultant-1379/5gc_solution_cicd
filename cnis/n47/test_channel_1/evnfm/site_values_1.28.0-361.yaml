@@ -1,0 +1,111 @@
+global:
+  hosts:
+    gr: ''
+    iam: iam01.eoaas.n47.vpod1.sc.sero.gic.ericsson.se
+    pf: ''
+    so: ''
+    uds: ''
+    vnfm: evnfm01.eoaas.n47.vpod1.sc.sero.gic.ericsson.se
+    gas: gas01.eoaas.n47.vpod1.sc.sero.gic.ericsson.se
+  pullSecret: k8s-registry-secret
+  nodeSelector: { "nodetype" : "eo" }
+  registry:
+    password: ReGstR@N47vp1
+    pullSecret: docker-reg-creds
+    url: n47-vpod1-registry.sc.sero.gic.ericsson.se
+    username: admin
+  support:
+    ipv6:
+      enabled: false
+  timezone: UTC
+tags:
+  eoEvnfm: true
+  eoPf: false
+  eoSo: false
+  eoUds: false
+  eoVmvnfm: true
+eric-ctrl-bro:
+  persistence:
+    persistentVolumeClaim:
+      size: 20Gi
+  sftp:
+    password: sftp-password
+    username: sftp-user
+eric-data-search-engine:
+  service:
+    network:
+      protocol:
+        IPv6: false
+eric-eo-evnfm:
+  eric-lcm-container-registry:
+    ingress:
+      hostname: registry01.eoaas.n47.vpod1.sc.sero.gic.ericsson.se
+    persistence:
+      persistentVolumeClaim:
+        size: 450Gi
+  eric-lcm-helm-chart-registry:
+    env:
+      secret:
+        BASIC_AUTH_PASS: Test@1234
+        BASIC_AUTH_USER: test
+    ingress:
+      enabled: true
+      hostname: helm01.eoaas.n47.vpod1.sc.sero.gic.ericsson.se
+  eric-vnfm-orchestrator-service:
+    oss:
+      topology:
+        secretName: null
+    smallstack:
+      application: true
+eric-eo-evnfm-nbi:
+  eric-evnfm-rbac:
+    defaultUser:
+      password: DefaultP12345!
+      username: vnfm-user
+eric-eo-evnfm-vm:
+  eric-vnflcm-service:
+    oss:
+      secretName: null
+    persistentVolumeClaim:
+      size: 20Gi
+system-user:
+  credentials:
+    password: DefaultP12345!
+    username: system-user
+eric-eo-so:
+  defaultUser:
+    password: ''
+    username: ''
+eric-gr-bur-orchestrator:
+  credentials:
+    password: ''
+    username: ''
+  gr:
+    bro:
+      autoDelete:
+        backupsLimit: 10
+    cluster:
+      role: ''
+      secondary_hostnames:
+      - ''
+    registry:
+      secondarySiteContainerRegistryHostname: null
+    sftp:
+      password: ''
+      url: ''
+      username: ''
+eric-oss-pf:
+  defaultUser:
+    password: ''
+    username: ''
+gas:
+  defaultUser:
+    password: DefaultP12345!
+    username: gas-user
+eric-sec-access-mgmt:
+  ingress:
+    hostname: iam01.eoaas.n47.vpod1.sc.sero.gic.ericsson.se
+  statefulset:
+    replicas: 2
+geo-redundancy:
+  enabled: false

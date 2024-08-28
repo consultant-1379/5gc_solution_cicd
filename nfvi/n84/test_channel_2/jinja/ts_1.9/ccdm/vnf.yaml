@@ -1,0 +1,187 @@
+vnflcm:
+  vnfInstanceName: n84-ccdm2
+  vnfProductName: ERIC-CCDM
+  vnfSoftwareVersion: 1.7.24
+  instantiate_file: ../../../../../../../ts-config/templates/common/instantiate.json.jinja2
+  rendered-instantiate-file: ../../../cnf/ccdm/ts_1.9/day0/instantiate.json
+  values_file: ../../../../../../../ts-config/templates/ccdm/1.7/values.yaml.jinja2
+  rendered-values-file: ../../../cnf/ccdm/ts_1.9/day0/values.yaml
+  clusterName: n84-eccd3
+  namespace: ccdm
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+skip-instantiation: false
+
+day0:
+  k8s-secret:
+  # 1. Create Secret for LDAP Admin User
+  - name: eric-sec-ldap-server-creds
+    label: app.kubernetes.io/instance=n84-ccdm1-2
+    sources:
+    - { type: literal, key: adminuser, value: sysadmin }
+    - { type: literal, key: passwd, value: keycloak }
+    - type: literal
+      key: adminpasswd
+      value: $6$tMyqIzGUW4jHtsGw$3tGshIwt6O4CpC/Vm5frHWE40QprbxFQi4Eg.XT7Xk31u8DGG0IO2/70TaT2rLhTRhMdRONBGF2TvmegMcqQm0
+  # 2. Create the SNMP Alarm Provider Secret
+#  - name: snmp-alarm-provider-config
+#    label: app.kubernetes.io/instance=n84-ccdm1-2
+#    sources:
+#    - { type: file, key: config.json, file: ../../../../../../../ts-config/templates/common/snmp-config.json.jinja2, rendered-file: ../../../cnf/ccdm/ts_1.9/day1/snmp-config.json }
+  # 3. Create the Distributed Coordinator ED Service Secret
+  - name: eric-data-distributed-coordinator-creds
+    label: app.kubernetes.io/instance=n84-ccdm1-2
+    sources:
+    - { type: literal, key: etcdpasswd, value: admin }
+  # 4. Create Identity and Access Management Credentials Secret
+  - name: eric-sec-access-mgmt-creds
+    label: app.kubernetes.io/instance=n84-ccdm1-2
+    sources:
+    - { type: literal, key: kcadminid, value: admin }
+    - { type: literal, key: kcpasswd, value: admin }
+  # 5. Create Object Storage MN Secret
+  - name: eric-data-object-storage-mn-creds
+    label: app.kubernetes.io/instance=n84-ccdm1-2
+    sources:
+    - { type: literal, key: accesskey, value: adminaccess }
+    - { type: literal, key: secretkey, value: adminsecret }
+
+verify-running: true
+ignore-not-running:
+- eric-data-search-engine-curator
+- eric-udr-app-counters
+- eric-udr-bulk-data-synchronizer
+- eric-udr-cmmanager
+- eric-udr-consistency-check-orchestrator
+- eric-udr-dbmanager
+- eric-udr-dbmonitor
+- eric-udr-gudrestfe
+- eric-udr-import-export-orchestrator
+- eric-udr-ldap-balancer
+- eric-udr-ldapfe
+- eric-udr-migration-orchestrator
+- eric-udr-migration-task
+- eric-udr-notificationsubscription
+- eric-udr-nrfproxy
+- eric-udr-nudrfe
+- eric-udr-provisioningfe
+- eric-udr-rest-notifchecker
+- eric-udr-rest-notifsender
+- eric-udr-soap-notifchecker
+- eric-udr-soap-notifsender
+
+day1:
+  access:
+    oam: 214.12.117.196
+    ldap-admin:
+      user: sysadmin
+      pass: Pa$$w0rd4LDAP
+    users:
+    - user: ccdmoam
+      pass: WeakPas#worD-1
+      pass_init: Changeme1st!
+      groups:
+      - udr-admin
+      - pf-admin
+      - pf-operator
+      - nrfagent-admin
+      - system-admin
+    - user: ccdmsec
+      pass: WeakPas#worD-1
+      pass_init: Changeme1st!
+      groups:
+      - udr-security-admin
+      - nrfagent-security-admin
+      - system-security-admin
+    configs:
+    - file: ../../../../../../../ts-config/templates/ccdm/1.7/user-config.xml.jinja2
+      rendered-file: ../../../cnf/ccdm/ts_1.9/day1/user-config.xml
+      proto: netconf
+      pre-verify-pods-ready:
+        check-interval: 5
+        deployments:
+        - eric-cm-yang-provider
+      post-delay: 30
+      retry-interval: 30
+  app-config:
+#  - file: external-certificates.xml
+#    user-id: 1
+#    proto: netconf
+#    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccdm/1.7/nrfagent-config.xml.jinja2
+    rendered-file: ../../../cnf/ccdm/ts_1.9/day1/nrfagent-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccdm/1.7/udr-config.xml.jinja2
+    rendered-file: ../../../cnf/ccdm/ts_1.9/day1/udr-config.xml
+    user-id: 0
+    proto: netconf
+    post-verify-pods-ready:
+      check-interval: 30
+      deployments:
+      - eric-udr-nudrfe
+      statefulsets:
+      - eric-udr-kvdb-ag-server
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccdm/1.7/ddc-config.xml.jinja2
+    rendered-file: ../../../cnf/ccdm/ts_1.9/day1/ddc-config.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 10
+  - file: ../../../../../../../ts-config/templates/ccdm/1.7/hss-application-counters.xml.jinja2
+    rendered-file: ../../../cnf/ccdm/ts_1.9/day1/hss-application-counters.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 30
+  - file: ../../../../../../../ts-config/templates/ccdm/1.7/eir-application-counters.xml.jinja2
+    rendered-file: ../../../cnf/ccdm/ts_1.9/day1/eir-application-counters.xml
+    user-id: 0
+    proto: netconf
+    post-delay: 30
+#  - file: ../../../../../../../ts-config/templates/ccdm/1.7/pf-config.xml.jinja2
+#    rendered-file: ../../../cnf/ccdm/ts_1.9/day1/pf-config.xml
+#    user-id: 0
+#    proto: netconf
+#    post-delay: 10
+#  - file: ../../../../../../../ts-config/templates/ccdm/1.7/consistency-config.xml.jinja2
+#    rendered-file: ../../../cnf/ccdm/ts_1.9/day1/consistency-config.xml
+#    user-id: 0
+#    proto: netconf
+#    post-delay: 10
+  - name: Set udr subscription expire time to 7 days
+    user-id: 0
+    commands: |-
+      config
+      udr nudr-dr-notifications maximum-subscription-duration 604800
+      commit
+      end
+    post-delay: 10
+  post-day1-k8s-config:
+    - name: Adding HSS and 5G-EIR service configmap in udr-nrf-agent-targetnfprofiles
+      cmd: |-
+        get configmap udr-nrf-agent-targetnfprofiles -o jsonpath='{.data.udr-nrf-agent-targetnfprofiles-ccdm\.json}' | jq -c . | sed 's/\["nudm-uecm"\]}/["nudm-uecm"]},{"requesterNfType":"UDR","targetNfType":"HSS","targetServiceNames":["nhss-uecm"]},{"requesterNfType":"UDR","targetNfType":"5G_EIR","targetServiceNames":["n5g-eir-eic"]}/g' | jq . > ~/udr-nrf-agent-targetnfprofiles-ccdm.json
+        create configmap udr-nrf-agent-targetnfprofiles --from-file ~/udr-nrf-agent-targetnfprofiles-ccdm.json -o yaml --dry-run=client > ~/udr-nrf-agent-targetnfprofiles.yaml
+        apply -f ~/udr-nrf-agent-targetnfprofiles.yaml
+
+# No need to restore CCDM data when another CCDM was normally running with full data.
+  ccdm-data-backup-restore:
+    sftp-server: 11.0.18.2
+    sftp-port: 22
+    sftp-path: /home/tsuser/ccdm-backup/ccdm-data/n99-real-geored-3m
+    sftp-user: tsuser
+    sftp-pass: tspass
+    user-id: 0
+    udr-status-check:
+      check-interval: 30
+      api-path-and-status:
+        "/udr/status": 'OK'
+        "/udr/reporting/dbManager/status": 'STARTED'
+        "/udr/reporting/dbMonitor/status": 'OK'
+
+sitedata:
+- site.yaml
+- ../site_global.yaml
+

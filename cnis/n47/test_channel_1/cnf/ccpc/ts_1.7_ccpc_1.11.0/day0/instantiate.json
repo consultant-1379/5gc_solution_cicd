@@ -1,0 +1,11 @@
+{
+  "additionalParams": {
+    "namespace": "ccpc",
+    "skipVerification": true,
+    "cleanUpResources": false,
+    "applicationTimeOut": "2000",
+    "commandTimeOut": "2000",
+    "manoControlledScaling": "false",
+    "global.ipStackMode": "ipv4"
+  }
+}

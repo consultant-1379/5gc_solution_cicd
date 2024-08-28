@@ -1,0 +1,175 @@
+nodeName: n84-pcc2
+nodeType: PCC
+vnflcm:
+  clusterName: n84-eccd3
+  namespace: pcc
+  InstantiateVnfRequest:
+    applicationTimeOut: 1800
+    skipVerification: "true"
+users:
+  day0:
+    username: sysadmin
+    password: sysadmin
+  day1:
+  - username: tsadm
+    password: tsadm
+    groups: [ system-admin system-security-admin mm-config-admin mm-lawful-intercept-admin mm-gsh-lawful-intercept-admin mm-itc-admin mm-security-admin mm-admin mm-read-only-operator mm-expert-admin sm-admin sm-cdr-admin sm-charging-admin sm-itc-admin sm-lawful-intercept-admin sm-operator sm-tracing-admin sm-uetrace-admin system-troubleshooter system-read-only admin ]
+ 
+license:
+  customerId: '946060'
+  swltId: STA-PCC-20
+snmp:
+  agentEngineId: 8000137001C0A8720BBDC2842D
+  heartbeatInterval: 600
+hss:
+- ip: 5.8.6.29
+- ip: 5.8.6.59
+replicaCount:
+  eric-pc-mm-forwarder: 2  # mandatory, as PC-MM networking configurations reply on this number.
+  eric-pc-mm-mobility: 2
+  eric-pc-sm-sgw-session: 2
+  eric-pc-sm-smf-pgw-session: 2
+  eric-pc-sm-nsmf-forwarder: 1
+  eric-pc-kvdb-rd-server: 2
+  eric-pc-sm-geo-red-forwarder: 1
+
+
+ddc:
+  remotePath: /home/admin/ddc/eccd3/n84-pcc2
+pcc:
+  ipRule:
+    defaultGws: [-2]
+    bfdPeers: [-2]
+    fwdIpFrom: 1
+    bgpNeighbors: [-2]
+    creIpFrom: 100
+    vpngwIpFrom: 1
+  pcmm:
+    enabled: true
+    nodeId: n84-amf2
+    mmeGroupId: 65281
+    mmeCode: 141
+    amfRegionId: 255
+    amfSetId: 2
+    amfPointer: 13
+    amfCapacity: 50
+    amfInstanceId: 3fb31bb6-99ee-4a34-b714-99eccd16c3cf
+    namfLbIp: 5.8.6.25
+    ipNetwork: # Only support IPv4
+    - name: OM_EXTERNAL
+      ipInt:
+        vlan: 3123
+        ipv4: 10.36.241.0/24
+      ipSvc:
+      - name: OAM
+        ipv4: 10.137.48.181
+    - name: PRAN_SCTP_1
+      ipInt:
+        vlan: 3904
+        ipv4: 11.2.4.0/24
+      ipSvc:
+      - name: N2-1
+        ipv4: 10.132.128.101
+      - name: S1-MME-1
+        ipv4: 10.132.128.156
+    - name: PRAN_SCTP_2
+      ipInt:
+        vlan: 3929
+        ipv4: 11.2.29.0/24
+      ipSvc:
+      - name: N2-2
+        ipv4: 10.132.144.101
+      - name: S1-MME-2
+        ipv4: 10.132.144.156
+    - name: SIG_SCTP_1
+      ipInt:
+        vlan: 3902
+        ipv4: 11.2.2.0/24
+      ipSvc:
+      - name: S6a-1
+        ipv4: 106.102.0.85
+      - name: SBI-Server
+        ipv4: 5.8.6.25
+      - name: SBI-Client
+        ipv4: 29.1.64.125
+    - name: SIG_SCTP_2
+      ipInt:
+        vlan: 3727
+        ipv4: 11.2.3.0/24
+      ipSvc:
+      - name: S6a-2
+        ipv4: 106.102.0.117
+    - name: MEDIA
+      ipInt:
+        vlan: 3901
+        ipv4: 11.2.1.0/24
+      ipSvc:
+      - name: Gn-GTP-C
+        ipv4: 106.101.0.21
+      - name: S10-GTP-C
+        ipv4: 106.101.0.53
+      - name: S11-GTP-C
+        ipv4: 106.101.0.85
+  pcsm:
+    smfInstanceId: d67766fc-210f-4ecf-858f-cc42a60fc00e
+    nsmfLbIp: 5.8.6.17
+    nsmfNotifLbIp: 5.8.6.18
+    sgwuPfcpAddress: 5.108.1.25
+    upfPfcpAddress: 5.108.1.25
+    internetPool:
+      ipv4: 40.0.0.0/10
+      ipv6: 2a01:2::/44
+    imsPool:
+      ipv4: 40.64.0.0/10
+      ipv6: 2a01:2:10::/44
+    smfSbiNotifyHost: smf2-notif.n84
+    smfSbiNsmfHost: smf2.n84
+    pcrfDiameterAddress: 25.51.0.252
+    smLogicalInt:
+      pgwS5s8c:
+        ipv4: 5.100.0.17
+        networkInstance: media
+      gomc:
+        ipv4: 5.116.0.21
+        networkInstance: signaling
+      sxb:
+        ipv4: 5.108.1.18
+        networkInstance: signaling
+      s4s11c:
+        ipv4: 5.102.0.21
+        networkInstance: media
+      sgwS5s8c:
+        ipv4: 5.104.0.21
+        networkInstance: media
+      sxa:
+        ipv4: 5.108.1.21
+        networkInstance: signaling
+      gx:
+        ipv4: 5.108.5.116
+        networkInstance: signaling
+  vpngw:
+    maxNum: 8
+    loopback:
+      ipv4: 109.2.1.50
+      networkInstance: signaling
+    intraForward:
+      vlan: 3401
+      ipv4: 172.31.1.0/24
+    networkInstances:
+    - name: signaling
+      localAs: 7002
+      remoteAs: 8002
+      ipForward:
+        vlan: 3952
+        ipv4: 11.2.52.0/24
+      vnfLoop:
+        ipv4: 5.129.0.33
+    - name: media
+      localAs: 7001
+      remoteAs: 8001
+      ipForward:
+        vlan: 3851
+        ipv4: 11.1.51.0/24
+      vnfLoop:
+        ipv4: 5.128.0.33
+interfaceType: macvlan

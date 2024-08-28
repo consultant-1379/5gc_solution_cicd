@@ -1,0 +1,25 @@
+apiVersion: siptls.sec.ericsson.com/v1
+kind: InternalCertificate
+metadata:
+  name: test-eric-data-search-engine-tls-cert
+  labels:
+    app.kubernetes.io/instance: eric-pcg
+spec:
+  kubernetes:
+    generatedSecretName: test-eric-data-search-engine-tls-cert
+    certificateName: "clicert.pem"
+    privateKeyName: "cliprivkey.pem"
+  certificate:
+    subject:
+      cn: test-eric-data-search-engine-tls
+    subjectAlternativeName:
+      dns:
+        - "*.cluster.local"
+    issuer:
+      reference: eric-data-search-engine-http-ca-cert
+    extendedKeyUsage:
+      tlsClientAuth: true
+      tlsServerAuth: false
+    validity:
+      # one day validity
+      overrideTtl: 15778800

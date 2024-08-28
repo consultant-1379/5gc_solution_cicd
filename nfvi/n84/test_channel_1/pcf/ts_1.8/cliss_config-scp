@@ -1,0 +1,33 @@
+#####add “SCP” to allowedNfTypes of service npcf-smpolicycontrol
+cliss
+ManagedElement=1,PolicyControlFunction=1,PcfConfig=1,PcfAppConfig=1
+configure
+PcfMsgTemplates=1
+   PcfMsgTemplate=pcfRegProfile
+     value="{\"nfInstanceId\":\"{PCF_ID}\",\"heartBeatTimer\":{PCF_HB_TIMER},\"nfType\":\"PCF\",\"nfStatus\":\"{PCF_STATUS}\",\"plmnList\":[{\"mcc\":\"240\",\"mnc\":\"81\"},{\"mcc\":\"240\",\"mnc\":\"80\"}],\"sNssais\":[{\"sst\":1,\"sd\":\"000002\"}],\"fqdn\":\"{PCF_FQDN}\",\"ipv4Addresses\":[\"{PCF_VIP}\"],\"capacity\":100,\"priority\":1,\"pcfInfo\":{\"dnnList\":[\"internet\",\"ims\",\"mqf\"],\"supiRanges\":[{\"start\":\"240800000000000\",\"end\":\"240819999999999\"}],\"rxDiamHost\":\"pcrf1.n84.epc.mnc081.mcc240.3gppnetwork.org\",\"rxDiamRealm\":\"n84.epc.mnc081.mcc240.3gppnetwork.org\"},\"nfServices\":[{\"serviceInstanceId\":\"npcf-smpc-0001\",\"serviceName\":\"npcf-smpolicycontrol\",\"versions\":[{\"apiVersionInUri\":\"v1\",\"apiFullVersion\":\"1.R15.2.0\"}],\"scheme\":\"{CONNECT}\",\"nfServiceStatus\":\"{smpc_status}\",\"ipEndPoints\":[{\"ipv4Address\":\"{PCF_VIP}\",\"port\":9091}],\"allowedNfTypes\":[\"SMF\",\"SCP\"]},{\"serviceInstanceId\":\"npcf-ampc-0001\",\"serviceName\":\"npcf-am-policy-control\",\"versions\":[{\"apiVersionInUri\":\"v1\",\"apiFullVersion\":\"1.R15.2.0\"}],\"scheme\":\"{CONNECT}\",\"nfServiceStatus\":\"{ampc_status}\",\"ipEndPoints\":[{\"ipv4Address\":\"{PCF_VIP}\",\"port\":9091}],\"apiPrefix\":\"npcf-am-policy-control\",\"allowedNfTypes\":[\"AMF\"]}],\"locality\":\"{locality}\"}"
+commit
+
+
+####configure local SCP infor
+cliss
+ManagedElement=1,PolicyControlFunction=1,PcfConfig=1,PcfNetwork=1,PcfPeerNodes=1
+configure
+PcfPeerNode=scp1
+fqdn="scp1.n84.5gc.mnc081.mcc240.3gppnetwork.org"
+type=SCP
+port=443
+nodeStatus=REGISTERED
+commit
+
+######configure SCP select rule
+ManagedElement=1,PolicyControlFunction=1,PcfConfig=1,PcfNetwork=1
+configure
+ScpSelectionRules=1
+ScpSelectionRule=r_smf
+nfType=SMF
+scpList=scp1
+ScpSelectionCondition=r_smf_cond1
+scpSelectionAttribute=FQDN
+pattern="smf1-notif.n84.5gc.mnc081.mcc240.3gppnetwork.org"
+commit
+

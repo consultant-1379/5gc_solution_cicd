@@ -1,0 +1,9 @@
+batch-size: 1
+vnf-info-files:
+- adp/vnf.yaml
+- ha/vnf.yaml
+- util/vnf.yaml
+- mgr/vnf.yaml
+- http/vnf.yaml
+- om/vnf.yaml
+- kvdb/vnf.yaml

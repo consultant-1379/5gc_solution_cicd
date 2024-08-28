@@ -1,0 +1,108 @@
+vnflcm:
+  vnfInstanceName: eric-pcg
+  vnfProductName: PCG
+  #csar-file: /lab/pccc_builds/images/PCG/PCG_1.23/PCG_1.23_PRG_T-152480/PCG_CXP9041656_1-R58B255.csar
+  vnfSoftwareVersion: CXP9037448_1.R56A
+  instantiate-file: day0/instantiate.json
+  values-file: day0/values.yaml
+  # evnfmName: node182
+  clusterName: n182-cluster
+  namespace: pcg
+
+
+access-info:
+  oam: pcg1-n182.seli.gic.ericsson.se
+  ldap-admin:
+    user: sysadmin
+    pass: c3lzYWRtaW4=
+  users:
+  - user: tsadm
+    pass: VHNAZG01Z2NAYjF1ZXM=
+    pass-init: dHNhZG0=
+
+pipeline:
+# - module: onboard
+#   check-interval: 10
+#   print-interval: 60
+- module: create-namespace
+# fivegcsafe doesn't need this sceret, remove it.
+# - module: create-k8s-secret
+#   name: eric-pc-gateway-ldap-server-secret
+#   sources:
+#   - type: literal
+#     key: adminuser
+#     value: sysadmin
+#   - type: literal
+#     key: passwd
+#     value: sysAdm1n@Day0
+#   - type: literal
+#     key: adminpasswd
+#     value: $6$fzLPYlRZCpweJMJC$AiNfP0WYE3npY8Za6GxMFoGj75TOl.TS6tmnnky2Bv5wY0Ek8RIoJlr9pyj0LF3wMMaNsNTUH4jp2lIHviJGS0
+- module: create-k8s-secret
+  name: eric-pc-gateway-snmp-alarm-provider-config
+  sources:
+  - type: file
+    key: snmp-alarm-provider-config
+    file: day1/snmp-config.json
+- module: instantiate
+- module: verify-pod-running
+  ignore-not-running:
+  - eric-data-search-engine-curator
+- module: run-k8s-command
+  name: Patching daemonset eric-log-shipper to tolerate high-throughput taint
+  cmd: patch daemonsets eric-log-shipper -p '{"spec":{"template":{"spec":{"tolerations":[{"effect":"NoSchedule","key":"high-throughput","operator":"Equal","value":"true"}]}}}}'
+- module: verify-pod-ready
+  check-interval: 5
+  daemonsets:
+  - eric-log-shipper
+# fivegcsafe doesn't need this sceret, remove it.
+# - module: run-k8s-command
+#   name: Allow PM server to use non-tls port 9090
+#   cmd: patch svc eric-pm-server --type=json -p '[{"op":"add","path":"/spec/ports/-","value":{"name":"http-pm","port":9090,"protocol":"TCP","targetPort":http-pm}}]'
+# Add a new networkpolicy file required by fivegcsafe test
+- module: run-k8s-command
+  name: Create networkpolicy to allow accessing eric-pm-server, eric-data-search-engine and eric-fh-alarm-handler
+  cmd: |
+    apply -f {file1}
+    apply -f {file2}
+    apply -f {file3}
+  inline-files:
+    file1: network-policy/eric-pm-server-allow.yaml
+    file2: network-policy/eric-data-search-engine-allow.yaml
+    file3: network-policy/eric-fh-alarm-handler-allow.yaml
+# Align the way to create ingress with fivegcsafe, or it can't be accessed in fivegcsafe test
+- module: run-k8s-command
+  name: Create ingresses eric-pm-server, eric-data-search-engine and eric-fh-alarm-handler
+  cmd: |
+    apply -f {file1}
+    apply -f {file2}
+    apply -f {file3}
+  inline-files:
+    file1: ingress/eric-pm-server-ingress.yaml
+    file2: ingress/eric-data-search-engine-ingress.yaml
+    file3: ingress/eric-fh-alarm-handler-ingress.yaml
+- module: verify-pod-ready
+  check-interval: 5
+  deployments:
+  - eric-cm-yang-provider
+- module: load-cmyp-user-config
+  file: day1/user-config.txt
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 30
+- module: change-initial-password
+- module: load-cmyp-app-config
+  file: day1/pcg-config.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 10
+- module: load-cmyp-app-config
+  file: day1/ddc-config.txt
+  user-id: 0
+  proto: ssh
+  retry-interval: 30
+- module: sleep
+  duration: 10

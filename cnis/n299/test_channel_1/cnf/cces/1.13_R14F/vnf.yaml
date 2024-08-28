@@ -1,0 +1,88 @@
+vnflcm:
+  vnfInstanceName: node299-cluster1-cces1
+  vnfProductName: CCES
+  vnfSoftwareVersion: 1.13.5+24
+  instantiate-file: instantiate.json
+  values-file: values.yaml
+  namespace: cces1
+  evnfmName: n299
+  csar-url: https://arm.sero.gic.ericsson.se/artifactory/proj-cudb-external-local/tmp/cces/csar/Ericsson.CCES.CXP9037720_1_13_5+24.csar
+access-info:
+  oam: cces1-oam.node299-cluster1.sero.gic.ericsson.se
+  ldap-admin:
+    user: sysadmin
+    pass: c3lzQWRtMW5ARGF5MA==
+  users:
+  - user: cces-admin
+    pass: RG01R0NAUzBsdXQhb24=
+    pass-init: Q2hhbmdlbWVAMXN0
+  - user: cces-sec
+    pass: RG01R0NAUzBsdXQhb24=
+    pass-init: Q2hhbmdlbWVAMXN0
+pipeline:
+- module: create-namespace
+- module: create-k8s-secret
+  name: eric-sec-ldap-server-creds
+  sources:
+  - type: literal
+    key: adminuser
+    value: sysadmin
+  - type: literal
+    key: passwd
+    value: sysAdm1n@Day0
+  - type: literal
+    key: adminpasswd
+    value: $6$fzLPYlRZCpweJMJC$AiNfP0WYE3npY8Za6GxMFoGj75TOl.TS6tmnnky2Bv5wY0Ek8RIoJlr9pyj0LF3wMMaNsNTUH4jp2lIHviJGS0
+- module: create-k8s-secret
+  name: eric-data-distributed-coordinator-creds
+  sources:
+  - type: literal
+    key: etcdpasswd
+    value: sysAdm1n@Day0
+- module: create-k8s-secret
+  name: eric-sec-access-mgmt-creds
+  sources:
+  - type: literal
+    key: kcadminid
+    value: admin
+  - type: literal
+    key: kcpasswd
+    value: sysAdm1n@Day0
+- module: instantiate
+- module: verify-pod-running
+  ignore-not-running:
+  - eric-data-search-engine-curator
+- module: run-k8s-command
+  name: Create networkpolicy to allow accessing eric-pm-server and eric-data-search-engine
+  cmd: |
+    apply -f {file1}
+    apply -f {file2}
+  inline-files:
+    file1: network-policy/eric-pm-server-allow.yaml
+    file2: network-policy/eric-data-search-engine-allow.yaml
+- module: run-k8s-command
+  name: Modify eric-cces-nf-monitor Service
+  cmd: |-
+    patch svc eric-cces-nf-monitor -p '{"metadata":{"annotations":{"prometheus.io/scrape":"true"}}}' --type=merge
+    patch svc eric-cces-nf-monitor -p '{"metadata":{"annotations":{"prometheus.io/path":"/metrics"}}}' --type=merge
+    patch svc eric-cces-nf-monitor -p '{"metadata":{"annotations":{"prometheus.io/port":"8082"}}}' --type=merge
+- module: run-k8s-command
+  name: Create pm server ingress
+  cmd: 'create ingress eric-pm-server --rule="eric-pm-server-cces.node299-cluster1.sero.gic.ericsson.se/*=eric-pm-server:9090" '
+- module: verify-pod-ready
+  check-interval: 5
+  deployments:
+  - eric-cm-yang-provider
+- module: load-cmyp-user-config
+  file: user-config.xml
+  proto: netconf
+  retry-interval: 30
+- module: sleep
+  duration: 60
+- module: change-initial-password
+- module: sleep
+  duration: 30
+- module: load-cmyp-app-config
+  user-id: 0
+  file: snmp-config.xml
+  proto: netconf

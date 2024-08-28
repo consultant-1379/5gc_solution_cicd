@@ -1,0 +1,113 @@
+vnflcm:
+  vnfInstanceName: n67-ccdm1
+  vnfProductName: ERIC-CCDM
+  vnfSoftwareVersion: 1.6.15
+
+day0:
+  k8s-secret:
+  - name: eric-sec-ldap-server-creds
+    label: release=n67-ccdm1-2
+    sources:
+    - { type: literal, key: adminuser, value: sysadmin }
+    - { type: literal, key: passwd, value: keycloak }
+    - type: literal
+      key: adminpasswd
+      value: $6$VLqvam6g$Qv7ufT.jEYnJYPL1dhG2oDtS5DfrukhrvZCZKEzRKvMY9rzW4wFbZsJ5kcNhveDoESKNpd50FZ54HQ.OTT0di0
+  - name: snmp-alarm-provider-config
+    label: release=n67-ccdm1-2
+    sources:
+    - { type: file, key: config.json, value: snmp-config.json }
+  - name: eric-data-distributed-coordinator-creds
+    label: release=n67-ccdm1-2
+    sources:
+    - { type: literal, key: etcdpasswd, value: admin }
+  - name: eric-sec-access-mgmt-creds
+    label: release=n67-ccdm1-2
+    sources:
+    - { type: literal, key: kcadminid, value: admin }
+    - { type: literal, key: kcpasswd, value: admin }
+  - name: eric-data-object-storage-mn-creds
+    label: release=n67-ccdm1-2
+    sources:
+    - { type: literal, key: accesskey, value: adminaccess }
+    - { type: literal, key: secretkey, value: adminsecret }
+
+verify-running: true
+ignore-not-running:
+- eric-data-search-engine-curator
+- eric-udr-app-counters
+- eric-udr-bulk-data-synchronizer
+- eric-udr-cmmanager
+- eric-udr-consistency-check-orchestrator
+- eric-udr-dbmanager
+- eric-udr-dbmonitor
+- eric-udr-gudrestfe
+- eric-udr-import-export-orchestrator
+- eric-udr-ldap-balancer
+- eric-udr-ldapfe
+- eric-udr-migration-orchestrator
+- eric-udr-migration-task
+- eric-udr-notificationsubscription
+- eric-udr-nrfproxy
+- eric-udr-nudrfe
+- eric-udr-provisioningfe
+- eric-udr-rest-notifchecker
+- eric-udr-rest-notifsender
+- eric-udr-soap-notifchecker
+- eric-udr-soap-notifsender
+
+day1:
+  access:
+    oam: 10.137.49.35
+    ldap-admin:
+      user: sysadmin
+      pass: Pa$$w0rd4LDAP
+    users:
+    - user: ccdmoam
+      pass: Wpp_Mme_n67-1
+      pass_init: Changeme1st!
+    - user: ccdmsec
+      pass: Wpp_Mme_n67-1
+      pass_init: Changeme1st!
+    configs:
+    - file: user-config.xml
+      proto: netconf
+      port: 830
+      sleep: 30
+  app-config:
+  - file: external-certificates.xml
+    user-id: 1
+    proto: netconf
+    port: 830
+    sleep: 10
+  - file: nrfagent-config.xml
+    user-id: 0
+    proto: netconf
+    port: 830
+    sleep: 10
+  - file: udr-config-fgeo.xml
+    user-id: 0
+    proto: netconf
+    port: 830
+    sleep: 10
+  - file: ddc-config.xml
+    user-id: 0
+    proto: netconf
+    port: 830
+    sleep: 10
+  - file: pf-config.xml
+    user-id: 0
+    proto: netconf
+    port: 830
+    sleep: 600
+  - file: hss-application-counters.xml
+    user-id: 0
+    proto: netconf
+    port: 830
+    sleep: 30
+#  ccdm-data-backup-restore:
+#    sftp-server: 11.0.18.2
+#    sftp-path: /home/tsuser/ccdm-backup/ccdm-data/ccdm-data-backup-1.25m
+#    sftp-user: tsuser
+#    sftp-pass: tspass
+#    user-id: 0

@@ -1,0 +1,252 @@
+global:
+  timezone: CET
+  applicationId: eric-n84-pcg003
+
+eric-cm-yang-provider:
+  objectStorage:
+    enableImportExportCommands: true
+    secretName: eric-pc-gateway-obj-storage-secret
+  service:
+    annotations:
+      addressPoolName: pcg-oam
+      sharedVIPLabel: pcg-oam
+eric-data-search-engine:
+  persistence: 
+    data: 
+      persistentVolumeClaim: 
+        size: "50Gi" 
+eric-fh-snmp-alarm-provider:
+  nodeSelector:
+    snmp-sender: eric-pcg
+  service:
+    annotations:
+     addressPoolName: pcg-oam
+     sharedVIPLabel: pcg-oam
+    secretName: snmp-alarm-provider-config
+  oamVIP:
+    enabled: true
+    vip: 10.137.48.162
+    destIp: 10.36.242.99
+
+eric-odca-diagnostic-data-collector:
+  resources:
+    diagnostic-data-collector:
+      limits:
+        memory: 1Gi
+        cpu: 2000m
+        ephemeral-storage: 30Gi
+      requests:
+        memory: 800Mi
+        cpu: 1600m
+        ephemeral-storage: 24Gi
+  env:
+    sftpFileLocation: pcg-1-ddc
+    sftphost: 10.36.242.1:22
+eric-pc-routing-engine:
+  network: cre-io
+  interfaces:
+    type: macvlan
+    macvlan:
+      - master: eth1
+
+eric-pc-up-data-plane:
+  allowNetworkConfigChanges: true
+  replicaCount: 1
+  acceleratedIo:
+    enabled: true
+  applications:
+  - name: app100
+  cm_source_env: false
+  deployment:
+    pinThreads: true
+  global:
+    serviceNames:
+      cm:
+        mediator: ""
+
+  nodeSelector:
+    type: high-throughput
+
+  resources:
+    dataPlane:
+      limits:
+        cpu: 17
+        hugepages-1Gi: 1Gi
+        intel.com/intel_sriov_dpdk_left: "1"
+        intel.com/intel_sriov_dpdk_right: "1"
+        memory: 24Gi
+      requests:
+        cpu: 17
+        hugepages-1Gi: 1Gi
+        intel.com/intel_sriov_dpdk_left: "1"
+        intel.com/intel_sriov_dpdk_right: "1"
+        memory: 24Gi
+  tolerations:
+  - effect: NoSchedule
+    key: high-throughput
+    operator: Equal
+    value: "true"
+
+eric-pc-up-pfcp-endpoint:
+  cm_source_env: false
+  global:
+    serviceNames:
+      cm:
+        mediator: ""
+
+eric-pm-bulk-reporter:
+  service:
+    annotations:
+      addressPoolName: pcg-oam
+      sharedVIPLabel: pcg-oam
+eric-pm-server:
+  rbac:
+    appMonitoring:
+      configFileCreate: false
+      enabled: true
+  server:
+    persistentVolume:
+      enabled: true
+
+eric-cnom-server:
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 500m
+  service:
+    type: LoadBalancer
+  annotations:
+    metallb.universe.tf/address-pool: pcg-oam
+    metallb.universe.tf/allow-shared-ip: pcg-oam
+
+eric-data-sftp-server:
+  service:
+    annotations:
+      sharedVIPLabel: "pcg-oam"
+      addressPoolName: "pcg-oam"
+eric-sec-ldap-server:
+  adminCredentials:
+    adminuser: day0
+    adminpasswd: "$6$<0>$AcnhaMbmO6zVPekh7UpnvZbfwMKm7dALF2hvlWG3/ZI2S8onY.c3UD3CBjbiqidN4.Luz8biX1qneoCD.JTm90"
+eric-log-shipper:
+  logshipper:
+    cfgData: |
+      paths:
+        - /var/log/containers/eric-cm-mediator-*pcg*.log
+        - /var/log/containers/eric-cm-yang-provider-*pcg*_notification-controller-*.log
+        - /var/log/containers/eric-cm-yang-provider-*pcg*_schema-synchronizer-*.log
+        - /var/log/containers/eric-cm-yang-provider-*pcg*_yang-db-adapter-*.log
+        - /var/log/containers/eric-fh-*pcg*.log
+        - /var/log/containers/eric-pm-bulk-reporter-*_eric-pm-bulk-reporter-*pcg*.log
+        - /var/log/containers/eric-pm-server-*pcg*_eric-pm-initcontainer-*.log
+        - /var/log/containers/eric-pm-server-*pcg*_eric-pm-reverseproxy-*.log
+        - /var/log/containers/eric-probe-event-report-broker-*.log
+        - /var/log/containers/eric-sec-sip-tls-*pcg*.log
+        - /var/log/containers/eric-sec-certm-*pcg*.log
+      tags: ["docker", "json-in-log"]
+      # These containers/microservices properly follow the ADP Design rules
+      # to log directly as JSON. The added tag 'json-in-log' is added to
+      # indicate this. Also notice that we do not use keys_under_root or
+      # overwrite_keys here. This lets us remove the intermediate data more
+      # easily later.
+      fields:
+        logplane: adp-app-logs
+      symlinks: true
+      json.add_error_key: true
+      paths:
+        - /var/log/containers/eric-cnom-server-*pcg*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: cnom-app-logs
+      symlinks: true
+      json.add_error_key: true
+      paths:
+        - /var/log/containers/eric-pc-routing-*pcg*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: pc-routing-app-logs
+      symlinks: true
+      json.add_error_key: true
+      paths:
+        - /var/log/containers/eric-pc-up-*-data-plane-at-*pcg*.log
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: pc-firewall-app-logs
+      symlinks: true
+      json.add_error_key: true
+      paths:
+        - /var/log/containers/eric-pc-up-*pcg*.log
+      exclude_files:
+        - 'eric-pc-up-.*-data-plane-at-.*\.log'
+        - 'eric-pc-up-br-agent-.*\.log'
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: pc-up-app-logs
+      symlinks: true
+      json.add_error_key: true
+      paths:
+        - /var/log/containers/eric-pc-*pcg*.log
+      exclude_files:
+        - 'eric-pc-kvdb-rd-.*\.log'
+        - 'eric-pc-routing-.*\.log'
+        - 'eric-pc-up-.*\.log'
+      tags: ["docker", "json-in-log"]
+      fields:
+        logplane: pc-app-logs
+      symlinks: true
+      json.add_error_key: true
+      paths:
+        - /var/log/containers/eric-cnom-*pcg*.log
+      exclude_files:
+        - 'eric-cnom-server-.*\.log'
+      tags: ["docker"]
+      # These containers/microservices do not follow the ADP Design rules
+      # to log directly as JSON.
+      fields:
+        logplane: cnom-app-logs
+      symlinks: true
+      json.add_error_key: true
+      paths:
+        - /var/log/containers/eric-pc-kvdb-rd-*pcg*.log
+      tags: ["docker"]
+      fields:
+        logplane: pc-kvdbrd-app-logs
+      symlinks: true
+      json.add_error_key: true
+      paths:
+        - /var/log/containers/eric-pc-up-br-agent-*pcg*.log
+      tags: ["docker"]
+      fields:
+        logplane: pc-up-app-logs
+      symlinks: true
+      json.add_error_key: true
+      paths:
+        - /var/log/containers/eric-*pcg*.log
+      exclude_files:
+        - 'eric-cm-mediator-.*\.log'
+        - 'eric-cm-yang-provider-.*_notification-controller-.*\.log'
+        - 'eric-cm-yang-provider-.*_schema-synchronizer-.*\.log'
+        - 'eric-cm-yang-provider-.*_yang-db-adapter-.*\.log'
+        - 'eric-cnom-.*\.log'
+        - 'eric-epg-.*\.log'
+        - 'eric-fh-.*\.log'
+        - 'eric-pc-.*\.log'
+        - 'eric-pccsm.*\.log'
+        - 'eric-pm-bulk-reporter-.*_eric-pm-bulk-reporter-.*\.log'
+        - 'eric-pm-server-.*_eric-pm-initcontainer-.*\.log'
+        - 'eric-pm-server-.*_eric-pm-reverseproxy-.*\.log'
+        - 'eric-pm-server-kube-.*\.log'
+        - 'eric-pm-server-node-.*\.log'
+        - 'eric-probe-event-report-broker-.*\.log'
+        - 'eric-sec-certm-.*\.log'
+        - 'eric-sec-sip-tls-.*\.log'
+        - 'eric-sw-inventory-.*\.log'
+        - 'eric-tm-.*\.log'
+      tags: ["docker"]
+      fields:
+        logplane: adp-app-logs
+      symlinks: true
+      json.add_error_key: true
+eric-log-transformer:
+  replicaCount: 3
+

@@ -1,0 +1,16 @@
+[
+    {"logplane.keyword": "adp-app-asi-logs"},
+    {"logplane.keyword": "adp-app-security-logs"},
+    {"logplane.keyword": "adp-app-audit-logs"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-ingressgw-nrf-traffic"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-ingressgw-nssf-traffic"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nrf-accesstoken"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nrf-management"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nrf-notify-agent"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nssf-nssai-availability"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nssf-slice-selection-control"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nrf-notify-agent"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-data-message-bus-kf"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-data-coordinator-zk"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-udr-message-bus-kf-client"}
+]

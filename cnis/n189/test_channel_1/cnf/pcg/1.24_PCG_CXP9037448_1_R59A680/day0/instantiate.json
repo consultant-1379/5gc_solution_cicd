@@ -1,0 +1,10 @@
+{
+  "clusterName": "n189-eccd1",
+  "additionalParams": {
+       "namespace": "pcg",
+       "helm_client_version": "latest",
+       "applicationTimeOut": "1200",
+       "skipJobVerification": "false",
+       "skipVerification": "true"
+      }
+}

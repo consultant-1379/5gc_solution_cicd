@@ -1,0 +1,59 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{t3410_attach_timer, 60}.
+{tc_history_length, 20}.
+{log_interval, 60}.
+{nbr_of_dps_gi_nws, 32}.
+{link_group_num, 2}.
+{debug_startup, off}.
+
+
+%%%%%%%%%%%%% Frontend 1 start %%%%%%%%%%%%%
+{dp, 1, 'tool-01-201', []}.
+%%{gnb_n2_ip_addresses, [{'6.192.32.0' , 19 , '2A04:6:192:0::',51}], 1, []}.
+%%%%{gnb_n3_ip_addresses, [{'6.196.32.0', 19 , '2A04:6:196:0::',51}], 1, []}.
+{gnb_n2_ip_addresses, [{'6.192.32.0' , 19 , undefined, 0 }], 1, []}.
+{gnb_n3_ip_addresses, [{'6.196.32.0', 19 , undefined, 0 }], 1, []}.
+{gi_ip_addresses, [{'222.8.0.0', 13, undefined, 0}], 1, []}.
+%%{gi_ip_addresses, [{'222.8.0.0', 13, '2A04:222::', 37}], 1, []}.
+{aggregator, 1, [{ipv4, '191.0.0.4', 30, '191.0.1.4'}], 1, []}.
+
+
+
+%%% for 4G dallas %%%%%%
+{enb_s1mme_ip_addresses, [{'8.140.32.0', 19, undefined, 0 }], 1, []}.
+{enb_s1u_ip_addresses, [{'6.16.32.0', 19, undefined, 0 }], 1, []}.  %%Used by MMEsim towards SGW s1u interface
+%%{enb_s1u_ip_addresses, [{'6.16.32.0', 19, '2A02:6:C0:2000::', 51}], 1, []}.  %%Used by MMEsim towards SGW s1u interface
+{hss_udm_s6a_ip_addresses, [{network_v4,{'6.72.0.0',27}},{dp_index, 1}]}.
+%%{hss_udm_nudm_ip_addresses, [{network_v4, {'6.72.0.0', 27}}, {dp_index, 1}]}.
+%%{ausf_nausf_ip_addresses, [{network_v4,{'6.72.32.0', 27}}, {dp_index, 1}]}.
+
+%%%  end for 4G dallas %%
+
+%%%%%%%%%%%%% Frontend 1 end %%%%%%%%%%%%%
+
+%%%%%%%%%%%%% Frontend 2 start %%%%%%%%%%%%%
+{dp, 2, 'tool-01-202', []}.
+{gnb_n2_ip_addresses, [{'6.192.64.0' , 19 , undefined, 0 }], 2, []}.
+{gnb_n3_ip_addresses, [{'6.196.64.0', 19 , undefined, 0 }], 2, []}.
+{gi_ip_addresses, [{'222.16.0.0', 13, undefined, 0 }], 2, []}.
+%%{gnb_n2_ip_addresses, [{'6.192.64.0' , 19 , '2A04:6:192:4000::',51}], 2, []}.
+%%{gnb_n3_ip_addresses, [{'6.196.64.0', 19 , '2A04:6:196:4000::',51}], 2, []}.
+%%{gi_ip_addresses, [{'222.16.0.0', 13, '2A04:222:800::', 37}], 2, []}.
+{aggregator, 1, [{ipv4, '191.0.0.8', 30, '191.0.1.8'}], 2, []}.
+
+%%% for 4G dallas %%%%%%
+{enb_s1mme_ip_addresses, [{'8.140.64.0', 19, undefined, 0 }], 2, []}.
+%%{enb_s1u_ip_addresses, [{'6.16.64.0', 19, '2A02:6:C0:4000::', 51}], 2, []}.  %%Used by MMEsim towards SGW s1u interface
+{enb_s1u_ip_addresses, [{'6.16.64.0', 19, undefined, 0 }], 2, []}.  %%Used by MMEsim towards SGW s1u interface
+%%{hss_udm_nudm_ip_addresses, [{network_v4, {'6.72.0.32', 27}}, {dp_index, 2}]}.
+{hss_udm_s6a_ip_addresses, [{network_v4,{'6.72.0.32',27}},{dp_index, 2}]}.
+
+%%%  end for 4G dallas %%
+
+%%%%%%%%%%%%% Frontend 2 end %%%%%%%%%%%%%
+
+%%%%%%%%%%%%% Backends start   %%%%%%%%%%%%%
+{subsystem, 1, 'tool-01-102', 10, []}.
+{subsystem, 2, 'tool-01-103', 10, []}.
+%%%%%%%%%%%%% Backends end     %%%%%%%%%%%%%
+

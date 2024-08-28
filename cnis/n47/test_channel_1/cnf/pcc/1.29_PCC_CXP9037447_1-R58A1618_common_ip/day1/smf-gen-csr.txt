@@ -1,0 +1,10 @@
+config
+epg node secm certm node-credential smf-sbi-server subject-name "C=SE, ST=Stockholm, L=Stockholm, O=Ericsson, CN=SMF"
+epg node secm certm node-credential smf-sbi-server key-info rsa-2048
+epg node secm certm node-credential smf-sbi-client subject-name "C=SE, ST=Stockholm, L=Stockholm, O=Ericsson, CN=SMF"
+epg node secm certm node-credential smf-sbi-client key-info rsa-2048
+commit
+end
+epg node secm certm node-credential smf-sbi-server start-offline-csr-enrollment uri smf-sbi-server.csr
+epg node secm certm node-credential smf-sbi-client start-offline-csr-enrollment uri smf-sbi-client.csr
+

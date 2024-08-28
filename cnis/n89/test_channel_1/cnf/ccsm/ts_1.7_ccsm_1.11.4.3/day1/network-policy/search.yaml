@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    meta.helm.sh/release-namespace: ccsm
+  generation: 1
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: allow-eric-data-search-engine-tls
+  namespace: ccsm
+  selfLink: /apis/networking.k8s.io/v1/namespaces/ccsm/networkpolicies/allow-eric-data-search-engine-tls
+spec:
+  egress:
+  - {}
+  ingress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: eric-data-search-engine
+      component: eric-data-search-engine
+      role: ingest-tls
+  policyTypes:
+  - Ingress
+

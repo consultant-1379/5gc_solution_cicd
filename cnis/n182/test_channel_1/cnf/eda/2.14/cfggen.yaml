@@ -1,0 +1,24 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global_common_ip.yaml
+# targetDir: .
+# jsonschema: eda/jsonschema.yaml
+# jsonschemaGlobal: common/global-jsonschema.yaml
+templateDir: ../../../../../../../ts-config/templates/eda/2.14
+#jsonschemaGlobal: ../../ts-config/jsonschemas/schema-global.yaml
+
+files:
+- template: values.yaml.jinja2
+  target: day0/values.yaml
+- template: instantiate.json.jinja2
+  target: day0/instantiate.json
+#- template: common/snmp-config.json.jinja2
+#  target: day1/snmp-config.json
+#- template: common/user-config.xml.jinja2
+#  target: day1/user-config.xml
+# Add account-management config templates manually for 2.14
+- template: provisioning/account-management/day1-service-account.json.jinja2
+  target: day1/account-management/day1-service-account.json
+- template: provisioning/account-management/day1-user.json.jinja2
+  target: day1/account-management/day1-user.json
+- template: provisioning/account-management/role.json.jinja2
+  target: day1/account-management/role.json

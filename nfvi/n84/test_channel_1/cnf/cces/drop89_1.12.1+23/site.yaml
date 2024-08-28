@@ -1,0 +1,88 @@
+######################################
+## CNF general information
+######################################
+nodeName: n84-eccd1-cces
+nodeType: CCES
+
+vnflcm:
+  clusterName: n84-eccd1
+  namespace: cces
+  InstantiateVnfRequest:
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day0:
+    username: sysadmin
+    password: Pa$$w0rd4LDAP
+
+  day1:
+  - username: ccesoam
+    password: Changeme@1st
+    groups:
+    - nef-admin
+    - apigm-admin
+    - sragent-admin
+    - nrfagent-admin
+    - system-admin
+  - username: ccessec
+    password: Changeme@1st
+    groups:
+    - nef-security-admin
+    - apigm-security-admin
+    - sragent-security-admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+license:
+  customerId: "946060"
+  swltId: STA-CCES-25
+
+cnom:
+  fqdn: cnom.cces.n84-eccd1.sero.gic.ericsson.se
+
+#snmp:
+#  agentEngineId: 8000137001C0A899ECCD10CEA6
+
+ddc:
+  remotePath: /home/admin/ddc/eccd1/n84-cces
+
+vtap:
+  tapagent: true
+
+######################################
+## CNF specific information
+######################################
+cces:
+  iamFqdn: iam.cces-oam.n84-eccd1.sero.gic.ericsson.se
+  nef:
+    instanceId: ddd9b5b3-fa57-4cb1-ace7-99eccd10cea6
+    host: nef1.n84
+    port: 443
+    nbi:
+      trust:
+        host: nef1-nbi-trust.n84
+    diameter:
+      host: nef1.n84
+      peer:
+        host: pcrf1.epc
+        ip: 25.51.0.251
+        port: 3868
+
+######################################
+## CNF dimensioning specific
+######################################
+
+replicaCount:
+  eric-cces-common-entity: 2
+  eric-cces-timer-service: 2
+  eric-apigm-api-proxy: 2
+
+hpaReplica:
+  eric-cces-common-entity: {min: 2, max: 2}
+  eric-cces-timer-service: {min: 2, max: 2}
+  eric-apigm-api-proxy: {min: 2, max: 2}
+  eric-data-wide-column-database-cd: 5
+
+
+

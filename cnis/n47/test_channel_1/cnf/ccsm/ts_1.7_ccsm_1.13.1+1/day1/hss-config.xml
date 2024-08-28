@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  Notice that it is a configuration template in XML format
+  compliant with NF YANG model.  This XML template provides
+  a configuration skeleton that shall be modified before
+  loading into the yang service.  Some parts of the document
+  must be deleted or added depending on the network configuration
+  where the VNF will be deployed.
+-->
+  <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+  </capabilities>
+  </hello>]]>]]>
+  <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+  <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="0">
+  <edit-config>
+    <target><running/></target>
+    <default-operation>replace</default-operation>
+    <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+      <hss-common xmlns="urn:rdns:com:ericsson:oammodel:ericsson-hss-common">
+        <nf-profile>
+            <instance-id>9448c0d3-6590-4e54-b90f-5f7ca0dfc48d</instance-id>
+            <requested-status>registered</requested-status>
+            <fqdn>hss1.n47.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+            <service>
+                <instance-id>nhss-uecm</instance-id>
+                <name>nhss-uecm</name>
+                <scheme>http</scheme>
+                <requested-status>registered</requested-status>
+                <fqdn>hss1.n47.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                <ip-endpoint>
+                    <id>1</id>
+                    <!--<ipv4-address>${HSS_IPv4}</ipv4-address> -->
+                    <transport>tcp</transport>
+                    <port>80</port>
+                </ip-endpoint>
+            </service>
+             <service>
+                 <instance-id>nhssepc-mt</instance-id>
+                 <name>nhssepc-mt</name>
+                 <scheme>http</scheme>
+                 <requested-status>registered</requested-status>
+                 <fqdn>hss1.n47.5gc.mnc081.mcc240.3gppnetwork.org</fqdn>
+                 <ip-endpoint>
+                     <id>1</id>
+                     <!-- <ipv4-address>{HSS_IPv4}</ipv4-address> -->
+                     <transport>tcp</transport> 
+                     <port>80</port> 
+                 </ip-endpoint> 
+             </service>
+        </nf-profile>
+        <!--Info for UDM that HSS know where to connect-->
+          <remote-nf-profile>
+          <!-- List of remote-nf-profile. -->
+          <remote-nf-profile>
+            <!-- Unique ID for the remote endpoint. -->
+            <instance-id>841d1b7c-5103-11e9-8c09-174c95907e28</instance-id>
+            <!-- Type of Network Function. -->
+            <type>udm</type>
+            <!-- FQDN of the Network Function. -->
+            <fqdn>udm1.n47.5gc.mnc081.mcc240.3gppnetwork.org:82</fqdn>
+            <remote-nf-service>
+              <!-- Unique ID of the remote NF Service Instance within the NF Instance. -->
+              <instance-id>nudm-ueau-0</instance-id>
+              <!-- Name of the remote NF Service Instance. -->
+              <name>nudm-ueau</name>
+              <ip-endpoint>
+                 <id>1</id>
+                 <transport>tcp</transport> 
+                 <port>82</port> 
+                 </ip-endpoint> 
+              <version>
+                 <api-version-in-uri>v1</api-version-in-uri>
+                 <expiry>2222-10-10T00:00:00-00:00</expiry>
+              </version>
+              <scheme>http</scheme>
+            </remote-nf-service>
+            <remote-nf-service>
+              <!-- Unique ID of the remote NF Service Instance within the NF Instance. -->
+              <instance-id>nudm-uecm-0</instance-id>
+              <!-- Name of the remote NF Service Instance. -->
+              <name>nudm-uecm</name>
+              <ip-endpoint>
+                  <id>1</id>
+                  <transport>tcp</transport> 
+                  <port>82</port> 
+              </ip-endpoint> 
+              <version>
+                 <api-version-in-uri>v1</api-version-in-uri>
+                 <expiry>2222-10-10T00:00:00-00:00</expiry>
+              </version>
+              <scheme>http</scheme>
+            </remote-nf-service>
+          </remote-nf-profile>
+        </remote-nf-profile>
+      </hss-common>
+    </config>
+  </edit-config>
+  </rpc>
+  <close-session/>

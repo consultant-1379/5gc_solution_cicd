@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello
+        xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <capabilities>
+        <capability>urn:ietf:params:netconf:base:1.0</capability>
+    </capabilities></hello>
+        ]]>]]>
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rpc
+xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+<edit-config>
+    <target>
+        <running/>
+    </target>
+    <config
+            xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <udr
+                xmlns="urn:rdns:com:ericsson:oammodel:ericsson-udr">
+            <consistency-check>
+                <sftp-server>
+                    <name>sftpServerForConsistency</name>
+                    <endpoints>
+                        <endpoint>
+                            <name>sftpServerForConsistency</name>
+                            <remote-address>11.100.3.51</remote-address>
+                            <remote-port>22</remote-port>
+                            <remote-path>/root/n47-inconsistencies</remote-path>
+                            <client-identity>
+                                <username>root</username>
+                                <password>lmc_xdg</password>
+                            </client-identity>
+                            <server-authentication>
+                                <ssh-host-keys>
+                                    <local-definition>
+                                        <host-key>AAAAB3NzaC1yc2EAAAADAQABAAABAQCu+vgpZjwHdzh8MPYaBW1LPtXa3zwzt9ySLSyv4wtOx5ijJOdcY97aITsgTu/TWvBjstXVd2H8NXx+/X8xUDYbfzxMN1rbIKh0/UTT9f/J6Noetj9cnP+NT39gCc3ei/9H3YWkekfp/i1wE95R/khF7fe3+T6kFaatEzPeEXMvinqy7CHSksKNrd4kO+YvFDxtmGGDSdy8nKYppBdrAQlmmzip7s3q1dKhOKkTRLTI/NZd2ALRNpoFp0mVFEDD3QHZwyne8kSvjxl0YZqk/6egv71Lstqu7gmgjxxyFSJtFyUhjszjusfKBEnVff8OOrJr6G+sAV36oCywA/vShCoR</host-key>
+                                    </local-definition>
+                                </ssh-host-keys>
+                            </server-authentication>
+                        </endpoint>
+                    </endpoints>
+                </sftp-server>
+            </consistency-check>
+        </udr>
+    </config>
+</edit-config>
+</rpc>

@@ -1,0 +1,11 @@
+{
+  "additionalParams": {
+    "namespace": "ccdm",
+    "skipJobVerification": true,
+    "skipVerification": true,
+    "helmNoHooks": false,
+    "cleanUpResources": true,
+    "applicationTimeOut": "2000",
+    "disableOpenapiValidation": false
+  }
+}

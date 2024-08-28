@@ -1,0 +1,16 @@
+[
+	{"logplane.keyword": "adp-app-asi-logs"},
+    {"logplane.keyword": "adp-app-audit-logs"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-ingressgw-nef-sbi-traffic"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nrf-discovery-agent"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nrf-notify-agent"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nrf-register-agent"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nef-afsessionwithqos"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nef-eventexposure"},
+	{"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nef-bdtpnegotiation"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nef-trafficinfluence"},
+	{"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nef-chargeableparty"},
+	{"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-nef-pfdmanagement"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-data-message-bus-kf"},
+    {"logplane.keyword": "adp-app-logs","service_id.keyword":"eric-data-coordinator-zk"}
+]

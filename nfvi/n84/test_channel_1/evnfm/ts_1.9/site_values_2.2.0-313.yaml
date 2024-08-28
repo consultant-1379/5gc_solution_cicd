@@ -1,0 +1,145 @@
+##Version: 2.2.0-313
+global:
+  createClusterRoles: true
+  hosts:
+    gas: 'oss.evnfm.n84-eccd2.sero.gic.ericsson.se'
+    gr: ''
+    iam: 'iam.evnfm.n84-eccd2.sero.gic.ericsson.se'
+    pf: ''
+    so: ''
+    uds: ''
+    vnfm: 'eo-nbi.evnfm.n84-eccd2.sero.gic.ericsson.se'
+  ingressClass: oss_iccr
+  registry:
+    # Docker registry password
+    password: 'c0ntainerReg!stry'
+    # If deploying from the director node on a CCD environment, the url can be retrieved using:
+    # kubectl get ingress eric-lcm-container-registry-ingress -n kube-system -o jsonpath="{.spec.tls[*].hosts[0]}"; echo
+    url: 'container-registry.ingress.n84-eccd2.sero.gic.ericsson.se'
+    # Docker registry username
+    username: 'admin'
+  support:
+    ipv6:
+      enabled: false
+  timezone: CET
+tags:
+  eoCm: false
+  eoEvnfm: true
+  eoPf: false
+  eoSo: false
+  eoUds: false
+  eoVmvnfm: true
+eric-cloud-native-base:
+  eric-ctrl-bro:
+    persistence:
+      persistentVolumeClaim:
+        size: 20Gi
+    sftp:
+      password: 'Qwerasdf1234!'
+      username: 'vnfm'
+  eric-data-search-engine:
+    autoSetRequiredWorkerNodeSysctl: false
+    service:
+      network:
+        protocol:
+          IPv6: false
+  eric-sec-access-mgmt:
+    replicaCount: 2
+    ingress:
+      hostname: "iam.evnfm.n84-eccd2.sero.gic.ericsson.se"
+  eric-tm-ingress-controller-cr:
+    service:
+      loadBalancerIP: '214.14.170.107'
+      annotations:
+        cloudProviderLB: {}
+      externalTrafficPolicy: Local
+    resources:
+      envoy:
+        limits:
+          memory: 2Gi
+      contour:
+        limits:
+          memory: 1Gi
+
+  eric-log-transformer:
+    egress:
+      syslog:
+        enabled: false
+        remoteHosts: []
+geo-redundancy:
+  enabled: false
+eric-oss-common-base:
+  eric-eo-evnfm-nbi:
+    eric-evnfm-rbac:
+      defaultUser:
+        username: 'vnfm'
+        password: 'Qwerasdf1234!'
+  eric-gr-bur-orchestrator:
+    credentials:
+      username: ''
+      password: ''
+    gr:
+      bro:
+        autoDelete:
+          backupsLimit: 10
+      sftp:
+        url: ''
+        username: ''
+        password: ''
+      cluster:
+        role: ''
+        secondary_hostnames:
+        - ''
+      registry:
+        secondarySiteContainerRegistryHostname: ''
+  system-user:
+    credentials:
+      username: 'oss-day0'
+      password: 'Qwerasdf1234!'
+  gas:
+    defaultUser:
+      username: 'gas-day0'
+      password: 'Qwerasdf1234!'
+eric-eo-evnfm:
+  eric-lcm-container-registry:
+    ingress:
+      hostname: 'docker-registry.evnfm.n84-eccd2.sero.gic.ericsson.se'
+    persistence:
+      persistentVolumeClaim:
+        size: 450Gi
+    resources:
+      registry:
+        limits:
+          memory: 16Gi
+
+  eric-lcm-helm-chart-registry:
+    env:
+      secret:
+        BASIC_AUTH_PASS: "Qwerasdf1234!"
+        BASIC_AUTH_USER: vnfm
+    ingress:
+      enabled: true
+      hostname: 'helm-registry.evnfm.n84-eccd2.sero.gic.ericsson.se'
+  eric-vnfm-orchestrator-service:
+    oss:
+      topology:
+        secretName: null
+    smallstack:
+      application: true
+  eric-am-onboarding-service:
+    userSecret: container-credentials
+    resources:
+      limits:
+        memory: 32Gi
+
+
+eric-eo-evnfm-vm:
+  eric-vnflcm-service:
+    oss:
+      secretName: null
+    persistentVolumeClaim:
+      size: 20Gi
+    service:
+      enabled: false
+      externalTrafficPolicy: Local
+      loadBalancerIP: '::'

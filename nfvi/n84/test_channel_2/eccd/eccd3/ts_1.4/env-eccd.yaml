@@ -1,0 +1,600 @@
+parameters:
+  ################################### Network variables #######################
+  timezone: CET
+  ntp_server_ips: [10.221.17.6]
+  dns_server_ips: [10.221.16.10]
+  os_endpoint_ips: [10.221.12.201, 10.221.14.88]
+  director_external_network: eccd3-ccd-oam
+  director_external_subnet: eccd3-ccd-oam_subnet
+  security_groups_enabled: False
+  # The list of remote CIDRs allowed to SSH to directors when SG are enabled
+  #director_ssh_allowed_cidrs: [<fill>]
+  # VRRP traffic might need to be specifically enabled when security groups are
+  # enabled on deployments running Openstack older than Pike release
+  #allow_vrrp_address_by_mac: False
+  #receive_packet_steering: false
+
+  ### Ingress/egress via LB ###################################################
+  lb_enabled: False
+  lb_external_network: <fill>
+  lb_external_subnet: <fill>
+  # lb_external_security_groups: [<fill>]
+
+  ##################################### L4LB variables ########################
+
+  lb_image: node-image
+  lb_flavor: m1.medium
+
+  lb_root_volume_size: 20
+
+  ################################### Master variables ########################
+  master_image: eccd-2.17.2-3-0d0fce92-node-image
+  master_flavor: MGMT_4vcpu_16384MBmem_0GBdisk
+  masters_count: 3
+
+  master_root_volume_size: 20
+  master_config_volume_size: 10
+  
+  # managed-on-host, ha-offline, unmanaged
+  master_metadata:
+    ha-policy: ha-offline
+
+  ################################### Director variables ######################
+  director_image: eccd-2.17.2-3-0d0fce92-director-image
+  director_flavor: MGMT_2vcpu_8192MBmem_0GBdisk
+  directors_count: 2
+
+  director_root_volume_size: 150
+  director_config_volume_size: 10
+
+  director_virtual_router_id: 50
+  director_external_vip: 10.117.60.22
+
+  # managed-on-host, ha-offline, unmanaged
+  director_metadata:
+    ha-policy: ha-offline
+
+  ################################## Licensing variables ######################
+  ccd_licensing_domains:
+  - productType: ECCD
+    swltId: STA-CCD-1
+    customerId: 946060
+  ccd_licensing_nels_host: 10.221.14.88
+
+  ansible_variables:
+    openstack_auth_url: https://gic-n84-ctrl.sc.sero.gic.ericsson.se:5000
+    infra_node_pool_name: pool1
+    kube_manager_kube_api_burst: 100
+    kube_manager_kube_api_qps: 100
+    kube_manager_attach_detach_reconcile_sync_period: 5m0s
+    kube_manager_disable_attach_detach_reconcile_sync: True
+    openstack_username: admin
+    openstack_user_password: C0ll6UyhGtxkvjGd9si0XEBx
+    openstack_project_name: admin
+    openstack_domain_name: Default
+    openstack_region: RegionOne
+    ecfe_enabled: true
+    ingressctrl_service_annotations: 'metallb.universe.tf/address-pool: system-pool'
+    ecfe_config_map_raw:
+      bgp-bfd-peers:
+      - peer-address: 11.2.27.254
+        peer-asn: 8002
+        my-asn: 7002
+        hold-time: 180s
+        min-rx: 500ms
+        min-tx: 500ms
+        multiplier: 3
+        my-address-pools:
+        - smf-nsmf
+        - smf-notification
+        - udr-signaling
+        - ausf-signaling
+        - nrf-signaling
+        - udm-signaling
+        - amf-namf
+        - nssf-signaling
+        - bsf-sig-http
+        - bsf-sig-diameter
+      - peer-address: 11.1.70.254
+        peer-asn: 4247584822
+        my-asn: 7010
+        hold-time: 180s
+        min-rx: 500ms
+        min-tx: 500ms
+        multiplier: 3
+        my-address-pools:
+        - system-pool
+        - pcc-oam
+        - pcg-oam
+        - ccdm-oam
+        - ccdm-prov
+        - ccsm-oam
+        - ccrc-oam
+        - ccrc-prov
+        - eda-oam
+        - sc-oam
+        node-selectors:
+        - match-labels:
+            type: test
+      - peer-address: 11.1.68.254
+        peer-asn: 8018
+        my-asn: 7018
+        hold-time: 180s
+        min-rx: 500ms
+        min-tx: 500ms
+        multiplier: 3
+        my-address-pools:
+        - ccdm-intersite
+      address-pools:
+      - name: smf-nsmf
+        protocol: bgp
+        addresses:
+        - 5.8.6.17/32
+        auto-assign: false
+      - name: smf-notification
+        protocol: bgp
+        addresses:
+        - 5.8.6.18/32
+        auto-assign: false
+      - name: udr-signaling
+        protocol: bgp
+        addresses:
+        - 5.8.6.20/32
+        auto-assign: false
+      - name: ausf-signaling
+        protocol: bgp
+        addresses:
+        - 5.8.6.21/32
+        auto-assign: false
+      - name: nrf-signaling
+        protocol: bgp
+        addresses:
+        - 5.8.6.22/32
+        auto-assign: false
+      - name: udm-signaling
+        protocol: bgp
+        addresses:
+        - 5.8.6.23/32
+        auto-assign: false
+      - name: amf-namf
+        protocol: bgp
+        addresses:
+        - 5.8.6.25/32
+        auto-assign: false
+      - name: nssf-signaling
+        protocol: bgp
+        addresses:
+        - 5.8.6.26/32
+        auto-assign: false
+      - name: bsf-sig-http
+        protocol: bgp
+        addresses:
+        - 5.8.6.27/32
+        auto-assign: false
+      - name: bsf-sig-diameter
+        protocol: bgp
+        addresses:
+        - 5.8.6.28/32
+        auto-assign: false
+      - name: system-pool
+        protocol: bgp
+        addresses:
+        - 214.12.117.193/32
+        auto-assign: false
+      - name: pcc-oam
+        protocol: bgp
+        addresses:
+        - 214.12.117.194/32
+        auto-assign: false
+      - name: pcg-oam
+        protocol: bgp
+        addresses:
+        - 214.12.117.195/32
+        auto-assign: false
+      - name: ccdm-oam
+        protocol: bgp
+        addresses:
+        - 214.12.117.196/32
+        auto-assign: false
+      - name: ccdm-prov
+        protocol: bgp
+        addresses:
+        - 214.12.117.197/32
+        auto-assign: false
+      - name: ccsm-oam
+        protocol: bgp
+        addresses:
+        - 214.12.117.198/32
+        auto-assign: false
+      - name: ccrc-oam
+        protocol: bgp
+        addresses:
+        - 214.12.117.199/32
+        auto-assign: false
+      - name: ccrc-prov
+        protocol: bgp
+        addresses:
+        - 214.12.117.200/32
+        auto-assign: false
+      - name: eda-oam
+        protocol: bgp
+        addresses:
+        - 214.12.117.201/32
+        auto-assign: false
+      - name: sc-oam
+        protocol: bgp
+        addresses:
+        - 214.12.117.202/32
+        auto-assign: false   
+      - name: ccdm-intersite
+        protocol: bgp
+        addresses:
+        - 5.8.6.34/32
+        auto-assign: false
+    kube_network_extra_plugin: multus
+    calico_ipv4pool_ipip_mode: "Off"
+    openstack_node_volume_attach_limit: 22
+    ingressctrl_loadbalancer_ip: 214.12.117.193
+    kube_api_ingress_host: kubeapi.ingress.n84-eccd3.sero.gic.ericsson.se
+    container_registry_hostname: container-registry.ingress.n84-eccd3.sero.gic.ericsson.se
+    container_registry_custom_pw: admin
+    container_registry_storage_size: 20Gi
+
+  ################################### Worker variables ########################
+
+  node_pools:
+  - name: pool1
+    image: eccd-2.17.2-3-0d0fce92-node-image
+    flavor: TEST_36vcpu_69632MBmem_0GBdisk
+    count: 7
+    root_volume_size: 200
+    # managed-on-host, ha-offline, unmanaged
+    metadata:
+      ha-policy: ha-offline
+
+    cpu_manager_policy: "none"
+    reserved_cpus: ""
+    isolate_interrupts: false
+
+    use_trunks: true
+    external_networks:
+    
+    - network: eccd3-ecfe-signaling
+      subnet: eccd3-ecfe-signaling_subnet
+
+      port_extra_properties:
+        port_security_enabled: false
+
+    - network: eccd3-ecfe-oam
+      subnet: eccd3-ecfe-oam_subnet
+      port_extra_properties:
+        port_security_enabled: false
+
+    - network: eccd3-ecfe-intersite
+      subnet: eccd3-ecfe-intersite_subnet
+      port_extra_properties:
+        port_security_enabled: false
+
+
+    labels: "type=test"
+    node_role: "worker"
+    server_group_policies: ['soft-anti-affinity']
+    nova_availability_zone: 5GC-AZ1
+    cinder_availability_zone: nova
+    pre_join_user_script: |
+      #!/usr/bin/env bash
+      set -ue
+
+      mv /lib/modules/*/kernel/net/sctp/sctp.ko /home/eccd/
+
+      cat << EOF > apparmor-docker-pcc
+      #include <tunables/global>
+
+      profile docker-pcc flags=(attach_disconnected,mediate_deleted) {
+        #include <abstractions/base>
+        network,
+        capability,
+        file,
+        mount,
+        umount,
+        ptrace peer=@{profile_name},
+      }
+      EOF
+
+      mv apparmor-docker-pcc /etc/apparmor.d/
+      systemctl restart apparmor
+
+      modprobe ip6table_mangle
+      modprobe nf_conntrack_ipv6
+      modprobe nf_conntrack_proto_gre
+      echo "ip6table_mangle" >> /etc/modules-load.d/ipv6.conf
+      echo "nf_conntrack_ipv6" >> /etc/modules-load.d/ipv6.conf
+      echo "nf_conntrack_proto_gre" >> /etc/modules-load.d/ipv6.conf
+
+      # Increase rmem/wmem kernel network core parameters
+      cat << EOF >> /etc/sysctl.conf
+      net.core.rmem_max = 8388608
+      net.core.wmem_max = 8388608
+      net.core.rmem_default = 8388608
+      net.core.wmem_default = 8388608
+      EOF
+      sysctl -p
+
+  - name: pool2
+    image: eccd-2.17.2-3-0d0fce92-node-image 
+    flavor: HT_48vcpu_82944MBmem_0GBdisk
+    count: 2
+    root_volume_size: 30
+    # managed-on-host, ha-offline, unmanaged
+    metadata:
+      ha-policy: ha-offline
+
+    external_networks:
+
+# HT worker eth1
+    - network: eccd3-ecfe-oam
+      subnet: eccd3-ecfe-oam_subnet
+      port_extra_properties:
+        port_security_enabled: false
+
+    # HT worker eth2
+    - network: sriov-flat-left
+      subnet: sriov-flat-left_subnet
+      port_extra_properties:
+        port_security_enabled: false
+        binding:vnic_type: direct
+
+    # HT worker eth3
+    - network: sriov-flat-right
+      subnet: sriov-flat-right_subnet
+      port_extra_properties:
+        port_security_enabled: false
+        binding:vnic_type: direct
+
+    # HT worker eth4
+    - network: sriov-flat-left
+      subnet: sriov-flat-left_subnet
+      port_extra_properties:
+        port_security_enabled: false
+        binding:vnic_type: direct
+
+    # HT worker eth5
+    - network: sriov-flat-right
+      subnet: sriov-flat-right_subnet
+      port_extra_properties:
+        port_security_enabled: false
+        binding:vnic_type: direct
+
+    # HT worker eth6
+    - network: sriov-flat-left
+      subnet: sriov-flat-left_subnet
+      port_extra_properties:
+        port_security_enabled: false
+        binding:vnic_type: direct
+
+    labels: "type=high-throughput"
+    node_role: "worker"
+    server_group_policies: ['soft-anti-affinity']
+    nova_availability_zone: 5GC-AZ1
+    cinder_availability_zone: nova
+
+    hugepage_type: 1GB
+    hugepage_number_1gb: 4
+    cpu_manager_policy: static
+    reserved_cpus: "0"
+    isolate_interrupts: true
+
+    pre_join_user_script: |
+      #!/usr/bin/env bash
+      set -ue
+      # Taint HT workers
+      sed -i "s/KUBELET_EXTRA_ARGS=/&--register-with-taints=high-throughput=true:NoSchedule /" /usr/local/lib/systemd/system/kubelet.service
+
+      # Bind SR-IOV VF to DPDK driver
+      ifdown eth2
+      ifdown eth3
+      ifdown eth4
+      ifdown eth5
+      ifdown eth6
+      ifdown eth7
+      driverctl set-override 0000:00:06.0 igb_uio
+      driverctl set-override 0000:00:07.0 igb_uio
+      driverctl set-override 0000:00:08.0 igb_uio
+      driverctl set-override 0000:00:09.0 igb_uio
+      driverctl set-override 0000:00:0a.0 igb_uio
+      driverctl set-override 0000:00:0b.0 igb_uio
+
+      # Increase rmem/wmem kernel network core parameters
+      cat << EOF >> /etc/sysctl.conf
+      net.core.rmem_max = 8388608
+      net.core.wmem_max = 8388608
+      net.core.rmem_default = 8388608
+      net.core.wmem_default = 8388608
+      EOF
+      sysctl -p
+
+  subport_data:
+    pool1:
+      subportsets:
+        subportset1:
+          - network_id: 51a36ddc-a192-45a6-8dda-35a185c0eafc
+            vlan_id: 3123
+          - network_id: 79345158-5a6e-4534-997c-c21cf7b20b69
+            vlan_id: 3904
+          - network_id: f73ae312-335f-410b-8ae5-3dba31e1885f
+            vlan_id: 3929
+          - network_id: 729feeee-ee66-4230-961d-ff8e261dafa7
+            vlan_id: 3902
+          - network_id: c814e3a1-5b15-4300-9ed5-3dca495b9531
+            vlan_id: 3727
+          - network_id: a2338e87-034e-45ac-9953-e631be5a48e9
+            vlan_id: 3901
+          - network_id: c64222e9-7a1c-499e-afa2-efbb0b3e7440
+            vlan_id: 3952
+          - network_id: 70481169-e046-41bb-bfa9-72c3a127ac38
+            vlan_id: 3851
+          - network_id: c2a3a52c-5cc7-4b90-973d-656845f05916
+            vlan_id: 3854
+          - network_id: 512819a9-c2f2-434d-9882-e290d32ec7a3
+            vlan_id: 3977
+          - network_id: 5fcd34ce-2ac5-4805-902d-7d25f4a50e40
+            vlan_id: 3714
+          - network_id: b0bebba2-67b9-44da-9cde-44a369a90a3d
+            vlan_id: 3855
+      nicsets:
+        0:
+          - subportset1
+        1:
+
+  ################################### Logger variables ########################
+  logger_enabled: False
+
+  ################################### Other variables #########################
+  nova_availability_zone: 5GC-AZ1
+  master_server_group_policies: ['anti-affinity']
+  director_server_group_policies: ['anti-affinity']
+  cinder_availability_zone: nova
+
+  os_cacert: |
+    -----BEGIN CERTIFICATE-----
+    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
+    tRq4ImVO9Ddg1VngqJRZvro+zlH3pQ==
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    MIIGhTCCBG2gAwIBAgITJAAAAAgZo51IZLn3FgAAAAAACDANBgkqhkiG9w0BAQsF
+    ADAVMRMwEQYDVQQDEwpFR0FEUm9vdENBMB4XDTE5MDUwMjEwNTgzNVoXDTI5MDUw
+    MjExMDgzNVowRzESMBAGCgmSJomT8ixkARkWAnNlMRgwFgYKCZImiZPyLGQBGRYI
+    ZXJpY3Nzb24xFzAVBgNVBAMTDkVHQURJc3N1aW5nQ0EzMIICIjANBgkqhkiG9w0B
+    AQEFAAOCAg8AMIICCgKCAgEAorS/FxfmNVug9Q963xTydgf5JD/XHEQ0HAypY0Mw
+    omgZA1Sj1cRFjFzqVbZlQB/d0RUeN8K9+wzpXl2sDiDTYFKc4v3sesmVrT+VHOtf
+    2G1Wuw+7OjMURFhoGNz56vDEL10KH86ViPF0Rx3R5/myKYgn/AX6rdVPSsBPyhAe
+    YDdsNX3yWrvxr6x3P5Ze8L5cfgDmw1NR3sR3j9mJSKxEpJHo/6z+wh1xOgV7z8Kj
+    Tzdl0+103ZvPw8wpnX3JGwOy5O/lIXMFctMEvZoD/eIerPtYEdjk8HrGbWWu66VK
+    EoXopl0/3MbPypVdizPcRBq7ldaCDDdLMi2LjFvZbD0UwHHjR/piIE/YsdPLxi1o
+    KSO2vPJHSPjpQ0JtP0gcAGR1wSFQCiOzklupMzZ1PMSySbT04woRnUDdTu9BMzIi
+    OV5scI+KtJ1JmPqHq3nCS2nkA0grSNbsbB0bz/mrJLX+wH3CXNj0r0gBIDKlaPQb
+    8UzrahG3uuIGk4/x8gnU/wh5WYeU89o+3neIgXySK5chnjfevWBwYVF1vddYltpf
+    DFZYuFwT+zefeMEiPnseW6JSnRvNljz1XsBlPC++UydVJDGkp+WzeCR46J6iCVeK
+    kWKoLv+BtNIbue7SJw0GdGWBJ0DzKdPBmp+Ya5YPDE1g8SqrfdlO61ykJQ1L6EGf
+    Sb0CAwEAAaOCAZowggGWMBAGCSsGAQQBgjcVAQQDAgEAMB0GA1UdDgQWBBSBekIQ
+    iZ64URB+VptBwt+veMU9JDB5BgNVHSAEcjBwMG4GBFUdIAAwZjBkBggrBgEFBQcC
+    AjBYHlYAVABoAGkAcwAgAFAASwBJACAAaQBzACAAaQBuAHQAZQBuAGQAZQBkACAA
+    ZgBvAHIAIABpAG4AdABlAHIAbgBhAGwAIAB1AHMAZQAgAG8AbgBsAHkALjAZBgkr
+    BgEEAYI3FAIEDB4KAFMAdQBiAEMAQTALBgNVHQ8EBAMCAYYwEgYDVR0TAQH/BAgw
+    BgEB/wIBADAfBgNVHSMEGDAWgBRWRUJaFKi5LET+mzXE2+4vOYJN0DA/BgNVHR8E
+    ODA2MDSgMqAwhi5odHRwOi8vcGtpLmVyaWNzc29uLnNlL0NlcnREYXRhL0VHQURS
+    b290Q0EuY3JsMEoGCCsGAQUFBwEBBD4wPDA6BggrBgEFBQcwAoYuaHR0cDovL3Br
+    aS5lcmljc3Nvbi5zZS9DZXJ0RGF0YS9FR0FEUm9vdENBLmNydDANBgkqhkiG9w0B
+    AQsFAAOCAgEAk6hklv9NPua9UImj08ILq43l9SgFhg5+y1pRsrUwdTmFANkL0dxi
+    TOF93QwFTfwOs1xJr2nzvCsoJ2Rvc04VQlONwiTqn1kMs9vJr2fuQg9hf2O9l0ss
+    AftlHq+UxbeIhloGTyJgleJUc2/+pm4UJn8fhZvNZywL8ok4xr5HQRH5xQz21X4i
+    VF9RJlvZbsdWLX1iJMs8+oZJQmhRxoHsPylg+24xLuKFuva7BevDub4HpF6utXeE
+    qRMN8Yd1HPg55abf8wEqt1VqNp2erZfLETdf59aXdznqeI+ZJl8gQZwBsOlSANct
+    n0nj306BlYm6jthXb7T/Bgau48qyrH/vEnwawZ+RH2q1UvGiAMY1/L5PAP4LGubP
+    q5VHsibvoQz+jld2bWM4X8y7Z93s33/elZo26pNuYWiE67IVmZntoHJZmq0RfI7V
+    cG27eExeNXYc7T0HheK32CguyDsDUURHOMfMzUJBzDnZ8zQWWeOsKCut9xcpxpPW
+    7XQB+iH59lFgRF0WW3H4Z3jh7Kvfbr6XsbzEx/onzLaEVrXBf1xKlXgV5rZW69w1
+    It5HdRmqOsfW32Bdz9JehI+Z/Iql9UFDsM1lS9dWfMj4Kv3ALpmG5uS3SjU5y1+e
+    7EaQhOp85z15UYt9yoS7KqaNZ07bZb2uzBs32lN/Bn1vwPoLA60kI48=
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    MIIDfTCCAmWgAwIBAgIJAJoYITC1EICjMA0GCSqGSIb3DQEBCwUAMFUxCzAJBgNV
+    BAYTAlNFMQswCQYDVQQIDAJTVDELMAkGA1UEBwwCU1QxETAPBgNVBAoMCEVyaWNz
+    c29uMRkwFwYDVQQDDBBDRUUgVGVzdCBSb290IENBMB4XDTIwMDcwNzA3NTQzN1oX
+    DTMwMDcwNTA3NTQzN1owVTELMAkGA1UEBhMCU0UxCzAJBgNVBAgMAlNUMQswCQYD
+    VQQHDAJTVDERMA8GA1UECgwIRXJpY3Nzb24xGTAXBgNVBAMMEENFRSBUZXN0IFJv
+    b3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC8nc3d0AVlsT1i
+    H6OfXCvAPVgO1NkTbUo59E1Xizwo0BS0WSa//i4nWVvgHcmjv1ENC//aLYZWwybp
+    H6RI66WpnQn4/S5oxgbxSPTIgaAkWi3PopguerBWZm9HjkFKvW/9ui1IdEUa20qE
+    EbOqIEsX1sATXAVbc2BkWYxOS9foNmbzlkn5oUvC1lwzyJmgNbfW5HPzvO+IwMsc
+    1wBr0u1iwgkA6ZWvwHF85YkzUTLi1zLo17W2cyHbYCixI2QHESGpD646q0QhV56t
+    n8k+1Af6heN7LmyQkZIm3hphixQdVcvUsXSuUQBK1V/Afl1z0pHqLTtzzNbQrZQ+
+    eg7mgRybAgMBAAGjUDBOMB0GA1UdDgQWBBT0Nczxb9ZiM+ajmljSicWLOyYitjAf
+    BgNVHSMEGDAWgBT0Nczxb9ZiM+ajmljSicWLOyYitjAMBgNVHRMEBTADAQH/MA0G
+    CSqGSIb3DQEBCwUAA4IBAQCF0Lje2TKtlGBtWSVFSrPcggiKsIQMGgREi1xnv0V3
+    WpeDRBU3rTZwdnKI0Ggm/rjFsvaes8yDUTCVLsplBvDTSdRzTjgUFRsRxCRU2XQH
+    NtlzXDdfYGb4zM5nToTRFiAw71l18J5HP1UY6Dsr/76x99lMXMlg9abEblz5ugm9
+    e/TrwEeHBKj47xoIeal38FXyAi5obVWWirhPR65wTtdDK1MyoYgVugZfJ1Z0YZwb
+    WX7JHXtALlDCSfXoSlTJEJ27OJfDxy/VguEAepQeVCUrvpHxcg1GedyblK+Bt6Q1
+    wxw1lA5fgbFbXy/itcQQT2WOSiqMHjEYYNKM0aRVr/WO
+    -----END CERTIFICATE-----  
+
+  ca_cert: |
+    -----BEGIN CERTIFICATE-----
+    MIIDAzCCAeugAwIBAgIJAMSmaEvd/VMQMA0GCSqGSIb3DQEBCwUAMBgxFjAUBgNV
+    BAMMDUt1YmVybmV0ZXMtY2EwHhcNMjAwNzEwMDMwNDQyWhcNNDcxMTI2MDMwNDQy
+    WjAYMRYwFAYDVQQDDA1LdWJlcm5ldGVzLWNhMIIBIjANBgkqhkiG9w0BAQEFAAOC
+    AQ8AMIIBCgKCAQEA2wyPymF3Nk/HD77qdg4zMz0m4VDcRCDCTwkvHhVwJM6LoX0z
+    rlrorVRL6KyAkJRvxdjqJ2ioGwLduI911xojd+70eU6ws0H8mrL+M3jkisRm9j/H
+    CjWyMcPCeXPfGq2myBs43w+b/vHIGSHw30bPqR2ZCU3oMIBTrYtZObTP6WrXkPap
+    5Vp+r+JUux6QYILF7Jr+o9YHdfTMYzxD2Y3ryyetcmj6G6poRAJn5jQksUDzrWaa
+    G8sYJD6+0yyYXajgEP6MN71hsDieNiejFVdCFPx7aRQmKZeYiGWxttXkOTaznXBn
+    xars4eQm4zvhz9qw2YBFgr+3+LQgMrEP72dROwIDAQABo1AwTjAdBgNVHQ4EFgQU
+    Mc5NugDUN7qggOCf40HMyQlyX5gwHwYDVR0jBBgwFoAUMc5NugDUN7qggOCf40HM
+    yQlyX5gwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAFllDan/0tA5X
+    //OHz0qUo+PPz9xctye+PRe/MUIFQqUQsg4XAABlxsp3N4xC2VsD/ncZAcfcy9aY
+    rf7s53+b2Fy0ENJLKjvEZBWo+DDQL786s/HoUwV34LcHDRIfo/W4JjwPE9Aj0SP+
+    XicqykZR5nPtWSxalDNylydFTqHSwij+JetWtxXG6/hQUfVRIUS4uKO40sEB4Rph
+    nICfPQxQqb7L4FrWpTEp3fW/Vq1hvMlnVj9qorImsvvSvL/s7a6h6DpJiJU8+JdN
+    ZchFa7zTBL3VCmx+puUwYDAWiA0sszZWZcxZZWTqBp2/uo872CuevZ3jBx7de9i/
+    aw99cpwQjw==
+    -----END CERTIFICATE-----
+  ca_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpAIBAAKCAQEA2wyPymF3Nk/HD77qdg4zMz0m4VDcRCDCTwkvHhVwJM6LoX0z
+    rlrorVRL6KyAkJRvxdjqJ2ioGwLduI911xojd+70eU6ws0H8mrL+M3jkisRm9j/H
+    CjWyMcPCeXPfGq2myBs43w+b/vHIGSHw30bPqR2ZCU3oMIBTrYtZObTP6WrXkPap
+    5Vp+r+JUux6QYILF7Jr+o9YHdfTMYzxD2Y3ryyetcmj6G6poRAJn5jQksUDzrWaa
+    G8sYJD6+0yyYXajgEP6MN71hsDieNiejFVdCFPx7aRQmKZeYiGWxttXkOTaznXBn
+    xars4eQm4zvhz9qw2YBFgr+3+LQgMrEP72dROwIDAQABAoIBAQCKvDYGFB0RBQ4q
+    5txQ0UWUWlLZugEIFUd8D3EMOL/CUB8XtNiawXFE9nLtdvQmnhz8zhnfw+VU1kff
+    sN0N07xLJckpW7GGl3CJ+nwN1a/KRAKCTHqf+MpXwojVq5HOr9VGQBeRD63ZlwEJ
+    CfopMAwuLFTVE8bPkTduXyev6NkWGC1gVp0PH6/TSkJ3pKOOJuALJsinoVhLCybt
+    jb96nBeKXQERFZcSjKMTaipHwDGpXDVMIqFBICKRkNhBzqDs7OTdqCNUPpcmlZ1g
+    Vb77g2rXOm45pFgQ5qpogPWLNl69NvUbP7t2MNurYW87jLZv1tORMNwDJLhvIxMd
+    FMBsB23BAoGBAO1DW0P34e0FPHvhODn1XQEoOHpIWWfK2tncw64f62Kfc+7s30fd
+    d3J1xbwvNJDJ5bLtLN/ocxp/s7x+kQW1lDEmsZkjPAqLy/pCC3P73kePxL35rNa7
+    rahJbgedrZUI4vDVjGDfFGFSbnnvQiHkRcBxZLSUawnYRkaQ3nCI76Q5AoGBAOxY
+    +ty6M8VhkAcrai2+yc9pe7scGO7U8euppW2vATsATekD2zRs5quyYIF30/os/PkC
+    MYDxcRT+pClEmpG4y7kjNTxSoxFkorFJuF+kZh3B5eBLGSU2HkSGC6Jsw7F59N2u
+    n6AKNaFRW84taFUx1YEFksONvlHJt5/BZq6w2SkTAoGAVJhqhw5wAHmYejbwPEIO
+    2iXEFV2MeyRp6bn8Dy6UV8KwrGTKq638M9RoH1PZczJ5ctV75Y3U1ILpy/B4tsdq
+    QiggtJBKjRwRK3a27LDGLU/Gf1HxXVLndRRRZefDh1r2x5XsinGfq5+fglxbgQgK
+    ErabiINOsuDpFan7lbZNc4kCgYBAUocTg2mLkl3MVbhz8rShyiduaNswRKwCYw0u
+    qK5BDHgnrnD995VfrRAurBn4wD2o1zv5x7vq5tJumMkoV466OCbI4ASZOzY74cBX
+    5zoTZy3UuRuC0ROzund4IPmxV2uY2Wl/+MdXu/isSBdY+FMO5iFnLzBYuflLdSso
+    5+ByGQKBgQCDK4PcuQ3HwfhY5tuKBLnCT94sIZ/kjiPE3GYpWaNMRvEAGGf25C3Y
+    gXRgyKlwCacrX2J1ycnBubvChG5RGD7b3zBTyXkb7nhsmKKXQaNRoIoqQhMx8kkn
+    3Io5i+/TVONAovqjCA0IhVSnXGCdDxwp7gm87Hi7yoWbxurJA6zWlw==
+    -----END RSA PRIVATE KEY-----
+
+  public_key: >
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDTX1jCVCL+psT8QconG5b9eXx92HUSsdolZw+0/UNI0KHZOu9ZCER8vN28H4od2V5p9AoSH4SQEzKuO3ACiGOtrWcDd6s+SaY62pgPoTpnw0TZbABloYZmRmRYLinjIZGxz8Dk4Hn6gTK/UhHFAP/4v4ttk+0Gz9JrL63NJAqu34+9uNJkpaCDzscsfvqxhsGPu/XDrtlDBIHqBGoX0T71xMv+yeOfNvDURibHB3e1a7jPkTJX3w50sDJkfpeR8YgcP8jn9Yq2MhjLWHHoSladbSWuB6GzfVlzdpWFgTArlhDx+/skphVL6ZuLPYjuOk7D7vIZ2l6fcWKgJsVI3eO5 ceeadm@cic-1.domain.tld

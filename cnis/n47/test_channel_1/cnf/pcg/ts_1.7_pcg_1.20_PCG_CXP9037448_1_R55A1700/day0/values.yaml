@@ -1,0 +1,217 @@
+---
+global:
+  timezone: CET
+  applicationid: eric-n47-pcg001
+  ericsson:
+    licensing:
+      licenseDomains:
+        - productType: 'PACKET_CORE_GATEWAY'
+          customerId: '946060'
+          swltId: 'STA-PCG-20'
+
+eric-pc-kvdb-rd-server:
+  numberOfMaster: 7
+
+eric-cloud-native-base:
+  eric-data-search-engine:
+    autoSetRequiredWorkerNodeSysctl: false
+  eric-fh-snmp-alarm-provider:
+    service:
+      annotations:
+        addressPoolName: pcg-oam
+        sharedVIPLabel: pcg-oam
+      oamVIP:
+        enabled: false
+  eric-lm-combined-server:
+    licenseServerClient:
+      licenseServer:
+        thrift:
+          host: 10.155.142.68
+          port: 9095
+  # not fully aligned with hammers due to n47 IP etc
+  eric-odca-diagnostic-data-collector:
+    env:
+      sftphost: "11.100.3.51:22"
+      sftpFileLocation: pcg-ddc
+    sftpCredentials:
+      username: "root"
+      password: "lmc_xdg"
+    resources:
+      promReceiver:
+        limits:
+          cpu: '3'
+          memory: 32Gi
+          ephemeral-storage: 30Gi
+        requests:
+          cpu: 1600m
+          memory: 800M
+          ephemeral-storage: 24Gi
+  eric-pm-server:
+    enabled: true
+    resources:
+      eric-pm-server:
+        limits:
+          cpu: 3500m
+          memory: 16Gi
+        requests:
+          cpu: 2
+          memory: 12Gi
+      eric-pm-exporter:
+        limits:
+          memory: "64Mi"
+        requests:
+          memory: "16Mi"
+    rbac:
+      appMonitoring:
+        configFileCreate: false
+    server:
+      retention: 5d
+      configMapOverrideName: eric-pc-gateway-pm-server
+      persistentVolume:
+        enabled: true
+        size: 48Gi
+  eric-si-application-sys-info-handler:
+    resources:
+      eric-si-application-sys-info-handler:
+        limits:
+          cpu: "100m"
+          memory: 150Mi
+        requests:
+          cpu: "50m"
+          memory: 50Mi
+
+eric-pc-up-data-plane:
+  replicaCount: 24
+  acceleratedIo:
+    enabled: true
+    driver: bifurcated
+  tolerations:
+    - key: high-throughput
+      effect: NoSchedule  
+  applications:
+    - name: app100
+  resources:
+    dataPlane:
+      requests:
+        cpu: '12'
+        memory: 18Gi
+        hugepages-1Gi: 1Gi
+        mellanox.com/mlnx_left: "1"
+        mellanox.com/mlnx_right: "1"
+      limits:
+        cpu: '12'
+        memory: 18Gi
+        hugepages-1Gi: 1Gi
+        mellanox.com/mlnx_left: "1"
+        mellanox.com/mlnx_right: "1"
+  interfaces:
+    - name: net1
+      type: sriov
+      resourceName: 'mellanox.com/mlnx_left'
+    - name: net2
+      type: sriov
+      resourceName: 'mellanox.com/mlnx_right'
+  nodeSelector:
+    node-pool: pool2
+
+
+# in hammers ts1.7 replica is 12
+eric-pc-up-pfcp-endpoint:
+  replicaCount: 8
+
+eric-pc-routing-engine:
+  interfaces:
+    type: ovs
+    ovs:
+    - bridge: br_data
+      vlan_mode: trunk
+      trunk:
+        - minID: 164
+          maxID: 165
+        - minID: 167
+          maxID: 168
+      mtu: 9000
+
+eric-cloud-native-nf-additions:
+  eric-cm-yang-provider:
+    service:
+      annotations:
+        addressPoolName: pcg-oam
+        sharedVIPLabel: pcg-oam
+  eric-data-sftp-server:
+    service:
+      annotations:
+        sharedVIPLabel: pcg-oam
+        addressPoolName: pcg-oam
+    configuration:
+      object_policy: ""
+      bucket_policy: "system-troubleshooter coredump r:up-troubleshooter coredump r:up-troubleshooter heuristics rw:up-operator heuristics rw:up-admin heuristics rw:system-troubleshooter itc r:system-trace-admin itc r:up-troubleshooter itc r:up-trace-admin itc r:system-read-only eric-pmbr-rop-file-store r:system-trace-admin eric-pmbr-rop-file-store rw"
+      default_bucket_policy: "system-admin * rw:system-security-admin * rw"
+  eric-sec-admin-user-management:
+    enabled: true
+    day0AdminUser:
+      admin:
+        secret: eric-pc-gateway-ldap-server-secret
+    ldap:
+      day0LdapClientSimpleBindAllowed: false
+      notifierEnabled: true
+  eric-sec-ldap-server:
+    adminCredentials:
+      adminuser: day0
+      adminpasswd: "$6$XcFGoO/Kh1Ruh8ng$J3pHByyQ8Wpq2J5M2H6Ukkf9acGwOWHwvtimlT4.BR0Mtq9264b2ktiEmjRczmQWqFVCkYAiJb3rxXAPtlxLk1"
+
+  eric-cnom-server:
+    service:
+      type: LoadBalancer
+    annotations:
+      metallb.universe.tf/address-pool: pcg-oam
+      metallb.universe.tf/allow-shared-ip: pcg-oam
+
+  eric-pm-bulk-reporter:
+    service:
+      annotations:
+        addressPoolName: pcg-oam
+        sharedVIPLabel: pcg-oam
+
+snmp-alarm-provider-secret-creation:
+  enabled: false
+
+eric-probe-event-report-broker:
+  ebm:
+    enabled: false
+
+
+
+#####   the config here onwards is not present in hammers config       
+
+eric-cm-mediator:
+  cmm:
+    restWorkers: 2
+#    debug: True
+#    logLevel: "Debug"
+#    kafkaLogLevel: "Debug"
+#    kafkaProducerConfig: "{\"max_request_size\": 2097152}"
+
+eric-data-document-database-pg:
+  persistentVolumeClaim:
+    enabled: true
+    storageClassName: network-block
+#  postgresConfig:
+#    client_min_messages: debug5
+#    log_min_messages: debug5
+#    log_min_error_statement: debug5
+
+eric-data-document-database-pg-cm:
+  persistentVolumeClaim:
+    enabled: true
+    storageClassName: network-block
+#  postgresConfig:
+#    client_min_messages: debug5
+#    log_min_messages: debug5
+#    log_min_error_statement: debug5
+
+eric-data-object-storage-mn:
+  affinity:
+    podAntiAffinity: hard
+
+

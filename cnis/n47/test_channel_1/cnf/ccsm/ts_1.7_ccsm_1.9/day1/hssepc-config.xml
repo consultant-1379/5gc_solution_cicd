@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  Notice that it is a configuration template in XML format
+  compliant with NF YANG model.  This XML template provides
+  a configuration skeleton that shall be modified before
+  loading into the yang service.  Some parts of the document
+  must be deleted or added depending on the network configuration
+  where the VNF will be deployed.
+-->
+  <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+  </capabilities>
+  </hello>]]>]]>
+  <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+  <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="0">
+  <edit-config>
+    <target><running/></target>
+    <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+      <!--
+        Configuration for the hssepc Network Function.
+      -->
+      <hssepc xmlns="urn:rdns:com:ericsson:oammodel:ericsson-hssepc">
+        <!-- Multi-NF features state  -->
+        <features>
+          <!--
+            Contains configuration parameters for epc feature.
+          -->
+          <iratmobility4g5g>
+            <!--
+              The feature can be activated/deactivated by the operator, in runtime, via the NBI.
+            -->
+            <oam-activated>true</oam-activated>
+            <!-- feature activation oam parameter exposed or not -->
+            <oam-exposed>true</oam-exposed>
+          </iratmobility4g5g>
+        </features>
+        <!-- States the eps-diameter -->
+        <eps-diameter>
+            <server>
+                <!-- Specify the origin realm of the Diameter Node, by default it should be read from environment variable -->
+                <realm>ericsson.se</realm>
+                <!-- Specify the origin host of the Diameter Node, by default it should be read from environment variable -->
+                <host>esm.ericsson.se</host>
+            </server>
+            <timeout-incoming-request>5000</timeout-incoming-request>
+            <timeout-outgoing-request>1000</timeout-outgoing-request>
+            <enable-trace>false</enable-trace>
+            <request-reattempts>5</request-reattempts>
+            <reattempt-delay-time>1000</reattempt-delay-time>
+            <early-rejection>
+                <!-- external busy ratio. -->
+                <external-busy-ratio>
+                    <algorithm>adaptive</algorithm>
+                    <threshold-up>4</threshold-up>
+                    <threshold-down>0</threshold-down>
+                    <step-up>10</step-up>
+                    <step-down>5</step-down>
+                    <throttling-rate-up>105</throttling-rate-up>
+                    <throttling-rate-down>120</throttling-rate-down>
+                </external-busy-ratio>
+                <!-- internal busy ratio. -->
+                <internal-busy-ratio>
+                    <tolerated-latency>10</tolerated-latency>
+                    <algorithm>none</algorithm>
+                    <threshold-up>10</threshold-up>
+                    <threshold-down>5</threshold-down>
+                    <step-up>10</step-up>
+                    <step-down>5</step-down>
+                    <throttling-rate-up>110</throttling-rate-up>
+                    <throttling-rate-down>130</throttling-rate-down>
+                </internal-busy-ratio>
+                <time-interval>2000</time-interval>
+                <statistics-window-size>10</statistics-window-size>
+                <message-priorities>
+                    <application>S6a</application>
+                    <commands>
+                        <command>Update-Location-Request</command>
+                        <priority>4</priority>
+                        <conditions>
+                            <priority>9</priority>
+                            <type>value-has-bit</type>
+                            <avp>ULR-Flags</avp>
+                            <value>32</value>
+                        </conditions>
+                    </commands>
+                    <commands>
+                        <command>Authentication-Information-Request</command>
+                        <priority>8</priority>
+                        <conditions>
+                            <priority>10</priority>
+                            <type>value-has-bit</type>
+                            <avp>AIR-Flags</avp>
+                            <value>1</value>
+                        </conditions>
+                        <conditions>
+                            <priority>7</priority>
+                            <type>avp-exists</type>
+                            <avp>Requested-EUTRAN-Authentication-Info/Immediate-Response-Preferred</avp>
+                        </conditions>
+                    </commands>
+                    <commands>
+                        <command>Notify-Request</command>
+                        <priority>5</priority>
+                    </commands>
+                    <commands>
+                        <command>Purge-UE-Request</command>
+                        <priority>11</priority>
+                    </commands>
+                </message-priorities>
+            </early-rejection>
+        </eps-diameter>
+        <!-- States the eps parameter -->
+        <eps-parameter>
+            <!-- The attribute means Each bit represents one service type:Bit 0: Circuit Switch Packet Switch (CSPS) Bit 1: reserved Bit 2: reserved Bit 3: reserved Bit 4: AuC Bit 5~15: reserved. -->
+            <common-services-in-extdb>0000000000000000</common-services-in-extdb>
+            <send-full-apn>true</send-full-apn>
+              <max-simultaneous-requests>100</max-simultaneous-requests>
+            <!-- This attribute indicates if the Roaming Area of EPC users is matched with either MME host, MME realm or both. -->
+            <ra-matching-policy>only-mme-host</ra-matching-policy>
+            <apn-config-can-be-deleted>false</apn-config-can-be-deleted>
+            <profile-can-be-deleted>false</profile-can-be-deleted>
+            <roaming-can-be-deleted>false</roaming-can-be-deleted>
+        </eps-parameter>
+        <!-- States the list of eps profile -->
+        <eps-profile>
+            <!-- Identifier of the eps profile. it is key of eps-profile EPS Profile is mandatory for EPS user. At least one needs to be defined-->
+            <profile-id>HSS-EsmProfile_Default</profile-id>
+            <can-be-deleted>true</can-be-deleted>
+            <!-- States the am data of eps profile -->
+            <am-data>
+                <ambr-max-dl>41943040</ambr-max-dl>
+                <ambr-max-dl-ext>41943040</ambr-max-dl-ext>
+                <ambr-max-ul>20971520</ambr-max-ul>
+                <ambr-max-ul-ext>20971520</ambr-max-ul-ext>
+                <rat-freq-sel-prior-id>20</rat-freq-sel-prior-id>
+                <rau-tau-timer>36000</rau-tau-timer>
+                <ue-usage-type>100</ue-usage-type>
+                <core-network-restrictions>0</core-network-restrictions>
+            </am-data>
+            <!-- States the sm data of eps profile -->
+            <sm-data>
+                <context-id>11</context-id>
+                <context-id>12</context-id>
+                <default-context-id>11</default-context-id>
+                <!-- <add-default-context-id>12</add-default-context-id> -->
+                <!-- <mapping-context-id> -->
+                    <!-- <eps-context-id>1</eps-context-id> -->
+                    <!-- <apn-context-id>11</apn-context-id> -->
+                <!-- </mapping-context-id> -->
+                <apn-oi-replacement>mnc081.mcc240.gprs</apn-oi-replacement>
+                <subscribed-charging-chars>1</subscribed-charging-chars>
+            </sm-data>
+        </eps-profile>
+        <!-- States the list of apn configuration -->
+        <eps-apn-configuration>
+            <!-- Identifier the eps profile. it is key of eps-profile -->
+            <context-id>11</context-id>
+            <apn-name>internet</apn-name>
+            <ambr-max-dl>41943040</ambr-max-dl>
+            <ambr-max-dl-ext>41943040</ambr-max-dl-ext>
+            <ambr-max-ul>20971520</ambr-max-ul>
+            <ambr-max-ul-ext>20971520</ambr-max-ul-ext>
+            <apn-oi-replacement>mnc081.mcc240.gprs</apn-oi-replacement>
+            <can-be-deleted>true</can-be-deleted>
+            <bearer-charging-chars>1</bearer-charging-chars>
+            <!-- <ipv4-static-pdngw-id>${HSSEPC_IPv4}</ipv4-static-pdngw-id> -->
+            <pdn-type>ipv4v6</pdn-type>
+            <qos-profile-arp>1</qos-profile-arp>
+            <qos-profile-arp-preemption-capability>disabled</qos-profile-arp-preemption-capability>
+            <qos-profile-arp-preemption-vulnerability>disabled</qos-profile-arp-preemption-vulnerability>
+            <qos-profile-qci>5</qos-profile-qci>
+            <!-- <static-pdngw-id> -->
+                <!-- <pgw-addr>pgwc1.n47.epc.mnc081.mcc240.3gppnetwork.org</pgw-addr> -->
+                <!-- <pgw-realm>n47.epc.mnc081.mcc240.3gppnetwork.org</pgw-realm> -->
+            <!-- </static-pdngw-id> -->
+            <vplmn-allowed>false</vplmn-allowed>
+        </eps-apn-configuration>
+        <eps-apn-configuration>
+            <!-- Identifier the eps profile. it is key of eps-profile -->
+            <context-id>12</context-id>
+            <apn-name>ims</apn-name>
+            <ambr-max-dl>41943040</ambr-max-dl>
+            <ambr-max-dl-ext>41943040</ambr-max-dl-ext>
+            <ambr-max-ul>20971520</ambr-max-ul>
+            <ambr-max-ul-ext>20971520</ambr-max-ul-ext>
+            <apn-oi-replacement>mnc081.mcc240.gprs</apn-oi-replacement>
+            <can-be-deleted>true</can-be-deleted>
+            <bearer-charging-chars>1</bearer-charging-chars>
+            <!-- <ipv4-static-pdngw-id>11.21.30.254</ipv4-static-pdngw-id> -->
+            <pdn-type>ipv4v6</pdn-type>
+            <qos-profile-arp>1</qos-profile-arp>
+            <qos-profile-arp-preemption-capability>disabled</qos-profile-arp-preemption-capability>
+            <qos-profile-arp-preemption-vulnerability>disabled</qos-profile-arp-preemption-vulnerability>
+            <qos-profile-qci>5</qos-profile-qci>
+            <!-- <static-pdngw-id> -->
+                <!-- <pgw-addr>pgwc1.n47.epc.mnc081.mcc240.3gppnetwork.org</pgw-addr> -->
+                <!-- <pgw-realm>n47.epc.mnc081.mcc240.3gppnetwork.org</pgw-realm> -->
+            <!-- </static-pdngw-id> -->
+            <vplmn-allowed>false</vplmn-allowed>
+            <iwk5gs-indicator>subscribed</iwk5gs-indicator>
+        </eps-apn-configuration>
+        <!-- States the list of eps-plmn -->
+        <eps-plmn>
+            <!-- Identifier the plmn id. it is key of eps-plmn,
+            The length of plmn id including mcc and mnc is 5 or 6 digits.
+            -->
+            <plmn-id>24081</plmn-id>
+            <is-home>true</is-home>
+            <reg-serv-rest>true</reg-serv-rest>
+            <zone-code-set>
+                <!-- Identifier the list of zone code set from user am data. -->
+                <zone-code-set-id>1</zone-code-set-id>
+                <zone-code>86</zone-code>
+                <zone-code>80</zone-code>
+                <can-be-deleted>true</can-be-deleted>
+            </zone-code-set>
+            <roaming-service-area>
+                <!-- Identifier the list of roaming service area from user am data. -->
+                <roaming-service-area-id>1</roaming-service-area-id>
+                <defined-area>
+                    <roaming-area-id>1</roaming-area-id>
+                    <restricted-access-type>0</restricted-access-type>
+                    <roaming-service-profile-id>1</roaming-service-profile-id>
+                    <!-- Identifier the list of network domain. using to find roaming area -->
+                    <network-domain>mme4.ericsson.se</network-domain>
+                </defined-area>
+                <non-defined-area>
+                    <roaming-service-profile-id>1</roaming-service-profile-id>
+                    <restricted-access-type>0</restricted-access-type>
+                </non-defined-area>
+                <can-be-deleted>true</can-be-deleted>
+            </roaming-service-area>
+            <roaming-service-profile>
+                <!-- Identifier the list of roaming service area. -->
+                <roaming-service-profile-id>1</roaming-service-profile-id>
+                <restricted-srvcc>true</restricted-srvcc>
+                <restricted-apn-id>11</restricted-apn-id>
+                <restricted-apn-id>12</restricted-apn-id>
+            </roaming-service-profile>
+        </eps-plmn>
+      </hssepc>
+    </config>
+  </edit-config>
+  </rpc>
+  <close-session/>

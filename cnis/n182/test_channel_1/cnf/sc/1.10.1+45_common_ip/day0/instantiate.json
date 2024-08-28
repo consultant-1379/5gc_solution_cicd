@@ -1,0 +1,9 @@
+{
+  "clusterName": "n182",
+  "additionalParams": {
+       "namespace": "sc",
+       "applicationTimeOut": "3600",
+       "skipJobVerification": "false",
+       "skipVerification": "true"
+      }
+}

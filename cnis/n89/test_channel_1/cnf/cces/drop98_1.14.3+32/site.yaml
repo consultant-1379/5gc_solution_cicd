@@ -1,0 +1,91 @@
+######################################
+## CNF general information
+######################################
+nodeName: n89
+nodeType: CCES
+instance: 1
+vnflcm:
+  clusterName: n89
+  namespace: cces
+  InstantiateVnfRequest:
+    helm_client_version: 3.8
+    applicationTimeOut: 3600
+    skipVerification: "true"
+
+users:
+  day0:
+    username: sysadmin
+    password: Pa$$w0rd4LDAP
+
+  day1:
+  - username: ccesoam
+    password: Changeme1st!
+    groups:
+    - nef-admin
+    - apigm-admin
+    - sragent-admin
+    - nrfagent-admin
+    - system-admin
+  - username: ccessec
+    password: Changeme1st!
+    groups:
+    - nef-security-admin
+    - apigm-security-admin
+    - sragent-security-admin
+    - nrfagent-security-admin
+    - system-security-admin
+
+license:
+  customerId: "946060"
+  swltId: STA-CCES-25
+
+cnom:
+  fqdn: cnom.cces1-oam.n89-eccd1.sero.gic.ericsson.se
+
+
+snmp:
+  agentEngineId: 8000137001C0A899ECCD10CEA6
+  heartbeatInterval: 600
+
+ddc:
+  remotePath: /lab/pccc_logs/5GC-CICD/ci/N89_DDC/n89-cces-ddc
+
+vtap:
+  tapagent: true
+
+######################################
+## CNF specific information
+######################################
+cces:
+  iamFqdn: iam.cces1-oam.n89-eccd1.sero.gic.ericsson.se
+  nef:
+    instanceId: ddd9b5b3-fa57-4cb1-ace7-89eccd10cea6
+    host: cces1-5g-sbi-traffic.site1-cluster1
+    port: 443
+    nbi:
+      trust:
+        host: cces1-5g-nbi-trust-traffic.site1-cluster1
+    diameter:
+      host: n89-eccd1-cces1-nef
+      peer:
+        host: ccpc1-5g-traffic.site1-cluster1
+        ip: 172.17.128.8
+        port: 3868
+
+######################################
+## CNF dimensioning specific
+######################################
+
+replicaCount:
+  eric-cces-common-entity: 4
+  eric-cces-timer-service: 6
+  eric-apigm-api-proxy: 5
+
+hpaReplica:
+  eric-cces-common-entity: {min: 4, max: 5}
+  eric-cces-timer-service: {min: 6, max: 7}
+  eric-apigm-api-proxy: {min: 5, max: 6}
+  eric-data-wide-column-database-cd: 5
+
+
+

@@ -1,0 +1,19 @@
+nodeInfo: site.yaml
+siteGlobal: ../../site_global_common_ip.yaml
+templateDir: ../../../../../../config_template/templates/
+#jsonschemaGlobal: ../jsonschemas/schema-global.yaml
+files:
+- template: sc/1.13.0+4_release_branch/values.yaml.jinja2
+  target: day0/values.yaml
+- template: common/instantiate.json.jinja2
+  target: day0/instantiate.json
+- template: sc/1.13.0+4_release_branch/bsf-config.txt.jinja2
+  target: day1/bsf-config.txt
+#- template: sc/1.13.0+4_release_branch/scp-config.txt.jinja2
+#  target: day1/scp-config.txt
+#- template: common/snmp-config.json.jinja2
+#  target: snmp-config.json
+- template: common/user-config.txt.jinja2
+  target: day1/user-config.txt
+- template: sc/1.13.0+4_release_branch/ddc-config.txt.jinja2
+  target: day1/ddc-config.txt

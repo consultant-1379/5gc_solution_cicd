@@ -1,0 +1,172 @@
+autowizard false
+config
+network-instances network-instance media
+ routing ingress-next-hop-announcements ingress-next-hop-announcement nexthop_media
+  service vpngw-forwarder
+   fallback-next-hop vpngw:cnf_loopback_media
+ enabled true
+ routing bgp 7001
+  neighbor 11.1.51.254
+   peer-type external
+   shutdown false
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              8001
+   address-family ipv4 unicast
+  !
+ !
+ ip static-route cre 0.0.0.0/0 11.1.51.254
+ !
+ ip static-route up 0.0.0.0/0 11.1.51.254
+ !
+!
+
+network-instances network-instance signaling
+ routing ingress-next-hop-announcements ingress-next-hop-announcement nexthop_signaling
+  service vpngw-forwarder
+   fallback-next-hop vpngw:cnf_loopback_signaling
+ enabled true
+ routing bgp 7002
+  neighbor 11.2.52.254
+   peer-type external
+   shutdown false
+   advertisement-interval 20
+   bfd-enabled            false
+   remote-as              8002
+   address-family ipv4 unicast
+  !
+ !
+ ip static-route cre 0.0.0.0/0 11.2.52.254
+ !
+ ip static-route up 0.0.0.0/0 11.2.52.254
+ !
+!
+
+network-instances network-instance intra
+ enabled true
+!
+
+interfaces interface cre:ipfw_media
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3851
+ parent-interface cre:net0
+ bind-ni-name     media
+ ipv4 enabled true
+ ipv4 address 11.1.51.100
+  prefix-length 24
+interfaces interface cre:ipfw_media
+ address-type ip-range 2
+ !
+!
+
+interfaces interface cre:ipfw_signaling
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3952
+ parent-interface cre:net0
+ bind-ni-name     signaling
+ ipv4 enabled true
+ ipv4 address 11.2.52.100
+  prefix-length 24
+interfaces interface cre:ipfw_signaling
+ address-type ip-range 2
+ !
+!
+
+interfaces interface cre:net0
+ type    ethernetCsmacd
+ enabled true
+ l2-mtu  1968
+!
+
+interfaces interface vpngw:intra
+ type            intraForward
+ enabled         true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3600
+ parent-interface vpngw:net0
+ bind-ni-name    intra
+ ipv4 enabled true
+ ipv4 address 172.31.101.1
+  prefix-length 24
+interfaces interface vpngw:intra
+ address-type ip-range 2
+ !
+!
+
+interfaces interface vpngw:cnf_loopback_media
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name media
+ ipv4 enabled true
+ ipv4 address 5.128.0.33
+  prefix-length 32
+interfaces interface vpngw:cnf_loopback_media
+ address-type single
+ !
+!
+
+interfaces interface vpngw:cnf_loopback_signaling
+ type         softwareLoopback
+ enabled      true
+ bind-ni-name signaling
+ ipv4 enabled true
+ ipv4 address 5.129.0.33
+  prefix-length 32
+interfaces interface vpngw:cnf_loopback_signaling
+ address-type single
+ !
+!
+
+interfaces interface vpngw:ipfw_media
+ type             ipForward
+ enabled          true
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3851
+ parent-interface vpngw:net0
+ bind-ni-name     media
+ ipv4 enabled true
+ ipv4 address 11.1.51.1
+  prefix-length 24
+interfaces interface vpngw:ipfw_media
+ address-type ip-range 8
+ !
+!
+
+interfaces interface vpngw:ipfw_signaling
+ type             ipForward
+ enabled          true
+ parent-interface vpngw:net0
+ encapsulation dot1q-vlan outer-tag tag-type c-vlan
+ encapsulation dot1q-vlan outer-tag vlan-id 3952
+ bind-ni-name     signaling
+ ipv4 enabled true
+ ipv4 address 11.2.52.1
+  prefix-length 24
+interfaces interface vpngw:ipfw_signaling
+ address-type ip-range 8
+ !
+!
+
+interfaces interface vpngw:net0
+ type    ethernetCsmacd
+ enabled true
+!
+
+
+interfaces interface vpngw:vpngw
+ type         vpnGateway
+ enabled      true
+ bind-ni-name signaling
+ ipv4 enabled true
+ ipv4 address 109.2.1.50
+  prefix-length 32
+interfaces interface vpngw:vpngw
+ address-type single
+ !
+!
+commit
+end
